@@ -47,8 +47,35 @@ export interface ModalProps {
     size?: 'sm' | 'md' | 'lg' | 'xl';
 }
 
+export interface Events {
+    title: string;
+    price: string;
+    Allcategories: string[];
+    Bestcategory: string;
+    imageLink: string;
+    bookingLink: string;
+    location: {
+        locationName: string;
+        locationCode: string;
+    };
+    eventType: string;
+    tags: string[];
+    lastUpdatedDate: number;
+    eventDateTime: number;
+    _id: string;
+    id: string;
+}
+
 export interface FormProps {
     onSubmit: (data: unknown) => void;
     loading?: boolean;
     initialValues?: Record<string, unknown>;
+}
+
+
+export interface TrendingLocationData {
+    imgUrl: string;
+    Title: string;
+    Location: string;
+    peopleVisited: string;
 }

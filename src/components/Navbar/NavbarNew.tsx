@@ -8,6 +8,7 @@ import Image from "next/image";
 import SyncTripLogo from "../../assets/images/logoWeb.png";
 import { PageTypeEnum } from "@/constants";
 import { useLogin } from "../providers/LoginProvider";
+
 import "../../../styles/navbar/navbar.css";
 
 interface NavbarProps {
@@ -50,7 +51,7 @@ const Navbar = ({ ctaAction }: NavbarProps) => {
   const handleLoginClick = () => {
     openLogin((user) => {
       // Optional: Handle successful login
-      console.log('User logged in:', user);
+      // console.log('User logged in:', user);
     });
   };
 
@@ -69,7 +70,7 @@ const Navbar = ({ ctaAction }: NavbarProps) => {
           <span className="navbar-toggler-icon"></span>
         </button>
 
-        <div className="navbar-collapse justify-content-end" id="navbarNav">
+        <div className=" collapse navbar-collapse justify-content-end" id="navbarNav" style={{ visibility:  'visible' }}>
           <ul className="navbar-nav" style={{ alignItems: "center" }}>
             {pageType === PageTypeEnum.TRIP ? (
               <li className="nav-item" style={{ cursor: "pointer" }} onClick={handleCtaAction}>

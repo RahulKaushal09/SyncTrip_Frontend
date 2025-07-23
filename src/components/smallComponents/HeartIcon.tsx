@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { FaHeart } from 'react-icons/fa';
 import toast from 'react-hot-toast';
 import { ApiService } from '@/utils/api.utils';
+import { STORAGE_KEYS } from '@/constants';
+import { triggerLogin } from '@/utils';
 
 interface HeartIconProps {
   id: string;
@@ -34,7 +36,12 @@ const HeartIcon: React.FC<HeartIconProps> = ({
     e.stopPropagation();
     if (loading) return;
     setLoading(true);
-
+    const token = localStorage.getItem(STORAGE_KEYS.TOKEN);
+    if (token === null) {
+      toast.error('Please log in to manage your wishlist');
+      triggerLogin(() => handleClick(e));
+      return;
+    }
     try {
       const res = await ApiService.toggleWishlist({
         type,

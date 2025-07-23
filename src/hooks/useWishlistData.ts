@@ -8,6 +8,7 @@ import { ApiService } from '@/utils/api.utils';
 import { StorageUtils } from '@/utils/storage.utils';
 import { Location } from '@/types';
 import { LocationField } from '@/constants';
+import { getLocationResponseSchema } from '@/classes/ApiResponse.classes';
 
 interface UseWishlistDataProps {
     serverLocations: Location[];
@@ -42,7 +43,7 @@ export const useWishlistData = ({
         }
 
         try {
-            const wishlistResponse = await ApiService.fetchLocationsWithWishlist(skip, limit, fields);
+            const wishlistResponse: getLocationResponseSchema = await ApiService.fetchLocationsWithWishlist(skip, limit, fields);
 
             if (wishlistResponse?.locations && wishlistResponse.locations.length > 0) {
                 const mergedLocations = ApiService.mergeLocationsWithWishlist(serverLocations, wishlistResponse.locations);

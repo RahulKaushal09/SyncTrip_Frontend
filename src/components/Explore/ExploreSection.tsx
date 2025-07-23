@@ -2,23 +2,23 @@ import React from 'react';
 import LocationCard from '../LocationCard/LocationCard';
 import ShowMoreButton from './ShowMoreButton';
 import { Location } from '@/types';
-interface ExploreLocationData {
-    id: string;
-    title?: string;
-    rating?: string;
-    placesNumberToVisit?: number;
-    best_time?: string;
-    images?: string[];
-    isWishlisted?: boolean;
-    country?: string;
-    description?: string;
-    fullDetails?: {
-        coordinates?: {
-            lat: number;
-            long: number;
-        };
-    };
-}
+// interface ExploreLocationData {
+//     id: string;
+//     title?: string;
+//     rating?: string;
+//     placesNumberToVisit?: number;
+//     best_time?: string;
+//     images?: string[];
+//     isWishlisted?: boolean;
+//     country?: string;
+//     description?: string;
+//     fullDetails?: {
+//         coordinates?: {
+//             lat: number;
+//             long: number;
+//         };
+//     };
+// }
 
 interface ExploreSectionProps {
     locations: Location[];
@@ -74,10 +74,7 @@ const ExploreSection: React.FC<ExploreSectionProps> = ({
         return bestTime;
     };
 
-    const handleLocationClick = (locationId: string) => {
-        // This will be handled by the LocationCard component
-        // We'll make LocationCard server-safe too
-    };
+
 
     // Show loading spinner when searching
     if (!locations.length && searching) {
@@ -116,8 +113,7 @@ const ExploreSection: React.FC<ExploreSectionProps> = ({
                             isWishlisted={location.isWishlisted || false}
                             typeOfWhishlistCardEnum="location"
                             cardId={location.id}
-                            onClickFunction={() => handleLocationClick(location.id)}
-                            placeConnectedwithid={`/location/${location.id}`}
+                            placeConnectedwithid={location.id}
                             isLoading={false}
                         />
                     ))

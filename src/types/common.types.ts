@@ -48,3 +48,8 @@ export interface consoleError {
     stack?: string;
     name?: string;
 }
+
+export interface IndianCity {
+    locationName: string;
+    locationCode: string;
+}

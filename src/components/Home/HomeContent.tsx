@@ -5,6 +5,7 @@ import { ApiService } from '@/utils/api.utils';
 import { StorageUtils } from '@/utils/storage.utils';
 import MainSearchBar from '../SearchPanel/MainSearchBar';
 import ExploreSection from '../Explore/ExploreSection';
+import PreMadeItinerary from '../preItineraries/PreMadeItinerary';
 import { LocationFields } from '@/constants';
 import '../../../styles/home/home.css';
 import { Location } from '@/types';
@@ -20,8 +21,9 @@ export default function HomeContent({ initialLocations, initialHasMore }: HomeCo
     const [searching, setSearching] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [hasFetchedAll, setHasFetchedAll] = useState(false);
-    const [currentPage, setCurrentPage] = useState(1);
     const [wishlistLoaded, setWishlistLoaded] = useState(false);
+    const [skip, setSkip] = useState(initialLocations.length);
+    const limit = 16; // Number of locations to fetch per page
     const fieldsToFetchForHome = [
         LocationFields.TITLE,
         LocationFields.RATING,
@@ -30,7 +32,7 @@ export default function HomeContent({ initialLocations, initialHasMore }: HomeCo
         LocationFields.PLACES_NUMBER_TO_VISIT,
         LocationFields.ID
     ];
-
+    const premadeItineariesLocations: Location[] = initialLocations.slice(0, 4);
     // Load wishlist data on component mount
     useEffect(() => {
         const loadWishlistData = async () => {
@@ -58,30 +60,15 @@ export default function HomeContent({ initialLocations, initialHasMore }: HomeCo
 
     const AllfetchLocations = async () => {
         try {
-            const token = StorageUtils.getToken();
-            const response = await ApiService.fetchLocations(1, 1000, fieldsToFetchForHome); // Fetch more for search
+            const response = await ApiService.fetchLocationsUnified(1, 1000, fieldsToFetchForHome);
 
-            if (response && response.locations) {
-                let finalLocations = response.locations || [];
-
-                // If user is logged in, get wishlist data and merge
-                if (token) {
-                    try {
-                        const wishlistResponse = await ApiService.fetchLocationsWithWishlist(1, 1000, fieldsToFetchForHome);
-                        if (wishlistResponse?.locations && wishlistResponse.locations.length > 0) {
-                            finalLocations = ApiService.mergeLocationsWithWishlist(finalLocations, wishlistResponse.locations);
-                        }
-                    } catch (error) {
-                        console.error('Failed to fetch wishlist data:', error);
-                        // Continue with non-wishlist data
-                    }
-                }
-
+            if (response?.locations?.length) {
                 return {
-                    locations: finalLocations,
-                    hasMore: false,
+                    locations: response.locations,
+                    hasMore: response.hasMore ?? false,
                 };
             }
+
             return { locations: [], hasMore: false };
         } catch (error) {
             console.error('Error fetching all locations:', error);
@@ -93,30 +80,35 @@ export default function HomeContent({ initialLocations, initialHasMore }: HomeCo
         if (searching || !hasMore) return;
 
         setIsLoading(true);
+
         try {
-            const nextPage = currentPage + 1;
-            const token = StorageUtils.getToken();
-            const response = await ApiService.fetchLocations(nextPage, 16, fieldsToFetchForHome);
+            const response = await ApiService.fetchLocationsUnified(skip, limit, fieldsToFetchForHome);
 
-            if (response && response.locations) {
-                let newLocations = response.locations || [];
+            if (response?.locations?.length) {
+                const newLocations = response.locations;
 
-                // If user is logged in, get wishlist data and merge
-                if (token) {
-                    try {
-                        const wishlistResponse = await ApiService.fetchLocationsWithWishlist(nextPage, 16, fieldsToFetchForHome);
-                        if (wishlistResponse?.locations && wishlistResponse.locations.length > 0) {
-                            newLocations = ApiService.mergeLocationsWithWishlist(newLocations, wishlistResponse.locations);
+                // Merge with previous locations (preserve isWishlisted where needed)
+                setLocations(prev => {
+                    const mergedMap = new Map();
+
+                    // Start with previous ones
+                    prev.forEach(loc => mergedMap.set(loc.id, loc));
+
+                    // Merge new ones
+                    newLocations.forEach(loc => {
+                        const existing = mergedMap.get(loc.id);
+                        if (existing) {
+                            mergedMap.set(loc.id, { ...existing, isWishlisted: loc.isWishlisted ?? existing.isWishlisted });
+                        } else {
+                            mergedMap.set(loc.id, loc);
                         }
-                    } catch (error) {
-                        console.error('Failed to fetch wishlist data for pagination:', error);
-                        // Continue with non-wishlist data
-                    }
-                }
+                    });
 
-                setLocations(prev => [...prev, ...newLocations]);
-                setHasMore(newLocations.length >= 16); // Estimate hasMore based on response size
-                setCurrentPage(nextPage);
+                    return Array.from(mergedMap.values());
+                });
+
+                setSkip(prev => prev + newLocations.length);
+                setHasMore(response.hasMore ?? false);
             }
         } catch (error) {
             console.error('Error fetching more locations:', error);
@@ -195,6 +187,9 @@ export default function HomeContent({ initialLocations, initialHasMore }: HomeCo
                 showMoreButtonToShow={searchTerm.length === 0}
                 hasMoreBtn={hasMore}
                 isLoading={isLoading}
+            />
+            <PreMadeItinerary
+                locations={premadeItineariesLocations}
             />
 
 

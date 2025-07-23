@@ -29,7 +29,7 @@ export default function ShowMoreButton({
                 disabled={isLoading}
                 aria-label="Load more destinations"
             >
-                {isLoading ? 'Loading...' : 'Show More Destinations'}
+                {isLoading ? 'Loading...' : 'Show More'}
             </button>
         </div>
     );

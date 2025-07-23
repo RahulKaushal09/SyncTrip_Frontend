@@ -2,7 +2,12 @@ import { Metadata } from 'next';
 import HomeContent from '@/components/Home/HomeContent';
 import { ApiService } from '@/utils/api.utils';
 import { Location } from '@/types';
-import { LocationFields } from '@/constants';
+import { LocationFields, locationsJsonLd, homeJsonLd } from '@/constants';
+import Head from 'next/head';
+import FestivalsEvents from '@/components/EventsForBooking/FestivalsEvents';
+import TrendingSection from '@/components/Home/TrendingSection';
+import TopDestinations from '@/components/Home/TopDestinations';
+import SyncTripAppPushingSection from '@/components/AppPushingComponents/AppPushingSection';
 
 export const viewport = {
   width: 'device-width',
@@ -57,62 +62,40 @@ export default async function Home() {
     LocationFields.PLACES_NUMBER_TO_VISIT,
     LocationFields.ID,
   ];
+
   const initialLocations: Location[] = (await ApiService.fetchLocations(0, 20, fieldsToFetchForHome)).locations;
+  const { initialEvents, initialLocation } = await ApiService.getServerSidePropsForEvents();
   // const initialLocations: Location[] = (await ApiService.fetchLocations(0, 12)).locations; // SSR
-  const homeJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    name: 'SyncTrip',
-    url: 'https://synctrip.in',
-    description: 'Discover amazing travel destinations and plan your perfect trip',
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: 'https://synctrip.in/search?q={search_term_string}',
-      'query-input': 'required name=search_term_string'
-    },
-    publisher: {
-      '@type': 'Organization',
-      name: 'SyncTrip',
-      url: 'https://synctrip.in'
-    }
-  };
-
-  const locationsJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'ItemList',
-    name: 'Popular Travel Destinations',
-    description: 'Curated list of amazing travel destinations',
-    numberOfItems: initialLocations.length,
-    itemListElement: initialLocations.map((location, index) => ({
-      '@type': 'ListItem',
-      position: index + 1,
-      item: {
-        '@type': 'Place',
-        name: location.title?.replace(/[0-9.]/g, '').trim(),
-        description: location.description || 'Amazing destination for travel and adventure',
-        image: Array.isArray(location.images) ? location.images[0] : undefined,
-        aggregateRating: location.rating && typeof location.rating === 'number'
-          ? {
-            '@type': 'AggregateRating',
-            ratingValue: location.rating,
-            bestRating: 5,
-            worstRating: 1
-          }
-          : undefined
-      }
-    }))
-  };
-
+  const randomLocations = initialLocations.sort(() => 0.5 - Math.random()).slice(0, 12); // Randomly select 4 locations for the top destinations
   return (
     <>
+      <Head>
+        {initialLocations[0]?.images?.[0] && (
+          <link
+            rel="preload"
+            as="image"
+            href={decodeURIComponent(initialLocations[0].images[0])}
+          />
+        )}
+      </Head>
       {/* JSON-LD structured data */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(homeJsonLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(locationsJsonLd) }} />
+      < script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(locationsJsonLd(initialLocations)) }} />
 
       <HomeContent
         initialLocations={initialLocations}
         initialHasMore={initialLocations.length >= 12}
       />
+      <div className='HomePage'>
+        <FestivalsEvents
+          initialEvents={initialEvents}
+          initialLocation={initialLocation}
+        />
+        <TrendingSection
+        />
+        <TopDestinations locations={randomLocations} />
+        <SyncTripAppPushingSection />
+      </div>
     </>
   );
 }

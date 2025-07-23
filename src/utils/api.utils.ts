@@ -4,11 +4,12 @@
 
 import { API_CONFIG, LocationField, STORAGE_KEYS } from '../constants';
 import { StorageUtils } from './storage.utils';
-import { ApiResponse, Location } from '../types';
+import { ApiResponse, IndianCity, Location } from '../types';
 import { triggerLogin } from './login.utils';
-import GoogleLoginResponse, { CompleteProfileApiResponse } from '@/types/ApiResponse.types';
-import { wishlistRequestSchema } from '@/types/ApiRequest.types';
-
+import { GoogleLoginResponse, CompleteProfileApiResponse, getLocationResponseSchema, EventsResponse } from '@/classes/ApiResponse.classes';
+import { wishlistRequestSchema } from '@/classes/ApiRequest.classes';
+import { indianCitiesPageData } from '@/data/indianCitiesPageData';
+import { Events } from '@/types';
 export class ApiService {
   private static getAuthHeaders(): HeadersInit {
     const token = StorageUtils.getToken();
@@ -26,6 +27,72 @@ export class ApiService {
     }
     return response.json();
   }
+
+  static async getServerSidePropsForEvents() {
+    const defaultCityName = 'Delhi-NCR';
+    let events: Events[] = [];
+    const indianCities = indianCitiesPageData;
+
+    try {
+      const cityObj = indianCities.find(city => city.locationName === defaultCityName);
+      if (cityObj) {
+        const response = await fetch(
+          `${API_CONFIG.BACKEND_BASE_URL}/api/events/getEventsForLocation`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              locationName: cityObj.locationName.split('-')[0],
+              locationCode: cityObj.locationCode || '',
+            }),
+          }
+        );
+        const data = response.ok ? await response.json() : { events: [] };
+        if (data.events) {
+          events = data.events || [];
+        }
+        else {
+          console.error('No events found for the default city:', defaultCityName);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching events:', error);
+      return {
+        initialEvents: [],
+        initialLocation: defaultCityName,
+      };
+    }
+    console.log("defaultCityName ", defaultCityName);
+    return {
+      initialEvents: events,
+      // indianCities,
+      initialLocation: defaultCityName,
+    };
+  }
+  static async fetchEvents(city: IndianCity): Promise<Events[]> {
+    if (city) {
+      try {
+        const res = await fetch(
+          `${API_CONFIG.BACKEND_BASE_URL}/api/events/getEventsForLocation`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              locationName: city.locationName.split('-')[0],
+              locationCode: city.locationCode || '',
+            }),
+          }
+        );
+        const data = await res.json();
+        return data.events || [];
+      } catch (error) {
+        console.error('Error fetching events:', error);
+        return [];
+      }
+    }
+    return [];
+  }
+
 
 
   // For server-side rendering and SEO - no auth required
@@ -47,9 +114,10 @@ export class ApiService {
   }
 
   // For client-side - fetches locations with wishlist status
-  static async fetchLocationsWithWishlist(skip: number = 0, limit: number = 1000, fields: LocationField[]): Promise<{ locations: Location[] }> {
+  static async fetchLocationsWithWishlist(skip: number = 0, limit: number = 1000, fields: LocationField[]): Promise<getLocationResponseSchema> {
+    let result: getLocationResponseSchema = {} as getLocationResponseSchema;
     if (localStorage.getItem(STORAGE_KEYS.TOKEN) === null) {
-      return { locations: [] }; // No token, return empty
+      return result; // No token, return empty
     }
     try {
       const response = await fetch(
@@ -60,10 +128,40 @@ export class ApiService {
           body: JSON.stringify({ skip, limit, fields })
         }
       );
-      return this.handleResponse<{ locations: Location[] }>(response);
+      result = await this.handleResponse<getLocationResponseSchema>(response);
+      return result;
+
     } catch (error) {
       console.error('Failed to fetch locations with wishlist:', error);
-      return { locations: [] };
+      // return { locations: [] };
+      return result;
+    }
+  }
+  static async fetchLocationsUnified(
+    skip: number = 0,
+    limit: number = 1000,
+    fields: LocationField[]
+  ): Promise<getLocationResponseSchema> {
+    const token = localStorage.getItem(STORAGE_KEYS.TOKEN);
+    const headers = token
+      ? this.getAuthHeaders()
+      : { 'Content-Type': 'application/json' };
+
+    try {
+      const response = await fetch(
+        `${API_CONFIG.BACKEND_BASE_URL}/api/locations/getAllLocationsDynamicByFields`,
+        {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({ skip, limit, fields }),
+        }
+      );
+
+      const result = await this.handleResponse<getLocationResponseSchema>(response);
+      return result;
+    } catch (error) {
+      console.error('Failed to fetch locations:', error);
+      return {} as getLocationResponseSchema;
     }
   }
 

@@ -159,6 +159,8 @@ export default function LoginPopup({ onClose, onLogin }: LoginPopupProps) {
         }
         onLogin(user);
         onClose();
+        window.location.reload();
+
       } else {
         throw new Error('Google login failed');
       }
@@ -279,13 +281,7 @@ export default function LoginPopup({ onClose, onLogin }: LoginPopupProps) {
               onError={handleGoogleError}
             />
           )}
-          {process.env.NODE_ENV === 'development' && (
-            <div style={{ fontSize: '12px', color: '#666', marginTop: '10px' }}>
-              Debug: Client ID = {process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID?.substring(0, 20)}...
-              <br />
-              Origin: {typeof window !== 'undefined' ? window.location.origin : 'SSR'}
-            </div>
-          )}
+
         </div>
 
         <p className="login-popup-toggle-text">

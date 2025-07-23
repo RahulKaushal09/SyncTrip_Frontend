@@ -4,6 +4,7 @@ const nextConfig: NextConfig = {
   /* config options here */
   images: {
     // domains: ['synctrip.in'],
+    domains: ['assets-in.bmscdn.com'],
     // deviceSizes: [320, 420, 540, 768, 1024, 1200], // add 540 here
     // imageSizes: [16, 32, 48, 64, 96, 128, 256, 540], // optionally here too
     remotePatterns: [
