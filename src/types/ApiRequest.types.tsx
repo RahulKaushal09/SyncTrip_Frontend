@@ -1,0 +1,7 @@
+export interface wishlistRequestSchema {
+    type: string;
+    refId: string;
+    parentType?: string;
+    parentId?: string;
+    name?: string;
+}

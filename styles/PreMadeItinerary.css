@@ -1,0 +1,49 @@
+.pre-made-itinerary {
+    background-color: #fff;
+    /* White background as in the image */
+    padding: 40px 0;
+    /* Vertical padding for spacing */
+}
+
+.itinerary-card-large,
+.itinerary-card-small {
+    border-radius: 15px;
+    /* Rounded corners as in the image */
+    overflow: hidden;
+    /* Ensure image stays within rounded corners */
+    border: none;
+    /* Remove default border */
+}
+
+.itinerary-card-large {
+    width: 400px;
+    /* Match the large card width */
+}
+
+.itinerary-card-small {
+    width: 200px;
+    /* Match the small card width */
+}
+
+/* Ensure cards stack nicely on mobile */
+@media (max-width: 768px) {
+
+    .itinerary-card-large,
+    .itinerary-card-small {
+        width: 100%;
+        /* Full width on mobile */
+    }
+}
+
+/* Adjust text color and font weight for consistency */
+.text-primary {
+    color: #2c3e50;
+    /* Dark blue for the title, matching the image */
+}
+
+.list-group-item {
+    background-color: transparent;
+    /* Transparent background for list items */
+    color: #2c3e50;
+    /* Dark blue text for list items */
+}

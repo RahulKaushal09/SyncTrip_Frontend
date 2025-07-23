@@ -1,103 +1,118 @@
-import Image from "next/image";
+import { Metadata } from 'next';
+import HomeContent from '@/components/Home/HomeContent';
+import { ApiService } from '@/utils/api.utils';
+import { Location } from '@/types';
+import { LocationFields } from '@/constants';
 
-export default function Home() {
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1
+};
+
+export const metadata: Metadata = {
+  title: 'SyncTrip - Discover Amazing Travel Destinations | Plan Your Perfect Trip',
+  description: 'Find and join trips near you. Explore curated travel destinations, connect with fellow travelers, and plan your perfect adventure with SyncTrip.',
+  keywords: 'travel, destinations, trips, adventure, explore, tourism, vacation, travel planning, group travel',
+  authors: [{ name: 'SyncTrip' }],
+  robots: 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1',
+  openGraph: {
+    title: 'SyncTrip - Discover Amazing Travel Destinations',
+    description: 'Find and join trips near you. Explore curated travel destinations and connect with fellow travelers.',
+    type: 'website',
+    url: 'https://synctrip.in',
+    siteName: 'SyncTrip',
+    locale: 'en_US',
+    images: [
+      {
+        url: 'https://synctrip.in/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'SyncTrip - Travel Destinations'
+      }
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    site: '@synctrip',
+    creator: '@synctrip',
+    title: 'SyncTrip - Discover Amazing Travel Destinations',
+    description: 'Find and join trips near you. Explore curated travel destinations and connect with fellow travelers.',
+    images: ['https://synctrip.in/twitter-image.jpg'],
+  },
+  alternates: {
+    canonical: 'https://synctrip.in',
+  },
+  other: {
+    'theme-color': '#1976d2',
+    'color-scheme': 'light',
+  },
+};
+
+export default async function Home() {
+  const fieldsToFetchForHome = [
+    LocationFields.TITLE,
+    LocationFields.RATING,
+    LocationFields.IMAGES,
+    LocationFields.BEST_TIME,
+    LocationFields.PLACES_NUMBER_TO_VISIT,
+    LocationFields.ID,
+  ];
+  const initialLocations: Location[] = (await ApiService.fetchLocations(0, 20, fieldsToFetchForHome)).locations;
+  // const initialLocations: Location[] = (await ApiService.fetchLocations(0, 12)).locations; // SSR
+  const homeJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'SyncTrip',
+    url: 'https://synctrip.in',
+    description: 'Discover amazing travel destinations and plan your perfect trip',
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: 'https://synctrip.in/search?q={search_term_string}',
+      'query-input': 'required name=search_term_string'
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'SyncTrip',
+      url: 'https://synctrip.in'
+    }
+  };
+
+  const locationsJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Popular Travel Destinations',
+    description: 'Curated list of amazing travel destinations',
+    numberOfItems: initialLocations.length,
+    itemListElement: initialLocations.map((location, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      item: {
+        '@type': 'Place',
+        name: location.title?.replace(/[0-9.]/g, '').trim(),
+        description: location.description || 'Amazing destination for travel and adventure',
+        image: Array.isArray(location.images) ? location.images[0] : undefined,
+        aggregateRating: location.rating && typeof location.rating === 'number'
+          ? {
+            '@type': 'AggregateRating',
+            ratingValue: location.rating,
+            bestRating: 5,
+            worstRating: 1
+          }
+          : undefined
+      }
+    }))
+  };
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <>
+      {/* JSON-LD structured data */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(homeJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(locationsJsonLd) }} />
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      <HomeContent
+        initialLocations={initialLocations}
+        initialHasMore={initialLocations.length >= 12}
+      />
+    </>
   );
 }

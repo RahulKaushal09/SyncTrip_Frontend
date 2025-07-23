@@ -1,0 +1,196 @@
+.tripCard {
+    width: 100%;
+    max-width: 400px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    background-color: #fff;
+    font-family: Arial, sans-serif;
+    cursor: pointer;
+}
+
+/* Image Section */
+.tripCard-image {
+    position: relative;
+    height: 200px;
+    background-image: url('https://via.placeholder.com/400x200');
+    /* Replace with dynamic image if available */
+    background-size: cover;
+    background-position: center;
+}
+
+.tripCard-bookNow {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: #6f42c1;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+/* Content Section */
+.tripCard-content {
+    padding: 20px;
+}
+
+.tripCard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.tripCard-header h2 {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0;
+    color: #333;
+}
+
+.tripCard-duration {
+    background-color: #e9ecef;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #333;
+}
+
+/* Inclusions Section */
+.tripCard-inclusions {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.inclusion-item {
+    font-size: 14px;
+    color: #555;
+}
+
+.inclusion-item::before {
+    content: '•';
+    margin-right: 5px;
+    color: #555;
+}
+
+/* Highlights Section */
+.tripCard-highlights {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.highlight-item {
+    font-size: 14px;
+    color: #28a745;
+    margin-bottom: 5px;
+}
+
+/* Price Section */
+.tripCard-price {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #e9ecef;
+    padding-top: 15px;
+}
+
+.exclusive-offer {
+    font-size: 12px;
+    color: #6c757d;
+}
+
+.price-details {
+    text-align: right;
+}
+
+.price-per-person {
+    display: block;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
+
+.total-price {
+    font-size: 14px;
+    color: #6c757d;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .tripCard {
+        max-width: 100%;
+        margin-top: 10px;
+    }
+
+    .tripCard-header h2 {
+        font-size: 18px;
+    }
+
+    .tripCard-duration {
+        font-size: 12px;
+    }
+
+    .tripCard-inclusions {
+        grid-template-columns: 1fr;
+    }
+
+    .inclusion-item {
+        font-size: 12px;
+    }
+
+    .highlight-item {
+        font-size: 12px;
+    }
+
+    .price-per-person {
+        font-size: 16px;
+    }
+
+    .total-price {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .tripCard-image {
+        height: 150px;
+    }
+
+    .tripCard-header h2 {
+        font-size: 16px;
+    }
+
+    .tripCard-bookNow {
+        font-size: 12px;
+        padding: 3px 8px;
+    }
+}
+
+.tripCard-heading-font {
+    font-size: 28px !important;
+    font-weight: bold;
+    color: #000 !important;
+}
+
+.dayNights-font {
+    font-size: 16px !important;
+    font-weight: bold;
+    color: #000 !important;
+}
+
+.price-font {
+    font-size: 16px !important;
+    font-weight: bold;
+    color: #012e41;
+}
+
+.otherDetails-font {
+    font-size: 16px !important;
+    color: #464E47 !important;
+}

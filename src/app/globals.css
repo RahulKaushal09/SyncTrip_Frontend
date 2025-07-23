@@ -1,26 +1,256 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ========= Global Typography & Reset ========= */
+html {
+  scrollbar-width: none;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+:focus-visible {
+  outline: none !important;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+a {
+  text-decoration: none !important;
+  color: inherit !important;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  @apply font-sans;
+  font-family: Helvetica, sans-serif !important;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
+
+/* ========= App Wrapper ========= */
+.App {
+  @apply text-center;
+  font-family: Helvetica, sans-serif !important;
+  margin-left: 60px;
+  margin-right: 60px;
+}
+
+/* Responsive Margins */
+@media screen and (max-width: 1050px) and (min-width: 990px) {
+  .App {
+    margin: 0 30px;
+    overflow-x: hidden;
+  }
+}
+
+@media screen and (max-width: 990px) {
+  .App {
+    margin: 0;
+    overflow-x: hidden;
+  }
+}
+
+/* ========= Utility Classes ========= */
+.RouterContainer {
+  @apply relative inline-block h-screen;
+}
+
+#_rht_toaster {
+  z-index: 10000 !important;
+}
+
+input {
+  font-family: Helvetica !important;
+}
+
+/* ========= Buttons ========= */
+.btn {
+  display: inline-block;
+  padding: 10px 20px !important;
+  /* Vertical and horizontal padding for button height and width */
+  border: none !important;
+  /* Remove default border */
+  border-radius: 9px !important;
+  /* Rounded corners */
+  cursor: pointer !important;
+  /* Hand cursor on hover */
+  font-size: 16px !important;
+  /* Readable text size */
+  text-align: center !important;
+  /* Center text */
+  text-decoration: none !important;
+  /* Remove underlines */
+  transition: background-color 0.3s, transform 0.1s !important;
+  /* Smooth transitions for hover effects */
+}
+
+.btn-light-blue {
+  background-color: #E9F2FF !important;
+  color: #000 !important;
+  margin-right: 20px;
+}
+
+.btn-black {
+  background-color: #000 !important;
+  color: #fff !important;
+}
+
+.btn-black:hover {
+  background-color: #202020 !important;
+  color: #fff !important;
+  transform: none !important;
+}
+
+.btn-black:active {
+  transform: translateY(0);
+}
+
+.btn-black:focus {
+  outline: 2px solid #000;
+  outline-offset: 2px;
+}
+
+.btn-white {
+  background-color: #fff !important;
+  color: #000 !important;
+  border: 1px solid #000 !important;
+}
+
+.btn-white:hover {
+  background-color: #000 !important;
+  color: #fff !important;
+}
+
+.circlularButton {
+  border-radius: 25px !important;
+  padding: 10px !important;
+  width: 100px;
+  height: 40px;
+}
+
+.zeroPaddingInMobile-btn-1000 {
+  padding: 0px !important;
+}
+
+/* ========= Headings ========= */
+.majorHeadings {
+  font-size: 55px !important;
+  margin-bottom: 40px;
+  text-align: left !important;
+}
+
+.locationEventHeadings {
+  font-size: 40px !important;
+  margin-bottom: 20px;
+  text-align: left !important;
+  font-weight: 700;
+}
+
+.DescriptionHeading {
+  margin-bottom: 20px !important;
+}
+
+/* ========= Pages ========= */
+.HomePage {
+  margin: 0px 40px;
+}
+
+.DestinationPage {
+  margin: 0px 80px;
+}
+
+.heart-icon {
+  fill: transparent;
+  stroke: white;
+  stroke-width: 20;
+  transition: fill 0.3s ease;
+  cursor: pointer;
+  width: 30px;
+  height: 20px;
+  opacity: 1;
+}
+
+.heart-icon.active {
+  fill: #6ECAD5 !important;
+  stroke: #6ECAD5 !important;
+}
+
+/* Responsive Page Layout */
+@media screen and (max-width: 1300px) {
+  .DestinationPage {
+    margin: 0 80px;
+  }
+
+  .HomePage {
+    margin: 0 40px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .majorHeadings {
+    font-size: 45px !important;
+  }
+
+  .locationEventHeadings {
+    font-size: 30px !important;
+    margin-bottom: 0px !important;
+  }
+
+  .DestinationPage {
+    margin: 0 40px;
+  }
+
+  .HomePage {
+    margin: 0 40px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .btn {
+    padding: 5px 10px !important;
+    font-size: 14px !important;
+  }
+}
+
+/* ========= Text Colors ========= */
+.text-custom-primary {
+  color: #61dafb !important;
+}
+
+.text-custom-secondary {
+  color: black !important;
+}
+
+/* ========= Toaster ========= */
+.dropdown-item.active,
+.dropdown-item:active {
+  background-color: #000 !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+}
+
+/* ========= Animations ========= */
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+                to {
+                  transform: rotate(360deg);
+                }
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+/* ========= Loader ========= */
+.loader-container {
+  @apply flex justify-center items-center;
+}
+
+/* All your #wifi-loader CSS remains unchanged as it's component-specific */

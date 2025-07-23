@@ -1,0 +1,155 @@
+/* General Card Styling */
+.eventsCards-card {
+    border: none;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.2s;
+    width: 100%;
+    position: relative;
+}
+
+.eventsCards-card:hover {
+    transform: translateY(-5px);
+}
+
+.eventsCards-card-img-top {
+    width: 100%;
+    object-fit: cover;
+    /* Default: crops to fill the container */
+    transition: max-height 2s ease, object-fit 0.3s ease;
+    /* Smooth transition for height and fit */
+    max-height: 350px;
+    /* Default max height to match your original design */
+}
+
+/* On hover, show the full image */
+.eventsCards-card-img-top:hover {
+    object-fit: contain;
+    /* Displays the entire image without cropping */
+    /* max-height: 400px; */
+    /* Adjust this value based on your image's natural height */
+}
+
+/* Fallback for aspect ratio (optional, if still needed) */
+.eventsCards-card-img-top::before {
+    content: "";
+    display: block;
+    padding-top: 150%;
+    /* 3/2 inverted for 2:3 ratio */
+}
+
+.eventsCards-card-img-top img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+
+.eventsCards-halwa {
+    background: #f5f5f5;
+    color: #333;
+}
+
+.eventsCards-halwa .eventsCards-card-img-top {
+    height: 300px;
+    object-fit: cover;
+    width: 100%;
+    filter: grayscale(50%);
+}
+
+.eventsCards-halwa .eventsCards-card-title {
+    color: #d32f2f;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+
+}
+
+.eventsCards-halwa .eventsCards-card-text {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.eventsCards-halwa .eventsCards-date {
+    background: #d32f2f;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.eventsCards-details {
+    text-align: left;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+.eventsCardlocation {
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.eventsCardCat {
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.eventsCardPrice {
+    font-size: 0.8rem;
+    color: #000;
+}
+
+/* Badge Styling */
+.eventsCards-badge {
+    font-size: 0.8rem;
+    padding: 5px 10px;
+    z-index: 1;
+    background-color: #ffffff;
+    border-radius: 10px;
+    color: #000;
+}
+
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .eventsCards-card {
+        max-width: 100%;
+
+    }
+
+
+
+    /* .eventsCards-card-img-top {
+        height: 250px;
+    } */
+
+    .eventsCards-card-title {
+        font-size: 1rem;
+    }
+
+    .eventsCards-card-text {
+        font-size: 0.8rem;
+    }
+
+    .eventsCards-btn {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 576px) {
+    /* .eventsCards-card-img-top {
+        height: 200px;
+    } */
+
+    .eventsCards-card-title {
+        font-size: 0.9rem;
+    }
+
+    .eventsCards-card-text {
+        font-size: 0.7rem;
+    }
+}

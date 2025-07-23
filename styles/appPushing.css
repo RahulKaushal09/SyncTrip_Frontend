@@ -1,0 +1,125 @@
+.container-appPushing {
+    margin: 0 auto;
+    background-color: white;
+}
+
+.AppPushingBlock {
+    padding: 0px 0px 0px 20px;
+}
+
+h1 {
+    font-size: 1.875rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.features,
+.image-section-appPushing {
+    width: 100%;
+}
+
+@media (min-width: 768px) {
+
+    .features {
+        width: 50%;
+    }
+
+    .image-section-appPushing {
+        width: 50%;
+    }
+
+    .flex-container-appPushing {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 2rem;
+    }
+
+
+}
+
+@media screen and (max-width: 768px) {
+    .appPushingSection2 {
+        height: auto !important;
+        overflow: hidden;
+    }
+
+    .AppPushingBlock {
+        padding: 0px 0px 0px 0px;
+    }
+
+    .marginR50InWebOnly {
+        margin-right: 0px !important;
+    }
+
+    .appPushingImagePeopleTravelling {
+        width: 100% !important;
+        position: relative;
+        margin: 0 auto;
+    }
+
+}
+
+.feature-item {
+    display: flex;
+    align-items: start;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.feature-item h2 {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.feature-item p {
+    color: #666;
+}
+
+.img-appPushing {
+    width: 100%;
+    max-width: 20rem;
+    border-radius: 0.5rem;
+    /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
+    margin-bottom: 1.5rem;
+}
+
+.call-to-action h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #2b6cb0;
+    margin-bottom: 1rem;
+}
+
+.call-to-action p {
+    color: #666;
+    margin-bottom: 1rem;
+}
+
+.call-to-action button {
+    background-color: black;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 9999px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.call-to-action button:hover {
+    background-color: #333;
+}
+
+.appPushingSection2 {
+    height: 50vh;
+    overflow: hidden;
+
+}
+
+.marginR50InWebOnly {
+    margin-right: 50px;
+}
+
+.appPushingImagePeopleTravelling {
+    width: 50%;
+}

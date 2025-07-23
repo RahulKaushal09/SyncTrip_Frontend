@@ -1,0 +1,75 @@
+.location-map {
+    text-align: left;
+    margin-bottom: 17px;
+}
+
+.location-map h3 {
+    font-size: 1.2rem;
+    color: #1a1a1a;
+    margin-bottom: 5px;
+}
+
+.location-map p {
+    font-size: 1rem;
+    color: #4a4a4a;
+    margin-bottom: 10px;
+}
+
+.get-direction {
+    display: block;
+    font-size: 0.9rem;
+    text-decoration: none;
+    margin-bottom: 15px;
+}
+
+.DescriptionHighlightText {
+    color: #ccd
+}
+
+.DescriptionHighlightText:hover {
+    color: black
+}
+
+
+
+.get-direction:hover {
+    text-decoration: underline;
+}
+
+.map-container {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.leaflet-bottom.leaflet-left {
+    display: none;
+}
+
+.leaflet-bottom.leaflet-right {
+    display: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .location-map {
+        /* padding: 10px; */
+    }
+
+    .location-map h3 {
+        font-size: 1rem;
+    }
+
+    .location-map p {
+        font-size: 0.9rem;
+    }
+
+    .get-direction {
+        font-size: 0.8rem;
+    }
+
+    .map-container {
+        height: 200px;
+        /* Reduced height for mobile */
+    }
+}

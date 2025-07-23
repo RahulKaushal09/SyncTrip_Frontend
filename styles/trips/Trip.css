@@ -1,0 +1,114 @@
+/* Trips.css */
+.trips-container {
+    /* max-width: 1200px; */
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Tabs Container */
+.tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    /* Allow wrapping on smaller screens */
+}
+
+/* Tab Button */
+.tab-button {
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 500;
+    background-color: #E9F2FF;
+    /* Light blue from .btn-light-blue */
+    color: #000000;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    min-width: 120px;
+    /* Ensure buttons don't shrink too much */
+}
+
+/* Hover Effect */
+.tab-button:hover {
+    background-color: #d1e4ff;
+    /* Slightly darker light blue */
+    transform: translateY(-2px);
+    /* Lift effect from .btn-black */
+}
+
+/* Active Tab */
+.tab-button.active {
+    background-color: #000000;
+    /* Black background from .btn-black */
+    color: #ffffff;
+    border: 1px solid #000000;
+}
+
+/* Active Tab Hover */
+.tab-button.active:hover {
+    background-color: #333333;
+    /* Slightly lighter black from .btn-black:hover */
+    color: #ffffff;
+    transform: translateY(0);
+    /* Prevent lift on active hover */
+}
+
+/* Focus State for Accessibility */
+.tab-button:focus {
+    outline: 2px solid #000000;
+    outline-offset: 2px;
+}
+
+/* Status Messages (Loading, Error, Empty) */
+.status-message {
+    text-align: center;
+    font-size: 18px;
+    color: #333;
+    margin: 20px 0;
+}
+
+.status-message.error {
+    color: #d9534f;
+    /* Bootstrap-like red for errors */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .tabs {
+        gap: 8px;
+        justify-content: center;
+    }
+
+    .tab-button {
+        padding: 10px 16px;
+        font-size: 14px;
+        min-width: 100px;
+    }
+}
+
+@media (max-width: 480px) {
+    .trips-container {
+        padding: 10px;
+    }
+
+    .tabs {
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .tab-button {
+        /* width: 100%; */
+        max-width: 300px;
+        padding: 12px;
+        font-size: 16px;
+    }
+
+    .status-message {
+        font-size: 16px;
+    }
+}

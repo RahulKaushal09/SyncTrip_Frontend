@@ -1,0 +1,169 @@
+.trip-planner {
+    text-align: left;
+    margin-bottom: 50px;
+}
+
+.DescriptionHeading {
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.d-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* margin-bottom: 10px; */
+}
+
+.clear-dates {
+    background: none;
+    border: none;
+    color: #ccd;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.clear-dates:hover {
+    color: black;
+}
+
+.date-range {
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+.calendar-container {
+    margin-bottom: 20px;
+}
+
+.react-datepicker {
+    width: 100%;
+}
+
+.button-container {
+    /* display: flex; */
+    /* gap: 10px;
+    width: 80%;
+    flex-direction: row; */
+    /* flex-wrap: wrap; */
+    /* Allow buttons to wrap on small screens */
+}
+
+/* .create-trip,
+.create-itinerary {
+    width: 100%;
+    /* Full width on mobile */
+/* padding: 10px;
+    font-size: 16px; */
+/* } */
+
+.react-datepicker {
+    border: none;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.react-datepicker__month-container {
+    float: left;
+    width: 50%;
+}
+
+
+
+.react-datepicker__header {
+    background-color: transparent !important;
+}
+
+.react-datepicker__current-month {
+    justify-content: center !important;
+}
+
+.react-datepicker__day--keyboard-selected {
+    background-color: transparent !important;
+    color: #000 !important;
+}
+
+.react-datepicker__day--selected,
+.react-datepicker__day--in-selecting-range,
+.react-datepicker__day--in-range,
+.react-datepicker__month-text--selected,
+.react-datepicker__month-text--in-selecting-range,
+.react-datepicker__month-text--in-range,
+.react-datepicker__quarter-text--selected,
+.react-datepicker__quarter-text--in-selecting-range,
+.react-datepicker__quarter-text--in-range,
+.react-datepicker__year-text--selected,
+.react-datepicker__year-text--in-selecting-range,
+.react-datepicker__year-text--in-range {
+    background-color: #000 !important;
+    color: #fff !important;
+    border-radius: 50% !important;
+}
+
+.react-datepicker__day:not([aria-disabled=true]):hover,
+.react-datepicker__month-text:not([aria-disabled=true]):hover,
+.react-datepicker__quarter-text:not([aria-disabled=true]):hover,
+.react-datepicker__year-text:not([aria-disabled=true]):hover {
+    background-color: #f0f0f0 !important;
+    color: #000 !important;
+    border-radius: 50% !important;
+}
+
+/* Media Query for Mobile Devices (max-width: 768px) */
+@media (max-width: 768px) {
+    .trip-planner {}
+
+    .DescriptionHeading {
+        font-size: 1.2rem;
+    }
+
+    .d-flex {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .clear-dates {
+        font-size: 12px;
+    }
+
+    .date-range {
+        font-size: 14px;
+        margin-bottom: 15px;
+    }
+
+    .calendar-container .react-datepicker__month-container {
+        width: 100%;
+        /* Stack months vertically on mobile */
+        float: none;
+    }
+
+    .button-container {
+        gap: 10px;
+    }
+
+    .create-trip,
+    .create-itinerary {
+        width: 100%;
+        padding: 8px;
+        font-size: 14px;
+    }
+}
+
+
+@media (max-width: 500px) {
+    .calendar-container .react-datepicker__month-container {
+        float: left !important;
+        width: 100% !important;
+    }
+
+}
+
+@media (max-width: 1000px) {
+    .button-container {
+        margin: 0 auto;
+    }
+
+    .create-itinerary {
+        margin-bottom: 10px;
+    }
+}

@@ -1,0 +1,174 @@
+.tripSection {
+    padding: 40px 20px;
+    /* background-image: url('https://via.placeholder.com/1200x400'); */
+    /* Replace with a dynamic background image */
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    color: #fff;
+    font-family: Arial, sans-serif;
+}
+
+/* Overlay for better text readability on background image */
+.tripSection::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* background: rgba(0, 0, 0, 0.3); */
+    /* Dark overlay */
+    z-index: 1;
+}
+
+/* Ensure content is above the overlay */
+.tripSection-header,
+.tripSection-search,
+.tripSection-cards {
+    position: relative;
+    z-index: 2;
+}
+
+/* Header Section */
+.tripSection-header {
+    height: 350px;
+    margin-bottom: 30px;
+    background: url("https://wbksuxwcqnzuppviunfz.supabase.co/storage/v1/object/public/assets//TripsHeaderImg.png");
+    border-radius: 20px 20px 0px 0px;
+    background-size: cover;
+    background-position: top;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    align-items: start;
+    padding-left: 50px;
+}
+
+.tripSection-header h1 {
+    font-size: 50px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.tripSection-header p {
+    font-size: 16px;
+    max-width: 600px;
+    /* margin: 0 auto; */
+    text-align: left;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Search Bar */
+.tripSection-search {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 40px;
+}
+
+.search-input {
+    width: 100%;
+    max-width: 500px;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 20px 0 0 20px;
+    font-size: 16px;
+    outline: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.search-button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #17a2b8;
+    color: white;
+    border-radius: 0 20px 20px 0;
+    cursor: pointer;
+    font-size: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s;
+}
+
+.search-button:hover {
+    background-color: #138496;
+}
+
+/* Trip Cards Grid */
+.tripSection-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .tripSection-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .tripSection-header h1 {
+        font-size: 30px;
+    }
+
+    .tripSection-header p {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 768px) {
+    .tripSection-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .tripSection-header {
+        padding-left: 10px;
+        justify-content: space-evenly;
+    }
+
+    .tripSection-header h1 {
+        font-size: 42px !important;
+        text-align: left;
+    }
+
+    .tripSection-header p {
+        font-size: 14px !important;
+    }
+
+    .search-input {
+        max-width: 400px;
+        font-size: 14px;
+    }
+
+    .search-button {
+        padding: 8px 15px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .tripSection {
+        padding: 20px 10px;
+    }
+
+    .tripSection-header h1 {
+        font-size: 20px;
+    }
+
+    .tripSection-header p {
+        width: 80%;
+        font-size: 10px;
+    }
+
+    .search-input {
+        max-width: 300px;
+        font-size: 12px;
+    }
+
+    .search-button {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+}

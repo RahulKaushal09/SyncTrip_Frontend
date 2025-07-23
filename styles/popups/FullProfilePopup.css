@@ -1,0 +1,501 @@
+/* Overlay */
+.full-profile-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1040;
+}
+
+/* Container */
+.full-profile-container {
+    position: relative;
+    background: #fff;
+    padding: 2.5rem;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 36rem;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    margin: 1rem;
+    scrollbar-width: none;
+    /* Warm coral border */
+}
+
+/* Close Button */
+.full-profile-close-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background-color: #fff;
+    color: black;
+    border: 2px solid black;
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.full-profile-close-btn:hover {
+    background-color: black;
+    color: #fff;
+    transform: rotate(90deg);
+}
+
+/* Title */
+.full-profile-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #2c3e50;
+    /* Dark slate */
+}
+
+/* Form */
+.full-profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* Section */
+.full-profile-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.full-profile-section label {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #34495e;
+    /* Slate gray */
+}
+
+.full-profile-optional {
+    font-size: 0.85rem;
+    color: #7f8c8d;
+    /* Muted gray */
+}
+
+/* Input */
+.full-profile-input {
+    width: 100%;
+    padding: 0.9rem;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: #f9f9f9;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.full-profile-input:focus {
+    border-color: black;
+    box-shadow: 0 0 8px rgba(255, 111, 97, 0.3);
+}
+
+/* Checkbox */
+.full-profile-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.95rem;
+    color: #555;
+}
+
+.full-profile-checkbox input {
+    accent-color: black;
+    /* Checkbox color */
+}
+
+/* Submit Button */
+/* .full-profile-submit-btn {
+    width: 100%;
+    padding: 1rem;
+    background-color: #ff6f61;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.full-profile-submit-btn:hover {
+    background-color: #e65b50;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(230, 91, 80, 0.4);
+}
+
+.full-profile-submit-btn:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+.full-profile-submit-btn:focus {
+    outline: 3px solid #ff9a8b;
+    outline-offset: 2px;
+} */
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .full-profile-container {
+        padding: 2rem;
+        max-width: 90%;
+    }
+
+    .full-profile-title {
+        font-size: 1.3rem;
+    }
+
+    .full-profile-section label {
+        font-size: 1rem;
+    }
+
+    .full-profile-input,
+    .full-profile-submit-btn {
+        padding: 0.8rem;
+        font-size: 0.95rem;
+    }
+
+    .full-profile-close-btn {
+        width: 2rem;
+        height: 2rem;
+        font-size: 1.25rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .full-profile-container {
+        padding: 1.5rem;
+        max-width: 95%;
+    }
+
+    .full-profile-title {
+        font-size: 1.15rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .full-profile-form {
+        gap: 1.5rem;
+    }
+
+    .full-profile-section {
+        gap: 0.5rem;
+    }
+
+    .full-profile-input,
+    .full-profile-submit-btn {
+        padding: 0.7rem;
+        font-size: 0.9rem;
+    }
+
+    .full-profile-checkbox {
+        font-size: 0.85rem;
+    }
+}
+
+/* Dropdown Container */
+.full-profile-dropdown-container {
+    position: relative;
+    width: 100%;
+}
+
+/* Search Input */
+.full-profile-search {
+    margin-bottom: 0.5rem;
+}
+
+/* Dropdown */
+.full-profile-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    background: #fff;
+    border: 2px solid black;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+}
+
+/* Dropdown Item */
+.full-profile-dropdown-item {
+    padding: 0.75rem;
+    font-size: 0.95rem;
+    color: #34495e;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.full-profile-dropdown-item:hover {
+    background-color: #ccc;
+}
+
+.full-profile-dropdown-item.selected {
+    background-color: black;
+    color: #fff;
+}
+
+.full-profile-dropdown-item.disabled {
+    color: #7f8c8d;
+    cursor: not-allowed;
+}
+
+/* Selected Destinations */
+.full-profile-selected-destinations {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+/* Selected Tag */
+.full-profile-selected-tag {
+    display: flex;
+    align-items: center;
+    padding: 0.4rem 0.75rem;
+    background-color: black;
+    color: #fff;
+    border-radius: 20px;
+    font-size: 0.9rem;
+}
+
+/* Remove Tag Button */
+.full-profile-remove-tag {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1rem;
+    margin-left: 0.5rem;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.full-profile-remove-tag:hover {
+    color: #ffe6e2;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .full-profile-dropdown {
+        max-height: 150px;
+    }
+
+    .full-profile-dropdown-item {
+        padding: 0.6rem;
+        font-size: 0.9rem;
+    }
+
+    .full-profile-selected-tag {
+        padding: 0.35rem 0.6rem;
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .full-profile-dropdown {
+        max-height: 120px;
+    }
+
+    .full-profile-dropdown-item {
+        padding: 0.5rem;
+        font-size: 0.85rem;
+    }
+
+    .full-profile-selected-tag {
+        padding: 0.3rem 0.5rem;
+        font-size: 0.8rem;
+    }
+}
+
+.dob-section {
+    position: relative;
+}
+
+/* DOB Input Wrapper */
+.dob-input-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+/* DOB Label */
+.dob-label {
+    position: absolute;
+    top: 50%;
+    left: 1rem;
+    transform: translateY(-50%);
+    font-size: 1rem;
+    font-weight: 500;
+    color: #ccc;
+    padding: 0 0.25rem;
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+
+.dob-section .react-datepicker__month-container {
+    width: 100% !important;
+}
+
+.dob-input:focus+.dob-label,
+.dob-input:not(:placeholder-shown)+.dob-label {
+    top: -0.5rem;
+    left: 0.75rem;
+    font-size: 0.85rem;
+    color: black;
+}
+
+/* Required Star */
+.required-star {
+    color: black;
+    font-size: 1rem;
+}
+
+/* DOB Input */
+.dob-input {
+    width: 100%;
+    padding: 0.9rem 1rem;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: #f9f9f9;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    appearance: none;
+    /* Remove default browser styling */
+    cursor: pointer;
+}
+
+.dob-input:focus {
+    border-color: black;
+    box-shadow: 0 0 8px rgba(255, 111, 97, 0.3);
+}
+
+/* Customize Date Picker Icon (Browser-specific) */
+.dob-input::-webkit-calendar-picker-indicator {
+    padding: 0.5rem;
+    cursor: pointer;
+    filter: invert(48%) sepia(13%) saturate(3207%) hue-rotate(130deg) brightness(95%) contrast(80%);
+    /* Coral-like color */
+}
+
+.dob-input::-webkit-datetime-edit {
+    color: #34495e;
+}
+
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .dob-input {
+        padding: 0.8rem;
+        font-size: 0.95rem;
+    }
+
+    .dob-label {
+        font-size: 0.9rem;
+    }
+
+    .dob-input:focus+.dob-label,
+    .dob-input:not(:placeholder-shown)+.dob-label {
+        font-size: 0.8rem;
+        top: -0.4rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .dob-input {
+        padding: 0.7rem;
+        font-size: 0.9rem;
+    }
+
+    .dob-label {
+        font-size: 0.85rem;
+    }
+
+    .dob-input:focus+.dob-label,
+    .dob-input:not(:placeholder-shown)+.dob-label {
+        font-size: 0.75rem;
+        top: -0.35rem;
+    }
+}
+
+/* Bubble Button Container */
+.bubble-btn-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+/* Bubble Button */
+.bubble-btn {
+    padding: 0.6rem 1.2rem;
+    background-color: #f9f9f9;
+    border: 2px solid #ddd;
+    border-radius: 20px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #34495e;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.bubble-btn:hover {
+    background-color: #e6e6e6;
+    border-color: #ccc;
+    transform: translateY(-2px);
+}
+
+.bubble-btn.selected {
+    background-color: black;
+    /* Coral theme */
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(255, 111, 97, 0.3);
+}
+
+/* .bubble-btn:focus {
+    box-shadow: 0 0 0 3px rgba(255, 111, 97, 0.3);
+} */
+
+.bubble-btn:active {
+    transform: translateY(0);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .bubble-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .bubble-btn-container {
+        gap: 0.6rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .bubble-btn {
+        padding: 0.45rem 0.9rem;
+        font-size: 0.85rem;
+    }
+
+    .bubble-btn-container {
+        gap: 0.5rem;
+    }
+}

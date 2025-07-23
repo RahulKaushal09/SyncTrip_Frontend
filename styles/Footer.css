@@ -1,0 +1,171 @@
+/* Footer.css */
+.footer {
+    /* position: absolute;
+    bottom: 0;
+    width: 100%; */
+    position: relative;
+    background-color: #000;
+    /* Black background */
+    color: #fff;
+    /* White text */
+    padding: 20px 0;
+    /* Vertical padding */
+    text-align: center;
+    font-family: Arial, sans-serif;
+    /* Adjust font as needed */
+}
+
+.footer-content {
+    max-width: 1200px;
+    /* Max width for content */
+    margin: 0 auto;
+    /* Center the content */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.footer-section {
+    margin: 10px 0;
+}
+
+.footer-title {
+    color: #00bcd4;
+    /* Cyan color for titles (like "Synctrip") */
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.footer-nav-list {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-nav-item {
+    margin: 10px 0;
+    font-size: 0.9rem;
+}
+
+.footer-nav-item a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.footer-nav-item a:hover {
+    color: #00bcd4;
+    /* Cyan on hover */
+}
+
+.social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 10px 0;
+
+}
+
+.social-icon {
+    color: #00bcd4;
+    /* Cyan for social icons */
+    font-size: 1.5rem;
+    text-decoration: none;
+    width: 40px;
+    height: 40px;
+    border: 2px solid;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.footerTextColorNormal {
+    color: #B3B3B3 !important;
+}
+
+.app-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.app-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #fff;
+    /* White background for buttons */
+    color: #000;
+    /* Black text for buttons */
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.app-button:hover {
+    background-color: #f0f0f0;
+    /* Light gray on hover */
+}
+
+.copyright {
+    font-size: 0.8rem;
+    margin-top: 20px;
+    color: #888;
+    text-align: center;
+    /* Light gray for copyright */
+}
+
+/* display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", backgroundColor: "#65CAD3", padding: "10px", borderRadius: "5px"  */
+.buttonGetApp {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-color: #65CAD3;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+
+}
+
+@media (max-width: 768px) {
+    .buttonGetApp {
+        width: 80%;
+        margin: auto;
+    }
+}
+
+/* Media Queries for Responsiveness */
+@media (min-width: 768px) {
+    .footer {
+        padding: 30px 0;
+        /* More padding on larger screens */
+        text-align: left;
+        /* Align left on larger screens */
+    }
+
+    .footer-content {
+        flex-direction: row;
+        /* Horizontal layout on larger screens */
+        justify-content: space-around;
+        /* Evenly distribute sections */
+        align-items: flex-start;
+        /* Align items at the top */
+    }
+
+    .footer-section {
+        margin: 0 20px;
+        /* Spacing between sections on larger screens */
+    }
+
+    .social-icons {
+        justify-content: flex-start;
+        /* Align left on larger screens */
+    }
+
+    .app-buttons {
+        flex-direction: row;
+        /* Horizontal layout on larger screens */
+        justify-content: center;
+        /* Center on larger screens */
+    }
+}

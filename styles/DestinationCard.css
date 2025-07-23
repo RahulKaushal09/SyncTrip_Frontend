@@ -1,0 +1,226 @@
+/* Base Styles (Desktop) */
+.destination-card-container {
+    position: relative;
+    width: 100%;
+    height: 80vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    perspective: 1000px;
+}
+
+.card-item {
+    position: absolute;
+    transition: all 0.5s ease-in-out;
+}
+
+.destination-card {
+    background-color: rgba(101, 202, 211, 0.22) !important;
+    padding: 20px;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border-radius: 22px !important;
+    max-width: 300px;
+    margin: auto;
+}
+
+.card-text-destination {
+    font-size: 28px;
+    margin: 0.5rem 0;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.position-0 {
+    left: 27%;
+    transform: scale(0.8) translateZ(-100px) rotateY(20deg);
+    /* Left position */
+    z-index: 1;
+}
+
+.position-1 {
+    left: 42%;
+    transform: translateX(-10%) scale(1) translateZ(0);
+    /* Middle position */
+    z-index: 2;
+}
+
+.position-2 {
+    left: 52%;
+    transform: scale(0.8) translateZ(-100px) rotateY(-20deg);
+    /* Right position */
+    z-index: 1;
+}
+
+.arrow-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 3;
+}
+
+.left-arrow {
+    left: 24%;
+    /* left: calc(50% - 360px); */
+
+}
+
+.right-arrow {
+    /* right: 20%; */
+    right: calc(50% - 380px);
+}
+
+
+.arrow-button:hover {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+/* Mobile View (max-width: 768px) */
+@media (max-width: 768px) {
+    .destination-card-container {
+        height: auto;
+        padding: 20px 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .card-item {
+        position: relative;
+        width: 100%;
+        max-width: 300px;
+        /* Full width, but capped at 300px */
+        margin-bottom: 20px;
+        /* Space between cards */
+    }
+
+    .destination-card {
+        max-width: 300px;
+        padding: 15px;
+    }
+
+    .card-img-container {
+        height: 250px;
+        /* Reduced height for mobile */
+    }
+
+    .card-title-destination {
+        font-size: 24px !important;
+        /* Smaller title */
+        margin-left: 8px !important;
+    }
+
+    .card-text-destination {
+        font-size: 20px;
+        /* Smaller location text */
+        margin: 0.3rem 0;
+    }
+
+    .avatars img {
+        width: 20px;
+        height: 20px;
+        margin-right: -10px;
+    }
+
+    .avatars p {
+        font-size: 12px;
+        margin-left: 8px;
+    }
+
+    .arrow-button {
+        position: absolute;
+        width: 30px;
+        height: 30px;
+        font-size: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .left-arrow {
+        left: 10px;
+    }
+
+    .right-arrow {
+        right: 10px;
+    }
+}
+
+/* Extra Small Screens (max-width: 480px) */
+@media (max-width: 480px) {
+    .card-item {
+        max-width: 100%;
+        /* Slightly smaller for very small screens */
+    }
+
+    .destination-card {
+        max-width: 100%;
+        padding: 10px;
+    }
+
+    .card-img-container {
+        height: 200px;
+        /* Further reduced height */
+    }
+
+    .card-title-destination {
+        font-size: 26px !important;
+    }
+
+    .card-text-destination {
+        font-size: 20px;
+    }
+
+    .avatars img {
+        width: 18px;
+        height: 18px;
+        margin-right: -8px;
+    }
+
+    .avatars p {
+        font-size: 10px;
+        margin-left: 6px;
+    }
+
+    .arrow-button {
+        /* width: 25px;
+        height: 25px;
+        font-size: 14px; */
+        display: none;
+    }
+
+    .position-0 {
+        left: 0%;
+        /* transform: scale(0.8) translateZ(-100px); */
+        transform: translateX(0%) scale(1) translateZ(0);
+        /* Left position */
+        z-index: 1;
+    }
+
+    .position-1 {
+        left: 0%;
+        /* transform: scale(0.8) translateZ(-100px); */
+        transform: translateX(0%) scale(1) translateZ(0);
+        /* Left position */
+        z-index: 1;
+    }
+
+    .position-2 {
+        left: 0%;
+        /* transform: scale(0.8) translateZ(-100px); */
+        transform: translateX(0%) scale(1) translateZ(0);
+        /* Left position */
+        z-index: 1;
+    }
+}

@@ -1,0 +1,52 @@
+.navbar-toggler:focus {
+    box-shadow: none !important;
+}
+
+/* Overlay */
+.mobile-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1040;
+}
+
+/* Drawer */
+.mobile-drawer {
+    position: fixed;
+    top: 0;
+    left: -250px;
+    width: 250px;
+    height: 100vh;
+    background-color: white;
+    z-index: 1050;
+    transition: left 0.3s ease-in-out;
+    padding: 10px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
+}
+
+.mobile-drawer.open {
+    left: 0;
+}
+
+/* Close button */
+.drawer-header {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.drawer-close {
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+@media (min-width: 992px) {
+
+    .mobile-drawer,
+    .mobile-overlay {
+        display: none;
+    }
+}

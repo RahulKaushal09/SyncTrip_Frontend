@@ -1,0 +1,274 @@
+.travel-card {
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.form-select.trip-info {
+    width: 100%;
+    max-width: 140px;
+    font-size: 14px;
+    padding: 10px 30px 10px 12px;
+    /* More padding for comfort, extra right padding for arrow */
+    border-radius: 8px;
+    /* Softer, modern rounded corners */
+    border: 1px solid #d1d5db;
+    /* Light gray border for a clean look */
+    background-color: #ffffff;
+    /* White background for clarity */
+    color: #1f2937;
+    /* Dark text for contrast */
+    appearance: none;
+    /* Remove default browser styling */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%231f2937' viewBox='0 0 16 16'%3E%3Cpath d='M3.293 5.293a1 1 0 011.414 0L8 8.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z'/%3E%3C/svg%3E");
+    /* Custom dropdown arrow */
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    /* Position arrow on the right */
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    /* Subtle shadow for depth */
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    /* Smooth transitions */
+    cursor: pointer;
+    /* Indicate interactivity */
+}
+
+.form-select.trip-info:focus {
+    outline: none;
+    /* Remove default outline */
+    border-color: #3b82f6;
+    /* Blue border on focus for accessibility */
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+    /* Glow effect on focus */
+}
+
+.form-select.trip-info:hover {
+    border-color: #9ca3af;
+    /* Slightly darker border on hover */
+}
+
+.form-select.trip-info:disabled {
+    background-color: #f3f4f6;
+    /* Gray background for disabled state */
+    color: #6b7280;
+    /* Muted text for disabled state */
+    cursor: not-allowed;
+    /* Indicate non-interactivity */
+}
+
+/* Optional: Style for the options (limited control due to browser rendering) */
+.form-select.trip-info option {
+    background-color: #ffffff;
+    color: #1f2937;
+    padding: 10px;
+    /* Attempt to style options, though browser support varies */
+}
+
+/* Responsive adjustment for smaller screens */
+@media (max-width: 600px) {
+    .form-select.trip-info {
+        max-width: 90%;
+        /* Full width on small screens */
+        font-size: 14px;
+        /* Slightly larger text for touch devices */
+    }
+}
+
+.locationIcons {
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    /* background-color: #D9D9D9; */
+    color: #84829A;
+    padding: 5px;
+    margin-right: 10px;
+    /* margin-right: 10px; */
+    /* display: inline-block; */
+
+}
+
+.location-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+/* .location-card-title h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+} */
+
+.info-box {
+    height: 20px;
+    border-radius: 5px;
+    font-size: 10px !important;
+    background-color: black;
+    color: white;
+    padding: 2px 8px;
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+    width: fit-content;
+}
+
+.rating {
+    font-size: 1rem;
+    color: #666;
+    margin: 5px 0;
+    min-width: 67px;
+    max-width: 90px;
+    /* width: 90px; */
+    padding-left: 5px;
+    text-align: right;
+}
+
+.trip-info {
+    font-size: 12px;
+    color: #999;
+    margin: 0;
+    margin: 10px 0px;
+}
+
+.location-card-image {
+    position: relative;
+}
+
+.location-card-image img {
+    height: 200px;
+    width: 150px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.price-marker {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(0, 0, 0, 0.7);
+    /* Semi-transparent black background */
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 14px;
+    z-index: 10;
+    /* Ensure it appears above the image */
+}
+
+.location-card-icons {
+    /* display: flex; */
+    /* justify-content: space-between; */
+    margin-bottom: 20px;
+}
+
+.location-card-icons svg {
+    font-size: 1.5rem;
+    color: #ccc;
+}
+
+.location-card-accommodation p {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.location-card-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.explore-btn {
+    background-color: #f0f0f0;
+    color: #333;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.create-trip-btn {
+    background-color: #008080;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+@media screen and (max-width: 1300px) {
+    .location-card-image img {
+        width: 130px;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .location-card-header {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+    }
+
+    .location-card-image {
+        /* margin-top: 20px; */
+        /* display: none; */
+        /* width: 60%; */
+    }
+
+    .location-card-image img {
+        /* width: 100%;
+        height: auto; */
+        width: 260px;
+    }
+
+    .location-card-icons {
+        /* justify-content: space-around; */
+        margin-bottom: 10px;
+    }
+
+    .location-card-buttons {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+}
+
+@media (max-width: 480px) {
+    .travel-card {
+        padding: 10px;
+    }
+
+    .location-card-title h2 {
+        font-size: 1.2rem;
+    }
+
+    .rating,
+    .trip-info,
+    .location-card-accommodation p {
+        font-size: 0.8rem;
+    }
+
+    .location-card-icons svg {
+        font-size: 1.2rem;
+    }
+
+    .explore-btn,
+    .create-trip-btn {
+        padding: 8px 15px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 500px) {
+    .location-card-image img {
+        width: 140px;
+    }
+
+}

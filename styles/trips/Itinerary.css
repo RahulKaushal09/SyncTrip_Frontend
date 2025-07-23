@@ -1,0 +1,38 @@
+.itinerary-container {
+    text-align: left;
+    margin-top: 20px;
+}
+
+.day-filters {
+    display: flex;
+    overflow: scroll;
+    scrollbar-width: none;
+    margin: 20px 0;
+}
+
+.day-filters-child {
+    display: flex;
+    gap: 10px;
+
+}
+
+.day-button {
+    width: 80px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 20px;
+    background-color: #eee;
+    cursor: pointer;
+    color: black !important;
+}
+
+.day-button.active {
+    background-color: #00bcd4;
+    color: white !important;
+}
+
+.day-content,
+.top-section,
+.bottom-section {
+    margin-bottom: 20px;
+}
