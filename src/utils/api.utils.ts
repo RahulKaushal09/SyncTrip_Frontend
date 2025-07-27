@@ -2,14 +2,16 @@
  * API service utilities for common API operations
  */
 
-import { API_CONFIG, LocationField, STORAGE_KEYS } from '../constants';
+import { API_CONFIG, LocationField, STORAGE_KEYS, UserField } from '../constants';
 import { StorageUtils } from './storage.utils';
-import { ApiResponse, IndianCity, Location } from '../types';
+import { ApiResponse, IndianCity, Location, PlacesToVisit, User } from '../types';
 import { triggerLogin } from './login.utils';
 import { GoogleLoginResponse, CompleteProfileApiResponse, getLocationResponseSchema, EventsResponse } from '@/classes/ApiResponse.classes';
 import { wishlistRequestSchema } from '@/classes/ApiRequest.classes';
 import { indianCitiesPageData } from '@/data/indianCitiesPageData';
 import { Events } from '@/types';
+// import { cookies } from 'next/headers';
+
 export class ApiService {
   private static getAuthHeaders(): HeadersInit {
     const token = StorageUtils.getToken();
@@ -17,6 +19,12 @@ export class ApiService {
       'Content-Type': 'application/json',
       'Authorization': token ? `Bearer ${token}` : '',
 
+    };
+  }
+  private static async getAuthHeadersServer(token: string = ""): Promise<HeadersInit> {
+    return {
+      'Content-Type': 'application/json',
+      'Authorization': token ? `Bearer ${token}` : '',
     };
   }
 
@@ -28,6 +36,30 @@ export class ApiService {
     return response.json();
   }
 
+  static async getClientUser(fields: UserField[]): Promise<User | null> {
+    const token = localStorage.getItem("userToken") || document.cookie.split('; ').find(row => row.startsWith('userToken='))?.split('=')[1];
+
+    if (!token) return null;
+
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/api/users/getUserWithSpecificFields`, {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        cache: "no-store",
+        body: JSON.stringify({ fields }),
+      });
+      if (!res.ok) return null;
+
+      const user: User = await res.json();
+      return user;
+    } catch (err) {
+      console.error("Auth fetch error:", err);
+      return null;
+    }
+  }
   static async getServerSidePropsForEvents() {
     const defaultCityName = 'Delhi-NCR';
     let events: Events[] = [];
@@ -62,7 +94,6 @@ export class ApiService {
         initialLocation: defaultCityName,
       };
     }
-    console.log("defaultCityName ", defaultCityName);
     return {
       initialEvents: events,
       // indianCities,
@@ -96,13 +127,13 @@ export class ApiService {
 
 
   // For server-side rendering and SEO - no auth required
-  static async fetchLocations(skip: number = 0, limit: number = 1000, fields: LocationField[]): Promise<{ locations: Location[] }> {
+  static async fetchLocations(skip: number = 0, limit: number = 1000, fields: LocationField[], token: string = ""): Promise<{ locations: Location[] }> {
     try {
       const response = await fetch(
         `${API_CONFIG.BACKEND_BASE_URL}/api/locations/getAllLocationsDynamicByFields`,
         {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: await this.getAuthHeadersServer(token),
           body: JSON.stringify({ skip, limit, fields })
         }
       );
@@ -270,6 +301,55 @@ export class ApiService {
     } catch (error) {
       console.error('Failed to toggle wishlist:', error);
       return;
+    }
+  }
+  static async fetchLocationById(id: string): Promise<Location | null> {
+    try {
+      const response = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/locations/${id}`, {
+        method: 'GET',
+        headers: this.getAuthHeaders(),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error fetching location: ${response.statusText}`);
+      }
+
+      const data: Location = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Failed to fetch location by ID:', error);
+      return null;
+    }
+  }
+  static async fetchLocationByIdServer(id: string, token: string = ""): Promise<Location | null> {
+    try {
+      const response = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/locations/${id}`, {
+        method: 'GET',
+        headers: await this.getAuthHeadersServer(token),
+      });
+      const data: Location = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Failed to fetch location by ID:', error);
+      return null;
+    }
+  }
+  static async getPlacesByIds(ids: string[], token: string = ""): Promise<PlacesToVisit[]> {
+    if (!ids || ids.length === 0) return [];
+    try {
+      const response = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/places/getPlacesByIds`, {
+        method: 'POST',
+        headers: await this.getAuthHeadersServer(token),
+        body: JSON.stringify({ placeIds: ids }),
+      });
+      const PlacesToVisitRes: PlacesToVisit[] = await response.json();
+      if (!response.ok) {
+        throw new Error(`Error fetching places`);
+      }
+      return PlacesToVisitRes;
+    } catch (error) {
+      console.error('Failed to fetch places by IDs:', error);
+      return [];
     }
   }
 }

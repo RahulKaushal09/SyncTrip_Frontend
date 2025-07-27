@@ -8,10 +8,6 @@ const SearchCircle: React.FC = () => {
             className="search-circle"
             type="button"
             aria-label="Search"
-            onClick={() => {
-                // Handle search action if needed
-                console.log('Search triggered');
-            }}
         >
             <FiSearch className="search-icon" aria-hidden="true" />
         </button>

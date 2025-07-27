@@ -1,0 +1,29 @@
+/* Custom Dropdown Styles */
+.custom-dropdown .dropdown-menu {
+    margin-top: 8px;
+}
+
+.custom-dropdown .dropdown-item:hover {
+    background-color: #f8f9fa;
+}
+
+/* Ensure navbar-toggler and other elements remain styled */
+.navbar-toggler {
+    border: none;
+}
+
+.navbar-nav {
+    display: flex;
+    align-items: center;
+}
+
+.btn-black {
+    background-color: black;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+}
+
+.btn-black:hover {
+    background-color: #333;
+}

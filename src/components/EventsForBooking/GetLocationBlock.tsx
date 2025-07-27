@@ -1,8 +1,6 @@
 // components/GetLocationBlock.tsx ("use client")
 'use client';
-import React, { useState, useEffect, useMemo } from 'react';
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// import { faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
+import React, { useState, useEffect } from 'react';
 import Fuse from 'fuse.js';
 import toast from 'react-hot-toast';
 import { Events, IndianCity } from '@/types';
@@ -53,7 +51,7 @@ export default function GetLocationBlock({ initialLocation, setEvents }: GetLoca
             try {
                 const res = await ApiService.fetchEvents(city);
                 if (res.length === 0) {
-                    toast.error(`No events found for ${defaultCity}`);
+                    // toast.error(`No events found for ${defaultCity}`);
                 }
                 else {
                     setEvents(res as Events[]);
@@ -85,7 +83,6 @@ export default function GetLocationBlock({ initialLocation, setEvents }: GetLoca
                             `https://nominatim.openstreetmap.org/reverse?lat=${position.coords.latitude}&lon=${position.coords.longitude}&format=json`
                         );
                         const data = await res.json();
-                        console.log("Geo response:", data); // ← LOG HERE
 
                         if (!data || !data.address) {
                             console.error("No address found:", data); // ← LOG HERE
@@ -94,11 +91,8 @@ export default function GetLocationBlock({ initialLocation, setEvents }: GetLoca
                             return;
                         }
                         const city = data.address.state_district || data.address.state || data.address.county || 'Unknown City';
-                        // console.log("Matched city:", city); // ← LOG HERE
                         const matchedCity = findClosestCity(city, indianCities);
-                        // console.log("Matched city after processing:", matchedCity); // ← LOG HERE
                         const cityObj = indianCities.find(city => city.locationName === matchedCity);
-                        // console.log("City object found:", cityObj); // ← LOG HERE
                         // setLocation(matchedCity);
 
                         if (matchedCity !== location && cityObj) {

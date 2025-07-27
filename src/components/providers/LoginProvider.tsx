@@ -29,6 +29,8 @@ export const useLogin = () => {
 
 interface LoginProviderProps {
     children: React.ReactNode;
+    //   initialUser?: User | null;
+
 }
 
 export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
@@ -38,9 +40,11 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
 
     useEffect(() => {
+         if (!user) {
         const storedUser = StorageUtils.getUser();
         if (storedUser) setUser(storedUser);
-    }, []);
+         }
+     }, [user]);
 
     const [showPhoneNumber, setShowPhoneNumber] = useState(false);
     const [showFullProfile, setShowFullProfile] = useState(false);

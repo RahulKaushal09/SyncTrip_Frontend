@@ -1,18 +1,41 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { ApiService } from '@/utils/api.utils';
-import { StorageUtils } from '@/utils/storage.utils';
-import MainSearchBar from '../SearchPanel/MainSearchBar';
-import ExploreSection from '../Explore/ExploreSection';
-import PreMadeItinerary from '../preItineraries/PreMadeItinerary';
-import { LocationFields } from '@/constants';
+// import MainSearchBar from '../SearchPanel/MainSearchBar';
+// import ExploreSection from '../Explore/ExploreSection';
+// import PreMadeItinerary from '../preItineraries/PreMadeItinerary';
+import { LocationFields, WishlistTypeEnum } from '@/constants';
 import '../../../styles/home/home.css';
 import { Location } from '@/types';
+import dynamic from 'next/dynamic';
+import { MainSearchBarSkeleton } from '../SearchPanel/MainSearchBar';
+import { StorageUtils } from '@/utils';
+import { UserApiService } from '@/utils/user.api.utils';
 interface HomeContentProps {
     initialLocations: Location[];
     initialHasMore: boolean;
 }
+interface MainSearchBarProps {
+    searchTerm: string;
+    setSearchTerm: (term: string) => void;
+    searchBarPlaceHolder: string;
+}
+
+const MainSearchBar = dynamic<MainSearchBarProps>(
+    () => import('../SearchPanel/MainSearchBar').then((mod) => mod.default),
+    {
+        ssr: false,
+        loading: () => {
+            return <MainSearchBarSkeleton searchBarPlaceHolder='Search destinations, hotels' />;
+        },
+    }
+);
+const PreMadeItinerary = dynamic(() => import('../preItineraries/PreMadeItinerary'), {
+    ssr: false,
+    loading: () => <div className="skeleton-pre-made-itinerary" style={{ height: '400px', background: '#e0e0e0' }} />,
+});
+const ExploreSection = dynamic(() => import('../Explore/ExploreSection'), { ssr: true });
 
 export default function HomeContent({ initialLocations, initialHasMore }: HomeContentProps) {
     const [locations, setLocations] = useState(initialLocations);
@@ -34,25 +57,41 @@ export default function HomeContent({ initialLocations, initialHasMore }: HomeCo
     ];
     const premadeItineariesLocations: Location[] = initialLocations.slice(0, 4);
     // Load wishlist data on component mount
+    // useEffect(() => {
+    //     const loadWishlistData = async () => {
+    //         const token = StorageUtils.getToken();
+    //         if (token && !wishlistLoaded) {
+    //             try {
+    //                 const response = await ApiService.fetchLocationsWithWishlist(0, locations.length, fieldsToFetchForHome);
+    //                 if (response?.locations && response.locations.length > 0) {
+    //                     const mergedLocations: Location[] = ApiService.mergeLocationsWithWishlist(locations, response.locations);
+    //                     setLocations(mergedLocations);
+    //                     setWishlistLoaded(true);
+    //                 }
+    //             } catch (error) {
+    //                 console.error('Failed to load wishlist data:', error);
+    //             }
+    //         }
+    //     };
+
+    //     loadWishlistData();
+    // }, [wishlistLoaded]); // Only run when wishlistLoaded changes
     useEffect(() => {
-        const loadWishlistData = async () => {
-            const token = StorageUtils.getToken();
-            if (token && !wishlistLoaded) {
-                try {
-                    const response = await ApiService.fetchLocationsWithWishlist(0, locations.length, fieldsToFetchForHome);
-                    if (response?.locations && response.locations.length > 0) {
-                        const mergedLocations: Location[] = ApiService.mergeLocationsWithWishlist(locations, response.locations);
-                        setLocations(mergedLocations);
-                        setWishlistLoaded(true);
-                    }
-                } catch (error) {
-                    console.error('Failed to load wishlist data:', error);
-                }
+        const updateUserWishlist = async () => {
+            if (wishlistLoaded) return; // Avoid re-fetching if already loaded
+
+            const userWishList = await UserApiService.fetchUserWishlist(WishlistTypeEnum.location);
+            if (userWishList && userWishList.length > 0) {
+                const updatedLocations = locations.map((location) => {
+                    const isWishlisted = userWishList.some((wish) => wish.refId === location.id);
+                    return { ...location, isWishlisted };
+                });
+                setLocations(updatedLocations);
+                setWishlistLoaded(true);
             }
         };
-
-        loadWishlistData();
-    }, [wishlistLoaded]); // Only run when wishlistLoaded changes
+        updateUserWishlist();
+    }, []);
 
     const handleSearchChange = (term: string) => {
         setSearchTerm(term);
@@ -139,7 +178,7 @@ export default function HomeContent({ initialLocations, initialHasMore }: HomeCo
         const localFiltered = [...startsWith, ...includes];
 
         // If no results found in current data and haven't fetched all, trigger search
-        if (localFiltered.length === 0 && !hasFetchedAll && !searching) {
+        if (localFiltered.length === 0 && !hasFetchedAll && !searching && searchTerm.length > 3) {
             (async () => {
                 try {
                     setSearching(true);

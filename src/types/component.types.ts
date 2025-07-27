@@ -79,3 +79,27 @@ export interface TrendingLocationData {
     Location: string;
     peopleVisited: string;
 }
+
+export interface Culture {
+    name: string;
+    description: string;
+    timings: string;
+    village: string;
+    images: {
+        image_url: string;
+        title: string;
+    }[];
+
+}
+export interface Festival {
+
+    name: string;
+    description: string;
+    timings: string;
+    village: string;
+    images: {
+        image_url: string;
+        title: string;
+    }[];
+
+}

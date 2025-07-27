@@ -2,11 +2,12 @@
 
 import React, { useState, useEffect } from 'react';
 import LocationCard from '../LocationCard/LocationCard';
-import { WishlistTypeEnum } from '@/constants';
+import { typeOfLocationCardEnum, WishlistTypeEnum } from '@/constants';
 import '../../../styles/TopDestinations.css';
+import { Location } from '@/types';
 
 interface TopDestinationsProps {
-    locations: any[]; // Ideally replace `any` with a proper Location type
+    locations: Location[]; // Ideally replace `any` with a proper Location type
 }
 
 const TopDestinations: React.FC<TopDestinationsProps> = ({ locations }) => {
@@ -23,9 +24,9 @@ const TopDestinations: React.FC<TopDestinationsProps> = ({ locations }) => {
         return () => window.removeEventListener('resize', updateVisibleCount);
     }, []);
 
-    const handleShowMore = () => {
-        setVisibleCount(locations.length); // Show all locations
-    };
+    // const handleShowMore = () => {
+    //     setVisibleCount(locations.length); // Show all locations
+    // };
 
     return (
         <section>
@@ -55,6 +56,7 @@ const TopDestinations: React.FC<TopDestinationsProps> = ({ locations }) => {
                         whishlistParentType={""}
                         typeOfWhishlistCardEnum={WishlistTypeEnum.location}
                         cardId={location.id}
+                        typeOfCard={typeOfLocationCardEnum.location}
                     />
                 ))}
             </div>

@@ -2,6 +2,10 @@ import React from 'react';
 import LocationCard from '../LocationCard/LocationCard';
 import ShowMoreButton from './ShowMoreButton';
 import { Location } from '@/types';
+import {
+    typeOfLocationCardEnum
+} from '@/constants';
+
 // interface ExploreLocationData {
 //     id: string;
 //     title?: string;
@@ -103,7 +107,7 @@ const ExploreSection: React.FC<ExploreSectionProps> = ({
                             key={location.id || index}
                             name={location.title?.replace(/[0-9.]/g, '') || 'Unknown Destination'}
                             rating={location.rating || 'N/A'}
-                            places={location.placesNumberToVisit}
+                            places={location.placesNumberToVisit as string}
                             bestTime={convertLongBestTimeNameToShortNotations(location.best_time || '')}
                             images={
                                 location.images && location.images.length > 0
@@ -113,8 +117,9 @@ const ExploreSection: React.FC<ExploreSectionProps> = ({
                             isWishlisted={location.isWishlisted || false}
                             typeOfWhishlistCardEnum="location"
                             cardId={location.id}
-                            placeConnectedwithid={location.id}
+                            placeConnectedwithid={""}
                             isLoading={false}
+                            typeOfCard={typeOfLocationCardEnum.location}
                         />
                     ))
                 ) : searching ? (

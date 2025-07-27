@@ -65,14 +65,14 @@
 }
 
 .social-icon {
-    color: #00bcd4;
+    color: #00bcd4 !important;
     /* Cyan for social icons */
     font-size: 1.5rem;
     text-decoration: none;
     width: 40px;
     height: 40px;
-    border: 2px solid;
-    border-radius: 50%;
+    /* border: 2px solid; */
+        /* border-radius: 50%; */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -132,6 +132,9 @@
         width: 80%;
         margin: auto;
     }
+        .footer-logo {
+            margin: 0 auto;
+        }
 }
 
 /* Media Queries for Responsiveness */

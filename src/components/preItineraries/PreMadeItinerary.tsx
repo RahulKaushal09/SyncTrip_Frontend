@@ -62,7 +62,7 @@ const PreMadeItinerary: React.FC<PreMadeItineraryProps> = ({ locations }) => {
                 <div className="row justify-content-center align-items-center" style={{ marginLeft: "0px" }}>
                     {/* Left Column: Text Content */}
                     <div className="col-md-6 col-lg-5 text-left text-md-start mb-4 mb-md-0" style={{ padding: "0px" }}>
-                        <h6 className="text-muted" style={{ fontWeight: "700" }}>Easy and Fast</h6>
+                        <p className="text-muted" style={{ fontWeight: "700" }}>Easy and Fast</p>
                         <h1 className="fw-bold text-custom-secondary majorHeadings">
                             Save The Hassle With Pre-Made Itinerary
                         </h1>

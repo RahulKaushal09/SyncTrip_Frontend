@@ -7,6 +7,7 @@ import { GrSwim } from 'react-icons/gr';
 import peopleTravelling from '../../assets/images/peopleTravelling.svg';
 import syncTripApp from '../../assets/images/syncTripMobile.png';
 import '../../../styles/appPushing.css';
+import { triggerLogin } from '@/utils';
 
 interface SyncTripAppPushingSectionProps {
     showWork?: boolean;
@@ -44,13 +45,13 @@ const SyncTripAppPushingSection = ({ showWork }: SyncTripAppPushingSectionProps)
     ];
 
     return (
-        <div className="container py-5 bg-white">
+        <div className="container-appPushing mx-auto  py-8 bg-white" style={{ paddingBottom: "0px" }}>
             {showWork && (
                 <h2 className="fw-bold text-primary mb-5">How SyncTrip works?</h2>
             )}
 
             {showWork && (
-                <div className="row align-items-center mb-5">
+                <div className="row  mb-5 ">
                     <div className="col-md-6 col-lg-5">
                         {features.map(({ Icon, title, description }, index) => (
                             <div className="d-flex mb-4" key={index}>
@@ -84,30 +85,30 @@ const SyncTripAppPushingSection = ({ showWork }: SyncTripAppPushingSectionProps)
                     </div>
                 </div>
             )}
-
-            <div className="row align-items-center">
+            <div className="AppPushingBlock" style={{ textAlign: "left" }}>
+                <div className="row appPushingSection2">
                 {!mobileView && (
-                    <div className="col-md-4 mb-4 mb-md-0 text-center">
+                        <div className="col-md-3 mb-3 mb-md-0 text-center" style={{ marginRight: "50px" }}>
                         <img
                             src={syncTripApp.src}
                             alt="SyncTrip app screenshot"
-                            className="img-fluid rounded shadow"
-                            style={{ maxHeight: '500px', objectFit: 'contain' }}
+                                className="w-full max-w-sm  mb-6 img-appPushing"
                         />
                     </div>
                 )}
 
-                <div className="col-md-8">
-                    <h2 className="fw-bold mb-3">Sync, plan, and explore – the way YOU want.</h2>
+                    <div className="col-md-7">
+                        <h2 className=" mb-4" style={{ fontWeight: "600", fontSize: "48px" }}>Sync, plan, and explore – the way YOU want.</h2>
                     <p className="text-muted mb-3">
                         Your perfect trip planner is <strong>coming soon!</strong> Stay ahead by joining the travel revolution.
                     </p>
-                    <button className="btn btn-dark" onClick={() => alert('CTA clicked')}>
+                        <button className="btn btn-dark" onClick={() => triggerLogin()}>
                         Click here
                     </button>
                     <p className="text-muted mt-3">and register for early access.</p>
                 </div>
             </div>
+        </div>
         </div>
     );
 };

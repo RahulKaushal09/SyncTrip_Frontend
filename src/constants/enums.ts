@@ -9,6 +9,11 @@ export const PageTypeEnum = Object.freeze({
     PROFILE: "profile",
 } as const);
 
+export const typeOfLocationCardEnum = Object.freeze({
+    location: 'location',
+    trip: 'trip',
+    placestovisit: 'placestovisit',
+} as const);
 export const ProfileCardEnum = Object.freeze({
     ReceivedRequests: "recievedReq",
     AllGoing: "allgoing",
@@ -60,6 +65,74 @@ export const LocationFields = Object.freeze({
     CULTURES: 'cultures',
     FESTIVALS: 'festivals'
 });
+export const TripFields = Object.freeze({
+    TRIP_ID: 'id',
+    TITLE: 'title',
+    MAIN_IMAGE_URL: 'MainImageUrl',
+    LOCATION_ID: 'locationId',
+
+    // Essentials (nested)
+    ESSENTIALS_REGION: 'essentials.region',
+    AVAILABLE_SEATS: 'essentials.availableSeats',
+    DURATION: 'essentials.duration',
+    BEST_TIME: 'essentials.bestTime',
+    TIMELINE: 'essentials.timeline',
+    START_DATE: 'essentials.timeline.fromDate',
+    END_DATE: 'essentials.timeline.tillDate',
+    TIMELINES: 'essentials.timelines',
+    ALTITUDE: 'essentials.altitude',
+    TYPE_OF_TRIP: 'essentials.typeOfTrip',
+    PRICE: 'essentials.price',
+    SEASON: 'essentials.season',
+    PICKUP_NAME: 'essentials.pickup.name',
+    PICKUP_LOCATION: 'essentials.pickup.mapLocation',
+    DROPPOINT_NAME: 'essentials.dropPoint.name',
+    DROPPOINT_LOCATION: 'essentials.dropPoint.mapLocation',
+
+    // Itinerary
+    ITINERARY_TOP_HTML: 'itinerary.topSectionHtml',
+    ITINERARY_DAYS: 'itinerary.days',
+    ITINERARY_BOTTOM_HTML: 'itinerary.bottomSectionHtml',
+
+    // Requirements
+    REQUIREMENTS_AGE: 'requirements.age',
+    FITNESS_CRITERIA: 'requirements.fitnessCriteria',
+    STATUS: 'requirements.status',
+    PREVIOUS_EXP: 'requirements.previousExp',
+
+    // Includes
+    INCLUDE_TRAVEL: 'include.travel',
+    INCLUDE_FOOD: 'include.food',
+    INCLUDE_HOTEL: 'include.hotel',
+
+    // Other
+    NUMBER_OF_PEOPLE_APPLIED: 'numberOfPeopleApplied',
+    PEOPLE_APPLIED: 'peopleApplied',
+    SELECTED_HOTEL_IDS: 'selectedHotelId',
+    TRIP_RATING: 'tripRating',
+    REMARK: 'remark'
+});
+export const UserFields = Object.freeze({
+    ID: 'id',
+    NAME: 'name',
+    EMAIL: 'email',
+    PHONE: 'phone',
+    RATING: 'rating',
+    SEX: 'sex',
+    DATE_OF_BIRTH: 'dateOfBirth',
+    PROFILE_PICTURE: 'profile_picture',
+    INTERESTED_AGE_GROUPS: 'interestedAgeGroups',
+    INTERESTED_SEX: 'interestedSex',
+    LANGUAGES: 'languages',
+    PERSONA: 'persona',
+    PREFERRED_DESTINATIONS: 'preferred_destinations',
+    WISHLIST: 'wishlist',
+    TRIPS: 'trips',
+    SOCIAL_MEDIAS: 'socialMedias',
+    TRAVEL_GOAL: 'travelGoal',
+    PROFILE_COMPLETED: 'profileCompleted',
+    VIEW_COUNT: 'viewCount'
+});
 
 // Type exports for TypeScript
 export type PageType = typeof PageTypeEnum[keyof typeof PageTypeEnum];
@@ -68,3 +141,4 @@ export type WishlistType = typeof WishlistTypeEnum[keyof typeof WishlistTypeEnum
 export type TripStatus = typeof TripStatusEnum[keyof typeof TripStatusEnum];
 export type NotificationType = typeof NotificationTypeEnum[keyof typeof NotificationTypeEnum];
 export type LocationField = typeof LocationFields[keyof typeof LocationFields];
+export type UserField = typeof UserFields[keyof typeof UserFields];

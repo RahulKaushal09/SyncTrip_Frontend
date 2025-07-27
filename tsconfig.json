@@ -28,6 +28,8 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "src/classes/ApiRequest.classes.tss"
-  ],
+,
+"src/components/PageDetails"
+],
   "exclude": ["node_modules"]
 }

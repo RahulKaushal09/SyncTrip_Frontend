@@ -54,3 +54,31 @@ export const locationsJsonLd = (locations: Location[] = []) => {
         })
     };
 };
+export const locationDataSchema = (locationData: Location) => ({
+    '@context': 'https://schema.org',
+    '@type': 'Place',
+    name: locationData?.title || 'Destination',
+    description: locationData?.description || 'Explore this destination with SyncTrip, plan your trip, and discover top attractions.',
+    address: {
+        '@type': 'PostalAddress',
+        addressCountry: locationData?.country || 'India',
+    },
+    geo: {
+        '@type': 'GeoCoordinates',
+        latitude: locationData?.fullDetails?.coordinates?.lat || 0,
+        longitude: locationData?.fullDetails?.coordinates?.long || 0,
+    },
+    image: locationData?.images?.[0] || 'https://via.placeholder.com/300x200?text=Destination+Image',
+    aggregateRating: locationData?.rating
+        ? {
+            '@type': 'AggregateRating',
+            ratingValue: locationData.rating,
+            itemReviewed: {
+                '@type': 'Place',
+                name: locationData?.title || 'Destination',
+                sameAs: `https://synctrip.in/location/${locationData?.id || ''}`,
+            },
+        }
+        : undefined,
+    url: `https://synctrip.in/location/${locationData?.id || ''}`,
+});

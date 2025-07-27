@@ -50,3 +50,22 @@
         display: none;
     }
 }
+@keyframes skeleton-loading {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+.skeleton {
+    display: inline-block;
+}
+
+.skeleton-logo,
+.skeleton-button,
+.skeleton-profile {
+    background-size: 200% 100%;
+}

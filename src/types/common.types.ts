@@ -4,6 +4,7 @@
 
 export type PageType = 'home' | 'trips' | 'location' | 'profile';
 
+
 export type Theme = 'light' | 'dark';
 
 export type Status = 'idle' | 'loading' | 'success' | 'error';
@@ -52,4 +53,20 @@ export interface consoleError {
 export interface IndianCity {
     locationName: string;
     locationCode: string;
+}
+export interface TripTimeline {
+    slotId: string;
+    fromDate: string;
+    tillDate: string;
+}
+export interface TripDayItinerary {
+    dayTitle: string;
+    date?: string;
+    htmlDescription: string;
+}
+
+export interface Itinerary {
+    topSectionHtml?: string;
+    bottomSectionHtml?: string;
+    days: TripDayItinerary[];
 }

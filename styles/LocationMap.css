@@ -16,7 +16,10 @@
 }
 
 .get-direction {
-    display: block;
+    display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 5px;
     font-size: 0.9rem;
     text-decoration: none;
     margin-bottom: 15px;

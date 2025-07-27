@@ -116,10 +116,19 @@ export default function LoginPopup({ onClose, onLogin }: LoginPopupProps) {
 
         response = await ApiService.login(loginData);
       }
-
+      const user = response?.user;
       if (response.success && response) {
         if (response?.token) {
           localStorage.setItem('userToken', response.token);
+          document.cookie = `userToken=${response.token}; path=/; max-age=604800; SameSite=Strict; Secure`;
+          const safeUser = {
+            id: user.id,
+            name: user.name,
+            profile_picture: user.profile_picture,
+          };
+          document.cookie = `userInfo=${encodeURIComponent(JSON.stringify(safeUser))}; path=/; max-age=604800; SameSite=Lax`;
+
+
         }
         onLogin(response.user);
         onClose();
@@ -156,6 +165,14 @@ export default function LoginPopup({ onClose, onLogin }: LoginPopupProps) {
       if (userData && user) {
         if (userToken) {
           localStorage.setItem('userToken', userToken);
+          document.cookie = `userToken=${response.token}; path=/; max-age=604800; SameSite=Strict; Secure`;
+          const safeUser = {
+            id: user.id,
+            name: user.name,
+            profile_picture: user.profile_picture,
+          };
+          document.cookie = `userInfo=${encodeURIComponent(JSON.stringify(safeUser))}; path=/; max-age=604800; SameSite=Lax`;
+
         }
         onLogin(user);
         onClose();

@@ -4,6 +4,7 @@
 
 export const API_CONFIG = {
     BACKEND_BASE_URL: process.env.NEXT_PUBLIC_BACKEND_BASE_URL || 'http://localhost:3001',
+    ICON_BASE_URL: process.env.NEXT_PUBLIC_ICON_BASE_URL || 'http://localhost:3001/icons',
     TIMEOUT: 10000,
     RETRY_ATTEMPTS: 3,
 } as const;
@@ -15,6 +16,7 @@ export const GOOGLE_CONFIG = {
 export const STORAGE_KEYS = {
     USER: 'user',
     TOKEN: 'userToken',
+    USER_INFO: 'userInfo',
     ACCESS_TOKEN: 'accessToken',
     REFRESH_TOKEN: 'refreshToken',
     THEME: 'theme',

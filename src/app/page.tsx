@@ -1,17 +1,15 @@
+// src/app/page.tsx
 import { Metadata } from 'next';
 import HomeContent from '@/components/Home/HomeContent';
 import { ApiService } from '@/utils/api.utils';
-import { Location } from '@/types';
+import { Events, Location } from '@/types';
 import { LocationFields, locationsJsonLd, homeJsonLd } from '@/constants';
-import Head from 'next/head';
 import FestivalsEvents from '@/components/EventsForBooking/FestivalsEvents';
-import TrendingSection from '@/components/Home/TrendingSection';
-import TopDestinations from '@/components/Home/TopDestinations';
-import SyncTripAppPushingSection from '@/components/AppPushingComponents/AppPushingSection';
-
+import HomeClientSection from '@/components/Home/HomeClientSection';
+// import { cookies } from 'next/headers';
 export const viewport = {
   width: 'device-width',
-  initialScale: 1
+  initialScale: 1,
 };
 
 export const metadata: Metadata = {
@@ -32,8 +30,8 @@ export const metadata: Metadata = {
         url: 'https://synctrip.in/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'SyncTrip - Travel Destinations'
-      }
+        alt: 'SyncTrip - Travel Destinations',
+      },
     ],
   },
   twitter: {
@@ -53,48 +51,58 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function Home() {
-  const fieldsToFetchForHome = [
-    LocationFields.TITLE,
-    LocationFields.RATING,
-    LocationFields.IMAGES,
-    LocationFields.BEST_TIME,
-    LocationFields.PLACES_NUMBER_TO_VISIT,
-    LocationFields.ID,
-  ];
+const fieldsToFetchForHome = [
+  LocationFields.TITLE,
+  LocationFields.RATING,
+  LocationFields.IMAGES,
+  LocationFields.BEST_TIME,
+  LocationFields.PLACES_NUMBER_TO_VISIT,
+  LocationFields.ID,
+];
 
-  const initialLocations: Location[] = (await ApiService.fetchLocations(0, 20, fieldsToFetchForHome)).locations;
-  const { initialEvents, initialLocation } = await ApiService.getServerSidePropsForEvents();
-  // const initialLocations: Location[] = (await ApiService.fetchLocations(0, 12)).locations; // SSR
-  const randomLocations = initialLocations.sort(() => 0.5 - Math.random()).slice(0, 12); // Randomly select 4 locations for the top destinations
+// Set revalidation time for ISR (1 hour)
+export const revalidate = 3600;
+
+export default async function Home() {
+  // Data fetching with error handling
+  let initialLocations: Location[] = [];
+  let initialEvents: Events[] = [];
+  let initialLocation: string = 'India';
+
+  try {
+
+    // const cookieStore = await cookies();
+    // const tokenCookie = cookieStore.get('userToken')?.value || '';
+    initialLocations = (await ApiService.fetchLocations(0, 20, fieldsToFetchForHome)).locations || [];
+
+    const eventsData = await ApiService.getServerSidePropsForEvents();
+    initialEvents = eventsData.initialEvents || [];
+    initialLocation = eventsData.initialLocation || 'India';
+
+  } catch (error) {
+    console.error('Error fetching data for Home page:', error);
+  }
+
+  const randomLocations = [...initialLocations]
+    .sort(() => 0.5 - Math.random())
+    .slice(0, 8);
+
   return (
     <>
-      <Head>
-        {initialLocations[0]?.images?.[0] && (
-          <link
-            rel="preload"
-            as="image"
-            href={decodeURIComponent(initialLocations[0].images[0])}
-          />
-        )}
-      </Head>
       {/* JSON-LD structured data */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(homeJsonLd) }} />
-      < script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(locationsJsonLd(initialLocations)) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(locationsJsonLd(initialLocations.slice(0, 10))) }} />
 
       <HomeContent
         initialLocations={initialLocations}
         initialHasMore={initialLocations.length >= 12}
       />
-      <div className='HomePage'>
+      <div className="HomePage">
         <FestivalsEvents
           initialEvents={initialEvents}
           initialLocation={initialLocation}
         />
-        <TrendingSection
-        />
-        <TopDestinations locations={randomLocations} />
-        <SyncTripAppPushingSection />
+        <HomeClientSection randomLocations={randomLocations} />
       </div>
     </>
   );

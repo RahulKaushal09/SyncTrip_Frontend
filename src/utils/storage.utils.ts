@@ -4,6 +4,7 @@
 
 import { User } from '@/types';
 import { STORAGE_KEYS } from '../constants';
+import Cookies from 'js-cookie';
 
 export class StorageUtils {
     static setItem<T>(key: string, value: T): void {
@@ -80,5 +81,7 @@ export class StorageUtils {
         this.removeItem(STORAGE_KEYS.TOKEN);
         this.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
         this.removeItem(STORAGE_KEYS.REFRESH_TOKEN);
+        Cookies.remove(STORAGE_KEYS.TOKEN);
+        Cookies.remove(STORAGE_KEYS.USER_INFO);
     }
 }

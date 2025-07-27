@@ -1,7 +1,13 @@
 /**
  * User-related type definitions
  */
+export interface UserWishList {
 
+    type: 'location' | 'placeToVisit' | 'activity' | 'food' | 'hotel' | 'transport' | 'other' | 'trip';
+    refId: string; // ID of the item (e.g., place ID, hotel ID)
+    parentId?: string; // e.g., locationId for a place/hotel, tripId for transport/activity
+    parentType?: 'location' | 'trip'; // e.g., "location" or "trip" (optional but useful for clarity)
+}
 export interface User {
     id: string;
     name: string;
@@ -20,7 +26,7 @@ export interface User {
     ageGroup?: string;
     showProfile?: boolean;
     allowInvites?: boolean;
-    wishlist?: unknown[];
+    wishlist?: UserWishList[];
     instagram?: string;
     travelGoal?: string;
     languages?: string;

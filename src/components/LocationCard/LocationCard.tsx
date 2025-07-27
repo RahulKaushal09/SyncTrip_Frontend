@@ -4,11 +4,14 @@ import Image from 'next/image';
 import '../../../styles/LocationCard.css';
 import HeartIcon from '../smallComponents/HeartIcon';
 import { useRouter } from 'next/navigation';
+import { typeOfLocationCardEnum } from '@/constants';
+import { CommonServices } from '@/utils';
+
 
 interface LocationCardProps {
     name?: string;
     rating?: string;
-    places?: number;
+    places?: string;
     bestTime?: string;
     images?: string[];
     // onClickFunction?: () => void;
@@ -22,6 +25,7 @@ interface LocationCardProps {
     whishlistParentId?: string;
     whishlistParentType?: string;
     isLoading?: boolean;
+    typeOfCard?: string;
 }
 
 const LocationCard: React.FC<LocationCardProps> = ({
@@ -41,8 +45,20 @@ const LocationCard: React.FC<LocationCardProps> = ({
     whishlistParentId,
     whishlistParentType,
     isLoading = false,
+    typeOfCard
 }) => {
-    const locationLink = `/location/` + (placeConnectedwithid ? `${placeConnectedwithid}` : `${cardId}`);
+
+    let locationLink = `/location/`;
+    if (typeOfCard === typeOfLocationCardEnum.placestovisit && (placeConnectedwithid == null || placeConnectedwithid == "")) {
+        locationLink = ""
+    }
+    else if (typeOfCard === typeOfLocationCardEnum.placestovisit && placeConnectedwithid) {
+        locationLink += CommonServices.generateLocationSlug(placeConnectedwithid, "Destination", "20", "India");
+    }
+    else if (typeOfCard != typeOfLocationCardEnum.placestovisit) {
+        locationLink += CommonServices.generateLocationSlug(cardId as string, name, places as string, "India");
+    }
+
     const router = useRouter();
 
     // Clean name for better SEO
@@ -90,13 +106,13 @@ const LocationCard: React.FC<LocationCardProps> = ({
             router.push(locationLink);
         }
     };
+    const shouldUseFill = !imageInlineStyle?.width && !imageInlineStyle?.height;
 
     const cardContent = (
         <div
             className="location-card"
             style={inlineStyle}
             onClick={() => {
-                // console.log("location " + locationLink);
                 if (locationLink) {
                     router.push(locationLink);
                 }
@@ -118,13 +134,21 @@ const LocationCard: React.FC<LocationCardProps> = ({
                     aria-label={`Images of ${cleanName}`}
                     onClick={(e: React.MouseEvent) => e.stopPropagation()} // Prevent carousel controls from triggering navigation
                 >
+
                     {images && images.length > 0 ? (
                         images.map((image, index) => (
                             <Carousel.Item key={index} style={{ cursor: 'pointer' }}>
                                 <Image
                                     className="d-block"
                                     src={decodeURIComponent(image)}
-                                    fill
+                                    {...(shouldUseFill ? {
+                                        fill: true,
+                                        style: { objectFit: 'cover', ...imageInlineStyle }
+                                    } : {
+                                        width: typeof imageInlineStyle?.width === 'number' ? imageInlineStyle.width : 260,
+                                        height: typeof imageInlineStyle?.height === 'number' ? imageInlineStyle.height : 200,
+                                        style: { objectFit: 'cover', ...imageInlineStyle }
+                                    })}
                                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                     alt={index === 0 ? imageAlt : `${cleanName} view ${index + 1}`}
                                     style={{ objectFit: 'cover', ...imageInlineStyle }}

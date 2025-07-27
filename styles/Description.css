@@ -56,20 +56,7 @@ h2 {
     text-align: left;
 }
 
-.view-more-btn {
-    background: #00bcd4;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-size: 1em;
-    transition: background 0.3s;
-}
 
-.view-more-btn:hover {
-    background: #0097a7;
-}
 
 /* Responsive Design */
 @media (max-width: 768px) {
@@ -86,9 +73,7 @@ h2 {
         padding: 10px;
     }
 
-    .view-more-btn {
-        width: 100%;
-    }
+    
 
     h2 {
         font-size: 1em;
@@ -106,8 +91,5 @@ h2 {
         font-size: 0.9em;
     }
 
-    .view-more-btn {
-        font-size: 0.9em;
-        padding: 8px 16px;
-    }
+    
 }

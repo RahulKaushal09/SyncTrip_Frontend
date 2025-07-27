@@ -24,7 +24,6 @@
 
 /* Ensure content is above the overlay */
 .tripSection-header,
-.tripSection-search,
 .tripSection-cards {
     position: relative;
     z-index: 2;
@@ -58,40 +57,6 @@
     /* margin: 0 auto; */
     text-align: left;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-}
-
-/* Search Bar */
-.tripSection-search {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 40px;
-}
-
-.search-input {
-    width: 100%;
-    max-width: 500px;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 20px 0 0 20px;
-    font-size: 16px;
-    outline: none;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.search-button {
-    padding: 10px 20px;
-    border: none;
-    background-color: #17a2b8;
-    color: white;
-    border-radius: 0 20px 20px 0;
-    cursor: pointer;
-    font-size: 16px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s;
-}
-
-.search-button:hover {
-    background-color: #138496;
 }
 
 /* Trip Cards Grid */
@@ -137,15 +102,7 @@
         font-size: 14px !important;
     }
 
-    .search-input {
-        max-width: 400px;
-        font-size: 14px;
-    }
-
-    .search-button {
-        padding: 8px 15px;
-        font-size: 14px;
-    }
+    
 }
 
 @media (max-width: 480px) {
@@ -162,13 +119,111 @@
         font-size: 10px;
     }
 
-    .search-input {
-        max-width: 300px;
-        font-size: 12px;
+}
+
+/* Tabs Container */
+.tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    /* Allow wrapping on smaller screens */
+}
+
+/* Tab Button */
+.tab-button {
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 500;
+    background-color: #e9e9e9;
+    /* Light blue from .btn-light-blue */
+    color: #000000;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    min-width: 120px;
+    /* Ensure buttons don't shrink too much */
+}
+
+/* Hover Effect */
+.tab-button:hover {
+    /* Slightly darker light blue */
+    transform: translateY(-2px);
+    /* Lift effect from .btn-black */
+}
+
+/* Active Tab */
+.tab-button.active {
+    background-color: #000000;
+    /* Black background from .btn-black */
+    color: #ffffff;
+    border: 1px solid #000000;
+}
+
+/* Active Tab Hover */
+.tab-button.active:hover {
+    background-color: #333333;
+    /* Slightly lighter black from .btn-black:hover */
+    color: #ffffff;
+    transform: translateY(0);
+    /* Prevent lift on active hover */
+}
+
+/* Focus State for Accessibility */
+.tab-button:focus {
+    outline: 2px solid #000000;
+    outline-offset: 2px;
+}
+
+/* Status Messages (Loading, Error, Empty) */
+.status-message {
+    text-align: center;
+    font-size: 18px;
+    color: #333;
+    margin: 20px 0;
+}
+
+.status-message.error {
+    color: #d9534f;
+    /* Bootstrap-like red for errors */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .tabs {
+        gap: 8px;
+        justify-content: center;
     }
 
-    .search-button {
-        padding: 6px 10px;
-        font-size: 12px;
+    .tab-button {
+        padding: 10px 16px;
+        font-size: 14px;
+        min-width: 100px;
+    }
+}
+
+@media (max-width: 480px) {
+    .trips-container {
+        padding: 10px;
+    }
+
+    .tabs {
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .tab-button {
+        /* width: 100%; */
+        max-width: 300px;
+        padding: 12px;
+            font-size: 16px;
+    }
+
+                                                                .status-message {
+                                                                    font-size: 16px;
     }
 }

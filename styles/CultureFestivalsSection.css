@@ -1,0 +1,298 @@
+.cf-section {
+    /* padding: 20px; */
+    /* max-width: 1200px; */
+    margin: 0 auto;
+}
+
+
+
+.cf-grid {
+    display: grid;
+    gap: 20px;
+}
+
+.skeleton {
+    animation: pulse 1.5s infinite;
+}
+
+.skeleton-image,
+.skeleton-text {
+    background: #e0e0e0;
+    border-radius: 4px;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+
+/* ================== card styles ==================
+ */
+.cf-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    margin-bottom: 1rem;
+    height: 150px;
+}
+
+.cf-card:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+.cf-image-container {
+    position: relative;
+    height: 150px;
+    overflow: hidden;
+}
+
+.cf-carousel-wrapper {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.cf-carousel-track {
+    display: flex;
+    height: 100%;
+    width: 100%;
+}
+
+.cf-carousel-slide {
+    min-width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.cf-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.cf-single-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.cf-image:hover {
+    transform: scale(1.05);
+}
+
+.cf-badge-container {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    z-index: 10;
+}
+
+.cf-badge {
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    backdrop-filter: blur(4px);
+}
+
+.cf-badge-culture {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.cf-badge-festival {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.cf-indicators {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 6px;
+    z-index: 10;
+}
+
+.cf-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.6);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.cf-indicator:hover {
+    background: rgba(255, 255, 255, 0.8);
+    transform: scale(1.1);
+}
+
+.cf-indicator-active {
+    background: white;
+    transform: scale(1.3);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.cf-content {
+    padding: 16px;
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.cf-header {
+    flex: 1;
+    text-align: left;
+}
+
+.cf-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a202c;
+    margin: 0 0 8px 0;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.cf-description {
+    font-size: 13px;
+    color: #4a5568;
+    line-height: 1.4;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.cf-details {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.cf-detail-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+}
+
+.cf-icon {
+    font-size: 14px;
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.cf-icon-location {
+    color: #3182ce;
+}
+
+.cf-icon-time {
+    color: #38a169;
+}
+
+.cf-detail-text {
+    font-size: 12px;
+    color: #2d3748;
+    font-weight: 500;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Responsive Styles */
+@media (max-width: 991.98px) {
+    .cf-card {
+        height: auto;
+        min-height: 150px;
+    }
+
+    .cf-image-container {
+        height: 150px;
+    }
+
+    .cf-content {
+        height: 150px;
+        padding: 12px;
+    }
+
+    .cf-title {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .cf-card {
+        height: auto;
+        min-height: 130px;
+    }
+
+    .cf-image-container {
+        height: 130px;
+    }
+
+    .cf-content {
+        height: 130px;
+        padding: 10px;
+    }
+
+    .cf-title {
+        font-size: 15px;
+    }
+
+    .cf-description {
+        font-size: 12px;
+        -webkit-line-clamp: 1;
+    }
+
+    .cf-detail-text {
+        font-size: 11px;
+        -webkit-line-clamp: 1;
+    }
+
+    .cf-indicator {
+        width: 6px;
+        height: 6px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .cf-card {
+        height: auto;
+    }
+
+    .cf-image-container {
+        height: 130px;
+    }
+
+    .cf-content {
+        height: auto;
+        min-height: 130px;
+        padding: 8px;
+    }
+}

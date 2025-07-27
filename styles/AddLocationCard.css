@@ -93,10 +93,24 @@
 .location-card-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
+    align-items: flex-start;
+        margin-bottom: 15px;
+    }
+        .locationCardFlexParent {
+            display: flex;
+            flex-direction: column;
+            width: 55%;
+            margin-right: 20px;
+        }
+    
+        .location-card-title {
+            width: 100%;
+        }
+    
+        .reviewingBox {
+            display: flex;
+            flex-direction: row;
+        }
 /* .location-card-title h2 {
     font-size: 1.5rem;
     font-weight: bold;
@@ -137,11 +151,12 @@
 
 .location-card-image {
     position: relative;
+    width: 40%
 }
 
 .location-card-image img {
     height: 200px;
-    width: 150px;
+    width: 100%;
     object-fit: cover;
     border-radius: 10px;
 }
@@ -162,7 +177,7 @@
 }
 
 .location-card-icons {
-    /* display: flex; */
+    display: flex;
     /* justify-content: space-between; */
     margin-bottom: 20px;
 }
@@ -247,6 +262,7 @@
 
     .location-card-title h2 {
         font-size: 1.2rem;
+        width: 100%
     }
 
     .rating,

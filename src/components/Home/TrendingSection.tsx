@@ -1,7 +1,7 @@
 // components/Home/TrendingSection.tsx
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import DestinationCardLayout from './DestinationCardLayout';
 import { TrendingLocationData } from '@/types';
 import '../../../styles/Trending.css';
@@ -11,19 +11,19 @@ import { triggerLogin } from '@/utils';
 
 export default function TrendingSection({ }) {
     const [trending, setTrending] = useState<TrendingLocationData[]>([{
-        imgUrl: 'https://www.holidify.com/images/bgImages/ALLEPPEY.jpg',
+        imgUrl: 'https://synctrip.in/AllImages/compressed/Location/Kumarakom/images/0_KUMARAKOM.jpg',
         Title: 'Top Destination of 2024',
         Location: 'Kurli, Koembatur',
         peopleVisited: 'Aryan & 24 others visited this month'
     },
     {
-        imgUrl: 'https://www.holidify.com/images/bgImages/GOA.jpg',
+        imgUrl: 'https://synctrip.in/AllImages/compressed/Location/Goa/images/0_GOA.jpg',
         Title: 'Beaches of Goa',
         Location: 'Goa, India',
         peopleVisited: 'Priya & 15 others visited this month'
     },
     {
-        imgUrl: 'https://www.holidify.com/images/bgImages/MANALI.jpg',
+        imgUrl: 'https://synctrip.in/AllImages/compressed/Location/Manali/images/0_MANALI.jpg',
         Title: 'Snowy Peaks of Manali',
         Location: 'Manali, Himachal Pradesh',
         peopleVisited: 'Rohan & 30 others visited this month'

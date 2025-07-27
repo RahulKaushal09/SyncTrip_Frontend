@@ -6,18 +6,16 @@ import EventList from './EventsListingBlock';
 // import EmptyState from './EmptyState'; // Server component
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import { faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
-import { Events, IndianCity } from '@/types';
+import { Events } from '@/types';
 
 interface FestivalsEventsProps {
     initialEvents: Events[];
-    //   indianCities: IndianCity[];
     initialLocation: string;
 }
 
 export default function FestivalsEvents({ initialEvents, initialLocation }: FestivalsEventsProps) {
     const [events, setEvents] = useState<Events[]>(initialEvents);
-    const [locationTitle, setLocation] = useState<string>(initialLocation);
-
+    const locationTitle = initialLocation || 'India'; // Default to 'India' if no location is provided
     return (
         <section itemScope itemType="https://schema.org/Event">
             <div className="row">

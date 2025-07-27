@@ -36,19 +36,8 @@
 }
 
 
-.heart-icon {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    color: white;
-    font-size: 25px;
-    z-index: 15;
-}
 
-/* .heart-icon:hover {
-    background-color: #6ECAD5;
-    border-radius: 50%;
-} */
+
 
 .card-content {
     padding-top: 10px;

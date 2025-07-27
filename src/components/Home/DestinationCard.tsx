@@ -34,15 +34,7 @@ const DestinationCard: React.FC<TrendingLocationData> = ({
                     {Location}
                 </p>
                 <div className="avatars d-flex justify-content-center gap-2">
-                    {[...Array(5)].map((_, i) => (
-                        <img
-                            key={i}
-                            src={`${imgUrl}`}
-                            alt={`User ${i + 1}`}
-                            className="rounded-circle"
-                            style={{ width: '25px', height: '25px', border: '1px solid white', marginRight: '-15px' }}
-                        />
-                    ))}
+
                     <p style={{ marginLeft: '10px', fontSize: '14px', fontWeight: 700 }}>
                         {peopleVisited}
                     </p>
