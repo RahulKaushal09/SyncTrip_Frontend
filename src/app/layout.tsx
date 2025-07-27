@@ -10,6 +10,7 @@ export const metadata = {
   title: 'Home | SyncTrip',
   description: 'Discover and join trips near you.',
 };
+// import generateSitemap from '@/temp/generateStaticSitemap';
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   // let user: User | null = null;
@@ -24,9 +25,17 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   //     user = null;
   //   }
   // }
+  // generateSitemap().catch((error) => {
+  //   console.error('Failed to generate sitemap:', error);
+  //   process.exit(1);
+  // });
   return (
     <html lang="en">
       <body>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="manifest" href="/manifest.json" />
         <div className="App">
           <LoginProvider>
             {/* You can add a global navbar or context providers here */}

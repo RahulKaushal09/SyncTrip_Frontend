@@ -34,8 +34,8 @@ export async function generateMetadata(): Promise<Metadata> {
                 title,
                 description,
                 type: 'website',
-                url: 'https://yourdomain.com/trips',
-                siteName: 'YourTravelBrand',
+                url: 'https://synctrip.in/trips',
+                siteName: 'SyncTrip',
                 images: [
                     {
                         url: trips.length > 0 ? trips[0].MainImageUrl : '/images/default-travel-og.jpg',

@@ -27,10 +27,10 @@ export const metadata: Metadata = {
     locale: 'en_US',
     images: [
       {
-        url: 'https://synctrip.in/og-image.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'SyncTrip - Travel Destinations',
+      url: 'https://synctrip.in/logo_main_withoutBG.png',
+      width: 1200,
+      height: 630,
+        alt: 'SyncTrip Logo',
       },
     ],
   },
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     creator: '@synctrip',
     title: 'SyncTrip - Discover Amazing Travel Destinations',
     description: 'Find and join trips near you. Explore curated travel destinations and connect with fellow travelers.',
-    images: ['https://synctrip.in/twitter-image.jpg'],
+    images: ['https://synctrip.in/logo_main_withoutBG.png'],
   },
   alternates: {
     canonical: 'https://synctrip.in',

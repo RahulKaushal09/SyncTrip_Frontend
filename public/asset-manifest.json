@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/static/css/main.b192c92d.css",
+    "main.js": "/static/js/main.c3e3a578.js",
+    "static/js/453.e0403987.chunk.js": "/static/js/453.e0403987.chunk.js",
+    "static/media/eventsEmptyState.jpg": "/static/media/eventsEmptyState.4771962b2d95e6634c50.jpg",
+    "static/media/group_travel_2.jpg": "/static/media/group_travel_2.e76bbcf0aba067b44023.jpg",
+    "static/media/TripsHeader.png": "/static/media/TripsHeader.8c396ec1d11287b845b4.png",
+    "static/media/teamImage.png": "/static/media/teamImage.ed72600ca85aa5a7c535.png",
+    "static/media/syncTripMobile_old.png": "/static/media/syncTripMobile_old.12c00ca8fd17f3ce0e3f.png",
+    "static/media/peopleTravelling.svg": "/static/media/peopleTravelling.a91f8d4bea63a6eec47c8a9595206ca8.svg",
+    "static/media/preRegisterPopupImg.png": "/static/media/preRegisterPopupImg.0943ae57724a27e787ce.png",
+    "static/media/syncTripMobile.png": "/static/media/syncTripMobile.20d31599bcc4d9245d89.png",
+    "index.html": "/index.html",
+    "main.b192c92d.css.map": "/static/css/main.b192c92d.css.map",
+    "main.c3e3a578.js.map": "/static/js/main.c3e3a578.js.map",
+    "453.e0403987.chunk.js.map": "/static/js/453.e0403987.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.b192c92d.css",
+    "static/js/main.c3e3a578.js"
+  ]
+}

@@ -6,8 +6,103 @@ import { TripDetailsResponse } from '@/classes/ApiResponse.classes';
 // import { cookies } from 'next/headers';
 import { notFound, redirect } from 'next/navigation';
 import TripDetailsContentClient from '@/components/Trips/TripDetailsClient';
+import { Metadata } from 'next';
 // import { PageTypeEnum } from '@/constants';
 
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+    const { slug } = await params; // Await params
+
+    const [uuid] = slug.split('_');
+
+    const tripData = await TripsApiService.fetchTripById(uuid);
+    if (!tripData) {
+        return {
+            title: 'Trip Not Found | YourTravelBrand',
+            description: 'Travel package no longer available.',
+            robots: { index: false, follow: false },
+        };
+    }
+    const trip = tripData.trip;
+    // Core fields
+    const {
+        title,
+        MainImageUrl,
+        essentials: {
+            price,
+            duration,
+            region,
+            season,
+            bestTime,
+            typeOfTrip,
+            availableSeats,
+        },
+        requirements,
+        tripRating,
+        include: { food, hotel, travel },
+    } = trip;
+
+    // Title
+    const metaTitle = `${title} – ${typeOfTrip ? typeOfTrip + ' | ' : ''}${region ? region + ' | ' : ''}${duration} Days ₹${price}+ | SyncTrip`;
+
+    // Description (make it benefit-driven & keyword-rich)
+    const metaDescription = `Book the "${title}" group trip${typeOfTrip ? ' (' + typeOfTrip + ')' : ''} to ${region ? region + ', ' : ''}India. Experience ${duration} days${bestTime ? ' (' + bestTime + ')' : ''} for only ₹${price}. Includes${hotel ? ' hotel,' : ''}${food ? ' meals,' : ''}${travel ? ' travel' : ''}. Rated ${tripRating ?? 'highly'}. Limited seats – reserve now!`;
+
+    // Keywords (long-tail targeting)
+    const metaKeywords = [
+        `${title}`,
+        typeOfTrip,
+        region,
+        'group tours',
+        'adventure trips',
+        'all inclusive trips',
+        `${title} itinerary`,
+        `${region} travel packages`,
+        `best time to visit ${region}`,
+        'India tours',
+        'travel deals',
+    ]
+        .filter(Boolean)
+        .join(', ');
+
+    // OG/Twitter images
+    const imageUrl = MainImageUrl || '/images/default-og.jpg';
+    const expectedSlug = CommonServices.generateTripSlug(uuid, title || 'Best Trip');
+    return {
+        title: metaTitle,
+        description: metaDescription,
+        keywords: metaKeywords,
+        openGraph: {
+            title: metaTitle,
+            description: metaDescription,
+            type: 'website',
+            url: `https://synctrip.in/trips/${expectedSlug}`,
+            siteName: 'SyncTrip',
+            images: [
+                {
+                    url: imageUrl,
+                    width: 1200,
+                    height: 630,
+                    alt: `${title} Trip`,
+                },
+            ],
+            locale: 'en_IN',
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: metaTitle,
+            description: metaDescription,
+            images: [imageUrl],
+        },
+        robots: {
+            index: true,
+            follow: true,
+            'max-snippet': -1,
+            'max-image-preview': 'large',
+            'max-video-preview': -1,
+        },
+        // You CAN add canonical if you handle it in <head>
+    };
+}
 
 interface Props {
     params: Promise<{ slug: string }>; // Define params as a Promise
@@ -30,130 +125,6 @@ const TripsDetailsPage = async ({ params }: Props) => {
     const locationData: Location | null = await ApiService.fetchLocationByIdServer(LocationIdConnectedWith);
     if (!locationData) return notFound();
     const otherGoing = tripsData.appliedUsers || [];
-    // const placeIds = locationData?.placesToVisit || [];
-
-
-
-
-
-
-
-
-
-
-    // Redirect if slug is outdated or mismatched
-
-
-    // const [isMobile, setIsMobile] = useState(false);
-    // const [otherGoing, setOtherGoing] = useState<User[]>(tripsData.appliedUsers || []);
-    // const [hotelIds, setHotelIds] = useState<string[]>(locationData.hotels || []);
-    // const [pageType, setPageType] = useState<string>("trip");
-    // const [tripStatus, setTripStatus] = useState<string | null>(null);
-    // const [user, setUser] = useState<User | null>(
-    //     typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('user') || 'null') : null
-    // );
-    // const [alreadyEnrolled, setAlreadyEnrolled] = useState(false);
-    // const [isLoading, setIsLoading] = useState(!tripsData || !locationData);
-    // const joinTripButtonRef = useRef<HTMLDivElement>(null);
-    // const router = useRouter();
-    // const { tripId } = router.query as { tripId: string };
-
-    // Enroll in trip
-    // const enrollInTrip = async (slotId: string) => {
-    //     setUser(JSON.parse(localStorage.getItem('user') || 'null'));
-    //     const userToken = localStorage.getItem('userToken');
-    //     if (!slotId) {
-    //         toast.error('Please select a trip date slot');
-    //         return;
-    //     }
-    //     if (alreadyEnrolled) {
-    //         toast.success('You are already enrolled in this trip.');
-    //         router.push(`/trips/en/${tripId}`);
-    //         return;
-    //     }
-    //     if (user && user.profileCompleted && userToken) {
-    //         const url = `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/api/trips/enroll/${tripId}`;
-    //         setIsLoading(true);
-    //         try {
-    //             const response = await fetch(url, {
-    //                 method: 'POST',
-    //                 headers: {
-    //                     'Content-Type': 'application/json',
-    //                     Authorization: `Bearer ${userToken}`,
-    //                 },
-    //                 body: JSON.stringify({ userId: user.id, slotId: parseInt(slotId) }),
-    //             });
-    //             const data = await response.json();
-    //             if (response.ok) {
-    //                 toast.success('You have successfully enrolled in the trip!');
-    //                 router.push(`/trips/en/${tripId}`);
-    //                 if (typeof window !== 'undefined' && window.fbq) {
-    //                     window.fbq('trackCustom', 'JoinTrip');
-    //                 }
-    //             } else {
-    //                 toast.error(data.message || 'Failed to enroll in the trip.');
-    //             }
-    //         } catch (error) {
-    //             toast.error('An error occurred while enrolling. Please try again.');
-    //         } finally {
-    //             setIsLoading(false);
-    //         }
-    //     } else {
-    //         triggerLogin();
-    //     }
-    // };
-
-    // Generate random number of reviews
-    // const getRandomNumberReviews = () => Math.floor(Math.random() * 100) + 1;
-
-    // Fetch trip details (background update)
-    // const fetchTripDetails = async () => {
-    //     let fromDate: Date | undefined;
-    //     let endDate: Date | undefined;
-    //     const trip = tripsData.trip;
-    //     const today = new Date();
-    //     today.setHours(0, 0, 0, 0);
-
-    //     for (const timeline of trip.essentials.timelines) {
-    //         const from = timeline.fromDate ? new Date(timeline.fromDate) : new Date();
-    //         const till = timeline.tillDate ? new Date(timeline.tillDate) : new Date();
-    //         if (!fromDate || from > fromDate) fromDate = from;
-    //         if (!endDate || till > endDate) endDate = till;
-    //     }
-    //     if (!fromDate) fromDate = new Date(trip.essentials.timelines[0]?.fromDate);
-
-    //     setTripStatus(
-    //         fromDate < today || trip.requirements?.status === 'completed'
-    //             ? 'completed'
-    //             : trip.requirements?.status as string
-    //     );
-    //     // setTripsData({ ...trip, title: extractTextFromHTML(trip.title.replace(/[0-9.]/g, '')) });
-    //     // setLocationData({
-    //     //     ...initialLocationData,
-    //     //     title: extractTextFromHTML(initialLocationData.title.replace(/[0-9.]/g, '')),
-    //     // });
-    //     if (user?.id) {
-    //         setAlreadyEnrolled(otherGoing.some((u) => u.id === user.id));
-    //     }
-    // };
-
-
-
-    // Scroll to join trip button
-    // useEffect(() => {
-    //     if (!isLoading && joinTripButtonRef.current) {
-    //         joinTripButtonRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    //     }
-    // }, [isLoading]);
-
-
-
-    // if (isLoading || !tripsData || !locationData) {
-    //     return <FullScreenLoader isVisible={isLoading} />;
-    // }
-
-    // const meta = metaTags.tripDetails(tripsData, locationData);
-
     return (
         <TripDetailsContentClient
             tripData={tripsData.trip}

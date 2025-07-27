@@ -32,25 +32,25 @@ const TripCard: React.FC<TripCardProps> = ({ trip, activeTab, parentId, parentTy
     } = trip;
 
     const expectedSlug = CommonServices.generateTripSlug(id, title || 'Best Trip');
-    const [urlToTrip, setUrlToTrip] = useState(expectedSlug);
+    const [urlToTrip, setUrlToTrip] = useState(`/trips/${expectedSlug}`);
     const availableSpots = availableSeats || 5;
 
     useEffect(() => {
         switch (activeTab) {
             case 'upcoming':
-                setUrlToTrip(expectedSlug);
+                setUrlToTrip(`/trips/${expectedSlug}`);
                 break;
             case 'enrolled':
                 setUrlToTrip(`/trips/en/${id}`);
                 break;
             case 'history':
-                setUrlToTrip(expectedSlug);
+                setUrlToTrip(`/trips/${expectedSlug}`);
                 break;
             case 'admin':
                 setUrlToTrip(`/admin/Trips/${id}`);
                 break;
             default:
-                setUrlToTrip(expectedSlug);
+                setUrlToTrip(`/trips/${expectedSlug}`);
                 break;
         }
     }, [activeTab, id]);
