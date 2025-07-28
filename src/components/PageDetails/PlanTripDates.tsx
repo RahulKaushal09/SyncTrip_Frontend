@@ -96,26 +96,26 @@ const PlanTripDates: React.FC<PlanTripDatesProps> = ({
         }
     }, [, startDate, endDate, btn2CTA]);
 
-    const jsonLd = {
-        '@context': 'https://schema.org',
-        '@type': 'Event',
-        name: `Plan Your Trip${pageType === PageTypeEnum.LOCATION ? ' to this Location' : ''}`,
-        description: `Plan a trip with customizable dates${startDate && endDate
-            ? ` from ${startDate.toDateString()} to ${endDate.toDateString()}`
-            : ''
-            }.`,
-        eventStatus: 'https://schema.org/EventScheduled',
-        eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
-        startDate: startDate?.toISOString() || 'Unknown',
-        endDate: endDate?.toISOString() || 'Unknown',
-    };
+    // const jsonLd = {
+    //     '@context': 'https://schema.org',
+    //     '@type': 'Event',
+    //     name: `Plan Your Trip${pageType === PageTypeEnum.LOCATION ? ' to this Location' : ''}`,
+    //     description: `Plan a trip with customizable dates${startDate && endDate
+    //         ? ` from ${startDate.toDateString()} to ${endDate.toDateString()}`
+    //         : ''
+    //         }.`,
+    //     eventStatus: 'https://schema.org/EventScheduled',
+    //     eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+    //     startDate: startDate?.toISOString() || 'Unknown',
+    //     endDate: endDate?.toISOString() || 'Unknown',
+    // };
 
     return (
         <div className="trip-planner" role="region" aria-label="Trip Planner">
-            <script
+            {/* <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-            />
+            /> */}
             <div className="d-flex" style={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
                 <h2 className="DescriptionHeading">
                     <strong>Let&apos;s plan your trip</strong>

@@ -23,8 +23,8 @@ export default function FestivalsEvents({ initialEvents, initialLocation }: Fest
                     <h2 className="fw-bold majorHeadings" style={{ textAlign: 'left' }}>
                         Festivals & Events
                     </h2>
-                    <meta itemProp="name" content="Festivals and Events" />
-                    <meta itemProp="description" content="Discover exciting festivals and events in various cities across India." />
+                    {/* <meta itemProp="name" content="Festivals and Events" />
+                    <meta itemProp="description" content="Discover exciting festivals and events in various cities across India." /> */}
                 </div>
 
                 <div className="col-lg-4 col-sm-12 col-md-4">
