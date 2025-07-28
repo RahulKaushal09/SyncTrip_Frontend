@@ -50,8 +50,8 @@ export default function TripDetailsContentClient({
     useEffect(() => {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
-        var fromDate;
-        var endDate;
+        let fromDate;
+        let endDate;
         for (let i = 0; i < tripData.essentials.timelines.length; i++) {
             const timeline = tripData.essentials.timelines[i];
 
