@@ -24,22 +24,6 @@ export const LoaderProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     );
 };
 
-export const showLoader = () => {
-    const context = useContext(LoaderContext);
-    if (!context) {
-        throw new Error("showLoader must be used within LoaderProvider");
-    }
-    const { showLoader } = context;
-    showLoader();
-}
-export const hideLoader = () => {
-    const context = useContext(LoaderContext);
-    if (!context) {
-        throw new Error("hideLoader must be used within LoaderProvider");
-    }
-    const { hideLoader } = context;
-    hideLoader();
-}
 export const useLoader = (): LoaderContextType => {
     const context = useContext(LoaderContext);
     if (!context) {

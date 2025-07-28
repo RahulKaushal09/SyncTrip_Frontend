@@ -6,7 +6,6 @@ import HeartIcon from '../smallComponents/HeartIcon';
 import { useRouter } from 'next/navigation';
 import { typeOfLocationCardEnum } from '@/constants';
 import { CommonServices } from '@/utils';
-import { useLoader } from '../providers/LoaderContext';
 
 
 interface LocationCardProps {
@@ -48,7 +47,6 @@ const LocationCard: React.FC<LocationCardProps> = ({
     isLoading = false,
     typeOfCard
 }) => {
-    const { showLoader } = useLoader();
     let locationLink = `/location/`;
     if (typeOfCard === typeOfLocationCardEnum.placestovisit && (placeConnectedwithid == null || placeConnectedwithid == "")) {
         locationLink = ""
@@ -104,7 +102,6 @@ const LocationCard: React.FC<LocationCardProps> = ({
     const handleImageClick = (e: React.MouseEvent) => {
         e.stopPropagation(); // Prevent the click from bubbling to the parent location-card
         if (locationLink) {
-            showLoader();
             router.push(locationLink);
         }
     };
@@ -116,7 +113,6 @@ const LocationCard: React.FC<LocationCardProps> = ({
             style={inlineStyle}
             onClick={() => {
                 if (locationLink) {
-            showLoader();
 
                     router.push(locationLink);
                 }

@@ -6,7 +6,7 @@ import Footer from '@/components/Footer/Footer';
 // import NavbarWrapper from './../components/Navbar/NavbarWrapper';
 import NavbarClient from '@/components/Navbar/NavbarClient';
 import { LoaderProvider } from '@/components/providers/LoaderContext';
-import { RouteChangeHandler } from './Handlers/RouteChangeHandler';
+// import { RouteChangeHandler } from './Handlers/RouteChangeHandler';
 // import NavbarServer from '@/components/Navbar/NavbarServer';
 export const metadata = {
   title: 'Home | SyncTrip',
@@ -43,7 +43,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <LoginProvider>
             {/* You can add a global navbar or context providers here */}
             {/* <NavbarWrapper /> */}
-              <RouteChangeHandler />
+              {/* <RouteChangeHandler /> */}
             <NavbarClient />
             {children}
             <Toaster position='top-right' />
