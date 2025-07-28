@@ -6,7 +6,7 @@ import { API_CONFIG, LocationField, STORAGE_KEYS, UserField } from '../constants
 import { StorageUtils } from './storage.utils';
 import { ApiResponse, IndianCity, Location, PlacesToVisit, User } from '../types';
 import { triggerLogin } from './login.utils';
-import { GoogleLoginResponse, CompleteProfileApiResponse, getLocationResponseSchema, EventsResponse } from '@/classes/ApiResponse.classes';
+import { GoogleLoginResponse, CompleteProfileApiResponse, getLocationResponseSchema } from '@/classes/ApiResponse.classes';
 import { wishlistRequestSchema } from '@/classes/ApiRequest.classes';
 import { indianCitiesPageData } from '@/data/indianCitiesPageData';
 import { Events } from '@/types';
