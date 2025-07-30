@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import Head from 'next/head';
 import { ApiService } from '@/utils/api.utils';
-import { locationDataSchema } from '@/constants'; // Make sure this is exported properly
+// import { locationDataSchema } from '@/constants'; // Make sure this is exported properly
 import LocationPageDetails from '@/components/PageDetails/LocationPageDetails';
 import { mapPreviousIdsWithNew } from '@/constants/mapPreviousIdsWithNew';
 import { redirect } from 'next/navigation';

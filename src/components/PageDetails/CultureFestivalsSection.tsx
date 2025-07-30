@@ -33,7 +33,7 @@ const CultureFestivalsSection: React.FC<CultureFestivalsSectionProps> = ({ data,
         '@type': 'Place',
         name: heading.split(' of ')[1] || 'this location',
       },
-      startDate: null,
+      // startDate: null,
       image: item.images?.[0]?.image_url || '',
     })),
   };
