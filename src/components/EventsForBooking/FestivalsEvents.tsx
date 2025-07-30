@@ -17,7 +17,7 @@ export default function FestivalsEvents({ initialEvents, initialLocation }: Fest
     const [events, setEvents] = useState<Events[]>(initialEvents);
     const locationTitle = initialLocation || 'India'; // Default to 'India' if no location is provided
     return (
-        <section itemScope itemType="https://schema.org/Event">
+        <section>
             <div className="row">
                 <div className="col-lg-8 col-sm-12 col-md-8">
                     <h2 className="fw-bold majorHeadings" style={{ textAlign: 'left' }}>
