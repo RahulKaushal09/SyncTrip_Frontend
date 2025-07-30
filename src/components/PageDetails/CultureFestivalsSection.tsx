@@ -18,25 +18,25 @@ const CultureFestivalsSection: React.FC<CultureFestivalsSectionProps> = ({ data,
   //   setLoading(false);
   // }, []);
 
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': type === 'culture' ? 'CulturalEvent' : 'Festival',
-    name: heading,
-    description: `Explore ${type === 'culture' ? 'cultural experiences' : 'festivals'} in ${heading.split(' of ')[1] || 'this location'}.`,
-    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
-    eventStatus: 'https://schema.org/EventScheduled',
-    subEvents: data.map((item) => ({
-      '@type': type === 'culture' ? 'CulturalEvent' : 'Festival',
-      name: item.name,
-      description: item.description,
-      location: {
-        '@type': 'Place',
-        name: heading.split(' of ')[1] || 'this location',
-      },
-      // startDate: null,
-      image: item.images?.[0]?.image_url || '',
-    })),
-  };
+  // const jsonLd = {
+  //   '@context': 'https://schema.org',
+  //   '@type': type === 'culture' ? 'CulturalEvent' : 'Festival',
+  //   name: heading,
+  //   description: `Explore ${type === 'culture' ? 'cultural experiences' : 'festivals'} in ${heading.split(' of ')[1] || 'this location'}.`,
+  //   eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+  //   eventStatus: 'https://schema.org/EventScheduled',
+  //   subEvents: data.map((item) => ({
+  //     '@type': type === 'culture' ? 'CulturalEvent' : 'Festival',
+  //     name: item.name,
+  //     description: item.description,
+  //     location: {
+  //       '@type': 'Place',
+  //       name: heading.split(' of ')[1] || 'this location',
+  //     },
+  //     // startDate: null,
+  //     image: item.images?.[0]?.image_url || '',
+  //   })),
+  // };
 
   // if (loading) {
   //   return (
@@ -65,10 +65,10 @@ const CultureFestivalsSection: React.FC<CultureFestivalsSectionProps> = ({ data,
 
   return (
     <div className="cf-section" style={{ marginBottom: '50px' }}>
-      <script
+      {/* <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      /> */}
       <h2 className="DescriptionHeading">
         <strong>{heading}</strong>
       </h2>
