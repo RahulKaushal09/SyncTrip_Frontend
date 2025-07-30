@@ -25,7 +25,7 @@ export async function generateMetadata(): Promise<Metadata> {
         const description = totalTrips > 0
             ? `Discover ${totalTrips} handpicked travel packages starting from ₹${Math.min(...trips.map(t => t.essentials.price))}. ${destinations.join(', ')} tours with accommodation, meals & transport included. Book your adventure today!`
             : 'Explore amazing travel packages and group tours with all-inclusive deals. Book your perfect getaway with accommodation, meals & transport included. Best prices guaranteed!'
-
+        const canonicalURL = 'https://synctrip.in/trips';
         return {
             title,
             description,
@@ -64,6 +64,7 @@ export async function generateMetadata(): Promise<Metadata> {
                 'max-image-preview': 'large',
                 'max-video-preview': -1,
             },
+            alternates: { canonical: canonicalURL },
         }
     } catch (error) {
         // Fallback metadata for error scenarios

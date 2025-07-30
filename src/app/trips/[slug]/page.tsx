@@ -67,6 +67,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     // OG/Twitter images
     const imageUrl = MainImageUrl || '/images/default-og.jpg';
     const expectedSlug = CommonServices.generateTripSlug(uuid, title || 'Best Trip');
+    const canonicalURL = `https://synctrip.in/trips/${expectedSlug}`;
     return {
         title: metaTitle,
         description: metaDescription,
@@ -101,6 +102,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
             'max-video-preview': -1,
         },
         // You CAN add canonical if you handle it in <head>
+        alternates: { canonical: canonicalURL },
     };
 }
 
