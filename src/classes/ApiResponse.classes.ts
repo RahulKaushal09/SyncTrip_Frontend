@@ -1,4 +1,4 @@
-import { Events, Location, Trip } from "@/types";
+import { Events, Location, PlacesToVisit, Restaurants, Trip } from "@/types";
 import { User, UserWishList } from "@/types/user.types";
 export interface GoogleLoginResponse {
     token: string;
@@ -44,4 +44,10 @@ export interface ApiResponse<T = unknown> {
 
 export interface userWishlistResponse {
     wishlist: UserWishList[];
+}
+
+export interface exploreNearByApiResponse {
+    locations: Location[];
+    placesToVisit: PlacesToVisit[];
+    restaurants: Restaurants[];
 }

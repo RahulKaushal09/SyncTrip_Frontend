@@ -6,7 +6,7 @@ import { API_CONFIG, LocationField, STORAGE_KEYS, UserField } from '../constants
 import { StorageUtils } from './storage.utils';
 import { ApiResponse, IndianCity, Location, PlacesToVisit, User } from '../types';
 import { triggerLogin } from './login.utils';
-import { GoogleLoginResponse, CompleteProfileApiResponse, getLocationResponseSchema } from '@/classes/ApiResponse.classes';
+import { GoogleLoginResponse, CompleteProfileApiResponse, getLocationResponseSchema, exploreNearByApiResponse } from '@/classes/ApiResponse.classes';
 import { wishlistRequestSchema } from '@/classes/ApiRequest.classes';
 import { indianCitiesPageData } from '@/data/indianCitiesPageData';
 import { Events } from '@/types';
@@ -352,4 +352,29 @@ export class ApiService {
       return [];
     }
   }
+
+  static async fetchNearbyEntities(latitude: number, longitude: number, radius: number): Promise<exploreNearByApiResponse> {
+    const userToken = localStorage.getItem('userToken');
+    const res = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/nearby/getNearbyEntities`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${userToken}`
+        },
+        body: JSON.stringify({
+          lat: latitude,
+          long: longitude,
+          radius
+        })
+      }
+    );
+
+    if (!res.ok) {
+      throw new Error("Failed to fetch nearby entities");
+    }
+    const response: exploreNearByApiResponse = await res.json();
+
+    return response;
+  };
 }

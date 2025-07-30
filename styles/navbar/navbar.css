@@ -1,6 +1,11 @@
 .navbar-toggler:focus {
     box-shadow: none !important;
 }
+@media(min-width: 992px) {
+    .navbar-collapse {
+        visibility: visible !important;
+    }
+}
 
 /* Overlay */
 .mobile-overlay {

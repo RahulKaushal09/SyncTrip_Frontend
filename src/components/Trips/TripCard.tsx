@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { FaRupeeSign } from 'react-icons/fa';
 import '../../../styles/trips/tripCard.css';
-import tripsHeaderImg from '../../assets/images/TripsHeader.png';
 
 import { Trip } from '@/types';
 import HeartIcon from './../smallComponents/HeartIcon';
@@ -78,7 +77,7 @@ const TripCard: React.FC<TripCardProps> = ({ trip, activeTab, parentId, parentTy
             <div className="tripCard-image">
                 <div style={{ position: 'relative', width: '100%', height: '100%' }} onClick={() => window.location.href = urlToTrip}>
                     <Image
-                        src={MainImageUrl || tripsHeaderImg}
+                        src={MainImageUrl}
                         alt={`Trips To ${title}`}
                         layout="fill"
                         objectFit="cover"

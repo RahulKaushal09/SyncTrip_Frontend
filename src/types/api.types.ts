@@ -88,6 +88,8 @@ export interface Location {
     isWishlisted?: boolean;
     createdAt?: string;
     updatedAt?: string;
+    type?: string;
+
 }
 export interface PlacesToVisit {
     id: string;
@@ -97,7 +99,8 @@ export interface PlacesToVisit {
     description: string;
     highlights: string;
     image: string[];
-    image_old: string[];
+    images: string[];
+    // image_old: string[];
     coordinates: {
         lat: number;
         long: number;
@@ -111,8 +114,50 @@ export interface PlacesToVisit {
     locationConnectedWith: string;
     createdAt?: Date;
     updatedAt?: Date;
+    type?: string;
 }
 
+
+
+export interface Restaurants {
+    id: string;
+    name: string;
+    address: string;
+    phone: string;
+    website: string;
+    googlePlaceId: string;
+    locationId?: string; // Optional, if linked to a location
+    coordinates: {
+        lat: number;
+        long: number;
+    };
+    geo: {
+        type: 'Point';
+        coordinates: [number, number]; // [longitude, latitude]
+    };
+    openingHours: {
+        day: string; // eg: Monday
+        open: string; // eg: 11:00 AM
+        close: string; // eg: 10:30 PM
+    }[];
+    rating: number;
+    userRatingsTotal: number;
+    priceLevel: number; // 0=Free, 1=Cheap, 4=Expensive
+    types: string[]; // eg: restaurant, food, bar, etc.
+    photos: {
+        url: string;
+        attribution?: string;
+        isMenu?: boolean; // optional: if image looks like a menu
+    }[];
+    images?: [];
+    cuisineType?: string; // eg: Italian, Indian
+    features?: string[]; // eg: ['live music', 'outdoor seating']
+    description?: string; // admin/manual
+    tags?: string[]; // keywords, searchable
+    type?: string;
+
+
+}
 
 export interface Hotel {
     id: string;

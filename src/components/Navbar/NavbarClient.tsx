@@ -12,6 +12,7 @@ import { useLogin } from "../providers/LoginProvider";
 import "../../../styles/navbar/navbar.css";
 import { User } from "@/types";
 import Cookies from 'js-cookie';
+// import { triggerLogin } from "@/utils";
 
 const NavbarClient = ({ }) => {
   const [LoadingUser, setLoadingUser] = useState(true);
@@ -94,8 +95,9 @@ const NavbarClient = ({ }) => {
         <button className="navbar-toggler" onClick={() => setMobileNavOpen(!mobileNavOpen)}>
           <span className="navbar-toggler-icon"></span>
         </button>
+        {/* <div className={`collapse navbar-collapse justify-content-end ${mobileNavOpen ? 'show' : ''}`} id="navbarNav"> */}
 
-        <div className="collapse navbar-collapse justify-content-end" id="navbarNav" style={{ visibility: 'visible' }}>
+        <div className="collapse navbar-collapse justify-content-end" id="navbarNav" >
           <ul className="navbar-nav" style={{ alignItems: "center" }}>
             <li className="nav-item" onClick={handleCtaAction} style={{ cursor: "pointer" }}>
               <span className="nav-link">
@@ -167,6 +169,89 @@ const NavbarClient = ({ }) => {
             </li>
           </ul>
         </div>
+      </div>
+
+      {mobileNavOpen && (
+        <div className="mobile-overlay" onClick={closeDrawer}></div>
+      )}
+
+      {/* Mobile Drawer */}
+      <div className={`mobile-drawer ${mobileNavOpen ? "open" : ""}`}>
+        <div className='' style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "1rem" }}>
+          {/* <div><a className="navbar-brand" href="/" style={{ display: 'inline-block', color: '#65CAD3', fontSize: "30px", fontWeight: "700", width: "100px" }}>
+                        <img src={SyncTripLogo} alt="SyncTrip" style={{ width: "100%", }} />
+                    </a>
+                    </div> */}
+          {user ? (
+            <>
+              <div
+                style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
+              >
+
+                {/* <img
+                  src={user.profile_picture?.[0] || "https://via.placeholder.com/40"}
+                  alt="Profile"
+                  style={{
+                    width: "40px",
+                    height: "40px",
+                    borderRadius: "50%",
+                    objectFit: "cover",
+                  }}
+                /> */}
+                <Image
+                  src={user.profile_picture?.[0] || "https://via.placeholder.com/40"}
+                  alt="Profile"
+                  width={40}
+                  height={40}
+                  style={{ borderRadius: "50%", objectFit: "cover" }}
+                />
+                <span className="ms-2 mt-2">{user?.name || "User"}</span>
+
+              </div>
+
+
+            </>
+          ) : (
+            <div>
+              {/* <a className="navbar-brand" href="/" style={{ display: 'inline-block', color: '#65CAD3', fontSize: "30px", fontWeight: "700", width: "100px" }}> */}
+              <Link href="/" className="navbar-brand" style={{ display: 'inline-block', color: '#65CAD3', fontSize: "30px", fontWeight: "700", width: "100px" }}>
+                <Image src={SyncTripLogo} alt="SyncTrip" style={{ width: "100%" }} />
+                {/* <img src={SyncTripLogo.src} alt="SyncTrip" style={{ width: "100%", }} /> */}
+              </Link>
+            </div>
+          )}
+          <div className="drawer-header">
+            <span className="drawer-close" onClick={closeDrawer}>&times;</span>
+          </div>
+        </div>
+        <ul className="navbar-nav" style={{ alignItems: "flex-start", padding: "1rem" }}>
+          {pageType == PageTypeEnum.TRIP ? (
+            <li className="nav-item" onClick={handleLoginClick}>
+              <span className="nav-link">Create Trip</span>
+            </li>
+          ) : (
+            <li className="nav-item" onClick={() => { handleCtaAction(); closeDrawer(); }}>
+              <span className="nav-link">Trips</span>
+            </li>
+          )}
+
+          {user ? (
+            // <li className="nav-item" onClick={() => { window.location.href = "/profile"; closeDrawer(); }}>
+            //     <span className="nav-link">Profile</span>
+            // </li>
+            <li className="nav-item" onClick={logout}>
+              <span className="nav-link">Logout</span>
+            </li>
+          ) : (
+            <li className="nav-item" onClick={() => { handleLoginClick(); closeDrawer(); }}>
+              <button className="btn btn-black mt-2" style={{ width: "100%" }}>
+                Login / Register
+              </button>
+            </li>
+          )}
+
+
+        </ul>
       </div>
     </nav>
   );

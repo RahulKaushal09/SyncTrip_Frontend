@@ -4,7 +4,7 @@
 
 export const API_CONFIG = {
     BACKEND_BASE_URL: process.env.NEXT_PUBLIC_BACKEND_BASE_URL || 'http://localhost:3001',
-    ICON_BASE_URL: process.env.NEXT_PUBLIC_ICON_BASE_URL || 'http://localhost:3001/icons',
+    ICON_BASE_URL: (process.env.NODE_ENV == "development" ? "http://localhost:3000" : process.env.NEXT_PUBLIC_BACKEND_BASE_URL) + '/icons',
     TIMEOUT: 10000,
     RETRY_ATTEMPTS: 3,
 } as const;

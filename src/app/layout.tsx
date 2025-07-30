@@ -5,6 +5,7 @@ import { LoginProvider } from '@/components/providers/LoginProvider';
 import Footer from '@/components/Footer/Footer';
 // import NavbarWrapper from './../components/Navbar/NavbarWrapper';
 import NavbarClient from '@/components/Navbar/NavbarClient';
+import ExploreNearby from '@/components/Explore/ExploreNearby';
 // import { LoaderProvider } from '@/components/providers/LoaderContext';
 // import { RouteChangeHandler } from './Handlers/RouteChangeHandler';
 // import NavbarServer from '@/components/Navbar/NavbarServer';
@@ -45,6 +46,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             {/* <NavbarWrapper /> */}
               {/* <RouteChangeHandler /> */}
             <NavbarClient />
+            <ExploreNearby />
             {children}
             <Toaster position='top-right' />
           </LoginProvider>

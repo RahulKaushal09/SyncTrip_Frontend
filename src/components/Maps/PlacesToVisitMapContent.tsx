@@ -77,17 +77,17 @@ const getPlaceIcon = (title: string) => {
 
 const getPlaceCategory = (title: string): string => {
     const lower = title.toLowerCase();
-    if (/raft|rafting/.test(lower)) return 'rafting';
-    if (/(temple|mandir|church|mosque|gurudwara|shrine)/.test(lower)) return 'temple';
-    if (/(trek|hike|mountain|peak|hill)/.test(lower)) return 'trekking';
-    if (/(beach|sea|ocean|coast)/.test(lower)) return 'beach';
-    if (/(lake|river|dam)/.test(lower)) return 'waterbody';
-    if (/waterfall/.test(lower)) return 'waterfall';
-    if (/(fort|palace|castle|haveli)/.test(lower)) return 'fort';
-    if (/(museum|gallery|monument|memorial)/.test(lower)) return 'monument';
-    if (/(park|garden|forest)/.test(lower)) return 'forest';
-    if (/wildlife/.test(lower)) return 'wildlife';
-    return 'monument';
+    if (/raft|rafting/.test(lower)) return 'Rafting';
+    if (/(temple|mandir|church|mosque|gurudwara|shrine)/.test(lower)) return 'Temple';
+    if (/(trek|hike|mountain|peak|hill)/.test(lower)) return 'Trekking';
+    if (/(beach|sea|ocean|coast)/.test(lower)) return 'Beach';
+    if (/(lake|river|dam)/.test(lower)) return 'Waterbody';
+    if (/waterfall/.test(lower)) return 'Waterfall';
+    if (/(fort|palace|castle|haveli)/.test(lower)) return 'Fort';
+    if (/(museum|gallery|monument|memorial)/.test(lower)) return 'Monument';
+    if (/(park|garden|forest)/.test(lower)) return 'Forest';
+    if (/wildlife/.test(lower)) return 'Wildlife';
+    return 'Monument';
 };
 
 const filterMajorityRegion = (places: Place[]): Place[] => {
