@@ -21,6 +21,7 @@ export const viewport = {
     width: 'device-width',
     initialScale: 1,
 };
+
 export async function generateMetadata(
     { params }: Props
 ): Promise<Metadata> {
@@ -40,29 +41,31 @@ export async function generateMetadata(
     const destination = location.title ?? 'Destination';
 
     // 4. Generate reusable strings.
-    const title = `${destination} Travel Guide & Trip Planner | Top ${placesCount} Things To Do`;
+    const title = `${destination} Travel Guide: Top ${placesCount} Things to Do & Plan Your Trip with SyncTrip`;
     const description =
-        `Plan your ${destination} getaway. Explore ${placesCount}+ attractions, ${hotelsCount}+ hotels, group adventures & weather tips for stress-free travel.`;
+        `Explore ${destination} with SyncTrip! Discover ${placesCount}+ must-see attractions, ${hotelsCount}+ top hotels, and expert tips for your perfect ${destination} adventure. Book now!`;
     const canonicalSlug = CommonServices.generateLocationSlug(
         uuid, destination, String(placesCount), country
     );
     const canonicalURL = `https://synctrip.in/location/${canonicalSlug}`;
     const ogImage =
-        location.images?.[0] ??
-        'https://via.placeholder.com/1200x630?text=SyncTrip+Destination';
+        location.images?.[0] ?? 'https://via.placeholder.com/1200x630?text=SyncTrip+Destination';
 
     return {
         title, // ≤60 chars
         description, // 120-155 chars
         keywords: [
+            `${destination} travel guide`,
             `${destination} trip planner`,
-            `top ${placesCount} places to visit`,
-            `best ${hotelsCount} hotels`,
-            `plan ${destination} trip`,
-            `best time to visit ${destination}`,
+            `things to do in ${destination}`,
+            `${destination} attractions`,
+            `best hotels ${destination}`,
             `${destination} itinerary`,
-            'group trips', 'SyncTrip', country + ' travel',
-        ].join(', '),
+            `${destination} tours`,
+            `group trips ${destination}`,
+            `${destination} vacation`,
+            `SyncTrip ${destination}`,
+        ].join(", "),
 
         alternates: { canonical: canonicalURL },
 
@@ -102,6 +105,88 @@ export async function generateMetadata(
 
     };
 }
+
+// export async function generateMetadata(
+//     { params }: Props
+// ): Promise<Metadata> {
+//     const { slug } = await params; // Await params
+//     let [uuid] = slug.split('_');
+//     if (uuid) {
+//         uuid = mapPreviousIdsWithNew(uuid);
+//     }
+//     // 2. Fetch dynamic data.
+//     const location = await ApiService.fetchLocationByIdServer(uuid);
+//     if (!location) return {};
+
+//     // 3. Derive dynamic counts.
+//     const placesCount = location.placesToVisit?.length ?? 10;
+//     const hotelsCount = location.hotels?.length ?? 5;
+//     const country = location.country ?? 'India';
+//     const destination = location.title ?? 'Destination';
+
+//     // 4. Generate reusable strings.
+//     const title = `${destination} Travel Guide & Trip Planner | Top ${placesCount} Things To Do`;
+//     const description =
+//         `Plan your ${destination} getaway. Explore ${placesCount}+ attractions, ${hotelsCount}+ hotels, group adventures & weather tips for stress-free travel.`;
+//     const canonicalSlug = CommonServices.generateLocationSlug(
+//         uuid, destination, String(placesCount), country
+//     );
+//     const canonicalURL = `https://synctrip.in/location/${canonicalSlug}`;
+//     const ogImage =
+//         location.images?.[0] ??
+//         'https://via.placeholder.com/1200x630?text=SyncTrip+Destination';
+
+//     return {
+//         title, // ≤60 chars
+//         description, // 120-155 chars
+//         keywords: [
+//             `${destination} trip planner`,
+//             `top ${placesCount} places to visit`,
+//             `best ${hotelsCount} hotels`,
+//             `plan ${destination} trip`,
+//             `best time to visit ${destination}`,
+//             `${destination} itinerary`,
+//             'group trips', 'SyncTrip', country + ' travel',
+//         ].join(', '),
+
+//         alternates: { canonical: canonicalURL },
+
+//         openGraph: {
+//             title,
+//             description,
+//             url: canonicalURL,
+//             siteName: 'SyncTrip',
+//             locale: 'en_IN',
+//             type: 'website',
+//             images: [
+//                 {
+//                     url: ogImage,
+//                     width: 1200,
+//                     height: 630,
+//                     alt: `${destination} – Travel Guide`,
+//                 },
+//             ],
+//         },
+
+//         twitter: {
+//             card: 'summary_large_image',
+//             title,
+//             description,
+//             images: [ogImage],
+//             site: '@synctrip_in',
+//             creator: '@synctrip_in',
+//         },
+
+//         robots: {
+//             index: true,
+//             follow: true,
+//             'max-snippet': -1,
+//             'max-image-preview': 'large',
+//             'max-video-preview': -1,
+//         },
+
+//     };
+// }
 
 export default async function LocationPage({ params }: Props) {
     const { slug } = await params; // Await params
