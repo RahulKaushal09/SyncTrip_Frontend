@@ -170,7 +170,7 @@ const LocationPageDetails = ({ uuid, locationData }: { uuid: string; locationDat
 
                 {!isMobile && (
                     <div className="col-lg-4" style={{ marginBottom: '17px' }}>
-                        <div style={{ position: 'sticky', top: '10px', zIndex: 1000 }}>
+                        <div style={{ position: 'sticky', top: '80px', zIndex: 50 }}>
                             <AddLocationCard
                                 showBtns
                                 pageType={pageType}

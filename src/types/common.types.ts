@@ -9,46 +9,46 @@ export type Theme = 'light' | 'dark';
 
 export type Status = 'idle' | 'loading' | 'success' | 'error';
 
-export interface SelectOption {
-    value: string;
-    label: string;
-    disabled?: boolean;
-}
+// export interface SelectOption {
+//     value: string;
+//     label: string;
+//     disabled?: boolean;
+// }
 
 export interface Coordinates {
     latitude: number;
     longitude: number;
 }
 
-export interface DateRange {
-    start: string;
-    end: string;
-}
+// export interface DateRange {
+//     start: string;
+//     end: string;
+// }
 
-export interface FileUpload {
-    file: File;
-    progress: number;
-    status: 'pending' | 'uploading' | 'completed' | 'error';
-    url?: string;
-    error?: string;
-}
+// export interface FileUpload {
+//     file: File;
+//     progress: number;
+//     status: 'pending' | 'uploading' | 'completed' | 'error';
+//     url?: string;
+//     error?: string;
+// }
 
-export type SortOrder = 'asc' | 'desc';
+// export type SortOrder = 'asc' | 'desc';
 
-export interface SortConfig {
-    field: string;
-    order: SortOrder;
-}
+// export interface SortConfig {
+//     field: string;
+//     order: SortOrder;
+// }
 
-export interface FilterConfig {
-    [key: string]: unknown;
-}
+// export interface FilterConfig {
+//     [key: string]: unknown;
+// }
 
-export interface consoleError {
-    message: string;
-    stack?: string;
-    name?: string;
-}
+// export interface consoleError {
+//     message: string;
+//     stack?: string;
+//     name?: string;
+// }
 
 export interface IndianCity {
     locationName: string;

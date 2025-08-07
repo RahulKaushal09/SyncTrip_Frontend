@@ -8,7 +8,7 @@ import { ApiResponse, IndianCity, Location, PlacesToVisit, User } from '../types
 import { triggerLogin } from './login.utils';
 import { GoogleLoginResponse, CompleteProfileApiResponse, getLocationResponseSchema, exploreNearByApiResponse } from '@/classes/ApiResponse.classes';
 import { wishlistRequestSchema } from '@/classes/ApiRequest.classes';
-import { indianCitiesPageData } from '@/data/indianCitiesPageData';
+// import { indianCitiesPageData } from '@/data/indianCitiesPageData';
 import { Events } from '@/types';
 // import { cookies } from 'next/headers';
 
@@ -63,7 +63,8 @@ export class ApiService {
   static async getServerSidePropsForEvents() {
     const defaultCityName = 'Delhi-NCR';
     let events: Events[] = [];
-    const indianCities = indianCitiesPageData;
+    // const indianCities = indianCitiesPageData;
+    const indianCities = await this.getAllLocationsForEventsFromBackend();
 
     try {
       const cityObj = indianCities.find(city => city.locationName === defaultCityName);
@@ -100,6 +101,50 @@ export class ApiService {
       initialLocation: defaultCityName,
     };
   }
+
+  static async getAllLocationsForEventsFromBackend(serverSide: boolean = true): Promise<IndianCity[]> {
+    const CACHE_KEY = 'event_locations';
+    const CACHE_TTL_MS = 1000 * 60 * 60 * 24; // 24 hours
+    try {
+      if (!serverSide) {
+        const cached = localStorage.getItem(CACHE_KEY);
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          const now = Date.now();
+
+          if (now - parsed.timestamp < CACHE_TTL_MS) {
+            // ✅ Return cached data if it's still valid
+            return parsed.data;
+          }
+        }
+      }
+
+      const response = await fetch(
+        `${API_CONFIG.BACKEND_BASE_URL}/api/events/getAllLocationsWithCode`,
+        {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+      if (!response.ok) {
+        throw new Error('Failed to fetch locations for events');
+      }
+      const data = await response.json();
+      if (!serverSide) {
+
+        // Step 3: Cache the fresh data with timestamp
+        localStorage.setItem(
+          CACHE_KEY,
+          JSON.stringify({ data, timestamp: Date.now() })
+        );
+      }
+      return data || [];
+    } catch (error) {
+      console.error('Error fetching locations for events:', error);
+      return [];
+    }
+  }
+
   static async fetchEvents(city: IndianCity): Promise<Events[]> {
     if (city) {
       try {

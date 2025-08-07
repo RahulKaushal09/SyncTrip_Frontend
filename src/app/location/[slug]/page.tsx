@@ -2,7 +2,7 @@
 
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
-import Head from 'next/head';
+// import Head from 'next/head';
 import { ApiService } from '@/utils/api.utils';
 // import { locationDataSchema } from '@/constants'; // Make sure this is exported properly
 import LocationPageDetails from '@/components/PageDetails/LocationPageDetails';
@@ -198,7 +198,7 @@ export default async function LocationPage({ params }: Props) {
 
     if (!locationData) return notFound();
     const placeIds = locationData?.placesToVisit || [];
-    const token = '';
+    // const token = '';
     // const cookieStore = await cookies();
     // const tokenCookie = cookieStore.get('userToken');
 

@@ -7,6 +7,7 @@ import { ApiService } from '../../utils/api.utils';
 import { User } from '../../types';
 import { Location } from '../../types';
 import '../../../styles/popups/FullProfilePopup.css';
+import { LocationFields } from '@/constants';
 
 interface FullProfilePopupProps {
     user: User;
@@ -37,12 +38,15 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
     const [locations, setLocations] = useState<Location[]>([]);
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-
+    const LocationFieldsToFetch = [
+        LocationFields.ID,
+        LocationFields.TITLE
+    ];
     useEffect(() => {
         const getLocations = async () => {
             try {
                 // For profile popup, we want locations without wishlist data (simpler)
-                const response = await ApiService.fetchLocations(0, 100, []);
+                const response = await ApiService.fetchLocations(0, 1000, LocationFieldsToFetch);
                 if (response && response.locations) {
                     setLocations(response.locations);
                 } else {

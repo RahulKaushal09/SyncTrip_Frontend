@@ -12,19 +12,19 @@ export interface ApiResponse<T = unknown> {
     error?: string;
 }
 
-export interface PaginatedResponse<T> extends ApiResponse<T[]> {
-    pagination: {
-        page: number;
-        limit: number;
-        total: number;
-        totalPages: number;
-    };
-}
+// export interface PaginatedResponse<T> extends ApiResponse<T[]> {
+//     pagination: {
+//         page: number;
+//         limit: number;
+//         total: number;
+//         totalPages: number;
+//     };
+// }
 
-export interface LoginRequest {
-    email: string;
-    password: string;
-}
+// export interface LoginRequest {
+//     email: string;
+//     password: string;
+// }
 
 export interface LoginResponse {
     user: {
@@ -37,12 +37,12 @@ export interface LoginResponse {
     refreshToken: string;
 }
 
-export interface RegisterRequest {
-    name: string;
-    email: string;
-    password: string;
-    confirmPassword: string;
-}
+// export interface RegisterRequest {
+//     name: string;
+//     email: string;
+//     password: string;
+//     confirmPassword: string;
+// }
 
 
 export interface Location {

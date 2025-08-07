@@ -66,7 +66,7 @@ export async function generateMetadata(): Promise<Metadata> {
             },
             alternates: { canonical: canonicalURL },
         }
-    } catch (error) {
+    } catch (error: unknown) {
         // Fallback metadata for error scenarios
         return {
             title: 'Best Travel Packages & Group Tours 2025 | YourTravelBrand',
@@ -80,7 +80,7 @@ const TripsPage = async ({ }) => {
     let trips: Trip[] = [];
     const tripsResponse: getAllTripsResponseSchema = await TripsApiService.fetchAllTrips();
     trips = tripsResponse.trips || [];
-    const totaltrips = tripsResponse.totalTrips || 0;
+    // const totaltrips = tripsResponse.totalTrips || 0;
     return (
         <div className="trips-container">
             <TripSection

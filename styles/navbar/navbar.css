@@ -5,8 +5,41 @@
     .navbar-collapse {
         visibility: visible !important;
     }
+    .navbar {
+        padding-left: 50px;
+    padding-right: 50px;
+    }
 }
 
+.navbar {
+    transition: all 0.3s ease;
+    /* Smooth transition for background and other properties */
+    width: 100%;
+    z-index: 1000;
+    
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+/* Sticky navbar styles */
+.navbar.sticky {
+
+    background: rgba(255, 255, 255, 0.8);
+    /* Semi-transparent white background */
+    backdrop-filter: blur(10px);
+    /* Blur effect */
+    -webkit-backdrop-filter: blur(10px);
+    /* For Safari compatibility */
+    /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
+    /* Subtle shadow for depth */
+}
+
+/* Optional: Adjust navbar content padding when sticky */
+/* .navbar.sticky .container-fluid {
+    padding: 10px 15px;
+} */
 /* Overlay */
 .mobile-overlay {
     position: fixed;
@@ -16,6 +49,7 @@
     height: 100vh;
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 1040;
+    
 }
 
 /* Drawer */

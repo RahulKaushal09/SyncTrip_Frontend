@@ -170,7 +170,7 @@ const PlanTripDates: React.FC<PlanTripDatesProps> = ({
                 >
                     <button
                         className="view-more-btn create-trip"
-                        style={{ borderRadius: '9px', width: '100%' }}
+                        style={{ borderRadius: '9px', width: '100%', textAlign: 'center' }}
                         onClick={createTrip}
                         aria-label={pageType === PageTypeEnum.LOCATION ? 'Create Trip' : 'Join Trip'}
                     >

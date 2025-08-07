@@ -33,23 +33,23 @@ export interface User {
     preferredDestinations?: string[];
 }
 
-export interface UserProfile extends User {
-    bio?: string;
-    location?: string;
-    preferences?: UserPreferences;
-}
+// export interface UserProfile extends User {
+//     bio?: string;
+//     location?: string;
+//     preferences?: UserPreferences;
+// }
 
-export interface UserPreferences {
-    theme?: 'light' | 'dark';
-    language?: string;
-    notifications?: NotificationSettings;
-}
+// export interface UserPreferences {
+//     theme?: 'light' | 'dark';
+//     language?: string;
+//     notifications?: NotificationSettings;
+// }
 
-export interface NotificationSettings {
-    email: boolean;
-    push: boolean;
-    sms: boolean;
-}
+// export interface NotificationSettings {
+//     email: boolean;
+//     push: boolean;
+//     sms: boolean;
+// }
 
 // export interface Location {
 //     id: string;

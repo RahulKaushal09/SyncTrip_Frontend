@@ -29,7 +29,16 @@ const NavbarClient = ({ }) => {
   useEffect(() => {
     setLoadingUser(false);
   }, [user]);
+  const [isSticky, setIsSticky] = useState(false);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsSticky(window.scrollY > 2); // 10px scroll threshold
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
   // let user: User | null = null;
 
   // // const cookieStore = cookies(); // Safe on server
@@ -86,7 +95,7 @@ const NavbarClient = ({ }) => {
   const toggleDropdown = () => setShowDropdown(!showDropdown);
   const handleLoginClick = () => openLogin();
   return (
-    <nav className="navbar navbar-expand-lg navbar-light" style={{ paddingTop: "10px" }}>
+    <nav className={`navbar navbar-expand-lg navbar-light ${isSticky ? "sticky" : "" }`} style={{ paddingTop: "10px" }}>
       <div className="container-fluid">
         <Link href="/" className="navbar-brand" style={{ width: "100px" }}>
           <Image src={SyncTripLogo} alt="SyncTrip" style={{ width: "100%" }} />

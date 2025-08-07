@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import '../../../styles/LocationImageGallery.css'; // Adjust if you're using a different folder structure
+import Image from 'next/image';
 
 interface Props {
     locationImages: string[];
@@ -64,9 +65,11 @@ const LocationImageGallery: React.FC<Props> = ({ locationImages, locationName })
                     onScroll={handleInteractionStart}
                 >
                     {locationImages.map((image, index) => (
-                        <img
+                        <Image
                             key={index}
                             src={image}
+                            width={400}
+                            height={300}
                             alt={`Attraction in ${locationName} - SyncTrip`}
                             className="carousel-image"
                             loading="lazy"
@@ -75,23 +78,29 @@ const LocationImageGallery: React.FC<Props> = ({ locationImages, locationName })
                 </div>
             ) : (
                 <div className="image-grid">
-                    <img
+                    <Image
                         src={locationImages[0]}
+                        width={800}
+                        height={500}
                         alt={`Attraction in ${locationName} - SyncTrip`}
                         className="main-image"
                     />
                     <div className="right-grid">
                         {locationImages.slice(1, 4).map((image, index) => (
-                            <img
+                            <Image
                                 key={index}
                                 src={image}
+                                width={400}
+                                height={250}
                                 alt={`Attraction in ${locationName} - SyncTrip`}
                                 className={`right-image right-image-${index + 1}`}
                             />
                         ))}
                         <div className="last-image-container">
-                            <img
+                            <Image
                                 src={locationImages[4]}
+                                width={400}
+                                height={250}
                                 alt={`Attraction in ${locationName} - SyncTrip`}
                                 className="right-image right-image-4"
                             />
@@ -111,9 +120,11 @@ const LocationImageGallery: React.FC<Props> = ({ locationImages, locationName })
                         </button>
                         <div className="popup-images">
                             {locationImages.map((image, index) => (
-                                <img
+                                <Image
                                     key={index}
                                     src={image}
+                                    width={200}
+                                    height={200}
                                     alt={`Attraction in ${locationName} - SyncTrip`}
                                     className="popup-image"
                                     style={{ height: '200px', width: '200px' }}

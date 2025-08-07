@@ -1,8 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { BsBoundingBoxCircles, BsTaxiFrontFill } from 'react-icons/bs';
-import { GrSwim } from 'react-icons/gr';
+
 
 import peopleTravelling from '../../assets/images/peopleTravelling.svg';
 import syncTripApp from '../../assets/images/syncTripMobile.png';
@@ -23,30 +22,30 @@ const SyncTripAppPushingSection = ({ showWork }: SyncTripAppPushingSectionProps)
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    const features = [
-        {
-            Icon: BsBoundingBoxCircles,
-            title: 'Explore Destinations',
-            description:
-                'Discover destinations with filters like budget, activities, and travel preferences.',
-        },
-        {
-            Icon: GrSwim,
-            title: 'Plan Collaboratively',
-            description:
-                'Create trips, invite friends, and build shared itineraries like Pinterest boards.',
-        },
-        {
-            Icon: BsTaxiFrontFill,
-            title: 'Finalize Effortlessly',
-            description:
-                'Pick dates, finalize plans with your group, and enjoy a well-organized trip.',
-        },
-    ];
+    // const features = [
+    //     {
+    //         Icon: BsBoundingBoxCircles,
+    //         title: 'Explore Destinations',
+    //         description:
+    //             'Discover destinations with filters like budget, activities, and travel preferences.',
+    //     },
+    //     {
+    //         Icon: GrSwim,
+    //         title: 'Plan Collaboratively',
+    //         description:
+    //             'Create trips, invite friends, and build shared itineraries like Pinterest boards.',
+    //     },
+    //     {
+    //         Icon: BsTaxiFrontFill,
+    //         title: 'Finalize Effortlessly',
+    //         description:
+    //             'Pick dates, finalize plans with your group, and enjoy a well-organized trip.',
+    //     },
+    // ];
 
     return (
         <div className="container-appPushing mx-auto  py-8 bg-white" style={{ paddingBottom: "0px" }}>
-            {showWork && (
+            {/* {showWork && (
                 <h2 className="fw-bold text-primary mb-5">How SyncTrip works?</h2>
             )}
 
@@ -84,7 +83,7 @@ const SyncTripAppPushingSection = ({ showWork }: SyncTripAppPushingSectionProps)
                         />
                     </div>
                 </div>
-            )}
+            )} */}
             <div className="AppPushingBlock" style={{ textAlign: "left" }}>
                 <div className="row appPushingSection2">
                 {!mobileView && (

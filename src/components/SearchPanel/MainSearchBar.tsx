@@ -44,7 +44,8 @@ const MainSearchBarSkeleton: React.FC<MainSearchBarPropsSkeleton> = ({
                 <input
                     type="search"
                     placeholder={searchBarPlaceHolder}
-                    value={""}
+                    // value={""}
+                    defaultValue=""
                     className="searchBarInput"
                     aria-label="Search for destinations, hotels, and travel experiences"
                     autoComplete="off"

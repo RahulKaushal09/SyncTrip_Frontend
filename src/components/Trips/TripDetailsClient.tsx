@@ -39,7 +39,7 @@ export default function TripDetailsContentClient({
     const [isLoadingPlaces, setIsLoadingPlaces] = useState(true);
     const [errorPlaces, setErrorPlaces] = useState<string | null>(null);
     const [alreadyEnrolled, setAlreadyEnrolled] = useState(false);
-    const [showBtnsOfJoin, setShowBtnsOfJoin] = useState(true);
+    // const [showBtnsOfJoin, setShowBtnsOfJoin] = useState(true);
     // Handle mobile detection
     useEffect(() => {
         const checkMobile = () => setIsMobile(window.innerWidth <= 768);
@@ -170,8 +170,8 @@ export default function TripDetailsContentClient({
                     ) : errorPlaces ? (
                         <div className="text-center my-4 text-danger">{errorPlaces}</div>
                     ) : placesToVisit.length > 0 ? (
-                        <PlacesToVisitSection
-                            title={tripData.title}
+                                <PlacesToVisitSection
+                                    title={tripData.title}
                             places={updatedLocationData.placesToVisit as PlacesToVisit[]}
                             parentId={updatedLocationData.id}
                             parentType="location"
@@ -211,7 +211,7 @@ export default function TripDetailsContentClient({
                 </div>
                 {!isMobile && (
                     <div className="col-lg-4" style={{ marginBottom: '17px' }}>
-                        <div style={{ position: 'sticky', top: '10px', zIndex: 50 }}>
+                        <div style={{ position: 'sticky', top: '80px', zIndex: 50 }}>
                             <AddLocationCard
                                 btnReference={undefined}
                                 showBtns={tripStatus !== 'completed'}

@@ -4,10 +4,10 @@
 
 import { User } from './user.types';
 
-export interface NavbarProps {
-    ctaAction: () => void;
-    user: User | null;
-}
+// export interface NavbarProps {
+//     ctaAction: () => void;
+//     user: User | null;
+// }
 
 export interface LoginPopupProps {
     onClose: () => void;
@@ -30,22 +30,22 @@ export interface PreRegisterPopupProps {
     onClose: () => void;
 }
 
-export interface ButtonProps {
-    children: React.ReactNode;
-    onClick?: () => void;
-    variant?: 'primary' | 'secondary' | 'danger' | 'success';
-    size?: 'sm' | 'md' | 'lg';
-    disabled?: boolean;
-    loading?: boolean;
-}
+// export interface ButtonProps {
+//     children: React.ReactNode;
+//     onClick?: () => void;
+//     variant?: 'primary' | 'secondary' | 'danger' | 'success';
+//     size?: 'sm' | 'md' | 'lg';
+//     disabled?: boolean;
+//     loading?: boolean;
+// }
 
-export interface ModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-    title?: string;
-    children: React.ReactNode;
-    size?: 'sm' | 'md' | 'lg' | 'xl';
-}
+// export interface ModalProps {
+//     isOpen: boolean;
+//     onClose: () => void;
+//     title?: string;
+//     children: React.ReactNode;
+//     size?: 'sm' | 'md' | 'lg' | 'xl';
+// }
 
 export interface Events {
     title: string;
@@ -66,11 +66,11 @@ export interface Events {
     id: string;
 }
 
-export interface FormProps {
-    onSubmit: (data: unknown) => void;
-    loading?: boolean;
-    initialValues?: Record<string, unknown>;
-}
+// export interface FormProps {
+//     onSubmit: (data: unknown) => void;
+//     loading?: boolean;
+//     initialValues?: Record<string, unknown>;
+// }
 
 
 export interface TrendingLocationData {
@@ -102,4 +102,26 @@ export interface Festival {
         title: string;
     }[];
 
+}
+export interface BlogPost {
+    id: string;
+    title: string;
+    slug: string;
+    content: string; // Full HTML content
+    featuredImage: string;
+    createdAt: string;
+    relatedLocations: string[]; // Array of location IDs
+    seo: {
+        seo_title: string;
+        seo_description: string;
+        seo_keywords: string[];
+        canonical_url: string;
+        seo_image: string;
+    };
+    tags: string[];
+    author: string;
+    readTime: string;
+    category: string;
+    rating?: string;
+    featured?: boolean;
 }

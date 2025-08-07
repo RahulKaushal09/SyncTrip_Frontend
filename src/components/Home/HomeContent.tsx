@@ -10,7 +10,7 @@ import '../../../styles/home/home.css';
 import { Location } from '@/types';
 import dynamic from 'next/dynamic';
 import { MainSearchBarSkeleton } from '../SearchPanel/MainSearchBar';
-import { StorageUtils } from '@/utils';
+// import { StorageUtils } from '@/utils';
 import { UserApiService } from '@/utils/user.api.utils';
 interface HomeContentProps {
     initialLocations: Location[];

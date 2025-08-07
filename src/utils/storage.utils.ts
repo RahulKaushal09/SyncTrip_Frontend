@@ -43,16 +43,16 @@ export class StorageUtils {
         }
     }
 
-    static clear(): void {
-        try {
-            // Check if we're in a browser environment
-            if (typeof window !== 'undefined' && window.localStorage) {
-                localStorage.clear();
-            }
-        } catch (error) {
-            console.error('Error clearing localStorage:', error);
-        }
-    }
+    // static clear(): void {
+    //     try {
+    //         // Check if we're in a browser environment
+    //         if (typeof window !== 'undefined' && window.localStorage) {
+    //             localStorage.clear();
+    //         }
+    //     } catch (error) {
+    //         console.error('Error clearing localStorage:', error);
+    //     }
+    // }
 
     // User-specific storage methods
     static setUser(user: User): void {
@@ -63,9 +63,9 @@ export class StorageUtils {
         return this.getItem(STORAGE_KEYS.USER);
     }
 
-    static setToken(token: string): void {
-        this.setItem(STORAGE_KEYS.TOKEN, token);
-    }
+    // static setToken(token: string): void {
+    //     this.setItem(STORAGE_KEYS.TOKEN, token);
+    // }
 
     static getToken(): string | null {
         const token = localStorage.getItem(STORAGE_KEYS.TOKEN);

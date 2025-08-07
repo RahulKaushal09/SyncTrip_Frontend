@@ -107,17 +107,17 @@ const ExploreNearby: React.FC = () => {
         }
     };
 
-    function isLocation(item: Location): item is Location {
-        return 'type' in item && item.type?.toLowerCase() == "location";
-    }
+    // function isLocation(item: Location): item is Location {
+    //     return 'type' in item && item.type?.toLowerCase() == "location";
+    // }
 
-    function isPlacesToVisit(item: PlacesToVisit): item is PlacesToVisit {
-        return 'type' in item && item.type?.toLowerCase() == "placestovisit";
-    }
+    // function isPlacesToVisit(item: PlacesToVisit): item is PlacesToVisit {
+    //     return 'type' in item && item.type?.toLowerCase() == "placestovisit";
+    // }
 
-    function isRestaurant(item: Restaurants): item is Restaurants {
-        return 'type' in item && item.type?.toLowerCase() == "restaurant";
-    }
+    // function isRestaurant(item: Restaurants): item is Restaurants {
+    //     return 'type' in item && item.type?.toLowerCase() == "restaurant";
+    // }
     const renderLocationCard = (location: Location) => {
         const title = location.title || 'Untitled Location';
         const description = location.description || 'No description available';

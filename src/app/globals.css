@@ -12,47 +12,48 @@
   --text: #0d344b;
 
   /* Primary Colors */
-  --primary-1: #41b4ea;
-  --primary-2: #63c3f9;
-  --primary-3: #94d6fd;
-  --primary-4: #e6f6fe;
-  --primary-5: #177bc2;
+  --primary-1: #3ABEF5;
+    --primary-2: #7ACCF5;
+    --primary-3: #B8E8FF;
+    --primary-4: #E3F5FF;
+    --primary-5: #F2FAFF;
   /* Hover */
-
+  --primary-hover: #007EB2;
   /* Secondary Colors */
-  --secondary-1: #0d344b;
-  --secondary-2: #5398d6;
-  --secondary-3: #9fcbfb;
-  --secondary-4: #f1f7fb;
-  --secondary-5: #183a53;
+  --secondary-1: #16324F;
+    --secondary-2: #A2C3E8;
+    --secondary-3: #CEE1F8;
+    --secondary-4: #E3F5FF;
+    --secondary-5: #F7FAFD;
   /* Hover */
 
   /* Neutrals */
-  --neutral-1: #646a80;
-  --neutral-2: #8e93a3;
-  --neutral-3: #b0b3ba;
-  --neutral-4: #cfd1d6;
-  --neutral-5: #e8e9ed;
+  --neutral-1: #80838D;
+    --neutral-2: #B9BBC6;
+    --neutral-3: #CDCED6;
+    --neutral-4: #D9D9E0;
+    --neutral-5: #E8E8EC;
 
   /* Semantic: Error */
-  --error-1: #ed5147;
-  --error-2: #f57979;
-  --error-3: #f7a8a8;
-  --error-4: #fde3e3;
-  --error-5: #ffebeb;
+  --error-1: #E5484D;
+    --error-2: #EB8E90;
+    --error-3: #F4A9AA;
+    --error-4: #FFCDCE;
+    --error-5: #FEEBEC;
 
   /* Semantic: Success */
-  --success-1: #28b575;
-  --success-2: #40c586;
-  --success-3: #96e0c4;
-  --success-4: #e4f9f1;
-  --success-5: #eefdef;
+  --success-1: #2B9A66;
+    --success-2: #5BB98B;
+    --success-3: #8ECEAA;
+    --success-4: #C4E8D1;
+    --success-5: #E6F6EB;
 
   /* Semantic: Warning */
-  --warning-1: #f7c240;
-  --warning-2: #ffd86c;
-  --warning-3: #ffe49a;
-  --warning-4: #fffbcc;
+  --warning-1: #FFC53D;
+    --warning-2: #F3D673;
+    --warning-3: #FBE577;
+    --warning-4: #FFEE9C;
+    --warning-5: #FFF7C2;
 
   /* typography  */
   --font-serif: 'Lisu Bosa', serif;
@@ -404,12 +405,13 @@ body {
   font-family: Helvetica, sans-serif !important;
   margin-left: 60px;
   margin-right: 60px;
+  margin-top: 80px !important;
 }
 
 /* Responsive Margins */
 @media screen and (max-width: 1050px) and (min-width: 990px) {
   .App {
-    margin: 0 30px;
+    margin: 80px 30px 0px 80px;
     overflow-x: hidden;
   }
 }
@@ -417,6 +419,7 @@ body {
 @media screen and (max-width: 990px) {
   .App {
     margin: 0;
+    margin-top: 60px !important;
     overflow-x: hidden;
   }
 }
@@ -510,6 +513,10 @@ input {
   height: 40px;
 }
 
+.btn-blue {
+  background-color: #00bcd4;
+  color: #fff;
+}
 
 
 /* ========= Headings ========= */

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Fuse from 'fuse.js';
 import toast from 'react-hot-toast';
 import { Events, IndianCity } from '@/types';
-import { indianCitiesPageData } from '@/data/indianCitiesPageData';
+// import { indianCitiesPageData } from '@/data/indianCitiesPageData';
 import { ApiService } from '@/utils/api.utils';
 
 interface GetLocationBlockProps {
@@ -44,8 +44,15 @@ export default function GetLocationBlock({ initialLocation, setEvents }: GetLoca
     const [customLocation, setCustomLocation] = useState('');
     const [suggestions, setSuggestions] = useState<IndianCity[]>([]);
     // const [events, setEvents] = useState<Event[]>([]);
-    let indianCities: IndianCity[] = []; // Replace with actual data or prop
-    indianCities = indianCitiesPageData;
+    const [indianCities, setIndianCities] = useState<IndianCity[]>([]);
+    // let indianCities: IndianCity[] = []; // Replace with actual data or prop
+    // indianCities = indianCitiesPageData;
+    useEffect(() => {
+        ( async () => {
+            const cities = await ApiService.getAllLocationsForEventsFromBackend(false);
+            setIndianCities(cities);
+        })();
+    }, []);
     const fetchEvents = async (city: IndianCity, defaultCity: string) => {
         if (city) {
             try {
@@ -107,7 +114,7 @@ export default function GetLocationBlock({ initialLocation, setEvents }: GetLoca
                     const cityObj = indianCities.find(city => city.locationName === defaultCity);
                     // setLocation(defaultCity);
                     if (cityObj) fetchEvents(cityObj, defaultCity);
-                    toast.error('Location permission is required to fetch events.');
+                    // toast.error('Location permission is required to fetch events.');
                 }
             );
         } else {
@@ -120,7 +127,8 @@ export default function GetLocationBlock({ initialLocation, setEvents }: GetLoca
             const lowerQuery = query.toLowerCase();
             const startsWith: IndianCity[] = [];
             const includes: IndianCity[] = [];
-
+            console.log('Fetching locations for query:', query);
+            console.log('Available cities:', indianCities.map(city => city.locationName));
             indianCities.forEach(city => {
                 const name = city.locationName.toLowerCase();
                 if (name.startsWith(lowerQuery)) {
