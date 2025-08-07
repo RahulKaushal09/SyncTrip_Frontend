@@ -1,3 +1,5 @@
+import { BlogPost } from "@/types";
+
 export interface wishlistRequestSchema {
     type: string;
     refId: string;
@@ -11,7 +13,12 @@ export interface getUserWishlistRequestSchema {
 }
 
 
-
+export interface blogResponseSchema{
+    success: boolean;
+    data: BlogPost;
+    message?: string;
+    error?: string;
+}
 
 export interface addBlogRequestSchema {
     title: string;

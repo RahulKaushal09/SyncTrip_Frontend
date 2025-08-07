@@ -240,7 +240,28 @@ export class ApiService {
       return {} as getLocationResponseSchema;
     }
   }
-
+  static async fetchLocationsByIds(
+    ids: string[],
+    fields: LocationField[],
+    token: string = ""
+  ): Promise<Location[]> {
+    if (!ids || ids.length === 0) return [];
+    try {
+      const response = await fetch(
+        `${API_CONFIG.BACKEND_BASE_URL}/api/locations/getLocationsByIds`,
+        {
+          method: 'POST',
+          headers: await this.getAuthHeadersServer(token),
+          body: JSON.stringify({ ids, fields }),
+        }
+      );
+      const locations: Location[] = await this.handleResponse<Location[]>(response);
+      return locations;
+    } catch (error) {
+      console.error('Failed to fetch locations by IDs:', error);
+      return [];
+    }
+  }
   // Utility to merge server locations with client wishlist data
   static mergeLocationsWithWishlist(serverLocations: Location[], clientLocations: Location[]): Location[] {
     const wishlistMap = new Map();

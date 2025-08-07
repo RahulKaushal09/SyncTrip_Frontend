@@ -1,143 +1,150 @@
-"use client";
+// app/blogs/[slug]/page.tsx
 
-import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-
-import { sampleBlogs, sampleLocations } from "@/data/sampleData";
-import BlogContent from "@/components/Blogs/BlogContent";
-import LocationCard from "@/components/Blogs/BlogsLocationCard";
-// import BlogHeader from "@/components/Blogs/BlogHeader";
-// import BlogFooter from "@/components/Blogs/BlogFooter";
-
+import { notFound } from "next/navigation";
+import { Metadata } from "next";
+import { ApiService, BlogsApiServices } from "@/utils";
+// import BlogContent from "@/components/Blogs/BlogContent";
+// import BlogsLocationCard from "@/components/Blogs/BlogsLocationCard";
 import { BlogPost, Location } from "@/types";
+import Script from "next/script";
+
+import dynamic from 'next/dynamic';
+const BlogContent = dynamic(() => import("@/components/Blogs/BlogContent"), {
+  loading: () => <p>Loading...</p>,
+});
+const BlogsLocationCard = dynamic(() => import("@/components/Blogs/BlogsLocationCard"));
+
+// import "@/styles/Blogs/blogDetail.css";
 import "../../../../styles/Blogs/blogDetail.css";
 
-const BlogDetail = () => {
-    const params = useParams();
-    const router = useRouter();
-    const slug = typeof params.slug === "string" ? params.slug : params.slug?.[0];
+import { LocationFields } from "@/constants";
 
-    const [blog, setBlog] = useState<BlogPost | null>(null);
-    const [relatedLocations, setRelatedLocations] = useState<Location[]>([]);
-    const [loading, setLoading] = useState(true);
+interface BlogDetailProps {
+    params: Promise<{ slug: string }>; // Define params as a Promise
 
-    useEffect(() => {
-        if (!slug) return;
+  
+}
 
-        const foundBlog = sampleBlogs.find((b) => b.slug === slug);
+export async function generateMetadata({ params }: BlogDetailProps): Promise<Metadata> {
+     const { slug } = await params;
+  const blog: BlogPost = await BlogsApiServices.fetchBlogBySlug(slug);
+  if (!blog) return {};
 
-        if (!foundBlog) {
-            router.push("/blog");
-            return;
-        }
+  return {
+    title: blog.seo?.seo_title || blog.title,
+    description: blog.seo?.seo_description || blog.content?.substring(0, 160),
+    keywords: blog.seo?.seo_keywords?.join(", "),
+    openGraph: {
+      title: blog.seo?.seo_title || blog.title,
+      description: blog.seo?.seo_description,
+      images: [
+        {
+          url: blog.seo?.seo_image || blog.featuredImage,
+          alt: blog.title,
+        },
+      ],
+      type: "article",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: blog.seo?.seo_title || blog.title,
+      description: blog.seo?.seo_description,
+      images: [blog.seo?.seo_image || blog.featuredImage],
+    },
+    alternates: {
+      canonical: blog.seo?.canonical_url || `https://yourdomain.com/blogs/${blog.slug}`,
+    },
+  };
+}
 
-        setBlog(foundBlog);
-
-        const locations = sampleLocations.filter((location) =>
-            foundBlog.relatedLocations.includes(location.id)
-        );
-        setRelatedLocations(locations);
-        setLoading(false);
-        console.log("Blog loaded:", foundBlog);
-        document.title = foundBlog.seo.seo_title;
-
-        const metaDescription = document.querySelector('meta[name="description"]');
-        if (metaDescription) {
-            metaDescription.setAttribute("content", foundBlog.seo.seo_description);
-        } else {
-            const meta = document.createElement("meta");
-            meta.name = "description";
-            meta.content = foundBlog.seo.seo_description;
-            document.head.appendChild(meta);
-        }
-
-        const canonicalLink = document.querySelector('link[rel="canonical"]');
-        if (canonicalLink) {
-            canonicalLink.setAttribute("href", foundBlog.seo.canonical_url);
-        } else {
-            const link = document.createElement("link");
-            link.rel = "canonical";
-            link.href = foundBlog.seo.canonical_url;
-            document.head.appendChild(link);
-        }
-    }, [slug, router]);
-
-    const handleCreateTrip = (locationId: string) => {
-        console.log("Creating trip for location:", locationId);
-        // router.push(`/create-trip?location=${locationId}`);
-    };
-
-    // const handleBackToBlog = () => {
-    //     router.push("/blogs");
-    // };
-
-    if (loading) {
-        return (
-            <div className="blog-detail">
-                {/* <BlogHeader /> */}
-                <div className="loading-section">
-                    <div className="loading-title"></div>
-                    <div className="loading-banner"></div>
-                    <div className="loading-lines">
-                        <div></div>
-                        <div></div>
-                        <div></div>
-                    </div>
-                </div>
-                {/* <BlogFooter /> */}
-            </div>
-        );
-    }
-
-    if (!blog) return null;
-
-    return (
-        <div className="blog-detail">
-            {/* <BlogHeader /> */}
-
-            <main className="blog-container">
-                {/* <button onClick={handleBackToBlog} className="back-button">
-                    <FaArrowLeft />
-                    <span>Back to Blogs</span>
-                </button> */}
-
-                <BlogContent blog={blog} />
-
-                {relatedLocations.length > 0 && (
-                    <section className="related-section">
-                        <div className="section-header">
-                            <h2>Explore Related Destinations</h2>
-                            <p>
-                                Discover amazing places mentioned in this blog and start planning your next adventure
-                            </p>
-                        </div>
-
-                        <div className="related-grid">
-                            {relatedLocations.map((location) => (
-                                <LocationCard
-                                    key={location.id}
-                                    location={location}
-                                    onCreateTrip={handleCreateTrip}
-                                />
-                            ))}
-                        </div>
-                    </section>
-                )}
-
-                <section className="cta-section">
-                    <div className="cta-box">
-                        <h3>Ready to Start Your Journey?</h3>
-                        <p>
-                            Turn your travel dreams into reality. Create personalized itineraries and discover hidden gems with SyncTrip.
-                        </p>
-                        <button className="cta-button">Plan Your Trip</button>
-                    </div>
-                </section>
-            </main>
-
-            {/* <BlogFooter /> */}
-        </div>
+const BlogDetailPage = async ({ params }: BlogDetailProps) => {
+  const { slug } = await params;
+  const blog: BlogPost = await BlogsApiServices.fetchBlogBySlug(slug);
+  if (!blog) {
+    return notFound(); // SSR 404 if blog not found
+  }
+  const relatedLocationsIds = blog.relatedLocations || [];
+  let relatedLocations: Location[] = [];
+  if(relatedLocationsIds.length > 0) {
+    const locationFieldsTofetch = [
+        LocationFields.ID,
+        LocationFields.TITLE,
+        LocationFields.IMAGES,
+        LocationFields.PHOTOS,
+        LocationFields.PLACES_NUMBER_TO_VISIT,
+        LocationFields.COUNTRY,
+        LocationFields.STATE,
+        LocationFields.BEST_TIME,
+        LocationFields.DESCRIPTION,
+        
+      ];
+    relatedLocations = await ApiService.fetchLocationsByIds(
+      relatedLocationsIds,
+      locationFieldsTofetch
     );
+  }
+
+
+  return (
+    
+    <div className="blog-detail">
+      <main className="blog-container">
+<Script id="structured-data" type="application/ld+json">
+  {JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: blog.seo?.seo_title || blog.title,
+    description: blog.seo?.seo_description,
+    image: blog.seo?.seo_image || blog.featuredImage,
+    author: {
+      "@type": "Person",
+      name: blog.author,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "SyncTrip",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://synctrip.in/logo_main.png",
+      },
+    },
+    datePublished: blog.createdAt,
+  })}
+</Script>
+
+        <BlogContent blog={blog} />
+
+        {relatedLocations.length > 0 && (
+          <section className="related-section">
+            <div className="section-header">
+              <h2>Explore Related Destinations</h2>
+              <p>
+                Discover amazing places mentioned in this blog and start planning your next adventure
+              </p>
+            </div>
+            <div className="related-grid">
+              {relatedLocations.map((location) => (
+                <BlogsLocationCard
+                  key={location.id}
+                  location={location}
+                />
+              ))}
+            </div>
+          </section>
+        )}
+
+        <section className="cta-section">
+          <div className="cta-box">
+            <h3>Ready to Start Your Journey?</h3>
+            <p>
+              Turn your travel dreams into reality. Create personalized itineraries and discover hidden gems with SyncTrip.
+            </p>
+            <button className="cta-button">Plan Your Trip</button>
+          </div>
+        </section>
+      </main>
+    </div>
+  );
 };
 
-export default BlogDetail;
+export default BlogDetailPage;

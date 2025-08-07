@@ -76,7 +76,7 @@ const BlogCard = ({
                         <span><Icon name={ICONS_CLASS.calendarIcon.iconName} alt={ICONS_CLASS.calendarIcon.alt} className="meta-icon" /> {date}</span>
                     </div>
                     <div className="blog-card-readtime">
-                        <Icon name={ICONS_CLASS.clockIcon.iconName} alt={ICONS_CLASS.clockIcon.alt} className="meta-icon" /> <span>{readTime}</span>
+                        <Icon name={ICONS_CLASS.clockIcon.iconName} alt={ICONS_CLASS.clockIcon.alt} className="meta-icon" /> <span>{readTime} min</span>
                     </div>
                 </div>
             </div>

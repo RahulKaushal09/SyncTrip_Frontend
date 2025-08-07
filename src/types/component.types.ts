@@ -119,6 +119,7 @@ export interface BlogPost {
         seo_image: string;
     };
     tags: string[];
+    filterTags: string[];
     author: string;
     readTime: string;
     category: string;

@@ -52,6 +52,7 @@ export const LocationFields = Object.freeze({
     RATING: 'rating',
     HREF: 'href',
     COUNTRY: 'country',
+    STATE: 'state',
     BEST_TIME: 'best_time',
     PLACE_IMAGE_LINK: 'PlaceImageLink',
     PLACES_TO_VISIT_LINK: 'PlacesToVisitLink',

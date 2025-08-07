@@ -1,4 +1,4 @@
-
+"use client";
 import { BlogPost } from "@/types";
 import "../../../styles/Blogs/blogContent.css";
 import { ICONS_CLASS } from "@/utils/icon.utils";

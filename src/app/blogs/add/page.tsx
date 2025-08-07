@@ -35,6 +35,7 @@ export default function AddBlogPage() {
     createdAt: '',
     tags: [],
     category: '',
+    filterTags: [],
   });
 
   const [locations, setLocations] = useState<Location[]>([]);
@@ -47,8 +48,7 @@ export default function AddBlogPage() {
   useEffect(() => {
     const fetchLocations = async () => {
       try {
-        const blogs = await BlogsApiServices.fetchAllBlogs();
-        console.log('Fetched blogs:', blogs);
+        
         const response = await ApiService.fetchLocations(0, 1000, fieldsToFetchForHome);
         setLocations(response.locations);
       } catch (error) {

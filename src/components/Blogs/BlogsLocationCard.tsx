@@ -1,3 +1,4 @@
+"use client"
 import { Location } from "@/types";
 import { ICONS_CLASS } from "@/utils/icon.utils";
 import Icon from "../Icons/Icons";
@@ -5,15 +6,19 @@ import "../../../styles/Locations/blogsLocationCard.css";
 
 interface LocationCardProps {
     location: Location;
-    onCreateTrip: (locationId: string) => void;
 }
 
-const LocationCard = ({ location, onCreateTrip }: LocationCardProps) => {
+const BlogsLocationCard = ({ location }: LocationCardProps) => {
+    const onCreateTrip = (locationId: string) => {
+        console.log("Creating trip for location:", locationId);
+        // Implement the logic to create a trip for the selected location
+        // This could involve navigating to a trip creation page or opening a modal
+    };
     return (
         <div className="location-card-blogs">
             <div className="location-card-image-wrapper">
                 <img
-                    src={location.PlaceImageLink}
+                    src={location.photos[0] || location.images?.[0]}
                     alt={location.title}
                     className="location-card-image"
                 />
@@ -49,14 +54,14 @@ const LocationCard = ({ location, onCreateTrip }: LocationCardProps) => {
                         />
                         <span>{location.best_time}</span>
                     </div>
-                    <div className="location-card-info">
+                    {/* <div className="location-card-info">
                         <Icon
                             name={ICONS_CLASS.personIcon.iconName}
                             alt={ICONS_CLASS.personIcon.alt}
                             className="meta-icon"
                         />
                         <span>{location.objective}</span>
-                    </div>
+                    </div> */}
                 </div>
 
                 <button
@@ -70,4 +75,4 @@ const LocationCard = ({ location, onCreateTrip }: LocationCardProps) => {
     );
 };
 
-export default LocationCard;
+export default BlogsLocationCard;
