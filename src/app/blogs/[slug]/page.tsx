@@ -52,7 +52,7 @@ export async function generateMetadata({ params }: BlogDetailProps): Promise<Met
       images: [blog.seo?.seo_image || blog.featuredImage],
     },
     alternates: {
-      canonical: blog.seo?.canonical_url || `https://yourdomain.com/blogs/${blog.slug}`,
+      canonical: blog.seo?.canonical_url || `https://synctrip.in/blogs/${blog.slug}`,
     },
   };
 }
