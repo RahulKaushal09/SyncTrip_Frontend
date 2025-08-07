@@ -1,7 +1,7 @@
 import { Location } from "@/types";
 import { ICONS_CLASS } from "@/utils/icon.utils";
 import Icon from "../Icons/Icons";
-import "../../../styles/Locations/locationCard.css";
+import "../../../styles/Locations/blogsLocationCard.css";
 
 interface LocationCardProps {
     location: Location;
@@ -10,14 +10,14 @@ interface LocationCardProps {
 
 const LocationCard = ({ location, onCreateTrip }: LocationCardProps) => {
     return (
-        <div className="location-card">
+        <div className="location-card-blogs">
             <div className="location-card-image-wrapper">
                 <img
                     src={location.PlaceImageLink}
                     alt={location.title}
                     className="location-card-image"
                 />
-                <div className="location-card-rating">
+                <div className="location-card-blogs-rating">
                     <Icon name={ICONS_CLASS.starIcon.iconName} alt={ICONS_CLASS.starIcon.alt} className="star-icon" />
                     <span>{location.rating}</span>
                 </div>

@@ -1,4 +1,4 @@
-.location-card {
+.location-card-blogs {
     border: 1px solid #ddd;
     border-radius: 16px;
     overflow: hidden;
@@ -7,7 +7,7 @@
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
 }
 
-.location-card:hover {
+.location-card-blogs:hover {
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
 
@@ -24,11 +24,11 @@
     transition: transform 0.5s ease;
 }
 
-.location-card:hover .location-card-image {
+.location-card-blogs:hover .location-card-image {
     transform: scale(1.1);
 }
 
-.location-card-rating {
+.location-card-blogs-rating {
     position: absolute;
     top: 12px;
     right: 12px;
