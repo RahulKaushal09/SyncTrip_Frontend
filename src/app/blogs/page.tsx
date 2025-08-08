@@ -1,4 +1,6 @@
 import BlogHero from "@/components/Blogs/BlogHero";
+export const dynamic = "force-dynamic";
+
 // import BlogCategories from "@/components/Blogs/BlogCategories";
 // import BlogCard from "@/components/Blogs/BlogsCard";
 // import BlogFooter from "@/components/Blogs/BlogFooter";
@@ -58,7 +60,7 @@ const Blog = async  () => {
     mainEntity: blogs.map((blog) => ({
       "@type": "BlogPosting",
       headline: blog.seo?.seo_title || blog.title,
-      url: `https://yourdomain.com/blogs/${blog.slug}`,
+      url: `https://synctrip.in/blogs/${blog.slug}`,
       image: blog.seo?.seo_image || blog.featuredImage,
       datePublished: blog.createdAt,
       author: {

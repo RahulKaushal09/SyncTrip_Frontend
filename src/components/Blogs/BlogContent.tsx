@@ -64,7 +64,7 @@ const BlogContent = ({ blog }: BlogContentProps) => {
 
                 {/* Tags */}
                 <div className="blogContent-tags">
-                    {blog.tags.map((tag, index) => (
+                    {blog.filterTags.map((tag, index) => (
                         <span key={index} className="blogContent-tag">
                             <Icon name={ICONS_CLASS.tagsIcon.iconName} alt={ICONS_CLASS.tagsIcon.alt} className="blogContent-icon-small" />
                             {tag}
