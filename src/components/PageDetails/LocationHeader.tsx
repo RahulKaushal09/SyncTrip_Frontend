@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { FaMapMarkerAlt, FaStar, FaShare } from 'react-icons/fa';
+import { MapPin, Star, Share2 } from "lucide-react";
+
 import "../../../styles/LocationEventsDetails.css"; // Rename if needed to LocationHeader.css
 
 type LocationHeaderProps = {
@@ -49,19 +50,19 @@ const LocationHeader: React.FC<LocationHeaderProps> = ({ type, location, rating,
                 <div className="d-flex m-gap-2 justify-content-between align-items-center">
                     <div className="d-flex">
                         <div className="btn-light-blue circlularButton d-flex align-items-center justify-content-center">
-                            <FaStar className="me-2" />
+                            <Star size={20} fill="currentColor" className="me-2" />
                             {rating}
                         </div>
                         {!isMobile && (
                             <div className="btn-light-blue circlularButton d-flex align-items-center justify-content-center ms-2">
-                                <FaMapMarkerAlt className="me-2" />
+                                <MapPin size={20}  className="me-2" />
                                 {country ? country : "India"}
                             </div>
                         )}
                     </div>
                     <div className="d-flex align-items-center ms-3" onClick={handleShare} style={{ cursor: "pointer" }}>
                         {!isMobile && <span>Share</span>}
-                        <FaShare className="ms-2" />
+                        <Share2 size={20} className="ms-2" />
                     </div>
                 </div>
             </div>

@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { FaRupeeSign } from 'react-icons/fa';
 import '../../../styles/trips/tripCard.css';
 
 import { Trip } from '@/types';
@@ -98,7 +97,7 @@ const TripCard: React.FC<TripCardProps> = ({ trip, activeTab, parentId, parentTy
                     <h3 className='tripCard-heading-font'>{title}</h3>
                     <div className="price">
                         <span style={{ display: 'flex', alignItems: 'center' }}>
-                            <FaRupeeSign style={{ width: '8px', marginRight: '5px' }} /> {price}
+                            ₹ {price}
                         </span>
                     </div>
                 </div>

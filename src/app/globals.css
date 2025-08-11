@@ -13,47 +13,47 @@
 
   /* Primary Colors */
   --primary-1: #3ABEF5;
-    --primary-2: #7ACCF5;
-    --primary-3: #B8E8FF;
-    --primary-4: #E3F5FF;
-    --primary-5: #F2FAFF;
+  --primary-2: #7ACCF5;
+  --primary-3: #B8E8FF;
+  --primary-4: #E3F5FF;
+  --primary-5: #F2FAFF;
   /* Hover */
   --primary-hover: #007EB2;
   /* Secondary Colors */
   --secondary-1: #16324F;
-    --secondary-2: #A2C3E8;
-    --secondary-3: #CEE1F8;
-    --secondary-4: #E3F5FF;
-    --secondary-5: #F7FAFD;
+  --secondary-2: #A2C3E8;
+  --secondary-3: #CEE1F8;
+  --secondary-4: #E3F5FF;
+  --secondary-5: #F7FAFD;
   /* Hover */
-
+  --secondary-hover:#173350;
   /* Neutrals */
   --neutral-1: #80838D;
-    --neutral-2: #B9BBC6;
-    --neutral-3: #CDCED6;
-    --neutral-4: #D9D9E0;
-    --neutral-5: #E8E8EC;
+  --neutral-2: #B9BBC6;
+  --neutral-3: #CDCED6;
+  --neutral-4: #D9D9E0;
+  --neutral-5: #E8E8EC;
 
   /* Semantic: Error */
   --error-1: #E5484D;
-    --error-2: #EB8E90;
-    --error-3: #F4A9AA;
-    --error-4: #FFCDCE;
-    --error-5: #FEEBEC;
+  --error-2: #EB8E90;
+  --error-3: #F4A9AA;
+  --error-4: #FFCDCE;
+  --error-5: #FEEBEC;
 
   /* Semantic: Success */
   --success-1: #2B9A66;
-    --success-2: #5BB98B;
-    --success-3: #8ECEAA;
-    --success-4: #C4E8D1;
-    --success-5: #E6F6EB;
+  --success-2: #5BB98B;
+  --success-3: #8ECEAA;
+  --success-4: #C4E8D1;
+  --success-5: #E6F6EB;
 
   /* Semantic: Warning */
   --warning-1: #FFC53D;
-    --warning-2: #F3D673;
-    --warning-3: #FBE577;
-    --warning-4: #FFEE9C;
-    --warning-5: #FFF7C2;
+  --warning-2: #F3D673;
+  --warning-3: #FBE577;
+  --warning-4: #FFEE9C;
+  --warning-5: #FFF7C2;
 
   /* typography  */
   --font-serif: 'Lisu Bosa', serif;
@@ -241,7 +241,7 @@ h1 {
 
 .h2,
 h2 {
-  font-family: var(--font-sans);
+  font-family: var(--font-serif);
   font-size: 36px;
   font-weight: 400;
   line-height: 1.2;
@@ -379,6 +379,7 @@ h4 {
     font-weight: 500;
   }
 }
+
 /* ========= Global Typography & Reset ========= */
 html {
   scrollbar-width: none;
@@ -407,7 +408,10 @@ body {
   margin-right: 60px;
   margin-top: 80px !important;
 }
-
+.fullwidth{
+    margin-left: -60px;
+    margin-right: -60px;
+}
 /* Responsive Margins */
 @media screen and (max-width: 1050px) and (min-width: 990px) {
   .App {
@@ -434,18 +438,18 @@ body {
 input {
   font-family: Helvetica !important;
   background-color: white;
-  }
-  
-  .list-group {
-    margin-top: 0px !important;
-    height: 300px !important;
-    overflow: scroll !important;
-    scrollbar-width: none !important;
-    border-radius: 0px 0px 4px 4px !important;
-  }
-  
-  .list-group-item {
-    background-color: white !important;
+}
+
+.list-group {
+  margin-top: 0px !important;
+  height: 300px !important;
+  overflow: scroll !important;
+  scrollbar-width: none !important;
+  border-radius: 0px 0px 4px 4px !important;
+}
+
+.list-group-item {
+  background-color: white !important;
 }
 
 /* ========= Buttons ========= */
@@ -466,7 +470,53 @@ input {
   text-decoration: none !important;
   /* Remove underlines */
   transition: background-color 0.3s, transform 0.1s !important;
+  height: 50px !important;
   /* Smooth transitions for hover effects */
+}
+
+.flexbtn {
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-white-home-hero {
+  background-color: #fff !important;
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  transition: transform 0.2s ease-in-out !important;
+  width: 100%;
+}
+
+.btn-white-home-hero:hover {
+  /* margin-top: -5px !important; */
+  transform:translateY(-5px) !important;
+  background-color: #fff;
+  color: var(--secondary-1);
+}
+
+
+
+.homebtnprimary {
+  transition: transform 0.2s ease-in-out !important;
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+
+}
+
+.homebtnprimary:hover {
+  /* margin-top: -5px !important; */
+  transform:translateY(-5px) !important;
+
+  background-color: var(--primary-1);
+  color: #fff;
+
 }
 
 .btn-light-blue {
@@ -477,6 +527,10 @@ input {
 
 .btn-black {
   background-color: #000 !important;
+  color: #fff !important;
+}
+.btn-primary{
+  background-color: var(--primary-1) !important;
   color: #fff !important;
 }
 
@@ -514,7 +568,7 @@ input {
 }
 
 .btn-blue {
-  background-color: #00bcd4;
+  background-color: var(--primary-1);
   color: #fff;
 }
 
@@ -549,6 +603,7 @@ input {
     flex-direction: row !important;
   }
 }
+
 /* ========= Pages ========= */
 .HomePage {
   margin: 0px 40px;
@@ -566,6 +621,7 @@ input {
   font-size: 25px;
   z-index: 15;
 }
+
 .heart-icon {
   fill: transparent;
   stroke: white;
@@ -597,9 +653,10 @@ input {
   .majorHeadings {
     font-size: 45px !important;
   }
+
   .view-more-btn {
-        width: 100%;
-    }
+    width: 100%;
+  }
 
   .locationEventHeadings {
     font-size: 30px !important;
@@ -643,28 +700,46 @@ input {
 .leaflet-control-attribution.leaflet-control {
   display: none !important;
 }
+
 .view-more-btn {
-    background: #00bcd4;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-size: 1em;
-    transition: background 0.3s;
+  background: #00bcd4;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background 0.3s;
 }
 
 .view-more-btn:hover {
-    background: #0097a7;
+  background: #0097a7;
 }
 
 @media (max-width: 480px) {
 
-   
 
-    .view-more-btn {
-        font-size: 0.9em;
-        padding: 8px 16px;
-    }
+
+  .view-more-btn {
+    font-size: 0.9em;
+    padding: 8px 16px;
+  }
 }
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fadeUp 0.6s ease-out forwards;
+}
+
 /* All your #wifi-loader CSS remains unchanged as it's component-specific */

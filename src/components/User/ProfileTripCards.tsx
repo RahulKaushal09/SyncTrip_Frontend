@@ -2,7 +2,7 @@
 
 import { CSSProperties } from 'react';
 import '../../../styles/Profile/ProfileCardUI.css';
-import { FaStar } from 'react-icons/fa';
+import { Star } from 'lucide-react';
 import { ProfileCardEnum } from '@/constants';
 import { appliedUsers } from '@/classes/ApiResponse.classes';
 
@@ -58,7 +58,7 @@ const TripsProfileCardUi: React.FC<ProfileCardUiProps> = ({
                     {age && <span className="stat-item">Age: {age}</span>}
                     {rating !== undefined && (
                         <span className="stat-item">
-                            Rating: {rating} <FaStar style={{ color: '#f5c518', marginLeft: '5px' }} />
+                            Rating: {rating} <Star style={{ color: '#f5c518', marginLeft: '5px' }} />
                         </span>
                     )}
                     {persona && <span className="stat-item">Persona: {persona}</span>}

@@ -1,3 +1,95 @@
 .HomePage {
     margin: 0 40px;
 }
+/* .homeHeroSection {
+  height: 100vh;
+  margin-left: -60px;
+  margin-right: -60px;
+  margin-top: -80px;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+} */
+.rowHeroSection{
+    justify-content: space-between;
+}
+
+.homeHeroSection {
+  position: relative;
+  height: 100vh;
+  margin: 0;
+   margin-left: -60px;
+  margin-right: -60px;
+  margin-top: -80px;
+  background-size: cover;
+  background-position: center;
+  transition: background-image 0.8s ease-in-out;
+}
+@media screen and (max-width: 1050px) and (min-width: 990px) {
+  .homeHeroSection {
+    margin-left: -80px;
+    margin-right: -80px;
+  }
+  
+
+}@media screen and (max-width: 1000px) and (min-width: 768px) {
+  .heroText h1{
+    width:50%;
+  }
+  .heroText h3{
+    font-size:24px;
+  }
+  
+}
+
+@media screen and (max-width:1000px){
+  .heroText{
+    padding-left: 40px;
+  }
+  .heroText h1{
+    font-size:50px !important;
+  }
+  .heroText .homebtnprimary{
+    margin-bottom:20px;
+  }
+  .heroBtnsSection{
+    flex-direction: column;
+
+  }
+}
+
+.heroOverlay {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.5) 0%,
+    rgba(0, 0, 0, 0.5) 100%
+  );
+  display: flex;
+  align-items: center;
+    position: relative; /* anchor for absolute children */
+
+}
+
+.rowHeroSection {
+  width: 100%;
+  padding: 0 10%;
+  align-items: center;
+}
+.heroBtnsSection{
+    margin-top:20px;
+}
+.heroVectorBottom {
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  background: url("/images/heroVectorBottom.png") no-repeat center bottom;
+  background-size: cover; /* or contain if you don't want cropping */
+  height: 120px; /* adjust to your vector image height */
+  pointer-events: none; /* so it doesn’t block clicks */
+}

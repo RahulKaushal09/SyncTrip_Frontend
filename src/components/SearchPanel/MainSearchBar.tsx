@@ -3,7 +3,7 @@ import React from "react";
 import SearchBar from './SearchBar';
 import SearchCircle from './SearchCircle';
 import "../../../styles/SearchBar.css";
-import { FiSearch } from "react-icons/fi";
+import {Search} from "lucide-react";
 
 interface MainSearchBarProps {
     searchTerm: string;
@@ -39,7 +39,7 @@ const MainSearchBarSkeleton: React.FC<MainSearchBarPropsSkeleton> = ({
         <div className="search-container main-search-container" role="search" aria-label="Loading search bar">
             <div className="input-group-searchBar dateBlock">
                 <span className="d-flex align-items-center me-2" aria-hidden="true">
-                    <FiSearch style={{ color: "#1E1E1E", scale: "1.1" }} />
+                    <Search style={{ color: "#1E1E1E", scale: "1.1" }} />
                 </span>
                 <input
                     type="search"

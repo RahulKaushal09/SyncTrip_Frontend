@@ -3,7 +3,8 @@
 import React, { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import L from 'leaflet';
-import { GoArrowUpRight } from "react-icons/go";
+import { ArrowUpRight } from "lucide-react";
+
 // TypeScript props
 interface LocationMapSectionProps {
     latitude: number;
@@ -48,7 +49,7 @@ const LocationMapSection: React.FC<LocationMapSectionProps> = ({ latitude, longi
                     rel="noopener noreferrer"
                     className="get-direction DescriptionHighlightText"
                 >
-                    Get Direction <span><GoArrowUpRight /></span>
+                    Get Direction <span><ArrowUpRight size={18} /></span>
                 </a>
             </div>
 

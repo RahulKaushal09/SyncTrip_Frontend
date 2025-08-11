@@ -7,7 +7,8 @@ import { ApiService } from '@/utils';
 import { triggerLogin, isUserLoggedIn } from './../../utils/login.utils';
 import { exploreNearByApiResponse } from '@/classes/ApiResponse.classes';
 import { Location, PlacesToVisit, Restaurants } from '@/types';
-import { FaCompass } from 'react-icons/fa';
+import { Compass } from "lucide-react";
+
 interface Coordinates {
     lat: number;
     long: number;
@@ -310,7 +311,7 @@ const ExploreNearby: React.FC = () => {
                 onClick={handleExploreClick}
             >
                 {/* <i className="fas fa-compass"></i> */}
-                <FaCompass />
+                <Compass/>
                 Explore Nearby
             </button>
 

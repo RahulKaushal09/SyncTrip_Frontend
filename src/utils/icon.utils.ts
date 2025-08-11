@@ -7,4 +7,6 @@ export const ICONS_CLASS = {
   arrowDownIcon: { iconName: "arrowDownIcon", alt: "Arrow Down" },
   starIcon: { iconName: "starIcon", alt: "Star" },
   mapMarkerIcon: { iconName: "mapMarkerIcon", alt: "Map Marker" },
+  UsersIcon: { iconName: "usersIcon", alt: "users Icon" },
+  PlayIcon: { iconName: "playIcon", alt: "Play Icon" },
 };

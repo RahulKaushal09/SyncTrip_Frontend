@@ -3,7 +3,7 @@
     position: fixed;
     bottom: 30px;
     right: 30px;
-    background: #61dafb;
+    background: var(--secondary-1);
     color: white;
     border: none;
     border-radius: 50px;
@@ -20,9 +20,9 @@
 }
 
 .floating-explore-btn:hover {
-    background: #4fa8c5;
+    background: var(--secondary-hover);
     transform: translateY(-2px);
-    box-shadow: 0 6px 25px rgba(97, 218, 251, 0.5);
+    /* box-shadow: 0 6px 25px rgba(97, 218, 251, 0.5); */
 }
 
 .floating-explore-btn i {

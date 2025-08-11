@@ -25,9 +25,11 @@ export const STORAGE_KEYS = {
 
 export const ROUTES = {
     HOME: '/',
-    LOGIN: '/login',
-    REGISTER: '/register',
+    // LOGIN: '/login',
+    // REGISTER: '/register',
     TRIPS: '/trips',
+    BLOGS:'/blogs',
+    EXPLORE:'/explore',
     PROFILE: '/profile',
     LOCATIONS: '/locations',
 } as const;

@@ -1,6 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { FaHeart } from 'react-icons/fa';
+import { Heart } from "lucide-react";
+
 import toast from 'react-hot-toast';
 import { ApiService } from '@/utils/api.utils';
 import { STORAGE_KEYS } from '@/constants';
@@ -82,23 +83,50 @@ const HeartIcon: React.FC<HeartIconProps> = ({
     //   onMouseEnter={() => setHovered(true)}
     //   onMouseLeave={() => setHovered(false)}
     // >
-    <FaHeart
-      className={`heart-icon ${isWishlistedState ? 'active' : ''}`}
-      size={25}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      onClick={handleClick}
-      style={{
-        fill: hovered ? "#6ECAD5" : "transparent",  // fill on hover only
-        stroke: !hovered ? "white" : "#6ECAD5",                            // white border always
-        strokeWidth: 20,                            // thickness of the white border
-        transition: "fill 0.3s ease",
-        cursor: loading ? "not-allowed" : "pointer",
-        width: "30px",
-        height: "20px",
-        opacity: loading ? 0.5 : 1
-      }}
-    />
+    <Heart
+  size={25}
+  className={`heart-icon`}
+  onMouseEnter={() => setHovered(true)}
+  onMouseLeave={() => setHovered(false)}
+  onClick={handleClick}
+  role="button"
+  aria-pressed={isWishlistedState}
+  tabIndex={0}
+  onKeyDown={(e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      handleClick(e as any);
+    }
+  }}
+  style={{
+    
+      
+    cursor: loading ? "not-allowed" : "pointer",
+    opacity: loading ? 0.5 : 1,
+    transition: "fill 0.3s ease",
+    stroke: !hovered ? "white" : "#6ECAD5",  
+    strokeWidth: 1,
+    fill: isWishlistedState || hovered ? "#6ECAD5" : "none",
+    width: 25,
+    height: 25,
+  }}
+/>
+    // <Heart
+    //   className={`heart-icon ${isWishlistedState ? 'active' : ''}`}
+    //   size={25}
+    //   onMouseEnter={() => setHovered(true)}
+    //   onMouseLeave={() => setHovered(false)}
+    //   onClick={handleClick}
+    //   style={{
+    //     fill: hovered ? "#6ECAD5" : "transparent",  // fill on hover only
+    //     stroke: !hovered ? "white" : "#6ECAD5",                            // white border always
+    //     strokeWidth: 20,                            // thickness of the white border
+    //     transition: "fill 0.3s ease",
+    //     cursor: loading ? "not-allowed" : "pointer",
+    //     width: "30px",
+    //     height: "20px",
+    //     opacity: loading ? 0.5 : 1
+    //   }}
+    // />
     // </div>
   );
 };

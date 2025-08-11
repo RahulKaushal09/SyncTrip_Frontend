@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { FiSearch } from "react-icons/fi";
+import {Search} from "lucide-react";
+
 import "../../../styles/SearchBar.css";
 
 interface SearchBarProps {
@@ -52,7 +53,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
         <div className="" role="search">
             <div className="input-group-searchBar dateBlock">
                 <span className="d-flex align-items-center me-2" aria-hidden="true">
-                    <FiSearch style={{ color: "#1E1E1E", scale: "1.1" }} />
+                    <Search style={{ color: "#1E1E1E", scale: "1.1" }} />
                 </span>
                 <input
                     type="search"

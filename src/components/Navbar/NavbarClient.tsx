@@ -7,7 +7,7 @@ import Link from "next/link";
 import { Dropdown } from "react-bootstrap";
 import Image from "next/image";
 import SyncTripLogo from "../../assets/images/logoWeb.png";
-import { PageTypeEnum, UserFields } from "@/constants";
+import { PageTypeEnum, ROUTES, UserFields } from "@/constants";
 import { useLogin } from "../providers/LoginProvider";
 import "../../../styles/navbar/navbar.css";
 import { User } from "@/types";
@@ -60,6 +60,7 @@ const NavbarClient = ({ }) => {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   const closeDrawer = () => setMobileNavOpen(false);
+  const redirectBtnClick = (redirectionLink: string) => router.push(redirectionLink);
   const handleCtaAction = () => router.push("/trips");
 
   // useEffect(() => {
@@ -95,7 +96,7 @@ const NavbarClient = ({ }) => {
   const toggleDropdown = () => setShowDropdown(!showDropdown);
   const handleLoginClick = () => openLogin();
   return (
-    <nav className={`navbar navbar-expand-lg navbar-light ${isSticky ? "sticky" : "" }`} style={{ paddingTop: "10px" }}>
+    <nav className={`navbar navbar-expand-lg navbar-light ${isSticky ? "sticky" : ""}`} style={{ paddingTop: "10px" }}>
       <div className="container-fluid">
         <Link href="/" className="navbar-brand" style={{ width: "100px" }}>
           <Image src={SyncTripLogo} alt="SyncTrip" style={{ width: "100%" }} />
@@ -108,6 +109,20 @@ const NavbarClient = ({ }) => {
 
         <div className="collapse navbar-collapse justify-content-end" id="navbarNav" >
           <ul className="navbar-nav" style={{ alignItems: "center" }}>
+            <li className="nav-item"
+              onClick={() => redirectBtnClick(ROUTES.EXPLORE)}
+              style={{ cursor: "pointer" }}>
+              <span className="nav-link">
+                Explore
+              </span>
+            </li>
+            <li className="nav-item"
+              onClick={() => redirectBtnClick(ROUTES.BLOGS)}
+              style={{ cursor: "pointer" }}>
+              <span className="nav-link">
+                Blogs
+              </span>
+            </li>
             <li className="nav-item" onClick={handleCtaAction} style={{ cursor: "pointer" }}>
               <span className="nav-link">
                 {pageType === PageTypeEnum.TRIP ? "Create Trip" : "Trips"}
@@ -173,7 +188,7 @@ const NavbarClient = ({ }) => {
                     </div>
                   </Dropdown>
                 ) : (
-                  <button className="btn btn-black ms-2" onClick={handleLoginClick}>Login / Register</button>
+                  <button className="btn btn-primary ms-2" onClick={handleLoginClick}>Login / Register</button>
                 )}
             </li>
           </ul>
@@ -253,7 +268,7 @@ const NavbarClient = ({ }) => {
             </li>
           ) : (
             <li className="nav-item" onClick={() => { handleLoginClick(); closeDrawer(); }}>
-              <button className="btn btn-black mt-2" style={{ width: "100%" }}>
+              <button className="btn btn-primary mt-2" style={{ width: "100%" }}>
                 Login / Register
               </button>
             </li>

@@ -2,8 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { IoLocationSharp } from 'react-icons/io5';
-import { MdAccessTime } from 'react-icons/md';
+
+import { MapPin, Clock } from "lucide-react";
+
 import { Culture, Festival } from '@/types';
 import '../../../styles/CultureFestivalsSection.css';
 
@@ -118,11 +119,11 @@ const CultureFestivalsCard: React.FC<CultureFestivalsCardProps> = ({ data, type 
                         </div>
                         <div className="cf-details">
                             <div className="cf-detail-item">
-                                <IoLocationSharp className="cf-icon cf-icon-location" aria-hidden="true" />
+                                <MapPin size={18} className="cf-icon cf-icon-location" aria-hidden="true" />
                                 <span className="cf-detail-text">{data.village || 'Unknown'}</span>
                             </div>
                             <div className="cf-detail-item">
-                                <MdAccessTime className="cf-icon cf-icon-time" aria-hidden="true" />
+                                <Clock size={18} className="cf-icon cf-icon-time" aria-hidden="true" />
                                 <span className="cf-detail-text">{data.timings || 'Unknown'}</span>
                             </div>
                         </div>

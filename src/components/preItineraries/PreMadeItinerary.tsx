@@ -1,8 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { BsBoundingBoxCircles, BsTaxiFrontFill } from "react-icons/bs";
-import { GrSwim } from "react-icons/gr";
+import { Circle, Car,Waves } from "lucide-react";
+
 import ItineraryCarousel from "./ItineraryCarousel";
 import "../../../styles/PreMadeItinerary.css";
 
@@ -25,19 +25,19 @@ interface PreMadeItineraryProps {
 
 const features: Feature[] = [
     {
-        Icon: BsBoundingBoxCircles,
+        Icon: Circle,
         title: "Choose Destination",
         description:
             "Pick from curated destinations, from vibrant cities to tranquil beaches. SyncTrip connects you with like-minded travelers for the perfect start.",
     },
     {
-        Icon: GrSwim,
+        Icon: Waves,
         title: "Explore Itinerary",
         description:
             "Browse expert-crafted itineraries with iconic sights and hidden gems. SyncTrip simplifies planning to match your style and budget.",
     },
     {
-        Icon: BsTaxiFrontFill,
+        Icon: Car,
         title: "Customise It to your liking",
         description:
             "Tailor your itinerary to your interests and budget. Collaborate with companions for a trip that’s uniquely yours.",

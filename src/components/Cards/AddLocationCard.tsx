@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { FaLeaf, FaBars, FaPlane } from 'react-icons/fa';
+import { Leaf, Menu, Plane } from "lucide-react";
+
 import '../../../styles/AddLocationCard.css';
 import { PageTypeEnum } from '@/constants';
 import { TripTimeline } from '@/types';
@@ -149,7 +150,7 @@ const AddLocationCard: React.FC<AddLocationCardProps> = ({
                         )}
 
                         <div className="location-card-icons">
-                            {[FaLeaf, FaBars, FaPlane].map((Icon, index) => (
+                            {[Leaf, Menu, Plane].map((Icon, index) => (
                                 <Icon
                                     key={index}
                                     className="locationIcons"

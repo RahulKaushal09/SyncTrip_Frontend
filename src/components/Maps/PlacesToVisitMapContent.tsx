@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-
+import {Star} from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L, { LatLngExpression } from 'leaflet';
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
@@ -9,15 +9,15 @@ import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import 'leaflet/dist/leaflet.css';
 import Image from 'next/image';
-import {
-    FaMapMarkerAlt,
-    FaMountain,
-    FaPlaceOfWorship,
-    FaMonument,
-    FaTree,
-    FaWater,
-    FaStar,
-} from 'react-icons/fa';
+// import {
+//     FaMapMarkerAlt,
+//     FaMountain,
+//     FaPlaceOfWorship,
+//     FaMonument,
+//     FaTree,
+//     FaWater,
+//     FaStar,
+// } from 'react-icons/fa';
 import { API_CONFIG } from '@/constants';
 
 
@@ -65,15 +65,15 @@ const getCustomIconUrl = (title: string): string => {
     return `${ICON_BASE}/monumentIconMap.png`;
 };
 
-const getPlaceIcon = (title: string) => {
-    const lower = title.toLowerCase();
-    if (/(temple|mandir|church|mosque|gurudwara|shrine)/.test(lower)) return <FaPlaceOfWorship className="text-blue-600" />;
-    if (/(trek|hike|mountain|peak|hill)/.test(lower)) return <FaMountain className="text-blue-600" />;
-    if (/(beach|sea|ocean|coast|lake|river|waterfall|dam)/.test(lower)) return <FaWater className="text-blue-600" />;
-    if (/(museum|gallery|monument|memorial|fort|palace|castle|haveli)/.test(lower)) return <FaMonument className="text-blue-600" />;
-    if (/(park|garden|forest|wildlife)/.test(lower)) return <FaTree className="text-blue-600" />;
-    return <FaMapMarkerAlt className="text-blue-600" />;
-};
+// const getPlaceIcon = (title: string) => {
+//     const lower = title.toLowerCase();
+//     if (/(temple|mandir|church|mosque|gurudwara|shrine)/.test(lower)) return <FaPlaceOfWorship className="text-blue-600" />;
+//     if (/(trek|hike|mountain|peak|hill)/.test(lower)) return <FaMountain className="text-blue-600" />;
+//     if (/(beach|sea|ocean|coast|lake|river|waterfall|dam)/.test(lower)) return <FaWater className="text-blue-600" />;
+//     if (/(museum|gallery|monument|memorial|fort|palace|castle|haveli)/.test(lower)) return <FaMonument className="text-blue-600" />;
+//     if (/(park|garden|forest|wildlife)/.test(lower)) return <FaTree className="text-blue-600" />;
+//     return <FaMapMarkerAlt className="text-blue-600" />;
+// };
 
 const getPlaceCategory = (title: string): string => {
     const lower = title.toLowerCase();
@@ -231,7 +231,7 @@ const PlacesToVisitMap: React.FC<PlacesToVisitMapProps> = ({ places }) => {
                                 {place.rating && (
                                     <div className="flex items-center text-yellow-500 text-xs">
                                         {/* <FontAwesomeIcon icon={faStar} className="mr-1" /> */}
-                                        <FaStar className="mr-1" />
+                                        <Star className="mr-1" />
                                         Rating: {place.rating}
                                     </div>
                                 )}

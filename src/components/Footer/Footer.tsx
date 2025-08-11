@@ -3,7 +3,7 @@ import React from 'react';
 import "../../../styles/Footer.css";
 import SyncTripLogo from "../../assets/images/logoWeb.png";
 import { usePathname } from 'next/navigation';
-import { FaFacebook, FaGooglePlay, FaInstagram, FaApple } from 'react-icons/fa';
+// import { FaFacebook, FaGooglePlay, FaInstagram, FaApple } from 'react-icons/fa';
 
 
 const Footer = () => {
@@ -81,7 +81,7 @@ const Footer = () => {
                             rel="noopener noreferrer"
                             aria-label="Facebook"
                         >
-                            <FaFacebook />
+                            {/* <FaFacebook /> */}
                         </a>
                         <a
                             href="https://www.instagram.com/synctrips/"
@@ -90,7 +90,7 @@ const Footer = () => {
                             rel="noopener noreferrer"
                             aria-label="Instagram"
                         >
-                            <FaInstagram />
+                            {/* <FaInstagram /> */}
                         </a>
                     </div>
 

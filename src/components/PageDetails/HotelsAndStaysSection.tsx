@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { CiHeart } from 'react-icons/ci';
 import toast from 'react-hot-toast';
 import { WishlistTypeEnum } from '@/constants';
 import { Hotel } from '@/types'; // Assuming you have a Hotel type defined
