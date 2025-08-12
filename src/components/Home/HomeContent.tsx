@@ -211,7 +211,7 @@ export default function HomeContent({ initialLocations, initialHasMore }: HomeCo
     }, [searchTerm, locations, hasFetchedAll, searching]);
 
     return (
-        <main className="min-h-screen HomePage">
+        <main className="min-h-screen HomePage paddingSectionLeftRight">
             <MainSearchBar
                 searchTerm={searchTerm}
                 setSearchTerm={handleSearchChange}

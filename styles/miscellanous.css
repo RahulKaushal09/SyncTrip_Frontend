@@ -1,0 +1,21 @@
+.timeToCreate-grid-box{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 32px;
+}
+
+@media screen and (max-width: 768px) {
+    .timeToCreate-grid-box {
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+
+    }
+}
+
+@media (max-width: 768px) {
+    .step-text {
+      order: 1 !important;
+    }
+    .step-box {
+      order: 2 !important;
+    }
+  }

@@ -10,6 +10,8 @@
   --white: #ffffff;
   --black: #222222;
   --text: #0d344b;
+ 
+  --background:#FFFFFF;
 
   /* Primary Colors */
   --primary-1: #3ABEF5;
@@ -404,23 +406,48 @@ body {
 /* ========= App Wrapper ========= */
 .App {
   font-family: Helvetica, sans-serif !important;
-  margin-left: 60px;
-  margin-right: 60px;
+  /* margin-left: 60px;
+  margin-right: 60px; */
   margin-top: 80px !important;
 }
 .fullwidth{
-    margin-left: -60px;
-    margin-right: -60px;
+    /* margin-left: -60px;
+    margin-right: -60px; */
+}
+.marginSectionLeftRight{
+    margin-left: 60px;
+  margin-right: 60px;
+}
+.paddingSectionLeftRight{
+    padding-left: 60px;
+  padding-right: 60px;
 }
 /* Responsive Margins */
 @media screen and (max-width: 1050px) and (min-width: 990px) {
+  .marginSectionLeftRight{
+    margin-left:30px;
+    margin-right:30px;
+  }
+  .paddingSectionLeftRight{
+    padding-left: 30px;
+  padding-right: 30px;
+}
   .App {
-    margin: 80px 30px 0px 80px;
+    /* margin: 80px 30px 0px 80px; */
+    margin: 80px 0px 0px 0px;
     overflow-x: hidden;
   }
 }
 
 @media screen and (max-width: 990px) {
+  .marginSectionLeftRight{
+    margin-left:0px;
+    margin-right:0px;
+  }
+  .paddingSectionLeftRight{
+    padding-left: 0px;
+  padding-right: 0px;
+}
   .App {
     margin: 0;
     margin-top: 60px !important;
@@ -532,6 +559,11 @@ input {
 .btn-primary{
   background-color: var(--primary-1) !important;
   color: #fff !important;
+}
+.btn-primary-border{
+  border: 2px solid var(--primary-1) !important;
+  color: var(--primary-1) !important;
+  background-color: var(--background);
 }
 
 .btn-black:hover {

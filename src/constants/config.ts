@@ -32,6 +32,7 @@ export const ROUTES = {
     EXPLORE:'/explore',
     PROFILE: '/profile',
     LOCATIONS: '/locations',
+    HOW_IT_WORKS: '/how-it-works',
 } as const;
 
 export const BREAKPOINTS = {

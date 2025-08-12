@@ -143,7 +143,7 @@ const TripSection: React.FC<TripSectionProps> = ({ trips }) => {
                             <Loader setLoadingState={isLoading} TextToShow="Loading trips" />
                         </div>
                     ) : ( */}
-                <div>
+                <div className="paddingSectionLeftRight">
                     <div className="tripSection-cards">
                         {((filteredTrips.length > 0 || ClientIsLoaded) ? filteredTrips : trips).map((trip, index) => (
                             <TripCard key={index} trip={trip}

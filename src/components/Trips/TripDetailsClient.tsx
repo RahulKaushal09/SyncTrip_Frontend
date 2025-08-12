@@ -126,7 +126,7 @@ export default function TripDetailsContentClient({
     };
 
     return (
-        <div className="DestinationPage">
+        <div className="DestinationPage paddingSectionLeftRight">
             <LocationHeader
                 type="Trip"
                 location={tripData.title || 'Best Trip'}

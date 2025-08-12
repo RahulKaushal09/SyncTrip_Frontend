@@ -73,7 +73,7 @@ const Blog = async  () => {
             <BlogHero />
             {/* <BlogCategories blogs={blogs} /> */}
 
-            <section className="blog-section" id="#blog-section">
+            <section className="blog-section paddingSectionLeftRight" id="#blog-section">
                 <div className="blog-container">
                    
 

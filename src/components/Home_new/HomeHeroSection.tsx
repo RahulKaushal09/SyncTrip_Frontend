@@ -6,7 +6,10 @@ import "../../../styles/home/home.css";
 import HomeHeroFeatures from "./featureHeroSection";
 import { ICONS_CLASS } from "@/utils/icon.utils";
 import Icon from "../Icons/Icons";
+import { useRouter } from "next/navigation";
+import { ROUTES } from "@/constants";
 const HomeHeroSection: React.FC = () => {
+    const router = useRouter();
     const images = [
         "/images/hero1.png",
         "/images/hero2.png",
@@ -14,7 +17,10 @@ const HomeHeroSection: React.FC = () => {
     ];
 
     const [bgImage, setBgImage] = useState<string>(images[0]);
-
+    const redirectToUrl = (redirectUrl: string) => {
+        // Implement your redirect logic here
+        router.push(redirectUrl);
+    };
     // useEffect(() => {
     //     const randomImage = images[Math.floor(Math.random() * images.length)];
     //     setBgImage(randomImage);
@@ -35,13 +41,13 @@ const HomeHeroSection: React.FC = () => {
                         
                         <div className="row heroBtnsSection">
                             <div className="col-lg-6 col-md-6 col-sm-6">
-                                <button className="btn btn-blue homebtnprimary b2">
+                                <button className="btn btn-blue homebtnprimary b2" onClick={() => redirectToUrl(ROUTES.EXPLORE)}>
                                     <Icon name={ICONS_CLASS.UsersIcon.iconName} />
                                     Find Travel Buddies
                                 </button>
                             </div>
                             <div className="col-lg-6 col-md-6 col-sm-6">
-                                <button className="btn btn-white-home-hero text-secondary-1 b2">
+                                <button className="btn btn-white-home-hero text-secondary-1 b2" onClick={() => redirectToUrl(ROUTES.HOW_IT_WORKS)}>
                                     <Icon name={ICONS_CLASS.PlayIcon.iconName} />
                                     How It Works
                                 </button>

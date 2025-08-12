@@ -82,7 +82,7 @@ const TripsPage = async ({ }) => {
     trips = tripsResponse.trips || [];
     // const totaltrips = tripsResponse.totalTrips || 0;
     return (
-        <div className="trips-container">
+        <div className="trips-container ">
             <TripSection
                 trips={trips}
             />

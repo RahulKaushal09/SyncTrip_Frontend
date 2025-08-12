@@ -62,7 +62,7 @@ export default function HomeHeroFeatures({showInMobile}: {showInMobile: boolean}
           ref={(el) => {
             if (el) refs.current[i] = el;
           }}
-          className={`feature-card ${i % 2 === 0 ? "left" : "right"}`} style={{top: `${(isMobile?300:100)+i * 100}px`}}
+          className={`feature-card ${i % 2 === 0 ? "left" : "right"}`} style={{top: `${(isMobile?200:100)+i * 100}px`}}
         >
           {f.icon && <f.icon className="feature-icon" style={{color: f.color}} />}
           <p style={{color: f.color}}>{f.title}</p>

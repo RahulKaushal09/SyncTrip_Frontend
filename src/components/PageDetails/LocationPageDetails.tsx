@@ -101,7 +101,7 @@ const LocationPageDetails = ({ uuid, locationData }: { uuid: string; locationDat
     // if (loading) return <FullScreenLoader isVisible={loading} />;
 
     return (
-        <div className="DestinationPage">
+        <div className="DestinationPage paddingSectionLeftRight">
 
             {/* Main Sections */}
             <LocationHeader

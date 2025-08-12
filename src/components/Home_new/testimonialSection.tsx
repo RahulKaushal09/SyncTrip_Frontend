@@ -133,7 +133,7 @@ const Testimonials: React.FC = () => {
   }, []);
 
   return (
-    <section className="testimonial-section fullwidth">
+    <section className="testimonial-section fullwidth paddingSectionLeftRight">
       <div className="container">
         {/* Section Header */}
         <div className="section-header">
@@ -147,9 +147,9 @@ const Testimonials: React.FC = () => {
         <div className="stats-container mb-5">
           <div className="row g-4">
             {[
-              { num: 50000, color: "blue", label: "Active Travelers",Icon:UsersRound },
-              { num: 15000, color: "red", label: "Trips Planned",Icon:MapPlus },
-              { num: 180, color: "green", label: "Countries Visited",Icon:Globe },
+              { num: 5000, color: "blue", label: "Active Travelers",Icon:UsersRound },
+              { num: 1000, color: "red", label: "Trips Planned",Icon:MapPlus },
+              { num: 750, color: "green", label: "Locations",Icon:Globe },
               { num: 95, color: "purple", label: "Trip Completion Rate",Icon:CheckCircle },
             ].map((stat, idx) => (
               <div key={idx} className="col-lg-3 col-md-6 col-sm-6">

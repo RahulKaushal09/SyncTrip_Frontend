@@ -134,7 +134,7 @@ export default async function Home() {
         initialLocations={initialLocations}
         initialHasMore={initialLocations.length >= 12}
       />
-      <div className="HomePage">
+      <div className="HomePage paddingSectionLeftRight">
         <FestivalsEvents
           initialEvents={initialEvents}
           initialLocation={initialLocation}

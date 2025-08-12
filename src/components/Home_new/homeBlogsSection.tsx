@@ -240,7 +240,7 @@ const postsWithHeight = useMemo(() => {
 }, [filteredPosts]);
 
   return (
-    <section className="content-hub-blogs-section">
+    <section className="content-hub-blogs-section paddingSectionLeftRight">
       <div className="container">
         {/* Section Header */}
         <div className="section-header-blogs-section">
