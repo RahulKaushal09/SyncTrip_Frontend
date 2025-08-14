@@ -5,6 +5,7 @@ import { Location } from '@/types';
 import {
     typeOfLocationCardEnum
 } from '@/constants';
+import { CommonServices } from '@/utils';
 
 // interface ExploreLocationData {
 //     id: string;
@@ -43,40 +44,7 @@ const ExploreSection: React.FC<ExploreSectionProps> = ({
 }) => {
     // Server-side visible count - show all locations passed from parent
     const visibleCount = locations.length;
-    const convertLongBestTimeNameToShortNotations = (bestTime: string): string => {
-        if (!bestTime) return 'N/A';
-
-        const bestTimeMap: Record<string, string> = {
-            'January': 'Jan',
-            'February': 'Feb',
-            'March': 'Mar',
-            'April': 'Apr',
-            'May': 'May',
-            'June': 'Jun',
-            'July': 'Jul',
-            'August': 'Aug',
-            'September': 'Sep',
-            'October': 'Oct',
-            'November': 'Nov',
-            'December': 'Dec',
-        };
-
-        // For long text or comma-separated values, convert months to short form
-        if (bestTime.length > 20 || bestTime.includes(',') || bestTime.includes(';')) {
-            return bestTime.split(' ').map((word) => {
-                const containsSeparator = word.includes(',') || word.includes(';');
-                const cleanWord = word.replace(/[,;]/g, '');
-
-                if (bestTimeMap[cleanWord]) {
-                    return bestTimeMap[cleanWord] + (containsSeparator ? ' & ' : '');
-                } else {
-                    return word + (containsSeparator ? ' & ' : '');
-                }
-            }).join(' ');
-        }
-
-        return bestTime;
-    };
+    
 
 
 
@@ -108,7 +76,7 @@ const ExploreSection: React.FC<ExploreSectionProps> = ({
                             name={location.title?.replace(/[0-9.]/g, '') || 'Unknown Destination'}
                             rating={location.rating || 'N/A'}
                             places={location.placesNumberToVisit as string}
-                            bestTime={convertLongBestTimeNameToShortNotations(location.best_time || '')}
+                            bestTime={CommonServices.convertLongBestTimeNameToShortNotations(location.best_time || '')}
                             images={
                                 location.images && location.images.length > 0
                                     ? location.images

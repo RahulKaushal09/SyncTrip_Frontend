@@ -6,9 +6,13 @@ import { triggerLogin } from '@/utils';
 import { useRouter } from 'next/navigation';
 import { ROUTES } from '@/constants';
 import "../../../styles/miscellanous.css"
+import { useLoader } from '@/components/providers/LoaderContext';
 const HowItWorks = () => {
+  const { showLoader } = useLoader();
     const router = useRouter();
     const redirectUrl = (url: string) => {
+        // Show the loader
+        showLoader();
         router.push(url);
     };
   const steps = [
@@ -185,8 +189,8 @@ const HowItWorks = () => {
               </h2>
               <p style={{ fontSize: '18px', color: '#6b7280', lineHeight: '1.6' }}>
                 SyncTrip makes it incredibly simple to find travel companions, plan amazing trips,
-                and create unforgettable memories. Whether you're joining existing trips or creating
-                your own adventures, we've got you covered.
+                and create unforgettable memories. Whether you&apos;re joining existing trips or creating
+                your own adventures, we&apos;ve got you covered.
               </p>
               {/* <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                 <div style={{ display: 'flex', marginLeft: '-8px' }}>
@@ -241,7 +245,7 @@ const HowItWorks = () => {
               margin: '0 auto',
               lineHeight: '1.6'
             }}>
-              From discovering trips to making lifelong friends, here's how SyncTrip transforms
+              From discovering trips to making lifelong friends, here&apos;s how SyncTrip transforms
               your travel experience step by step.
             </p>
           </div>
@@ -362,8 +366,8 @@ const HowItWorks = () => {
               margin: '0 auto',
               lineHeight: '1.6'
             }}>
-              We're constantly innovating to make your travel experience even better.
-              Here's what's coming next to SyncTrip.
+              We&apos;re constantly innovating to make your travel experience even better.
+              Here&apos;s what&apos;s coming next to SyncTrip.
             </p>
           </div>
 
@@ -479,7 +483,7 @@ const HowItWorks = () => {
               margin: '0 auto',
               lineHeight: '1.6'
             }}>
-              See how quickly you can go from idea to adventure with SyncTrip's streamlined process.
+              See how quickly you can go from idea to adventure with SyncTrip&apos;s streamlined process.
             </p>
           </div>
 

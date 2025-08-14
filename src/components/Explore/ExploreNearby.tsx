@@ -87,7 +87,7 @@ const ExploreNearby: React.FC = () => {
                     setIsLoading(false);
                 }
             },
-            (error) => {
+            (error: unknown) => {
                 setError('Location access denied. Please allow location access to continue.');
                 setIsLoading(false);
             },

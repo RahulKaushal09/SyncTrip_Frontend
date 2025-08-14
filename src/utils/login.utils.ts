@@ -18,6 +18,22 @@ export const setLoginHandler = (handler: LoginHandler): void => {
 };
 
 export const triggerLogin = (onLoginCallback?: LoginCallback, options: LoginOptions = {}): void => {
+    if (isUserLoggedIn()) {
+        const currentUser = getCurrentUser() as User;
+        if (!currentUser.profileCompleted && !options.skipCompleteProfile) {
+            // Trigger profile completion popup if profile is not completed
+            if (openLoginPopup) {
+                openLoginPopup(onLoginCallback || (() => { }), { ...options, skipCompleteProfile: false });
+            } else {
+                console.warn("Login handler not initialized");
+            }
+            return;
+        }
+        if (currentUser) {
+            onLoginCallback?.(currentUser); // Call the login callback with the current user
+            return;
+        }
+    }
     if (openLoginPopup) {
         openLoginPopup(onLoginCallback || (() => { }), options);
     } else {

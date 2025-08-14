@@ -443,4 +443,30 @@ export class ApiService {
 
     return response;
   };
+
+  static async fetchNearbyLocations(latitude: number, longitude: number, radius: number): Promise<exploreNearByApiResponse> {
+    const userToken = localStorage.getItem('userToken');
+    const res = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/nearby/getNearbyLocations`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${userToken}`
+        },
+        body: JSON.stringify({
+          lat: latitude,
+          long: longitude,
+          radius,
+          limit:18
+        })
+      }
+    );
+
+    if (!res.ok) {
+      throw new Error("Failed to fetch nearby entities");
+    }
+    const response: exploreNearByApiResponse = await res.json();
+
+    return response;
+  };
 }

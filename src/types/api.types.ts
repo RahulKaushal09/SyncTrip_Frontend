@@ -89,6 +89,8 @@ export interface Location {
     createdAt?: string;
     updatedAt?: string;
     type?: string;
+    filterTags?: string[];
+
 
 }
 export interface PlacesToVisit {

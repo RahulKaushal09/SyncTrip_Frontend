@@ -28,47 +28,16 @@
   background-position: center;
   transition: background-image 0.8s ease-in-out;
 }
-@media screen and (max-width: 1050px) and (min-width: 990px) {
-  .homeHeroSection {
-    /* margin-left: -80px;
-    margin-right: -80px; */
-  }
-  
 
-}@media screen and (max-width: 1000px) and (min-width: 768px) {
-  .heroText h1{
-    width:50%;
-  }
-  .heroText h3{
-    font-size:24px;
-  }
-  
-}
-
-@media screen and (max-width:1000px){
-  .heroText{
-    padding-left: 40px;
-  }
-  .heroText h1{
-    font-size:50px !important;
-  }
-  .heroText .homebtnprimary{
-    margin-bottom:20px;
-  }
-  .heroBtnsSection{
-    flex-direction: column;
-
-  }
-}
 
 .heroOverlay {
   width: 100%;
   height: 100%;
-  background: linear-gradient(
+  /* background: linear-gradient(
     180deg,
     rgba(0, 0, 0, 0.5) 0%,
     rgba(0, 0, 0, 0.5) 100%
-  );
+  ); */
   display: flex;
   align-items: center;
     position: relative; /* anchor for absolute children */
@@ -92,4 +61,105 @@
   background-size: cover; /* or contain if you don't want cropping */
   height: 120px; /* adjust to your vector image height */
   pointer-events: none; /* so it doesn’t block clicks */
+}
+
+
+.floating-icon-hero {
+  position: absolute;
+  z-index:2;
+  animation: floatIcon 6s ease-in-out infinite;
+}
+
+/* Icon circle wrapper */
+.icon-wrapper-hero {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.2;
+}
+
+/* Floating animation keyframes */
+@keyframes floatIcon {
+  0% {
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+  25% {
+    transform: translateY(-15px) rotate(8deg) scale(1.05);
+  }
+  50% {
+    transform: translateY(0) rotate(-8deg) scale(1);
+  }
+  75% {
+    transform: translateY(-10px) rotate(5deg) scale(1.05);
+  }
+  100% {
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+}
+
+
+@media screen and (max-width: 1050px) and (min-width: 990px) {
+  .homeHeroSection {
+    /* margin-left: -80px;
+    margin-right: -80px; */
+  }
+  
+
+}@media screen and (max-width: 1000px) and (min-width: 768px) {
+  .heroText h1{
+    width:50%;
+  }
+  .heroText h3{
+    font-size:24px;
+  }
+  
+}
+
+@media screen and (max-width:1000px){
+  .heroText{
+    padding-left: 20px;
+  }
+  .heroText h1{
+    font-size:50px !important;
+  }
+  .heroText .homebtnprimary{
+    margin-bottom:20px;
+  }
+  .heroBtnsSection{
+    flex-direction: column;
+  }
+}
+
+.HomePageMoreExploreButtonCss {
+  border: 1px solid #3abef5;
+  color: #3abef5;
+  background-color: transparent;
+  padding: 0.75rem 2rem; /* py-3 px-8 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem; /* gap-2 */
+  cursor: pointer;
+  border-radius:8px;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.HomePageMoreExploreButtonCss:hover {
+  background-color: #f2faff;
+}
+
+.HomePageMoreExploreButtonCss:active {
+  transform: scale(0.97);
+}
+@media screen and (max-width: 768px) {
+  .heroOverlay { 
+    align-items: normal;
+    padding-top:40px;
+  }
+  .heroText{
+    padding-left: 0px;
+  }
 }

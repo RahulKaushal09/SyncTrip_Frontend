@@ -12,7 +12,9 @@ import { useLogin } from "../providers/LoginProvider";
 import "../../../styles/navbar/navbar.css";
 import { User } from "@/types";
 import Cookies from 'js-cookie';
+import { useLoader } from '@/components/providers/LoaderContext';
 // import { triggerLogin } from "@/utils";
+import { redirect } from 'next/navigation';
 
 const NavbarClient = ({ }) => {
   const [LoadingUser, setLoadingUser] = useState(true);
@@ -51,6 +53,8 @@ const NavbarClient = ({ }) => {
   //     user = null;
   //   }
   // }
+    const { showLoader } = useLoader();
+
   const pathname = usePathname();
   const router = useRouter();
   const { logout, openLogin } = useLogin();
@@ -60,8 +64,14 @@ const NavbarClient = ({ }) => {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   const closeDrawer = () => setMobileNavOpen(false);
-  const redirectBtnClick = (redirectionLink: string) => router.push(redirectionLink);
-  const handleCtaAction = () => router.push("/trips");
+  // const redirectBtnClick = (redirectionLink: string) => router.push(redirectionLink);
+  const redirectBtnClick = (redirectionLink: string) => {
+    if(pathname !== redirectionLink) showLoader();
+    router.push(redirectionLink);
+  };
+  const handleCtaAction = () => {
+    redirectBtnClick("/trips");
+  };
 
   // useEffect(() => {
   //   const fetchUser = async () => {
@@ -98,7 +108,7 @@ const NavbarClient = ({ }) => {
   return (
     <nav className={`navbar navbar-expand-lg navbar-light ${isSticky ? "sticky" : ""}`} style={{ paddingTop: "10px" }}>
       <div className="container-fluid">
-        <Link href="/" className="navbar-brand" style={{ width: "100px" }}>
+        <Link href="/" onClick={() => redirectBtnClick("/")} className="navbar-brand" style={{ width: "100px" }}>
           <Image src={SyncTripLogo} alt="SyncTrip" style={{ width: "100%" }} />
         </Link>
 
@@ -238,7 +248,7 @@ const NavbarClient = ({ }) => {
           ) : (
             <div>
               {/* <a className="navbar-brand" href="/" style={{ display: 'inline-block', color: '#65CAD3', fontSize: "30px", fontWeight: "700", width: "100px" }}> */}
-              <Link href="/" className="navbar-brand" style={{ display: 'inline-block', color: '#65CAD3', fontSize: "30px", fontWeight: "700", width: "100px" }}>
+              <Link href="/" onClick={() => redirectBtnClick("/")} className="navbar-brand" style={{ display: 'inline-block', color: '#65CAD3', fontSize: "30px", fontWeight: "700", width: "100px" }}>
                 <Image src={SyncTripLogo} alt="SyncTrip" style={{ width: "100%" }} />
                 {/* <img src={SyncTripLogo.src} alt="SyncTrip" style={{ width: "100%", }} /> */}
               </Link>

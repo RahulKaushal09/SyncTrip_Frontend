@@ -6,6 +6,7 @@ import { Events, Location } from '@/types';
 import { LocationFields, locationsJsonLd, homeJsonLd } from '@/constants';
 import FestivalsEvents from '@/components/EventsForBooking/FestivalsEvents';
 import HomeClientSection from '@/components/Home/HomeClientSection';
+import ExploreNearby from '@/components/Explore/ExploreNearby';
 // import { cookies } from 'next/headers';
 export const viewport = {
   width: 'device-width',
@@ -129,7 +130,7 @@ export default async function Home() {
       {/* JSON-LD structured data */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(homeJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(locationsJsonLd(initialLocations.slice(0, 10))) }} />
-
+      <ExploreNearby/>
       <HomeContent
         initialLocations={initialLocations}
         initialHasMore={initialLocations.length >= 12}

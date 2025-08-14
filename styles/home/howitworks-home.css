@@ -1,0 +1,149 @@
+/* === Base Section === */
+.howitworks-home-section {
+  /* padding: 4rem 0; */
+  background-image: linear-gradient(to bottom right, #f2faff, #e3f5ff);
+}
+
+
+/* === Heading === */
+.howitworks-home-heading {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.howitworks-home-heading h2 {
+  /* font-size: 2rem;
+  font-weight: bold;
+  color: #0f172a; */
+  margin-bottom: 1rem;
+}
+
+.howitworks-home-heading p {
+  font-size: 1.125rem;
+  color: #475569;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+/* === Grid === */
+.howitworks-home-grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .howitworks-home-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .howitworks-home-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* === Step Card === */
+.howitworks-home-card {
+  background-color: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  transition: box-shadow 0.2s ease;
+  height: 100%;
+}
+
+.howitworks-home-card:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+}
+
+.howitworks-home-card-content {
+  padding: 1.5rem;
+  text-align: center;
+}
+
+/* Step Number */
+.howitworks-home-stepnum {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  background-color: #2563eb;
+  color: #fff;
+  font-weight: bold;
+  font-size: 1.125rem;
+  border-radius: 9999px;
+  margin-bottom: 1rem;
+}
+
+/* Icon */
+.howitworks-home-icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.5rem;
+  background-color: #eff6ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+}
+
+.howitworks-home-icon svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: #2563eb;
+}
+
+/* Text */
+.howitworks-home-text h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 0.5rem;
+}
+
+.howitworks-home-text p {
+  font-size: 0.875rem;
+  color: #475569;
+}
+
+/* Arrow Connector (Desktop Only) */
+.howitworks-home-arrow {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .howitworks-home-step {
+    position: relative;
+  }
+  .howitworks-home-arrow {
+    display: block;
+    position: absolute;
+    top: 50%;
+    right: -2rem;
+    transform: translateY(-50%);
+  }
+  .howitworks-home-arrow-line {
+    width: 2rem;
+    height: 2px;
+    background-color: #93c5fd;
+  }
+  .howitworks-home-arrow-tip {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 4px solid #93c5fd;
+    border-top: 2px solid transparent;
+    border-bottom: 2px solid transparent;
+  }
+}
+@media(max-width:768px){
+    .howitworks-home-section{
+        padding-left:5%;
+    padding-right:5%;
+    }
+}

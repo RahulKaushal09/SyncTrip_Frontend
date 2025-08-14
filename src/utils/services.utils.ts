@@ -8,7 +8,40 @@ export class CommonServices {
             .replace(/\s+/g, "-")          // Replace spaces with hyphens
             .replace(/-+/g, "-");          // Replace multiple hyphens with single
     };
+static convertLongBestTimeNameToShortNotations = (bestTime: string): string => {
+        if (!bestTime) return 'N/A';
 
+        const bestTimeMap: Record<string, string> = {
+            'January': 'Jan',
+            'February': 'Feb',
+            'March': 'Mar',
+            'April': 'Apr',
+            'May': 'May',
+            'June': 'Jun',
+            'July': 'Jul',
+            'August': 'Aug',
+            'September': 'Sep',
+            'October': 'Oct',
+            'November': 'Nov',
+            'December': 'Dec',
+        };
+
+        // For long text or comma-separated values, convert months to short form
+        if (bestTime.length > 20 || bestTime.includes(',') || bestTime.includes(';')) {
+            return bestTime.split(' ').map((word) => {
+                const containsSeparator = word.includes(',') || word.includes(';');
+                const cleanWord = word.replace(/[,;]/g, '');
+
+                if (bestTimeMap[cleanWord]) {
+                    return bestTimeMap[cleanWord] + (containsSeparator ? ' & ' : '');
+                } else {
+                    return word + (containsSeparator ? ' & ' : '');
+                }
+            }).join(' ');
+        }
+
+        return bestTime;
+    };
     static generateLocationSlug = (uuid: string, title: string, places: string, country: string) => {
         const maxTotalLength = 75;
         if (title.length > 15 && title.split(' ').length > 1) {

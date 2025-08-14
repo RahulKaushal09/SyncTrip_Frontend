@@ -62,7 +62,7 @@ const TripSection: React.FC<TripSectionProps> = ({ trips }) => {
                     // const fromDate = new Date(trip.essentials.timeline.fromDate);
                     return fromDate >= today && ['active', 'scheduled'].includes(trip.requirements?.status as string);
                 });
-                if (upcomingTrips.length === 0) {
+                if (upcomingTrips.length === 0 && activeTab === 'upcoming' && !ClientIsLoaded) {
                     setActiveTab('history');
                 }
                 return upcomingTrips;

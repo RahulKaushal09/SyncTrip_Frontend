@@ -92,11 +92,11 @@ const HeartIcon: React.FC<HeartIconProps> = ({
   role="button"
   aria-pressed={isWishlistedState}
   tabIndex={0}
-  onKeyDown={(e) => {
-    if (e.key === "Enter" || e.key === " ") {
-      handleClick(e as any);
-    }
-  }}
+  // onKeyDown={(e) => {
+  //   if (e.key === "Enter" || e.key === " ") {
+  //     handleClick(e as any);
+  //   }
+  // }}
   style={{
     
       

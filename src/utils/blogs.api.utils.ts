@@ -10,6 +10,7 @@ export class BlogsApiServices {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ limit: 100 }),
+            cache: "no-store"
         });
         if (allBlogsResponse.status === 404) {
             // throw new Error('No blogs found. Please check back later.');

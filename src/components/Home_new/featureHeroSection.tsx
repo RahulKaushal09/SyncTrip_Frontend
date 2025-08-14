@@ -65,7 +65,7 @@ export default function HomeHeroFeatures({showInMobile}: {showInMobile: boolean}
           className={`feature-card ${i % 2 === 0 ? "left" : "right"}`} style={{top: `${(isMobile?200:100)+i * 100}px`}}
         >
           {f.icon && <f.icon className="feature-icon" style={{color: f.color}} />}
-          <p style={{color: f.color}}>{f.title}</p>
+          <p style={{color: f.color,marginBottom:"0px"}}>{f.title}</p>
         </div>
       ))}
     </div>

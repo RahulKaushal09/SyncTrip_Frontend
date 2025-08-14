@@ -60,8 +60,37 @@
   /* typography  */
   --font-serif: 'Lisu Bosa', serif;
   --font-sans: 'Inter', Arial, sans-serif;
+  --container-padding-x: 5%; /* mobile default */
+  --container-padding-y: 40px;
+}
+@media (min-width: 640px) {
+  :root {
+    --container-padding-x: 40px;
+    --container-padding-y: 40px;
+  }
 }
 
+/* desktop */
+@media (min-width: 1024px) {
+  :root {
+    --container-padding-x: 60px;
+    --container-padding-y: 40px;
+  }
+}
+
+/* large desktop */
+@media (min-width: 1440px) {
+  :root {
+    --container-padding-x: 80px;
+    --container-padding-y: 50px;
+  }
+}
+
+/* usage */
+.container-custom {
+  padding: var(--container-padding-y) var(--container-padding-x) ;
+  max-width: -webkit-fill-available !important;
+}
 /*================= Color Library End ==================== */
 /* ============ Backgound Colors ============ */
 .bg-primary-1 {
@@ -245,6 +274,7 @@ h1 {
 h2 {
   font-family: var(--font-serif);
   font-size: 36px;
+  color: #003b59;
   font-weight: 400;
   line-height: 1.2;
   margin-bottom: 0.5em;
@@ -509,11 +539,12 @@ input {
 }
 
 .btn-white-home-hero {
-  background-color: #fff !important;
+  background-color: transparent !important;
   display: flex !important;
   justify-content: center;
   align-items: center;
   gap: 10px;
+  border:1px solid var(--secondary-1) !important;
   transition: transform 0.2s ease-in-out !important;
   width: 100%;
 }
@@ -522,7 +553,7 @@ input {
   /* margin-top: -5px !important; */
   transform:translateY(-5px) !important;
   background-color: #fff;
-  color: var(--secondary-1);
+  color: var(--secondary-1) !important;
 }
 
 
@@ -541,8 +572,8 @@ input {
   /* margin-top: -5px !important; */
   transform:translateY(-5px) !important;
 
-  background-color: var(--primary-1);
-  color: #fff;
+  background-color: var(--primary-1) !important;
+  color: #fff !important;
 
 }
 
@@ -600,8 +631,8 @@ input {
 }
 
 .btn-blue {
-  background-color: var(--primary-1);
-  color: #fff;
+  background-color: var(--primary-1) !important;
+  color: #fff !important;
 }
 
 
@@ -702,6 +733,7 @@ input {
   .HomePage {
     margin: 0 40px;
   }
+  
 }
 
 @media screen and (max-width: 500px) {
@@ -709,7 +741,13 @@ input {
     padding: 5px 10px !important;
     font-size: 14px !important;
   }
+  .hideInMobile{
+    display:none !important;
+  }
+ 
+
 }
+
 
 /* ========= Text Colors ========= */
 .text-custom-primary {
@@ -717,7 +755,7 @@ input {
 }
 
 .text-custom-secondary {
-  color: black !important;
+  color: var(--secondary-1) !important;
 }
 
 /* ========= Toaster ========= */
@@ -774,4 +812,153 @@ input {
   animation: fadeUp 0.6s ease-out forwards;
 }
 
+
+
+
 /* All your #wifi-loader CSS remains unchanged as it's component-specific */
+
+
+
+/* ANIMATION CSS  */
+/* ===== Motion vars (tweak once, reuse everywhere) ===== */
+:root{
+  --motion-ease: cubic-bezier(.22,.61,.36,1);
+  --motion-dur: .6s;
+  --motion-delay: 0s;
+  --motion-distance: 24px;   /* px, %, etc. */
+  --motion-rotate: 8deg;
+  --motion-scale: .96;
+}
+
+/* ===== Base hook ===== */
+.m-animate{
+  opacity: 0;
+  transform: translateZ(0);
+  animation-duration: var(--motion-dur);
+  animation-delay: var(--motion-delay);
+  animation-timing-function: var(--motion-ease);
+  animation-fill-mode: both;
+  will-change: transform, opacity, filter;
+}
+
+/* Toggle this class (or add .play) to run the animation */
+.m-animate.is-inview,
+.m-animate.play{ opacity: 1; }
+/* ===== Variants ===== */
+.m-rotate-loop {
+  animation: m-rotate-loop 4s linear infinite;
+}
+@keyframes m-rotate-loop {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.m-fade-in{ animation-name: m-fade-in; }
+@keyframes m-fade-in{
+  from{ opacity: 0; } to{ opacity: 1; }
+}
+
+.m-slide-up{ animation-name: m-slide-up; }
+@keyframes m-slide-up{
+  from{ opacity: 0; transform: translateY(var(--motion-distance)); }
+  to{ opacity: 1; transform: translateY(0); }
+}
+
+.m-slide-down{ animation-name: m-slide-down; }
+@keyframes m-slide-down{
+  from{ opacity: 0; transform: translateY(calc(var(--motion-distance) * -1)); }
+  to{ opacity: 1; transform: translateY(0); }
+}
+
+.m-slide-left{ animation-name: m-slide-left; }
+@keyframes m-slide-left{
+  from{ opacity: 0; transform: translateX(var(--motion-distance)); }
+  to{ opacity: 1; transform: translateX(0); }
+}
+
+.m-slide-right{ animation-name: m-slide-right; }
+@keyframes m-slide-right{
+  from{ opacity: 0; transform: translateX(calc(var(--motion-distance) * -1)); }
+  to{ opacity: 1; transform: translateX(0); }
+}
+
+.m-zoom-in{ animation-name: m-zoom-in; }
+@keyframes m-zoom-in{
+  from{ opacity: 0; transform: scale(var(--motion-scale)); }
+  to{ opacity: 1; transform: scale(1); }
+}
+
+.m-rotate-in{ animation-name: m-rotate-in; }
+@keyframes m-rotate-in{
+  from{
+    opacity: 0;
+    transform: translateY(var(--motion-distance)) rotate(var(--motion-rotate));
+  }
+  to{
+    opacity: 1;
+    transform: translateY(0) rotate(0);
+  }
+}
+
+.m-blur-in{ animation-name: m-blur-in; }
+@keyframes m-blur-in{
+  from{ opacity: 0; filter: blur(12px); }
+  to{ opacity: 1; filter: blur(0); }
+}
+
+/* ===== Stagger container =====
+   - Use --stagger-step to control gap between items
+   - Set --i on children (0,1,2,...) or rely on nth-child snippet below
+*/
+.m-stagger{ --stagger-step: 80ms; }
+.m-stagger > *{
+  --i: var(--i, 0);
+  animation-delay: calc(var(--motion-delay) + var(--stagger-step) * var(--i));
+}
+
+/* Auto-index up to 20 children (optional; delete if you prefer inline --i) */
+.m-stagger > *:nth-child(1){ --i: 0; }
+.m-stagger > *:nth-child(2){ --i: 1; }
+.m-stagger > *:nth-child(3){ --i: 2; }
+.m-stagger > *:nth-child(4){ --i: 3; }
+.m-stagger > *:nth-child(5){ --i: 4; }
+.m-stagger > *:nth-child(6){ --i: 5; }
+.m-stagger > *:nth-child(7){ --i: 6; }
+.m-stagger > *:nth-child(8){ --i: 7; }
+.m-stagger > *:nth-child(9){ --i: 8; }
+.m-stagger > *:nth-child(10){ --i: 9; }
+.m-stagger > *:nth-child(11){ --i: 10; }
+.m-stagger > *:nth-child(12){ --i: 11; }
+.m-stagger > *:nth-child(13){ --i: 12; }
+.m-stagger > *:nth-child(14){ --i: 13; }
+.m-stagger > *:nth-child(15){ --i: 14; }
+.m-stagger > *:nth-child(16){ --i: 15; }
+.m-stagger > *:nth-child(17){ --i: 16; }
+.m-stagger > *:nth-child(18){ --i: 17; }
+.m-stagger > *:nth-child(19){ --i: 18; }
+.m-stagger > *:nth-child(20){ --i: 19; }
+
+/* ===== Looping/ambient motions ===== */
+.m-float{ animation: m-float 4s ease-in-out infinite; }
+@keyframes m-float{
+  0%,100%{ transform: translateY(0); }
+  50%{ transform: translateY(-6px); }
+}
+
+.m-pulse{ animation: m-pulse 2s ease-in-out infinite; }
+@keyframes m-pulse{
+  0%,100%{ opacity: 1; }
+  50%{ opacity: .6; }
+}
+
+/* ===== Hover utilities (no extra JS) ===== */
+.hov-lift{ transition: transform .2s var(--motion-ease), box-shadow .2s var(--motion-ease); }
+.hov-lift:hover{ transform: translateY(-4px); }
+
+/* ===== Respect reduced motion ===== */
+@media (prefers-reduced-motion: reduce){
+  *{ animation: none !important; transition: none !important; }
+}

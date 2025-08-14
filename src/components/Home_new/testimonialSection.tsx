@@ -4,6 +4,7 @@ import React, { useEffect } from "react";
 import "../../../styles/home/testimonials.css"; // Regular CSS file
 // import { UsersRound } from "lucide-react";
 import { UsersRound, Globe, CheckCircle,MapPlus } from "lucide-react";
+// import { FeaturesSection } from "./whyChooseSyncTrip";
 const testimonials = [
   {
     name: "Aarav Singh",
@@ -119,27 +120,18 @@ const Testimonials: React.FC = () => {
     const statsContainer = document.querySelector(".stats-container");
     if (statsContainer) observer.observe(statsContainer);
 
-    // Hover animation for testimonial cards
-    document.querySelectorAll<HTMLElement>(".testimonial-card").forEach((card) => {
-      card.addEventListener("mouseenter", () => {
-        card.style.transform = "translateY(-8px)";
-      });
-      card.addEventListener("mouseleave", () => {
-        card.style.transform = "translateY(0)";
-      });
-    });
+   
 
     return () => observer.disconnect();
   }, []);
 
   return (
-    <section className="testimonial-section fullwidth paddingSectionLeftRight">
-      <div className="container">
+    <section className="testimonial-section fullwidth container-custom ">
         {/* Section Header */}
         <div className="section-header">
           <h2 className="section-title">Trusted by Travelers Worldwide</h2>
           <p className="section-subtitle">
-            Join thousands of adventurers who've discovered the joy of collaborative travel
+            Join thousands of adventurers who&apos;ve discovered the joy of collaborative travel
           </p>
         </div>
 
@@ -174,61 +166,12 @@ const Testimonials: React.FC = () => {
             <h4>{t.name}</h4>
             <div className="testimonial-role">{t.role}</div>
             <div className="testimonial-trip">{t.trip}</div>
-            <p className="testimonial-text">"{t.text}"</p>
+            <p className="testimonial-text"><q>{t.text}</q></p>
           </div>
         ))}
       </div>
     </section>
-        {/* <div className="testimonials-header">
-          <h3 className="testimonials-title">Real Stories from Real Travelers</h3>
-        </div> */}
-
-        {/* <div className="row g-4">
-          {[
-            {
-              name: "Sarah Chen",
-              role: "Backpacker • 28 trips",
-              trip: "Thailand Adventure",
-              text: "I was nervous about solo travel until I found SyncTrip. Now I've explored 12 countries with amazing people I met through the app!",
-              avatar: "avatar-1",
-            },
-            {
-              name: "Marcus Johnson",
-              role: "Adventure Seeker • 15 trips",
-              trip: "European Road Trip",
-              text: "The collaborative planning feature is genius! Our group saved $2500 on our European trip by sharing costs and finding deals together.",
-              avatar: "avatar-2",
-            },
-            {
-              name: "Emma Rodriguez",
-              role: "Culture Explorer • 22 trips",
-              trip: "Japan Cultural Tour",
-              text: "I've made lifelong friends through SyncTrip. The safety features and verification system give me peace of mind when meeting new travel buddies.",
-              avatar: "avatar-3",
-            },
-          ].map((t, idx) => (
-            <div key={idx} className="col-lg-4 col-md-6">
-              <div className="testimonial-card">
-                <div className="testimonial-header">
-                  <div className={`testimonial-avatar ${t.avatar}`}></div>
-                  <div className="testimonial-info">
-                    <h4>{t.name}</h4>
-                    <div className="testimonial-meta">{t.role}</div>
-                    <div style={{ fontSize: "0.75rem", color: "#10b981" }}>✓ Verified Traveler</div>
-                  </div>
-                </div>
-                <div className="testimonial-rating">
-                  {"★★★★★".split("").map((_, i) => (
-                    <span key={i} className="star">★</span>
-                  ))}
-                </div>
-                <div className="testimonial-content">"{t.text}"</div>
-                <div className="testimonial-trip">Latest: {t.trip}</div>
-              </div>
-            </div>
-          ))}
-        </div> */}
-
+       
         {/* Trust Indicators */}
         <div className="trust-indicators">
           <div className="row g-3">
@@ -247,7 +190,6 @@ const Testimonials: React.FC = () => {
             ))}
           </div>
         </div>
-      </div>
     </section>
   );
 };

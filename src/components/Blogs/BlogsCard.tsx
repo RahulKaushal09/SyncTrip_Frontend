@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import "../../../styles/Blogs/blogCard.css";
 import { ICONS_CLASS } from "@/utils/icon.utils";
 import Icon from "../Icons/Icons";
+import { useLoader } from '@/components/providers/LoaderContext';
 
 interface BlogCardProps {
     id?: string;
@@ -32,6 +33,7 @@ const BlogCard = ({
     rating,
     featured = false,
 }: BlogCardProps) => {
+    const { showLoader } = useLoader();
     const router = useRouter();
     const [isMobile, setIsMobile] = useState(false);
 
@@ -47,6 +49,7 @@ const BlogCard = ({
     }, []);
     const handleClick = () => {
         if (slug) {
+            showLoader();
             router.push(`/blogs/${slug}`);
         }
     };
