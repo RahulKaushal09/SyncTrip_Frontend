@@ -156,21 +156,21 @@ const Testimonials: React.FC = () => {
         </div>
 
         {/* Testimonials */}
-         <section className="testimonials-slider-container">
-      <h3 className="testimonials-title">Real Stories from Real Indian Travelers</h3>
-      <div className="testimonials-slider">
-        {/* Duplicate testimonials to create infinite scroll illusion */}
-        {[...testimonials, ...testimonials].map((t, idx) => (
-          <div key={idx} className="testimonial-card">
-            <div className={`testimonial-avatar`} style={{backgroundImage: `url(${"images/avatars/"+t.name.split(" ")[0]}.webp)`}}></div>
-            <h4>{t.name}</h4>
-            <div className="testimonial-role">{t.role}</div>
-            <div className="testimonial-trip">{t.trip}</div>
-            <p className="testimonial-text"><q>{t.text}</q></p>
+        <section className="testimonials-slider-container">
+          <h3 className="testimonials-title">Real Stories from Indian Travelers</h3>
+          <div className="testimonials-slider">
+            {/* Duplicate testimonials to create infinite scroll illusion */}
+            {[...testimonials, ...testimonials].map((t, idx) => (
+              <div key={idx} className="testimonial-card">
+                <div className={`testimonial-avatar`} style={{backgroundImage: `url(${"images/avatars/"+t.name.split(" ")[0]}.webp)`}}></div>
+                <h4>{t.name}</h4>
+                <div className="testimonial-role">{t.role}</div>
+                <div className="testimonial-trip">{t.trip}</div>
+                <p className="testimonial-text"><q>{t.text}</q></p>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-    </section>
+        </section>
        
         {/* Trust Indicators */}
         <div className="trust-indicators">

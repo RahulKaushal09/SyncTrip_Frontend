@@ -9,7 +9,42 @@ import { HowItWorksSectionHome } from "@/components/Home_new/howItWorksHomeSecti
 import { getThemeClass } from "@/utils/getThemeClassForBlogs";
 import { BlogsApiServices } from "@/utils/blogs.api.utils";
 import { BlogPost } from "@/types";
+import { Metadata } from "next";
 
+export const metadata: Metadata = {
+  title: 'SyncTrip: Group Travel, Destinations & Itineraries in India',
+  description: 'SyncTrip helps you plan the perfect trip. Explore curated destinations, join group adventures, discover itineraries, book hotels, and connect with fellow travelers in India.',
+  keywords: 'group travel India, travel planning, curated itineraries, SyncTrip, travel with friends, solo trips, book trips online, travel communities',
+  authors: [{ name: 'SyncTrip' }],
+  robots: 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1',
+  openGraph: {
+    title: 'SyncTrip - Plan Your Perfect Adventure',
+    description: 'Discover destinations, plan trips, and connect with fellow travelers. Start your journey with SyncTrip today!',
+    type: 'website',
+    url: 'https://synctrip.in',
+    siteName: 'SyncTrip',
+    locale: 'en_US',
+    images: [
+      {
+        url: 'https://synctrip.in/logo_main_withoutBG.png',
+        width: 1200,
+        height: 630,
+        alt: 'SyncTrip Home Page',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    site: '@synctrip',
+    creator: '@synctrip',
+    title: 'SyncTrip - Group Travel & Destinations',
+    description: 'Find trips, destinations, itineraries, and fellow travelers with SyncTrip.',
+    images: ['https://synctrip.in/logo_main_withoutBG.png'],
+  },
+  alternates: {
+    canonical: 'https://synctrip.in',
+  },
+};
 export default async function Home() {
   const data = await BlogsApiServices.fetchAllBlogs();
 
@@ -40,6 +75,47 @@ export default async function Home() {
 
   return (
     <>
+    <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: "SyncTrip",
+            url: "https://synctrip.in",
+            logo: "https://synctrip.in/logo_main_withoutBG.png",
+            sameAs: [
+              // "https://www.facebook.com/synctrip",
+              // "https://twitter.com/synctrip",
+              "https://www.instagram.com/synctrips"
+            ]
+          }),
+        }}
+      />
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              {
+                "@type": "ListItem",
+                position: 1,
+                name: "Home",
+                item: "https://synctrip.in"
+              },
+              {
+                "@type": "ListItem",
+                position: 2,
+                name: "Explore",
+                item: "https://synctrip.in/explore"
+              }
+            ]
+          }),
+        }}
+      />
       <HomeHeroSection />
       <FeaturesSection />
       <ExploreNearbySection />

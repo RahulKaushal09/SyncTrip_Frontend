@@ -48,6 +48,8 @@ const LocationCard: React.FC<LocationCardProps> = ({
     isLoading = false,
     typeOfCard
 }) => {
+
+
     let locationLink = `/location/`;
     if (typeOfCard === typeOfLocationCardEnum.placestovisit && (placeConnectedwithid == null || placeConnectedwithid == "")) {
         locationLink = ""

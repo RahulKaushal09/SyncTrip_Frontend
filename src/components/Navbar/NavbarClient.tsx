@@ -18,19 +18,23 @@ import { redirect } from 'next/navigation';
 
 const NavbarClient = ({ }) => {
   const [LoadingUser, setLoadingUser] = useState(true);
-  const cookie = Cookies.get('userInfo');
-  const [user, setUser] = useState<User | null>(() => {
-    try {
+    const { user, isLoggedIn, logout, openLogin } = useLogin(); // ⬅️ use context directly
 
-      return cookie ? JSON.parse(cookie) : null;
-    } catch {
+  // const cookie = Cookies.get('userInfo');
+  // const [user, setUser] = useState<User | null>(() => {
+  //   try {
 
-      return null;
-    }
-  });
-  useEffect(() => {
+  //     return cookie ? JSON.parse(cookie) : null;
+  //   } catch {
+
+  //     return null;
+  //   }
+  // });
+  
+   useEffect(() => {
+    // as soon as context has finished checking localStorage, stop loading skeleton
     setLoadingUser(false);
-  }, [user]);
+  }, [user, isLoggedIn]);
   const [isSticky, setIsSticky] = useState(false);
 
   useEffect(() => {
@@ -57,7 +61,7 @@ const NavbarClient = ({ }) => {
 
   const pathname = usePathname();
   const router = useRouter();
-  const { logout, openLogin } = useLogin();
+  // const { logout, openLogin } = useLogin();
   const [pageType, setPageType] = useState("");
 
   const [showDropdown, setShowDropdown] = useState(false);
@@ -118,7 +122,7 @@ const NavbarClient = ({ }) => {
         {/* <div className={`collapse navbar-collapse justify-content-end ${mobileNavOpen ? 'show' : ''}`} id="navbarNav"> */}
 
         <div className="collapse navbar-collapse justify-content-end" id="navbarNav" >
-          <ul className="navbar-nav" style={{ alignItems: "center" }}>
+          <ul className="navbar-nav" style={{ alignItems: "center", gap: "20px" }}>
             <li className="nav-item"
               onClick={() => redirectBtnClick(ROUTES.EXPLORE)}
               style={{ cursor: "pointer" }}>
@@ -259,12 +263,18 @@ const NavbarClient = ({ }) => {
           </div>
         </div>
         <ul className="navbar-nav" style={{ alignItems: "flex-start", padding: "1rem" }}>
+          <li className="nav-item" onClick={()=>{redirectBtnClick(ROUTES.EXPLORE); closeDrawer();}}>
+              <span className="nav-link">Explore</span>
+            </li>
+            <li className="nav-item" onClick={()=>{redirectBtnClick(ROUTES.BLOGS); closeDrawer();}}>
+              <span className="nav-link">Blogs</span>
+            </li>
           {pageType == PageTypeEnum.TRIP ? (
             <li className="nav-item" onClick={handleLoginClick}>
               <span className="nav-link">Create Trip</span>
             </li>
           ) : (
-            <li className="nav-item" onClick={() => { handleCtaAction(); closeDrawer(); }}>
+            <li className="nav-item" onClick={() => { redirectBtnClick(ROUTES.TRIPS); closeDrawer(); }}>
               <span className="nav-link">Trips</span>
             </li>
           )}

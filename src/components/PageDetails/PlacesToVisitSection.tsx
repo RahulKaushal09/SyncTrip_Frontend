@@ -42,6 +42,9 @@ const PlacesToVisitSection: React.FC<Props> = ({ title, places, parentId, parent
             }
         };
     }, []);
+    useEffect(() => {
+        setIsMobile(window.innerWidth < 768);
+    }, []);
     const toggleShowOnMap = () => {
         setShowMap(!showMap);
     };
@@ -74,7 +77,7 @@ const PlacesToVisitSection: React.FC<Props> = ({ title, places, parentId, parent
                             rating={place.rating}
                             images={place.image}
                             inlineStyle={{ width: isMobile ? "100%" : "260px" }}
-                            imageInlineStyle={{ width: isMobile ? "100%" : "260px" }}
+                            imageInlineStyle={{ width: isMobile ? 500 : 260 }}
                             whishlistParentId={parentId}
                             whishlistParentType={parentType}
                             typeOfWhishlistCardEnum={WishlistTypeEnum.placeToVisit}

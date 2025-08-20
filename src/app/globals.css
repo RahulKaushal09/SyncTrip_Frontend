@@ -962,3 +962,10 @@ input {
 @media (prefers-reduced-motion: reduce){
   *{ animation: none !important; transition: none !important; }
 }
+.clamp-4 {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;   /* limit to 4 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

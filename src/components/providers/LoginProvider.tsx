@@ -84,9 +84,13 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
         } else if (!(user as User).profileCompleted) {
             setShowFullProfile(true);
         }
+        else{
+            // User is fully logged in
+            onLoginCallback(user, false);
+        }
 
         // Always run the external callback
-        onLoginCallback(user, requiresPhone);
+        // onLoginCallback(user, requiresPhone);
     }, [onLoginCallback, loginOptions]);
 
     // Register login popup globally

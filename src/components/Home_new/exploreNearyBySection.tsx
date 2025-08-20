@@ -12,7 +12,7 @@ import {  Location } from "@/types";
 import { useLoader } from "../providers/LoaderContext";
 import { Carousel } from "react-bootstrap";
 import { ROUTES } from "@/constants";
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 
 const distanceFilters = [
@@ -94,7 +94,7 @@ export default function ExploreNearbySection() {
   const [selectedTypeColor, setSelectedTypeColor] = useState("var(--primary-1)");
   const [selectedType, setSelectedType] = useState("All");
   const { showLoader } = useLoader();
-  // const router = useRouter();
+  const router = useRouter();
 const redirectLocationUrl = (id: string, title: string, placesNo: string, country: string) => {
     // Implement your redirection logic here
     showLoader();
@@ -102,8 +102,9 @@ const redirectLocationUrl = (id: string, title: string, placesNo: string, countr
     // router.push(CommonServices.generateLocationSlug(id, title, placesNo, country));
   };
   const redirectBtnClick = (url: string) => {
+    console.log(url);
     showLoader();
-    redirect(url);
+    router.push(url);
   };
   const renderLocationCard = (location: Location) => {
   const title = location.title || 'Untitled Location';
@@ -122,8 +123,8 @@ const redirectLocationUrl = (id: string, title: string, placesNo: string, countr
   return renderResultCard(location.id, title, description, rating, distance as string, images, state, NoPlaces as string, bestTime, filterTags, country);
 }
 const renderResultCard = (id: string, title: string, description: string, rating: number, distance: string | null, images: string[], state: string, placesToVisitNo: string, bestTime: string, tags: string[], country: string): JSX.Element => {
+  const redirectUrlForLocation = "/location/" + CommonServices.generateLocationSlug(id, title, placesToVisitNo, country);
 
-  
   return (
     <div className="destination-card-explorenearby-section m-animate m-slide-up hov-lift" key={id}>
       <div className="image-wrap-explorenearby-section">
@@ -133,27 +134,26 @@ const renderResultCard = (id: string, title: string, description: string, rating
           className="w-full h-48 object-cover"
         /> */}
         {images.length > 1 ? (
-                        <Carousel interval={null} indicators={false} style={{ borderRadius: '8px' }}>
-                            {images.map((imgUrl, idx) => (
-                                <Carousel.Item key={idx}>
-                                    <img
-                                        src={imgUrl}
-                                        className="w-full h-48 object-cover"
-                                        alt={`Slide ${idx + 1}`}
-                                        style={{height:"12rem"}}
-                                    />
-                                </Carousel.Item>
-                            ))}
-                        </Carousel>
-                    ) : (
+            <Carousel interval={null} indicators={false} style={{ borderRadius: '8px' }}>
+                {images.map((imgUrl, idx) => (
+                    <Carousel.Item key={idx}>
                         <img
-                            src={images[0] }
+                            src={imgUrl}
                             className="w-full h-48 object-cover"
-                            alt={title}
-                                        style={{height:"12rem"}}
-
+                            alt={`Slide ${idx + 1}`}
+                            style={{height:"12rem"}}
                         />
-                    )}
+                    </Carousel.Item>
+                ))}
+            </Carousel>
+        ) : (
+            <img
+                src={images[0] }
+                className="w-full h-48 object-cover"
+                alt={title}
+                            style={{height:"12rem"}}
+            />
+        )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent">
           <div className="absolute top-3 left-3">
             <div className="badge-explorenearby-section bg-white/90 text-[#003b59]">
@@ -181,7 +181,7 @@ const renderResultCard = (id: string, title: string, description: string, rating
         </div>
       </div>
       <div className="card-body-explorenearby-section">
-        <p className="text-[#80838d] leading-relaxed">
+        <p className="text-[#80838d] leading-relaxed clamp-4">
           {description}
         </p>
         <div className="meta-explorenearby-section grid grid-cols-2 gap-4 text-sm">
@@ -216,7 +216,13 @@ const renderResultCard = (id: string, title: string, description: string, rating
             </span>
           ))}
         </div>
-        <button onClick={()=>{redirectLocationUrl(id,title,placesToVisitNo,country)}} className="explore-btn-explorenearby-section w-full bg-[#3abef5] text-white px-4 py-2 rounded hover:bg-[#7accf5] transition-all duration-200">
+        <button
+          onClick={(e) => {
+            e.stopPropagation(); // Prevent event from bubbling to parent
+            redirectBtnClick(redirectUrlForLocation);
+          }}
+          className="explore-btn-explorenearby-section w-full bg-[#3abef5] text-white px-4 py-2 rounded hover:bg-[#7accf5] transition-all duration-200 cursor-pointer"
+        >
           Explore {title}
         </button>
       </div>
@@ -340,7 +346,7 @@ useEffect(() => {
 }, [selectedType]);
 
   return (
-    <section className="explore-nearby-section container-custom">
+    <section id="explore-nearby-section" className="explore-nearby-section container-custom">
       <div className="explore-header m-animate m-slide-up is-inview ">
         <div className="explore-badge">
           <Compass className="w-5 h-5 text-[#3abef5] m-rotate-loop" />

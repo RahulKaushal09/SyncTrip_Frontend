@@ -176,7 +176,7 @@ export default function LoginPopup({ onClose, onLogin }: LoginPopupProps) {
         }
         onLogin(user);
         onClose();
-        window.location.reload();
+        // window.location.reload();
 
       } else {
         throw new Error('Google login failed');
