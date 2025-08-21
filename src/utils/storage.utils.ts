@@ -20,17 +20,24 @@ export class StorageUtils {
 
     static getItem<T>(key: string): T | null {
         try {
-            // Check if we're in a browser environment
-            if (typeof window !== 'undefined' && window.localStorage) {
-                const item = localStorage.getItem(key);
-                return item ? JSON.parse(item) : null;
+            if (typeof window !== "undefined" && window.localStorage) {
+            const item = localStorage.getItem(key);
+            if (!item) return null;
+
+            try {
+                // Try to parse JSON
+                return JSON.parse(item) as T;
+            } catch {
+                // If not JSON, return raw string
+                return item as unknown as T;
+            }
             }
             return null;
         } catch (error) {
-            console.error('Error reading from localStorage:', error);
+            console.error("Error reading from localStorage:", error);
             return null;
         }
-    }
+        }
 
     static removeItem(key: string): void {
         try {

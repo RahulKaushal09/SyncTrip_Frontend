@@ -102,7 +102,7 @@ export default function LoginPopup({ onClose, onLogin }: LoginPopupProps) {
           name: form.name,
           email: form.email,
           password: form.password,
-          confirmPassword: form.password,
+          // confirmPassword: form.password,
           phone: form.phone,
           sex: form.sex,
         };
@@ -117,7 +117,7 @@ export default function LoginPopup({ onClose, onLogin }: LoginPopupProps) {
         response = await ApiService.login(loginData);
       }
       const user = response?.user;
-      if (response.success && response) {
+      if ( response && response.token?.trim()!="") {
         if (response?.token) {
           localStorage.setItem('userToken', response.token);
           document.cookie = `userToken=${response.token}; path=/; max-age=604800; SameSite=Strict; Secure`;
@@ -132,7 +132,8 @@ export default function LoginPopup({ onClose, onLogin }: LoginPopupProps) {
         }
         onLogin(response.user);
         onClose();
-      } else {
+      } 
+      else {
         throw new Error(response.error || 'Operation failed');
       }
     } catch (err: unknown) {
