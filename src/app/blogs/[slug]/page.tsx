@@ -24,38 +24,65 @@ interface BlogDetailProps {
 
   
 }
-
 export async function generateMetadata({ params }: BlogDetailProps): Promise<Metadata> {
-     const { slug } = await params;
-  const blog: BlogPost = await BlogsApiServices.fetchBlogBySlug(slug);
+  const { slug } = await params;
+  const blog = await BlogsApiServices.fetchBlogBySlug(slug);
   if (!blog) return {};
+  const title = blog.seo?.seo_title || blog.title;
+  const description = blog.seo?.seo_description || (blog.content?.replace(/<[^>]+>/g, '').slice(0, 155));
+  const image = blog.seo?.seo_image || blog.featuredImage;
 
   return {
-    title: blog.seo?.seo_title || blog.title,
-    description: blog.seo?.seo_description || blog.content?.substring(0, 160),
-    keywords: blog.seo?.seo_keywords?.join(", "),
+    title,
+    description,
+    keywords: blog.seo?.seo_keywords?.join(', '),
     openGraph: {
-      title: blog.seo?.seo_title || blog.title,
-      description: blog.seo?.seo_description,
-      images: [
-        {
-          url: blog.seo?.seo_image || blog.featuredImage,
-          alt: blog.title,
-        },
-      ],
-      type: "article",
+      title,
+      description,
+      type: 'article',
+      url: blog.seo?.canonical_url || `https://synctrip.in/blogs/${blog.slug}`,
+      images: [{ url: image, alt: blog.title }],
     },
     twitter: {
-      card: "summary_large_image",
-      title: blog.seo?.seo_title || blog.title,
-      description: blog.seo?.seo_description,
-      images: [blog.seo?.seo_image || blog.featuredImage],
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [image],
     },
-    alternates: {
-      canonical: blog.seo?.canonical_url || `https://synctrip.in/blogs/${blog.slug}`,
-    },
+    alternates: { canonical: blog.seo?.canonical_url || `https://synctrip.in/blogs/${blog.slug}` }
   };
 }
+// export async function generateMetadata({ params }: BlogDetailProps): Promise<Metadata> {
+//      const { slug } = await params;
+//   const blog: BlogPost = await BlogsApiServices.fetchBlogBySlug(slug);
+//   if (!blog) return {};
+
+//   return {
+//     title: blog.seo?.seo_title || blog.title,
+//     description: blog.seo?.seo_description || blog.content?.substring(0, 160),
+//     keywords: blog.seo?.seo_keywords?.join(", "),
+//     openGraph: {
+//       title: blog.seo?.seo_title || blog.title,
+//       description: blog.seo?.seo_description,
+//       images: [
+//         {
+//           url: blog.seo?.seo_image || blog.featuredImage,
+//           alt: blog.title,
+//         },
+//       ],
+//       type: "article",
+//     },
+//     twitter: {
+//       card: "summary_large_image",
+//       title: blog.seo?.seo_title || blog.title,
+//       description: blog.seo?.seo_description,
+//       images: [blog.seo?.seo_image || blog.featuredImage],
+//     },
+//     alternates: {
+//       canonical: blog.seo?.canonical_url || `https://synctrip.in/blogs/${blog.slug}`,
+//     },
+//   };
+// }
 
 const BlogDetailPage = async ({ params }: BlogDetailProps) => {
   const { slug } = await params;
@@ -84,10 +111,24 @@ const BlogDetailPage = async ({ params }: BlogDetailProps) => {
     );
   }
 
+  const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": blog.title,
+  "image": [blog.featuredImage],
+  "author": { "@type": "Person", "name": blog.author || 'SyncTrip' },
+  "datePublished": blog.createdAt,
+  "dateModified": blog.createdAt,
+  "publisher": { "@type": "Organization", "name": "SyncTrip", "logo": { "@type": "ImageObject", "url": "https://synctrip.in/logo_main_withoutBG.png" } },
+  "description": blog.seo?.seo_description || blog.content?.replace(/<[^>]+>/g, '').slice(0, 155),
+  "mainEntityOfPage": { "@type": "WebPage", "@id": blog.seo?.canonical_url || `https://synctrip.in/blogs/${blog.slug}` }
+};
+
 
   return (
     
     <div className="blog-detail">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
       <main className="blog-container">
 <Script id="structured-data" type="application/ld+json">
   {JSON.stringify({
