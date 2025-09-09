@@ -83,7 +83,7 @@ function Dropdown({ label, options, value, onChange }: DropdownProps) {
   );
 }
 
-const DEFAULT_DELHI = { lat: 28.6139, lng: 77.2090 }; // Default coords when permission not given
+const DEFAULT_LADAKH = { lat: 34.2268, lng: 77.5619 }; // Default coords when permission not given
 
 export default function ExploreNearbySection() {
   const [selectedTypeColor, setSelectedTypeColor] = useState("var(--primary-1)");
@@ -228,10 +228,10 @@ export default function ExploreNearbySection() {
     return new Promise((resolve) => {
       if (!("geolocation" in navigator)) {
         // no geolocation API
-        setUserLocation(DEFAULT_DELHI);
+        setUserLocation(DEFAULT_LADAKH);
         setIsUsingDefaultLocation(true);
         setLocationPermissionDenied(true);
-        resolve(DEFAULT_DELHI);
+        resolve(DEFAULT_LADAKH);
         return;
       }
 
@@ -246,13 +246,13 @@ export default function ExploreNearbySection() {
         (err) => {
           console.error("Geolocation error:", err);
           // If permission denied or any other error, use default Delhi coords
-          setUserLocation(DEFAULT_DELHI);
+          setUserLocation(DEFAULT_LADAKH);
           setIsUsingDefaultLocation(true);
           // if error code 1 => PERMISSION_DENIED
           setLocationPermissionDenied(err.code === 1 || true);
-          resolve(DEFAULT_DELHI);
+          resolve(DEFAULT_LADAKH);
         },
-        { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+        { enableHighAccuracy: true, timeout: 10, maximumAge: 0 }
       );
     });
   };
@@ -347,7 +347,7 @@ export default function ExploreNearbySection() {
       {isUsingDefaultLocation && (
         <div className="my-3 p-3 rounded border border-yellow-200 bg-yellow-50 text-yellow-800 flex items-center justify-between">
           <div>
-            <strong>Location not available:</strong> Showing results for Delhi by default. Enable location access for results near you.
+            <strong>Location not available:</strong> Showing results for Ladakh by default. Enable location access for results near you.
           </div>
           <div className="ml-4">
             <button
