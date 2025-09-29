@@ -52,6 +52,16 @@ const nextConfig: NextConfig = {
         hostname: "muddietrails.com",
         pathname: "/**",
       },
+      {
+        protocol: 'https',
+        hostname: 'cdn-icons-png.flaticon.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'via.placeholder.com',
+        pathname: '/**',
+      },
     ],
   },
 };
