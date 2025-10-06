@@ -389,6 +389,7 @@ export class ApiService {
   }
   static async fetchLocationByIdServer(id: string, token: string = ""): Promise<Location | null> {
     try {
+      
       const response = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/locations/${id}`, {
         method: 'GET',
         headers: await this.getAuthHeadersServer(token),
