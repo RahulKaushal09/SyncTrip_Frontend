@@ -113,12 +113,12 @@
   transform: translateY(-3px);
 }
 
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
 
 .features-section {
     padding-top:400px;
     padding-left:5%;
     padding-right:5%;
-}
-}
+} */
+/* } */
 

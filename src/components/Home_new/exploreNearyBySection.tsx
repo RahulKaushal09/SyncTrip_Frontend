@@ -68,9 +68,8 @@ function Dropdown({ label, options, value, onChange }: DropdownProps) {
                   onChange(opt.value);
                   setOpen(false);
                 }}
-                className={`selectOptions flex items-center justify-between px-3 py-2 cursor-pointer hover:bg-[#e3f5ff] ${
-                  value === opt.value ? "bg-[#e3f5ff]/60" : ""
-                }`}
+                className={`selectOptions flex items-center justify-between px-3 py-2 cursor-pointer hover:bg-[#e3f5ff] ${value === opt.value ? "bg-[#e3f5ff]/60" : ""
+                  }`}
               >
                 <span>{opt.label}</span>
                 {value === opt.value && <Check className="w-4 h-4 text-[#3abef5]" />}
@@ -173,17 +172,20 @@ export default function ExploreNearbySection() {
         </div>
         <div className="card-body-explorenearby-section">
           <p className="text-[#80838d] leading-relaxed clamp-4">{description}</p>
-          <div className="meta-explorenearby-section grid grid-cols-2 gap-4 text-sm">
-            <div className="flex items-center gap-2">
+          <div className="meta-explorenearby-section grid grid-cols-12 gap-2 text-sm">
+            <div className="col-span-4 flex items-center gap-1">
               <MapPin className="w-4 h-4 text-[#3abef5]" />
               <div>
                 <div className="text-s text-[var(--secondary-1)]">{placesToVisitNo} Places</div>
               </div>
             </div>
-            <div className="flex items-center gap-2 text-sm">
+
+            <div className="col-span-8 flex items-center gap-3 text-sm">
               <Calendar className="w-4 h-4 text-[#2b9a66]" />
               <span className="text-[#80838d]">Best time:</span>
-              <span className="font-medium text-[#003b59]">{CommonServices.convertLongBestTimeNameToShortNotations(bestTime)}</span>
+              <span className="font-medium text-[#003b59]">
+                {CommonServices.convertLongBestTimeNameToShortNotations(bestTime)}
+              </span>
             </div>
           </div>
 
@@ -224,6 +226,38 @@ export default function ExploreNearbySection() {
   };
 
   // Request user location (promise) - `forcePrompt` true means attempt to show permission prompt again
+  // const requestUserLocation = (forcePrompt = true): Promise<{ lat: number; lng: number }> => {
+  //   return new Promise((resolve) => {
+  //     if (!("geolocation" in navigator)) {
+  //       // no geolocation API
+  //       setUserLocation(DEFAULT_LADAKH);
+  //       setIsUsingDefaultLocation(true);
+  //       setLocationPermissionDenied(true);
+  //       resolve(DEFAULT_LADAKH);
+  //       return;
+  //     }
+
+  //     navigator.geolocation.getCurrentPosition(
+  //       (position) => {
+  //         const coords = { lat: position.coords.latitude, lng: position.coords.longitude };
+  //         setUserLocation(coords);
+  //         setIsUsingDefaultLocation(false);
+  //         setLocationPermissionDenied(false);
+  //         resolve(coords);
+  //       },
+  //       (err) => {
+  //         console.error("Geolocation error:", err);
+  //         // If permission denied or any other error, use default Delhi coords
+  //         setUserLocation(DEFAULT_LADAKH);
+  //         setIsUsingDefaultLocation(true);
+  //         // if error code 1 => PERMISSION_DENIED
+  //         setLocationPermissionDenied(err.code === 1 || true);
+  //         resolve(DEFAULT_LADAKH);
+  //       },
+  //       { enableHighAccuracy: true, timeout: 10, maximumAge: 0 }
+  //     );
+  //   });
+  // };
   const requestUserLocation = (forcePrompt = true): Promise<{ lat: number; lng: number }> => {
     return new Promise((resolve) => {
       if (!("geolocation" in navigator)) {
@@ -245,14 +279,14 @@ export default function ExploreNearbySection() {
         },
         (err) => {
           console.error("Geolocation error:", err);
-          // If permission denied or any other error, use default Delhi coords
+          // If permission denied or any other error, use default Ladakh coords
           setUserLocation(DEFAULT_LADAKH);
           setIsUsingDefaultLocation(true);
-          // if error code 1 => PERMISSION_DENIED
-          setLocationPermissionDenied(err.code === 1 || true);
+          // code === 1 means PERMISSION_DENIED
+          setLocationPermissionDenied(err.code === 1);
           resolve(DEFAULT_LADAKH);
         },
-        { enableHighAccuracy: true, timeout: 10, maximumAge: 0 }
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 } // 10 seconds
       );
     });
   };

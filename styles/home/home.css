@@ -103,7 +103,9 @@
 
 @media screen and (max-width: 1050px) and (min-width: 990px) {
   .homeHeroSection {
+
     /* margin-left: -80px;
+    
     margin-right: -80px; */
   }
   
@@ -157,9 +159,23 @@
 @media screen and (max-width: 768px) {
   .heroOverlay { 
     align-items: normal;
-    padding-top:40px;
+    padding-top:100px;
+    padding-bottom: 150px !important;
+    height: auto !important;
   }
   .heroText{
     padding-left: 0px;
+    padding-right: 0px;
   }
+  .homeHeroSection{
+    height: auto !important;
+    ;
+  }
+  .rowHeroSection{
+    margin-left: 0px !important;
+    margin-right: 0px !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+  
 }
