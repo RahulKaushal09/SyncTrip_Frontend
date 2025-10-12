@@ -83,6 +83,7 @@ export interface Location {
     hotels?: string[];
     restaurantsandfoods?: string[];
     placesToVisit?: PlacesToVisit[] | string[];
+    locationConnectedWith?: string;
     cultures?: Culture[];
     festivals?: Festival[];
     isWishlisted?: boolean;

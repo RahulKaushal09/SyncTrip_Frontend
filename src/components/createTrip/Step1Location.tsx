@@ -1,161 +1,178 @@
-import React, { useState } from 'react';
-import { Search, MapPin, Calendar, Clock } from 'lucide-react';
-import { Location } from '@/types';
+"use client";
+
+import { useState, useEffect } from "react";
+import Image from "next/image";
+import { MapPin, Search, X } from "lucide-react";
+import { LocationServices } from "@/utils/location.utils";
+import apiClient from "@/utils/apiClient";
+import { LocationFields, typeOfLocationCardEnum } from "@/constants";
+import LocationCard from "../LocationCard/LocationCard";
+import { Location } from "@/types";
 
 
-interface Step1LocationProps {
-    selectedLocation?: Location;
-    onLocationSelect: (location: Location) => void;
-}
 
-const Step1Location: React.FC<Step1LocationProps> = ({ selectedLocation, onLocationSelect }) => {
-    const [searchQuery, setSearchQuery] = useState('');
-    const [searchResults, setSearchResults] = useState<Location[]>([]);
-    const [isSearching, setIsSearching] = useState(false);
+export default function LocationSelector({
+    onSelect,
+    // onProceed,
+    initialSelectedLocation = null,
+}: {
+    onSelect?: (loc: Location) => void;
+    // onProceed: (loc: Location) => void;
+    initialSelectedLocation?: Location | null;
+}) {
+    const [query, setQuery] = useState("");
+    const [focused, setFocused] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [results, setResults] = useState<Location[]>([]);
+    const [selected, setSelected] = useState<Location | null>(initialSelectedLocation);
+    const [error, setError] = useState<string | null>(null);
 
-    // Mock search function - replace with actual API call
-    const searchLocations = async (query: string) => {
-        if (query.length < 2) {
-            setSearchResults([]);
+
+
+    useEffect(() => {
+        if (!query.trim()) {
+            setResults([]);
+            setError(null);
             return;
         }
 
-        setIsSearching(true);
-        // Simulate API call
-        setTimeout(() => {
-            const mockResults: Location[] = [
-                {
-                    id: '1',
-                    title: 'Paris',
-                    country: 'France',
-                    placesNumberToVisit: '4',
-                    photos: ['https://images.unsplash.com/photo-1502602898536-47ad22581b52?w=500&h=300&fit=crop'],
-                    best_time: 'April - June, September - October',
-                },
-                
-            ].filter(location => 
-                location.title.toLowerCase().includes(query.toLowerCase()) ||
-                location.country.toLowerCase().includes(query.toLowerCase())
-            );
-            
-            setSearchResults(mockResults);
-            setIsSearching(false);
-        }, 500);
-    };
+        const controller = new AbortController();
+        const timer = setTimeout(async () => {
 
-    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
-        setSearchQuery(value);
-        searchLocations(value);
-    };
+            try {
+                setLoading(true);
+                const res = await LocationServices.fetchLocationsBySearch(query);
 
-    if (selectedLocation) {
-        return (
-            <div className="max-w-2xl mx-auto p-6">
-                <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-                    <div className="relative h-64">
-                        <img 
-                            src={selectedLocation.photos[0]} 
-                            alt={selectedLocation.title}
-                            className="w-full h-full object-cover"
-                        />
-                        <div className="absolute inset-0 bg-black bg-opacity-30 flex items-end">
-                            <div className="p-6 text-white">
-                                <h2 className="text-3xl font-bold">{selectedLocation.title}</h2>
-                                <p className="text-lg opacity-90">{selectedLocation.country}</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div className="p-6">
-                        <div className="mb-6">
-                            <div className="flex items-center mb-2">
-                                <Clock className="w-5 h-5 text-blue-500 mr-2" />
-                                <h3 className="font-semibold text-gray-800">Best Time to Visit</h3>
-                            </div>
-                            <p className="text-gray-600">{selectedLocation.best_time}</p>
-                        </div>
-                        
-                        <div className="mb-6">
-                            <div className="flex items-center mb-3">
-                                <MapPin className="w-5 h-5 text-red-500 mr-2" />
-                                <h3 className="font-semibold text-gray-800">Popular Places to Visit</h3>
-                            </div>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                                {selectedLocation.placesNumberToVisit && (
-                                    <div className="bg-gray-50 rounded-lg p-3">
-                                        <span className="text-gray-700">{selectedLocation.placesNumberToVisit} places to visit</span>
-                                    </div>
-                                )}
-                                {/* {selectedLocation.places.map((place, index) => (
-                                    <div key={index} className="bg-gray-50 rounded-lg p-3">
-                                        <span className="text-gray-700">{place}</span>
-                                    </div>
-                                ))} */}
-                            </div>
-                        </div>
-                        
-                        <button 
-                            onClick={() => onLocationSelect(selectedLocation)}
-                            className="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition-colors font-medium"
-                        >
-                            Continue with {selectedLocation.title}
-                        </button>
-                    </div>
-                </div>
-            </div>
-        );
-    }
+                setResults((res || []) as Location[]);
+                setError(null);
+            } catch (err: any) {
+                if (err.name !== "AbortError") {
+                    setError("Failed to load results");
+                    setResults([]);
+                }
+            } finally {
+                setLoading(false);
+            }
+        }, 400);
+
+
+        return () => {
+            clearTimeout(timer);
+            controller.abort();
+        };
+    }, [query]);
+
+    const handleSelect = (loc: Location) => {
+        setSelected(loc);
+        setQuery("");
+        setFocused(false);
+        onSelect?.(loc);
+    };
 
     return (
-        <div className="max-w-2xl mx-auto p-6">
-            <div className="mb-8 text-center">
-                <h1 className="text-3xl font-bold text-gray-800 mb-2">Where do you want to go?</h1>
-                <p className="text-gray-600">Search for your dream destination</p>
-            </div>
-            
-            <div className="relative mb-6">
-                <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+        <div className="flex flex-col   ">
+            <h2 className="DescriptionHeading" >
+              <strong> Where are you going?</strong> 
+            </h2>
+            <p style={{ color: "rgb(102, 102, 102)", marginBottom: "16px" }}>
+                Start by selecting your travel destination.
+            </p>
+
+            {/* Search Input */}
+            <div className="relative w-full max-w-lg">
+                <div
+                    className={`flex items-center bg-white border rounded-full px-5 py-3 shadow-sm transition ${focused ? "border-blue-500" : "border-gray-200"
+                        }`}
+                >
+                    <Search className="text-gray-400 mr-3" size={18} />
                     <input
                         type="text"
-                        placeholder="Search destinations..."
-                        value={searchQuery}
-                        onChange={handleSearchChange}
-                        className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                        placeholder="Search your destination..."
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                        onFocus={() => setFocused(true)}
+                        className="flex-1 outline-none text-gray-700"
                     />
+                    {query && (
+                        <button onClick={() => setQuery("")}>
+                            <X className="text-gray-400" size={18} />
+                        </button>
+                    )}
                 </div>
-                
-                {isSearching && (
-                    <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-lg mt-1 p-4 text-center">
-                        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500 mx-auto"></div>
-                    </div>
-                )}
-                
-                {searchResults.length > 0 && !isSearching && (
-                    <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-lg mt-1 max-h-80 overflow-y-auto z-10 shadow-lg">
-                        {searchResults.map((location) => (
-                            <div
-                                key={location.id}
-                                onClick={() => onLocationSelect(location)}
-                                className="flex items-center p-4 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0"
-                            >
-                                <img 
-                                    src={location.photos[0]} 
-                                    alt={location.title}
-                                    className="w-12 h-12 rounded-lg object-cover mr-3"
-                                />
-                                <div>
-                                    <p className="font-medium text-gray-800">{location.title}</p>
-                                    <p className="text-sm text-gray-500">{location.country}</p>
-                                </div>
+
+                {/* Search Results Dropdown */}
+                {focused && query && (
+                    <div className="absolute left-0 right-0 mt-2 bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden z-20 max-h-80 overflow-y-auto">
+                        {loading ? (
+                            <div className="py-4 text-center text-gray-400">Loading...</div>
+                        ) : error ? (
+                            <div className="py-4 text-center text-gray-400">{error}</div>
+                        ) : results.length === 0 ? (
+                            <div className="py-4 text-center text-gray-400">
+                                No results found.
                             </div>
-                        ))}
+                        ) : (
+                            <ul className="divide-y divide-gray-100">
+                                {results.map((loc) => (
+                                    <li
+                                        key={loc.id}
+                                        onClick={() => handleSelect(loc)}
+                                        className="flex items-center gap-3 p-3 hover:bg-gray-50 cursor-pointer"
+                                    >
+                                        <div className="flex items-center justify-center w-9 h-9 bg-gray-100 rounded-md">
+                                            <MapPin size={16} className="text-gray-500" />
+                                        </div>
+                                        <div className="flex-1">
+                                            <p className="font-medium text-gray-900">{loc.title}</p>
+                                            <p className="text-sm text-gray-500">
+                                                {[loc.state, loc.country].filter(Boolean).join(", ")}
+                                            </p>
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
                     </div>
                 )}
             </div>
-        </div>
-    );
-};
 
-export default Step1Location;
+            {/* Selected Location Card */}
+            {selected && (
+                <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '20px', gap: '15px',width: '100%'}}>
+                    <LocationCard
+                        key={selected.id}
+                        isWishlisted={selected.isWishlisted}
+                        placeConnectedwithid={selected.locationConnectedWith}
+                        name={selected.title}
+                        rating={selected.rating}
+                        images={selected.photos}
+                        // inlineStyle={{ width: isMobile ? "100%" : "260px" }}
+                        // imageInlineStyle={{ width: isMobile ? 500 : 260 }}
+                        // whishlistParentId={parentId}
+                        // whishlistParentType={parentType}
+                        typeOfWhishlistCardEnum={selected.isWishlisted ? "filled" : "outline"}
+                        cardId={selected.id}
+                        typeOfCard={typeOfLocationCardEnum.location}
+                    />
+                    {/* <div className="flex gap-3 mt-5">
+                        <button
+                            onClick={() => onProceed({ id: selected.id, name: selected.title })}
+                            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl py-2.5 transition"
+                        >
+                            Next
+                        </button>
+                        <button
+                            onClick={() => setSelected(null)}
+                            className="text-gray-500 hover:text-gray-700 font-medium"
+                        >
+                            Change
+                        </button>
+                    </div> */}
+                </div>
+
+        // <LocationCard location={selected} />
+    )
+}
+        </div >
+    );
+}

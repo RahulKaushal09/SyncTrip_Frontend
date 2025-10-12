@@ -13,16 +13,16 @@ interface Step2SelectDatesProps {
   startDatePreTrip?: string | null;
   endDatePreTrip?: string | null;
   onDatesSelected: (start: Date, end: Date) => void;
-  onNext: () => void;
-  onBack: () => void;
+  // onNext: () => void;
+  // onBack: () => void;
 }
 
 const Step2SelectDates: React.FC<Step2SelectDatesProps> = ({
   startDatePreTrip,
   endDatePreTrip,
   onDatesSelected,
-  onNext,
-  onBack,
+  // onNext,
+  // onBack,
 }) => {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
@@ -42,21 +42,25 @@ const Step2SelectDates: React.FC<Step2SelectDatesProps> = ({
       }
     }
   }, [startDatePreTrip, endDatePreTrip]);
-
+  useEffect(() => {
+    if (startDate && endDate) {
+      onDatesSelected(startDate, endDate);
+    }
+  }, [startDate, endDate, onDatesSelected]);
   const handleDateChange = useCallback((dates: [Date | null, Date | null]) => {
     const [start, end] = dates;
     setStartDate(start);
     setEndDate(end);
   }, []);
 
-  const handleNext = useCallback(() => {
-    if (startDate && endDate) {
-      onDatesSelected(startDate, endDate);
-      onNext();
-    } else {
-      alert('Please select both start and end dates.');
-    }
-  }, [startDate, endDate, onDatesSelected, onNext]);
+  // const handleNext = useCallback(() => {
+  //   if (startDate && endDate) {
+  //     onDatesSelected(startDate, endDate);
+  //     // onNext();
+  //   } else {
+  //     alert('Please select both start and end dates.');
+  //   }
+  // }, [startDate, endDate, onDatesSelected, onNext]);
 
   return (
     <div className="step2-date-selection">
@@ -84,38 +88,12 @@ const Step2SelectDates: React.FC<Step2SelectDatesProps> = ({
       </div>
 
       <div className="date-range-display" aria-live="polite" style={{ marginTop: '12px' }}>
-        {startDate && endDate
-          ? `${startDate.toDateString()} - ${endDate.toDateString()}`
+        {startDate || endDate
+          ? `${startDate ? startDate.toDateString() : 'Start Date'} - ${endDate ? endDate.toDateString() : 'End Date'}`
           : 'Select your trip dates'}
       </div>
 
-      <div className="button-container row" style={{ marginTop: '20px' }}>
-        <div className="col-lg-6 col-md-6 col-sm-12 zeroPaddingInMobile-btn-1000">
-          <button
-            onClick={onBack}
-            className="btn btn-outline-dark"
-            style={{ width: '100%', borderRadius: '9px' }}
-          >
-            Back
-          </button>
-        </div>
-        <div className="col-lg-6 col-md-6 col-sm-12 zeroPaddingInMobile-btn-1000">
-          <button
-            onClick={handleNext}
-            className="view-more-btn create-trip"
-            style={{
-              width: '100%',
-              borderRadius: '9px',
-              textAlign: 'center',
-              backgroundColor: "var(--primary-1)",
-              color: 'white',
-              border: 'none',
-            }}
-          >
-            Next
-          </button>
-        </div>
-      </div>
+     
     </div>
   );
 };
