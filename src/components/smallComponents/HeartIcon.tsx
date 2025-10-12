@@ -104,7 +104,7 @@ const HeartIcon: React.FC<HeartIconProps> = ({
     opacity: loading ? 0.5 : 1,
     transition: "fill 0.3s ease",
     stroke: !hovered ? "white" : "#6ECAD5",  
-    strokeWidth: 1,
+    strokeWidth: isWishlistedState ?0:1,
     fill: isWishlistedState || hovered ? "#6ECAD5" : "none",
     width: 25,
     height: 25,
