@@ -11,6 +11,7 @@ import Step3Preferences from '@/components/createTrip/Step3Preferences';
 import Step4Budget from '@/components/createTrip/Step4Budget';
 import Step5Privacy from '@/components/createTrip/Step5Privacy';
 import { Pencil, MapPin, Calendar, Star, CreditCard, Lock } from "lucide-react";
+import TripServices from '@/utils/trip.utils';
 
 const TOTAL_STEPS = 6;
 const formatISODateOnly = (d: Date) => d.toISOString().split('T')[0];
@@ -136,16 +137,7 @@ export default function CreateTripScreen() {
     (step === 5 && !!selectedPrivacy) ||
     step === TOTAL_STEPS;
 
-  // --- Publish (adapt to your ApiService contract) ---
-  const publishTripAndNavigateToTripCreation = useCallback(
-    async (manual: boolean) => {
-      try {
-      }
-      catch (err) {
-      }
-    },  
-    [selectedLocation, startDate, endDate, selectedBudget, selectedPreferences, selectedPrivacy, router]
-  );
+  
   const publishTripAndNavigateToMatching = useCallback(
     async (manual: boolean) => {
       try {
@@ -173,7 +165,7 @@ export default function CreateTripScreen() {
           const createdTripId = res.id;
           if (manual) {
             // route to manual planner page
-            router.replace(`/userTrip/planner?tripId=${createdTripId}&showHotelsAfter=true`);
+            router.replace(`/userTrip/planner?tripId=${createdTripId}`);
           } else {
             router.replace(`/userTrip/${createdTripId}`);
           }
@@ -325,7 +317,7 @@ export default function CreateTripScreen() {
         <div className="mt-6">
           <div className="flex flex-col gap-3">
             <button
-              onClick={() => publishTripAndNavigateToTripCreation(true)}
+              onClick={() => publishTripAndNavigate(true)}
               className="w-full btn btn-primary-border"
             >
               Make Your Plan Manually

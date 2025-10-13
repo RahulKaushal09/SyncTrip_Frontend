@@ -6,10 +6,13 @@ import { Leaf, Menu, Plane } from "lucide-react";
 import '../../../styles/AddLocationCard.css';
 import { PageTypeEnum } from '@/constants';
 import { TripTimeline } from '@/types';
+import { triggerLogin } from '@/utils';
+import { useRouter } from 'next/navigation';
 
 
 
 interface AddLocationCardProps {
+    locationId?: string;
     showBtns: boolean;
     pageType: string | null;
     onLoginClick: () => void;
@@ -32,6 +35,7 @@ interface AddLocationCardProps {
 }
 
 const AddLocationCard: React.FC<AddLocationCardProps> = ({
+    locationId,
     showBtns,
     pageType,
     onLoginClick,
@@ -52,6 +56,8 @@ const AddLocationCard: React.FC<AddLocationCardProps> = ({
     price,
     timelines
 }) => {
+        const router = useRouter();
+    
     const [activeIcon, setActiveIcon] = useState(0);
     const [btn2Text, setBtn2Text] = useState('');
     const [btn2CTA, setBtn2CTA] = useState<() => void>(() => ctaAction);
@@ -65,13 +71,20 @@ const AddLocationCard: React.FC<AddLocationCardProps> = ({
         `<strong style='color:black'>${HotelsToStay}</strong>+ Hotels to stay at`,
         `<strong style='color:black'>${getRandomNumberReviews}</strong>+ Others planning`
     ];
+    const createTrip = (locationId: string) => {
+        // Logic to create a trip
+        router.push(`/create/trip?locationId=${locationId}`);
+    };
+    const loginThenNavigate = () => {
+        triggerLogin(createTrip.bind(null, locationId || ''));
+    }
     useEffect(() => {
         const random = Math.floor(Math.random() * (100 - 10 + 1)) + 10;
         setCustomReviews(random);
     }, []);
     useEffect(() => {
         if (pageType === PageTypeEnum.LOCATION) {
-            setBtn2CTA(() => ctaAction);
+            setBtn2CTA(() => loginThenNavigate);
         } else if (pageType === PageTypeEnum.TRIP) {
             const user = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('user') || 'null') : null;
             if (user?.profileCompleted) {

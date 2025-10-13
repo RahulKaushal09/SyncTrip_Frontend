@@ -40,7 +40,6 @@ import { UserApiService } from '@/utils/user.api.utils';
 //     )
 // });
 const LocationPageDetails = ({ uuid, locationData }: { uuid: string; locationData: Location }) => {
-
     const pathname = usePathname();
     const [loading, setLoading] = useState(true);
     const [isWishlistedLocation, setIsWishlistedLocation] = useState(false);
@@ -117,6 +116,7 @@ const LocationPageDetails = ({ uuid, locationData }: { uuid: string; locationDat
 
             {isMobile && (
                 <AddLocationCard
+                    locationId={locationData?.id}
                     showBtns
                     pageType={pageType}
                     btnsStyle={{ width: '45%' }}
@@ -172,6 +172,8 @@ const LocationPageDetails = ({ uuid, locationData }: { uuid: string; locationDat
                     <div className="col-lg-4" style={{ marginBottom: '17px' }}>
                         <div style={{ position: 'sticky', top: '80px', zIndex: 50 }}>
                             <AddLocationCard
+                    locationId={locationData?.id}
+
                                 showBtns
                                 pageType={pageType}
                                 ctaAction={ctaAction}

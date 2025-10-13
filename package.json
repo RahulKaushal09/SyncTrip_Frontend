@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@googlemaps/js-api-loader": "^2.0.1",
+    "@react-google-maps/api": "^2.20.7",
     "@react-oauth/google": "^0.12.2",
     "@uiw/react-md-editor": "^4.0.8",
     "axios": "^1.12.2",
@@ -34,6 +34,7 @@
     "@eslint/eslintrc": "^3",
     "@next/bundle-analyzer": "^15.4.6",
     "@tailwindcss/postcss": "^4",
+    "@types/google.maps": "^3.58.1",
     "@types/js-cookie": "^3.0.6",
     "@types/leaflet": "^1.9.20",
     "@types/lodash": "^4.17.20",

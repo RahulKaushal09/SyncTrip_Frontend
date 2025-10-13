@@ -33,4 +33,56 @@ export class LocationServices {
             return [];
         }
     }
+    static async fetchLocationDetails(locationId: string, fields?: string[]) {
+        try {
+            const res = await apiClient.get(`/app/getLocationDetails/${locationId}`, {
+                params: {
+                    fields: fields?.join(",")
+                }
+            });
+            return res.data.location as Location;
+        } catch (error) {
+            console.error("Error fetching location details:", error);
+            throw error;
+        }
+    }
+
+    static async getPlacesToVisitByIds(placeIds: string[], token?: string) {
+        try {
+            const res = await apiClient.post(`/places/getPlacesByIds`, { placeIds });
+            return res.data;
+        } catch (error) {
+            console.error("Error fetching places by IDs:", error);
+            throw error;
+        }
+    }
+    static async getHotelsByIds(hotelIds: string[], token?: string) {
+        try {
+            const res = await apiClient.post(`/hotels/getHotelsByIds`, { hotelIds });
+            // clean hotel_name for nay number wiht . ex 76. 67. etc 
+            if(res.data && Array.isArray(res.data)) {
+                res.data = res.data.map((h: any) => {
+                    if(h.hotel_name) {
+                        h.hotel_name = h.hotel_name.replace(/^\d+(\.\s*)?/, '').trim();
+                    }
+                    return h;
+                });
+            }
+            return res.data;
+        }
+        catch (error) {
+            console.error("Error fetching hotels by IDs:", error);
+            throw error;
+        }
+    }
+    static async getRestaurantsByIds(restaurantIds: string[], token?: string) {
+        try {
+            const res = await apiClient.post(`/locations/getRestaurantsByRestaurantIds`, { restaurantIds });
+            return res.data.restaurants;
+        }
+        catch (error) {
+            console.error("Error fetching restaurants by IDs:", error);
+            throw error;
+        }
+    }
 };

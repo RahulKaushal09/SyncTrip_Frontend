@@ -1,8 +1,15 @@
-"use client"
-import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { importLibrary } from '@googlemaps/js-api-loader';
-import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
+// src/app/userTrip/planner/page.tsx
+'use client';
 
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
+import { GoogleMap, DirectionsService, DirectionsRenderer, Marker } from '@react-google-maps/api';
+import { MapProvider } from '@/components/createTrip/MapProvider';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { LocationFields } from '@/constants';
+import { LocationServices } from '@/utils/location.utils';
+import TripServices from '@/utils/trip.utils';
+import { PlacesToVisit } from '@/types';
 // ---------------------------------------------
 // TYPES
 // ---------------------------------------------
@@ -11,14 +18,6 @@ interface LatLng {
   longitude: number;
 }
 
-interface PlacesToVisit {
-  id: string;
-  title: string;
-  coordinates: { lat: number; long: number };
-  image: string[];
-  rating: string;
-  tag: string;
-}
 
 interface ActivityWithDistance {
   place: PlacesToVisit;
@@ -45,13 +44,7 @@ interface DayPlan {
 // ---------------------------------------------
 // MOCK DATA
 // ---------------------------------------------
-const PLACE_CATALOG: PlacesToVisit[] = [
-  { id: 'eiffel', title: 'Eiffel Tower', coordinates: { lat: 48.85837, long: 2.294481 }, image: ['https://picsum.photos/400/240?random=41'], rating: '4.8', tag: 'Cultural' },
-  { id: 'arc', title: 'Arc de Triomphe', coordinates: { lat: 48.873792, long: 2.295028 }, image: ['https://picsum.photos/400/240?random=42'], rating: '4.8', tag: 'Adventure' },
-  { id: 'louvre', title: 'Louvre Museum', coordinates: { lat: 48.860611, long: 2.337644 }, image: ['https://picsum.photos/400/240?random=43'], rating: '4.7', tag: 'Cultural' },
-  { id: 'notredame', title: 'Notre-Dame Cathedral', coordinates: { lat: 48.853, long: 2.3499 }, image: ['https://picsum.photos/400/240?random=44'], rating: '4.7', tag: 'Cultural' },
-  { id: 'montmartre', title: 'Montmartre & Sacré-Cœur', coordinates: { lat: 48.8867, long: 2.3431 }, image: ['https://picsum.photos/400/240?random=45'], rating: '4.6', tag: 'Cultural' },
-];
+
 
 const makeDay = (id: string, label: string, date?: string): DayPlan => ({
   id,
@@ -81,12 +74,6 @@ function haversineKm(a: LatLng, b: LatLng): number {
   return Math.round(R * c * 10) / 10;
 }
 
-function sumPolylineKm(coords: LatLng[]): number {
-  let s = 0;
-  for (let i = 1; i < coords.length; i++) s += haversineKm(coords[i - 1], coords[i]);
-  return s;
-}
-
 function routeSignature(activities: ActivityWithDistance[], optimize: boolean): string {
   const ids = activities.map(a => a.place.id).join('>');
   return `${optimize ? '1' : '0'}|${ids}`;
@@ -101,45 +88,6 @@ function attachDistancesToActivities(orderedPlaces: PlacesToVisit[], legDistance
   return out;
 }
 
-function decodePolyline(poly: string): LatLng[] {
-  let index = 0, lat = 0, lng = 0;
-  const coords: LatLng[] = [];
-  const next = () => {
-    let result = 0, shift = 0, b;
-    do {
-      b = poly.charCodeAt(index++) - 63;
-      result |= (b & 0x1f) << shift;
-      shift += 5;
-    } while (b >= 0x20);
-    return (result & 1) ? ~(result >> 1) : (result >> 1);
-  };
-  while (index < poly.length) {
-    lat += next();
-    lng += next();
-    coords.push({ latitude: lat / 1e5, longitude: lng / 1e5 });
-  }
-  return coords;
-}
-
-// Mock Directions API
-async function mockDirectionsAPI(payload: { places: LatLng[]; mode: string; optimize: boolean }) {
-  const { places, optimize } = payload;
-  if (places.length < 2) return { coordinates: places };
-  const coords = places.map(p => ({ latitude: p.latitude, longitude: p.longitude }));
-  const legDistancesKm = [];
-  for (let i = 1; i < places.length; i++) {
-    legDistancesKm.push(haversineKm(places[i - 1], places[i]));
-  }
-  const totalKm = legDistancesKm.reduce((sum, d) => sum + d, 0);
-  const waypointOrder = optimize ? Array.from({ length: places.length - 2 }, (_, i) => i) : null;
-  return {
-    coordinates: coords,
-    distanceMeters: totalKm * 1000,
-    waypoint_order: waypointOrder,
-    legDistancesKm,
-  };
-}
-
 // ---------------------------------------------
 // COMPONENTS
 // ---------------------------------------------
@@ -151,7 +99,7 @@ const PlaceCard: React.FC<{
     <img src={place.image[0]} alt={place.title} className="w-16 h-10 object-cover rounded mr-4" />
     <div className="flex-1">
       <h3 className="text-sm font-semibold">{place.title}</h3>
-      <p className="text-xs text-gray-500">{place.tag} • {place.rating} ★</p>
+      {/* <p className="text-xs text-gray-500">{place.filter} • {place.rating} ★</p> */}
     </div>
     <button
       onClick={onAdd}
@@ -174,7 +122,7 @@ const ActivityCard: React.FC<{
     </div>
     <div className="flex-1">
       <h3 className="text-sm font-semibold">{place.title}</h3>
-      <p className="text-xs text-gray-500">{place.tag} • {place.rating} ★</p>
+      {/* <p className="text-xs text-gray-500">{place.tag} • {place.rating} ★</p> */}
       {distanceKm != null && (
         <p className="text-xs text-gray-500">Distance: {distanceKm.toFixed(1)} km</p>
       )}
@@ -188,59 +136,139 @@ const ActivityCard: React.FC<{
   </div>
 );
 
+function generateDays(start: string | Date, end: string | Date): DayPlan[] {
+    const days: DayPlan[] = [];
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+
+    let current = new Date(startDate);
+    let index = 1;
+
+    while (current <= endDate) {
+        // format date however you like, e.g. “January 21”
+        const label = `Day ${index}`;
+        const dateString = current.toLocaleDateString('en-US', {
+            month: 'long',
+            day: 'numeric'
+        });
+
+        days.push(makeDay(`d${index}`, label, dateString));
+
+        // increment
+        current.setDate(current.getDate() + 1);
+        index++;
+    }
+
+    return days;
+}
+
 // ---------------------------------------------
 // MAIN PAGE
 // ---------------------------------------------
+// http://localhost:3000/userTrip/planner?tripId=43c3d093-f00d-4976-83fb-28457e373b1d
 const TripPlannerPage: React.FC = () => {
-  const [placesToVisit, setPlacesToVisit] = useState<PlacesToVisit[]>(PLACE_CATALOG);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const tripId = searchParams?.get('tripId');
+
+  const [placesToVisit, setPlacesToVisit] = useState<PlacesToVisit[]>([]);
   const [days, setDays] = useState<DayPlan[]>(INITIAL_DAYS);
   const [selectedDayIdx, setSelectedDayIdx] = useState(0);
   const [isOverview, setIsOverview] = useState(false);
   const [openOverviewIdx, setOpenOverviewIdx] = useState(0);
   const [optimizeByDay, setOptimizeByDay] = useState<Record<string, boolean>>({});
-  const [routeCoords, setRouteCoords] = useState<LatLng[]>([]);
+  const [directions, setDirections] = useState<google.maps.DirectionsResult | null>(null);
   const [totalDistanceKm, setTotalDistanceKm] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [mainLocationLatitude, setMainLocationLatitude] = useState<number>(28.6139); // Default to New Delhi
+  const [mainLocationLongitude, setMainLocationLongitude] = useState<number>(77.209); // Default to New Delhi
+
+  const [tripDetails, setTripDetails] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
   const mapRef = useRef<google.maps.Map | null>(null);
-  const markersRef = useRef<google.maps.Marker[]>([]);
-  const polylineRef = useRef<google.maps.Polyline | null>(null);
 
   const activeDay = days[isOverview ? openOverviewIdx : selectedDayIdx];
   const activeOptimize = optimizeByDay[activeDay?.id ?? ''] ?? false;
-  // Initialize Google Map
+
+  const mapContainerStyle = { width: '100%', height: '100vh' };
+  // const center = { lat: 48.85837, lng: 2.294481 }; // Eiffel Tower
+  const [center, setCenter] = useState<{ lat: number; lng: number }>({ lat: mainLocationLatitude, lng: mainLocationLongitude });
+
+
   useEffect(() => {
-    let mapInstance: google.maps.Map | null = null;
-
-    (async () => {
-      try {
-        const { Map } = (await importLibrary('maps')) as google.maps.MapsLibrary;
-
-        // Initialize the map only once
-        if (!mapRef.current) {
-          mapInstance = new Map(document.getElementById('map') as HTMLElement, {
-            center: { lat: 48.85837, lng: 2.294481 }, // Eiffel Tower
-            zoom: 12,
-            styles: [
-              { featureType: 'poi', stylers: [{ visibility: 'simplified' }] },
-            ],
-            // mapId: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY, // optional if using Map ID
-          });
-
-          mapRef.current = mapInstance;
-        }
-      } catch (err) {
-        console.error('Failed to initialize Google Map:', err);
+    const fetchDetails = async (locationId: string) => {
+      if (!locationId) {
+        // showInAppNotification('Error: Missing destination ID');
+        // navigation.goBack();
+        router.replace('/userTrips');
       }
-    })();
+      else {
+        const LocationDetailsFields = [
+          LocationFields.ID,
+          LocationFields.TITLE,
+          LocationFields.COORDINATES,
+          LocationFields.COUNTRY,
+          LocationFields.PLACES_TO_VISIT,
+        ];
+        const LocationDetails = await LocationServices.fetchLocationDetails(locationId, LocationDetailsFields);
+        if (!LocationDetails) {
+          // showInAppNotification('Error: Could not fetch location details');
+          // navigation.goBack();
+          // router.replace('/userTrips');
+          return;
+        }
 
-    return () => {
-      if (polylineRef.current) polylineRef.current.setMap(null);
-      markersRef.current.forEach(marker => marker.setMap(null));
-      markersRef.current = [];
+        setMainLocationLatitude(LocationDetails.fullDetails?.coordinates?.lat  as number);
+        setMainLocationLongitude(LocationDetails.fullDetails?.coordinates?.long as number);
+        setCenter({ lat: LocationDetails.fullDetails?.coordinates?.lat as number, lng: LocationDetails.fullDetails?.coordinates?.long as number });
+        const placesToVisitIds: string[] = LocationDetails.placesToVisit as string[] || [];
+        if (placesToVisitIds.length > 0) {
+          const placesToVisit_ = await LocationServices.getPlacesToVisitByIds(placesToVisitIds);
+          setPlacesToVisit(placesToVisit_);
+        }
+        setLoading(false);
+      }
     };
-  }, []);
+    const fetchTripDetails = async () => {
+      if (!tripId) {
+        // showInAppNotification('Error: Missing trip ID');
+        // navigation.goBack();
+        // router.replace('/userTrips');
+        return;
+      }
+      try {
+        const tripDetails_ = await TripServices.fetchTripDetails(tripId);
+        if (!tripDetails_) {
+          // showInAppNotification('Error: Could not fetch trip details');
+          // navigation.goBack();
+          // router.replace('/userTrips');
+          return;
+        }
+        setTripDetails(tripDetails_);
+        setDays(() =>
+          tripDetails_.startDate && tripDetails_.endDate
+            ? generateDays(tripDetails_.startDate, tripDetails_.endDate)
+            : []);
+        // Set main location coords if available
+        if (tripDetails_.locationId) {
+          await fetchDetails(tripDetails_.locationId);
+        }
 
-  // Fit map to markers
+      }
+      catch (error) {
+        // showInAppNotification('Error fetching trip details');
+        // navigation.goBack();
+        // router.replace('/userTrips');
+      }
+      setLoading(false);
+    };
+    fetchTripDetails();
+  }, [tripId]);
+
+
+
+  // Fit map to bounds
   const fitMapTo = useCallback((coords: LatLng[]) => {
     if (!mapRef.current || !coords.length) return;
 
@@ -255,85 +283,18 @@ const TripPlannerPage: React.FC = () => {
     mapRef.current.fitBounds(bounds, { top: 80, right: 400, bottom: 40, left: 40 });
   }, []);
 
-  // Update markers and polyline
-  useEffect(() => {
-    if (!mapRef.current || !activeDay) return;
+  // Directions callback
+  const directionsCallback = useCallback((response: google.maps.DirectionsResult | null, status: google.maps.DirectionsStatus) => {
+    if (response !== null && status === 'OK') {
+      setDirections(response);
 
-    // Clear existing markers
-    markersRef.current.forEach(marker => marker.setMap(null));
-    markersRef.current = [];
-
-    // Add new markers
-    const places = activeDay.activities.map(a => a.place);
-    places.forEach((place, idx) => {
-      const marker = new google.maps.Marker({
-        position: { lat: place.coordinates.lat, lng: place.coordinates.long },
-        map: mapRef.current,
-        title: `${idx + 1}. ${place.title}`,
-        label: { text: `${idx + 1}`, color: 'white', fontSize: '12px', fontWeight: 'bold' },
-      });
-      markersRef.current.push(marker);
-    });
-
-    // Update polyline
-    if (polylineRef.current) {
-      polylineRef.current.setMap(null);
-    }
-    if (routeCoords.length > 1) {
-      polylineRef.current = new google.maps.Polyline({
-        path: routeCoords.map(c => ({ lat: c.latitude, lng: c.longitude })),
-        strokeColor: '#C2185B',
-        strokeWeight: 5,
-        map: mapRef.current,
-      });
-    }
-
-    fitMapTo(places.map(p => ({ latitude: p.coordinates.lat, longitude: p.coordinates.long })));
-  }, [activeDay, routeCoords, fitMapTo]);
-
-  // Fetch route for active day
-  const fetchRouteForFocusedDay = useCallback(async () => {
-    if (!activeDay || isOverview) {
-      setRouteCoords([]);
-      setTotalDistanceKm(null);
-      return;
-    }
-
-    const places = activeDay.activities.map(a => a.place);
-    const optimize = activeOptimize;
-
-    if (places.length < 2) {
-      setRouteCoords(places.map(p => ({ latitude: p.coordinates.lat, longitude: p.coordinates.long })));
-      setTotalDistanceKm(null);
-      fitMapTo(places.map(p => ({ latitude: p.coordinates.lat, longitude: p.coordinates.long })));
-      return;
-    }
-
-    const sig = routeSignature(activeDay.activities, optimize);
-    if (activeDay.route?.signature === sig && activeDay.route.coords) {
-      setRouteCoords(activeDay.route.coords);
-      setTotalDistanceKm(activeDay.route.distanceKm ?? null);
-      fitMapTo(activeDay.route.coords);
-      return;
-    }
-
-    const payload = {
-      places: places.map(p => ({ latitude: p.coordinates.lat, longitude: p.coordinates.long })),
-      mode: 'DRIVING',
-      optimize,
-    };
-
-    try {
-      const data = await mockDirectionsAPI(payload);
-      const coords = data.coordinates;
-      const totalKm = data.distanceMeters as number / 1000;
-      const legDistancesKm = data.legDistancesKm ?? [];
-      const orderedPlaces = places; // Mock API doesn't reorder
+      const route = response.routes[0];
+      const totalKm = route.legs.reduce((sum, leg) => sum + (leg.distance?.value ?? 0) / 1000, 0);
+      const legDistancesKm = route.legs.map(leg => (leg.distance?.value ?? 0) / 1000);
+      const orderedPlaces = activeDay.activities.map(a => a.place); // Maintain original order for now
       const activitiesWithDistances = attachDistancesToActivities(orderedPlaces, legDistancesKm);
 
-      setRouteCoords(coords);
       setTotalDistanceKm(totalKm);
-      fitMapTo(coords);
 
       setDays(prev => {
         const next = [...prev];
@@ -343,27 +304,48 @@ const TripPlannerPage: React.FC = () => {
             ...next[dIdx],
             activities: activitiesWithDistances,
             route: {
-              signature: routeSignature(activitiesWithDistances, optimize),
-              coords,
-              polyline: null,
+              signature: routeSignature(activitiesWithDistances, activeOptimize),
+              coords: route.overview_path.map(p => ({ latitude: p.lat(), longitude: p.lng() })),
+              polyline: route.overview_polyline,
               distanceKm: totalKm,
-              waypointOrder: data.waypoint_order ?? null,
+              waypointOrder: route.waypoint_order ?? null,
               legDistancesKm,
             },
           };
         }
         return next;
       });
-    } catch (err) {
-      console.error('Route fetch error:', err);
+
+      fitMapTo(route.overview_path.map(p => ({ latitude: p.lat(), longitude: p.lng() })));
+    } else {
+      console.error('Directions request failed:', status);
+      setDirections(null);
+      setTotalDistanceKm(null);
     }
   }, [activeDay, activeOptimize, fitMapTo]);
 
-  // Debounce route fetch
-  useEffect(() => {
-    const timeout = setTimeout(() => fetchRouteForFocusedDay(), 650);
-    return () => clearTimeout(timeout);
-  }, [fetchRouteForFocusedDay]);
+  // Directions options
+  const directionsOptions = useMemo(() => {
+    if (!activeDay || isOverview || activeDay.activities.length < 2) return null;
+
+    const places = activeDay.activities.map(a => a.place);
+    const waypoints = places.slice(1, -1).map(place => ({
+      location: { lat: place.coordinates.lat, lng: place.coordinates.long },
+      stopover: true,
+    }));
+
+    return {
+      origin: { lat: places[0].coordinates.lat, lng: places[0].coordinates.long },
+      destination: { lat: places[places.length - 1].coordinates.lat, lng: places[places.length - 1].coordinates.long },
+      waypoints,
+      optimizeWaypoints: activeOptimize,
+      travelMode: google.maps.TravelMode.DRIVING,
+      provideRouteAlternatives: false,
+      avoidFerries: false,
+      avoidHighways: false,
+      avoidTolls: false,
+    } as google.maps.DirectionsRequest;
+  }, [activeDay, isOverview, activeOptimize]);
 
   // Handlers
   const addPlaceToDay = useCallback((place: PlacesToVisit, dayIndex: number) => {
@@ -416,14 +398,48 @@ const TripPlannerPage: React.FC = () => {
   );
 
   return (
-    <>
-      {/* <Head>
-        <title>Trip Planner</title>
-        <script src="https://cdn.tailwindcss.com"></script>
-      </Head> */}
+    <MapProvider>
       <div className="relative h-screen w-screen">
         {/* Map Background */}
-        <div id="map" className="absolute inset-0" />
+        
+        <GoogleMap
+          mapContainerStyle={mapContainerStyle}
+          center={center}
+          zoom={12}
+          onLoad={map => {
+            mapRef.current = map;
+          }}
+          options={{
+            styles: [{ featureType: 'poi', stylers: [{ visibility: 'simplified' }] }],
+          }}
+        >
+          {/* Markers */}
+          {activeDay?.activities.map((item, idx) => (
+            <Marker
+              key={item.place.id}
+              position={{ lat: item.place.coordinates.lat, lng: item.place.coordinates.long }}
+              title={`${idx + 1}. ${item.place.title}`}
+              label={{ text: `${idx + 1}`, color: 'white', fontSize: '12px', fontWeight: 'bold' }}
+            />
+          ))}
+
+          {/* Directions */}
+          {directionsOptions && (
+            <DirectionsService
+              options={directionsOptions}
+              callback={directionsCallback}
+            />
+          )}
+
+          {directions && (
+            <DirectionsRenderer
+              options={{
+                directions,
+                polylineOptions: { strokeColor: '#C2185B', strokeWeight: 5 },
+              }}
+            />
+          )}
+        </GoogleMap>
 
         {/* Right Sidebar (Search + Places + Itinerary) */}
         <div className="absolute right-0 top-0 h-full w-96 bg-white shadow-lg flex flex-col">
@@ -499,7 +515,7 @@ const TripPlannerPage: React.FC = () => {
                             place={item.place}
                             distanceKm={item.distanceKm}
                             index={idx}
-                            onRemove={() => { }}
+                            onRemove={() => removePlaceFromDay(item.place.id, i)}
                           />
                         ))}
                       </div>
@@ -555,7 +571,7 @@ const TripPlannerPage: React.FC = () => {
           </div>
         </div>
       </div>
-    </>
+    </MapProvider>
   );
 };
 
