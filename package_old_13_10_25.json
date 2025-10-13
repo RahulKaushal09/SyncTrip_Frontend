@@ -9,7 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@googlemaps/js-api-loader": "^2.0.1",
     "@react-oauth/google": "^0.12.2",
     "@uiw/react-md-editor": "^4.0.8",
     "axios": "^1.12.2",
@@ -21,14 +20,13 @@
     "lodash": "^4.17.21",
     "lucide-react": "^0.539.0",
     "next": "15.4.2",
-    "react": "^18.3.1",
-    "react-beautiful-dnd": "^13.1.1",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
     "react-bootstrap": "^2.10.10",
     "react-datepicker": "^8.4.0",
-    "react-dom": "^18.3.1",
     "react-froala-wysiwyg": "^4.6.0",
     "react-hot-toast": "^2.5.2",
-    "react-leaflet": "^4.2.1"
+    "react-leaflet": "^5.0.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -39,7 +37,6 @@
     "@types/lodash": "^4.17.20",
     "@types/node": "^20.19.9",
     "@types/react": "^19",
-    "@types/react-beautiful-dnd": "^13.1.8",
     "@types/react-dom": "^19",
     "autoprefixer": "^10.4.21",
     "eslint": "^9",

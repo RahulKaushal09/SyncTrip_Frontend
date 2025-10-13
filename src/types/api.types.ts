@@ -43,6 +43,36 @@ export interface LoginResponse {
 //     password: string;
 //     confirmPassword: string;
 // }
+export interface UserTripActivity {
+  dayId: string;
+  dayLabel: string;
+  dayDate: string; // or Date if you parse it
+  placeId: string;
+  order: number;
+  distanceKm?: number;
+  routeSignature?: string;
+  polyline?: string;
+}
+export interface UserTrip {
+    id?: string;     // Unique identifier for the trip
+    userId?: string; // ID of the user who created the trip
+    locationId: string; // ID of the trip destination (e.g., location ID)
+    locationName?: string; // Name of the destination (for display purposes)
+    tripName?: string; // Name or title of the trip
+    
+//   destination: string; // Location or destination of the trip
+  startDate: string;   // Start date of the trip
+  endDate: string;     // End date of the trip
+  budget: string;      // Budget preference ("Cheap", "Economic", "Luxury", etc.)
+  interests?: string[];   // Interests (e.g., "Cultural Exploration", "Beach", etc.)
+//   interests?: string;   // Interests (e.g., "Cultural Exploration", "Beach", etc.)
+  privacy?: string;    // Privacy setting ("Public", "Friends", "Only Me", etc.)
+    // activities?: TripActivity[]; // List of activities planned for the trip
+    image?: string;    // URL of the main image for the trip
+    rating?: number;   // Average rating (e.g., 4.5)
+    avatars?: string[]; // URLs of user avatars who joined the trip
+    activities?: UserTripActivity[]; // List of activities planned for the trip
+};
 
 
 export interface Location {

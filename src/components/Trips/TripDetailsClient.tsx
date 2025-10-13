@@ -18,9 +18,9 @@ import dynamic from 'next/dynamic';
 import SyncTripAppPushingSection from '../AppPushingComponents/AppPushingSection';
 import "../../../styles/trips/TripDetailsPage.css"
 // Dynamically import LocationMapSection to avoid SSR issues
-const LocationMapSection = dynamic(() => import('../PageDetails/LocationMapSection'), {
-    ssr: false,
-});
+// const LocationMapSection = dynamic(() => import('../PageDetails/LocationMapSection'), {
+//     ssr: false,
+// });
 
 interface TripDetailsContentClientProps {
     tripData: Trip;
@@ -204,10 +204,10 @@ export default function TripDetailsContentClient({
                             </div>
                         </div>
                     )}
-                    <LocationMapSection
+                    {/* <LocationMapSection
                         latitude={updatedLocationData?.fullDetails?.coordinates?.lat ?? 0}
                         longitude={updatedLocationData?.fullDetails?.coordinates?.long ?? 0}
-                    />
+                    /> */}
                 </div>
                 {!isMobile && (
                     <div className="col-lg-4" style={{ marginBottom: '17px' }}>

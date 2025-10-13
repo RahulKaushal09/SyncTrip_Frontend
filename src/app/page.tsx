@@ -10,6 +10,7 @@ import { getThemeClass } from "@/utils/getThemeClassForBlogs";
 import { BlogsApiServices } from "@/utils/blogs.api.utils";
 import { BlogPost } from "@/types";
 import { Metadata } from "next";
+import Script from "next/script";
 
 // export const metadata: Metadata = {
 //   title: 'SyncTrip — Group Travel & Travel Buddies in India',
@@ -124,7 +125,11 @@ export default async function Home() {
           }),
         }}
       />
-
+      <Script
+          id="google-maps"
+          strategy="beforeInteractive"
+          src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=maps,marker`}
+        />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

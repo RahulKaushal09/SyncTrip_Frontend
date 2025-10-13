@@ -69,7 +69,8 @@ const Step2SelectDates: React.FC<Step2SelectDatesProps> = ({
       </h2>
 
       <p className="sub-text" style={{ color: '#666', marginBottom: '16px' }}>
-        Choose your start and end dates for the trip.
+        Choose your trip dates so we can plan the perfect itinerary and connect you with the right travel buddies.
+
       </p>
 
       <div className="calendar-container">
@@ -93,7 +94,7 @@ const Step2SelectDates: React.FC<Step2SelectDatesProps> = ({
           : 'Select your trip dates'}
       </div>
 
-     
+
     </div>
   );
 };

@@ -70,9 +70,9 @@ export default function LocationSelector({
     };
 
     return (
-        <div className="flex flex-col   ">
+        <div className="flex flex-col   " >
             <h2 className="DescriptionHeading" >
-              <strong> Where are you going?</strong> 
+                <strong> Where are you going?</strong>
             </h2>
             <p style={{ color: "rgb(102, 102, 102)", marginBottom: "16px" }}>
                 Start by selecting your travel destination.
@@ -137,8 +137,8 @@ export default function LocationSelector({
             </div>
 
             {/* Selected Location Card */}
-            {selected && (
-                <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '20px', gap: '15px',width: '100%'}}>
+            {selected ? (
+                <div style={{ display: 'flex', flexDirection: 'column', marginTop: '20px', gap: '15px', width: '100%' }}>
                     <LocationCard
                         key={selected.id}
                         isWishlisted={selected.isWishlisted}
@@ -170,9 +170,10 @@ export default function LocationSelector({
                     </div> */}
                 </div>
 
-        // <LocationCard location={selected} />
-    )
-}
+                // <LocationCard location={selected} />
+            ):
+            <div style={{height:"50%"}}></div>
+            }
         </div >
     );
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import {Star} from 'lucide-react';
+import { Star } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L, { LatLngExpression } from 'leaflet';
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
@@ -124,19 +124,32 @@ const FitMajorityBounds: React.FC<{ places: Place[] }> = ({ places }) => {
     return null;
 };
 
+
 const PlacesToVisitMap: React.FC<PlacesToVisitMapProps> = ({ places }) => {
+
+ 
+  const mapKey = useRef(Date.now()); // unique key to reset map cleanly
+
     const [selectedCategory, setSelectedCategory] = useState<string>('all');
     const filterRef = useRef<HTMLDivElement>(null);
     const [filterWidth, setFilterWidth] = useState<number>(0);
     const [showFilter, setShowFilter] = useState<boolean>(false);
     const [shouldRenderFilter, setShouldRenderFilter] = useState<boolean>(true);
-
+   
     useEffect(() => {
         if (showFilter && filterRef.current) {
             setFilterWidth(filterRef.current.offsetWidth);
         }
     }, [showFilter]);
+const [hydrated, setHydrated] = useState(false);
 
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
+
+  if (!hydrated) return null; // Prevent map init during React double mount
+
+    
     const availableCategories = Array.from(
         new Set(places.map(place => getPlaceCategory(place.title)))
     );
@@ -199,6 +212,7 @@ const PlacesToVisitMap: React.FC<PlacesToVisitMapProps> = ({ places }) => {
 
             {/* Map */}
             <MapContainer
+                key={mapKey.current}
                 center={defaultCenter}
                 zoom={5}
                 zoomControl={false}

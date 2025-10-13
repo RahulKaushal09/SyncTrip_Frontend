@@ -4,12 +4,13 @@
 
 import { API_CONFIG, LocationField, STORAGE_KEYS, UserField } from '../constants';
 import { StorageUtils } from './storage.utils';
-import { ApiResponse, IndianCity, Location, PlacesToVisit, User } from '../types';
+import { ApiResponse, IndianCity, Location, PlacesToVisit, User, UserTrip } from '../types';
 import { triggerLogin } from './login.utils';
 import { GoogleLoginResponse, CompleteProfileApiResponse, getLocationResponseSchema, exploreNearByApiResponse } from '@/classes/ApiResponse.classes';
 import { wishlistRequestSchema } from '@/classes/ApiRequest.classes';
 // import { indianCitiesPageData } from '@/data/indianCitiesPageData';
 import { Events } from '@/types';
+import apiClient from './apiClient';
 // import { cookies } from 'next/headers';
 
 export class ApiService {
@@ -334,7 +335,16 @@ export class ApiService {
     });
     return this.handleResponse(response);
   }
-
+  static async saveTripDetails(tripDetails: UserTrip) {
+    try {
+      const res = await apiClient.post(`/app/createUserTripWithDetails`, tripDetails);
+      return res.data.trip;
+    }
+    catch (error) {
+      console.error("Error saving trip details:", error);
+      throw error;
+    }
+  }
   static async toggleWishlist(data: { type: string; refId: string; parentType?: string; parentId?: string; name?: string }): Promise<ApiResponse | void> {
     const body: wishlistRequestSchema = {
       type: data.type,
@@ -389,7 +399,7 @@ export class ApiService {
   }
   static async fetchLocationByIdServer(id: string, token: string = ""): Promise<Location | null> {
     try {
-      
+
       const response = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/locations/${id}`, {
         method: 'GET',
         headers: await this.getAuthHeadersServer(token),
@@ -458,7 +468,7 @@ export class ApiService {
           lat: latitude,
           long: longitude,
           radius,
-          limit:18
+          limit: 18
         })
       }
     );

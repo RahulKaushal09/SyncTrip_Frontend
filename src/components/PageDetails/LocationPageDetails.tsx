@@ -18,27 +18,27 @@ import SyncTripAppPushingSection from '../AppPushingComponents/AppPushingSection
 import Cookies from 'js-cookie';
 import dynamic from 'next/dynamic';
 import { UserApiService } from '@/utils/user.api.utils';
-const LocationMapSection = dynamic(() => import('./LocationMapSection'), {
-    ssr: false, // This prevents SSR for import { is } from './../../../.next/server/vendor-chunks/next';
-    loading: () => (
-        <div className="map-skeleton" style={{
-            height: '400px',
-            background: 'linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%)',
-            borderRadius: '8px',
-            animation: 'loading 1.5s infinite'
-        }}>
-            <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                height: '100%',
-                color: '#666'
-            }}>
-                Loading Map...
-            </div>
-        </div>
-    )
-});
+// const LocationMapSection = dynamic(() => import('./LocationMapSection'), {
+//     ssr: false, // This prevents SSR for import { is } from './../../../.next/server/vendor-chunks/next';
+//     loading: () => (
+//         <div className="map-skeleton" style={{
+//             height: '400px',
+//             background: 'linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%)',
+//             borderRadius: '8px',
+//             animation: 'loading 1.5s infinite'
+//         }}>
+//             <div style={{
+//                 display: 'flex',
+//                 alignItems: 'center',
+//                 justifyContent: 'center',
+//                 height: '100%',
+//                 color: '#666'
+//             }}>
+//                 Loading Map...
+//             </div>
+//         </div>
+//     )
+// });
 const LocationPageDetails = ({ uuid, locationData }: { uuid: string; locationData: Location }) => {
 
     const pathname = usePathname();
@@ -162,10 +162,10 @@ const LocationPageDetails = ({ uuid, locationData }: { uuid: string; locationDat
                     <PlanTripDates pageType={pageType as string} ctaAction={ctaAction}
                         EnrollInTrip={() => { }} />
                     <CultureFestivalsSection data={locationData?.festivals as Festival[]} heading={`Festivals of ${locationData?.title}`} type="festival" />
-                    <LocationMapSection
+                    {/* <LocationMapSection
                         latitude={locationData?.fullDetails?.coordinates?.lat as number}
                         longitude={locationData?.fullDetails?.coordinates?.long as number}
-                    />
+                    /> */}
                 </div>
 
                 {!isMobile && (

@@ -1,14 +1,18 @@
 'use client';
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Step1Location from '@/components/createTrip/Step1Location';
 import Step2SelectDates from '@/components/createTrip/step2Date';
-import type { Location } from '@/types';
-import { ApiService } from '@/utils';
+import type { Location, UserTrip } from '@/types';
+import { ApiService, CommonServices } from '@/utils';
+import ProgressBar from '@/components/common/progressBar';
+import Step3Preferences from '@/components/createTrip/Step3Preferences';
+import Step4Budget from '@/components/createTrip/Step4Budget';
+import Step5Privacy from '@/components/createTrip/Step5Privacy';
+import { Pencil, MapPin, Calendar, Star, CreditCard, Lock } from "lucide-react";
 
 const TOTAL_STEPS = 6;
-
 const formatISODateOnly = (d: Date) => d.toISOString().split('T')[0];
 
 export default function CreateTripScreen() {
@@ -20,19 +24,29 @@ export default function CreateTripScreen() {
   const endParam = searchParams?.get('end');
 
   const inferInitialStep = () => {
-    if(locationIdParam && !startParam && !endParam) return 2;
+    if (locationIdParam && !startParam && !endParam) return 2;
     else if (startParam && endParam) return 3;
     return 1;
   };
 
+  // const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => { 
+    if( typeof window !== 'undefined' && window.innerWidth<=768){
+      setIsMobile(true);
+
+    }
+  }, [window]);
   const [step, setStep] = useState<number>(inferInitialStep());
-  const [selectedLocation, setSelectedLocation] = useState<Location>();
+  const [editingFromModify, setEditingFromModify] = useState<boolean>(false);
+
+  const [selectedLocation, setSelectedLocation] = useState<Location | undefined>();
   const [startDate, setStartDate] = useState<Date | null>(startParam ? new Date(startParam) : null);
   const [endDate, setEndDate] = useState<Date | null>(endParam ? new Date(endParam) : null);
 
-  const [preferences, setPreferences] = useState<Record<string, any>>({});
-  const [budget, setBudget] = useState<number | null>(null);
-  const [privacy, setPrivacy] = useState<'public' | 'private' | 'friends'>('public');
+  const [selectedPreferences, setSelectedPreferences] = useState<string[]>([]);
+  const [selectedBudget, setSelectedBudget] = useState<string>('');
+  const [selectedPrivacy, setSelectedPrivacy] = useState<string>('');
 
   useEffect(() => {
     const parseLocationId = async () => {
@@ -46,11 +60,13 @@ export default function CreateTripScreen() {
       }
     };
     parseLocationId();
-  }, [locationIdParam, selectedLocation]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [locationIdParam]);
 
   useEffect(() => {
     if (startParam && !startDate) setStartDate(new Date(startParam));
     if (endParam && !endDate) setEndDate(new Date(endParam));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [startParam, endParam]);
 
   const updateUrlParams = useCallback(
@@ -62,9 +78,8 @@ export default function CreateTripScreen() {
         } else if (patch.location) {
           try {
             if (patch.location.id) sp.set('locationId', String(patch.location.id));
-
           } catch {
-            console.error('Invalid location ID:', patch.location.id);
+            console.error('Invalid location ID:', patch.location?.id);
           }
         }
       }
@@ -99,123 +114,277 @@ export default function CreateTripScreen() {
     [updateUrlParams]
   );
 
-  const goNext = () => setStep((s) => Math.min(TOTAL_STEPS, s + 1));
-  const goBack = () => setStep((s) => Math.max(1, s - 1));
+  const goNext = useCallback(() => {
+    setStep((s) => {
+      const next = Math.min(TOTAL_STEPS, s + 1);
+      if (next === TOTAL_STEPS) {
+        setEditingFromModify(false); // arriving at review clears the modify flag
+      }
+      return next;
+    });
+  }, []);
 
-  // --- dynamic button enable logic ---
+  const goBack = useCallback(() => {
+    setStep((s) => Math.max(1, s - 1));
+  }, []);
+
   const canGoNext =
-    (step === 1 && !!selectedLocation) ||
-    (step === 2 && !!startDate && !!endDate) ||
-    step > 2;
+    (step === 1 && !!selectedLocation) || 
+    (step === 2 && !!startDate && !!endDate) || 
+    (step === 3 && selectedPreferences.length > 0) ||
+    (step === 4 && !!selectedBudget) ||
+    (step === 5 && !!selectedPrivacy) ||
+    step === TOTAL_STEPS;
 
-  // --- Placeholder steps (same as before, trimmed for brevity) ---
-  const Step3Preferences = () => (
-    <div className="max-w-3xl mx-auto p-4">
-      <h2 className="text-xl font-semibold mb-3">Trip preferences</h2>
-      <p className="text-sm text-gray-600 mb-4">Pick preferences.</p>
-      <div className="flex gap-3 mb-6">
-        {['adventure', 'relax', 'culture'].map((k) => (
-          <button
-            key={k}
-            onClick={() => setPreferences((p) => ({ ...p, [k]: !p[k] }))}
-            className={`px-4 py-2 rounded-lg border ${preferences[k] ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700'
-              }`}
-          >
-            {k}
-          </button>
-        ))}
-      </div>
-      
-    </div>
+  // --- Publish (adapt to your ApiService contract) ---
+  const publishTripAndNavigateToTripCreation = useCallback(
+    async (manual: boolean) => {
+      try {
+      }
+      catch (err) {
+      }
+    },  
+    [selectedLocation, startDate, endDate, selectedBudget, selectedPreferences, selectedPrivacy, router]
+  );
+  const publishTripAndNavigateToMatching = useCallback(
+    async (manual: boolean) => {
+      try {
+      }
+      catch (err) {
+      }
+    },
+    [selectedLocation, startDate, endDate, selectedBudget, selectedPreferences, selectedPrivacy, router]
   );
 
-  const Step4Budget = () => {
-    const [localBudget, setLocalBudget] = useState<number | ''>(budget ?? '');
-    const handleNext = () => {
-      setBudget(typeof localBudget === 'number' ? localBudget : null);
-      goNext();
-    };
+  const publishTripAndNavigate = useCallback(
+    async (manual: boolean) => {
+      try {
+        const payload:UserTrip = {
+          locationId: selectedLocation?.id ?? '',
+          locationName: selectedLocation?.title ?? '',
+          startDate: startDate ? formatISODateOnly(startDate) : '',
+          endDate: endDate ? formatISODateOnly(endDate) : '',
+          budget: selectedBudget,
+          interests: selectedPreferences,
+          privacy: selectedPrivacy,
+        };
+        const res = await ApiService.saveTripDetails(payload);
+        if (res && res.id) {
+          const createdTripId = res.id;
+          if (manual) {
+            // route to manual planner page
+            router.replace(`/userTrip/planner?tripId=${createdTripId}&showHotelsAfter=true`);
+          } else {
+            router.replace(`/userTrip/${createdTripId}`);
+          }
+        } else {
+          console.error('Failed to create trip:', res);
+        }
+      } catch (err) {
+        console.error('Error creating trip:', err);
+      }
+    },
+    [selectedLocation, startDate, endDate, selectedBudget, selectedPreferences, selectedPrivacy, router]
+  );
+
+  // Memoized header element so ProgressBar does not remount unnecessarily
+  const headerEl = useMemo(() => {
     return (
-      <div className="max-w-2xl mx-auto p-4">
-        <h2 className="text-xl font-semibold mb-3">Budget</h2>
-        <input
-          type="number"
-          placeholder="e.g. 15000"
-          value={localBudget}
-          onChange={(e) => {
-            const v = e.target.value;
-            setLocalBudget(v === '' ? '' : Number(v));
-          }}
-          className="w-full mb-4 p-3 border rounded-lg"
+      <div className="mb-6 px-6 pt-6 bg-white">
+        <div className="flex items-center">
+          {/* back */}
+          <div className="mr-4">
+            <button
+              onClick={() => {
+                if (editingFromModify && step < TOTAL_STEPS) {
+                  // if we are editing from modify and pressing "back" in header, send back to review
+                  setStep(TOTAL_STEPS);
+                  setEditingFromModify(false);
+                  return;
+                }
+                if (step > 1) setStep((s) => s - 1);
+                else router.back();
+              }}
+              aria-label="Back"
+              className="p-2 rounded hover:bg-gray-100"
+            >
+              ←
+            </button>
+          </div>
+
+          <div className="flex-1 mr-6">
+            <ProgressBar step={step} total={TOTAL_STEPS} />
+          </div>
+
+          <div className="text-sm text-gray-500">
+            Step {step} / {TOTAL_STEPS}
+          </div>
+        </div>
+      </div>
+    );
+  }, [step, editingFromModify, router]);
+
+  // --- Step 6: Modify / Review Component ---
+  const Step6Review: React.FC = () => {
+    const dateRange =
+      startDate && endDate ? CommonServices.formatRange(startDate.toISOString(),endDate.toISOString()) : '—';
+
+    const Card: React.FC<{
+      icon: React.ReactNode;
+      label: string;
+      value: string | React.ReactNode;
+      pill?: boolean;
+      onEdit: () => void;
+    }> = ({ icon, label, value, pill, onEdit }) => {
+      return (
+        <div className="mb-4 border rounded-lg bg-white p-4 flex items-start justify-between shadow-sm">
+          <div className="flex items-start gap-3 flex-1">
+            <div className="text-gray-500 mt-1">{icon}</div>
+            <div className="flex-1 min-w-0">
+              <div className="font-medium text-sm text-gray-800">{label}</div>
+              {pill ? (
+                <div className="chipsBox mt-2">
+                  {typeof value === 'string' && value !== '—' && value.split(', ').map((val, i) => (
+                    <span key={`${val}-${i}`} className="chip ">
+                      {val}
+                    </span>
+                  ))}
+                  {(!value || (typeof value === 'string' && value === '—')) && (
+                    <div className="text-sm text-gray-500 mt-1">Select</div>
+                  )}
+                </div>
+              ) : (
+                <div className="text-sm text-gray-500 truncate mt-2">{value}</div>
+              )}
+            </div>
+          </div>
+
+          <div className="ml-3">
+            <button
+              onClick={onEdit}
+              className="p-2 rounded hover:bg-gray-100"
+              aria-label={`Edit ${label}`}
+            >
+              <Pencil size={18} />
+            </button>
+          </div>
+        </div>
+      );
+    };
+
+    const goEdit = (targetStep: number) => {
+      setEditingFromModify(true);
+      setStep(targetStep);
+      // scroll to top or focus optional
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    return (
+      <div className="">
+        <h2 className="DescriptionHeading">
+          <strong>Modify Plan</strong>
+        </h2>
+        <Card
+          icon={<MapPin size={18} />}
+          label="Location"
+          value={selectedLocation?.title || '—'}
+          onEdit={() => goEdit(1)}
         />
-        
+
+        <Card
+          icon={<Calendar size={18} />}
+          label="Dates"
+          value={dateRange}
+          onEdit={() => goEdit(2)}
+        />
+
+        <Card
+          icon={<Star size={18} />}
+          label="Interests"
+          value={selectedPreferences.length ? selectedPreferences.join(', ') : '—'}
+          pill
+          onEdit={() => goEdit(3)}
+        />
+
+        <Card
+          icon={<CreditCard size={18} />}
+          label="Budget"
+          value={selectedBudget || '—'}
+          pill
+          onEdit={() => goEdit(4)}
+        />
+
+        <Card
+          icon={<Lock size={18} />}
+          label="Privacy"
+          value={selectedPrivacy || '—'}
+          pill
+          onEdit={() => goEdit(5)}
+        />
+
+        <div className="mt-6">
+          <div className="flex flex-col gap-3">
+            <button
+              onClick={() => publishTripAndNavigateToTripCreation(true)}
+              className="w-full btn btn-primary-border"
+            >
+              Make Your Plan Manually
+            </button>
+
+            {/* Optional second CTA */}
+            <button
+              onClick={() => publishTripAndNavigateToMatching(false)}
+              className="w-full btn btn-matching-color"
+            >
+              Start Matching
+            </button>
+          </div>
+        </div>
       </div>
     );
   };
 
-  const Step5Privacy = () => (
-    <div className="max-w-2xl mx-auto p-4">
-      <h2 className="text-xl font-semibold mb-3">Privacy</h2>
-      {['public', 'friends', 'private'].map((opt) => (
-        <label key={opt} className="flex items-center gap-3 border p-3 rounded-lg mb-3 cursor-pointer">
-          <input
-            type="radio"
-            name="privacy"
-            checked={privacy === opt}
-            onChange={() => setPrivacy(opt as any)}
-          />
-          <span className="capitalize">{opt}</span>
-        </label>
-      ))}
-      
-    </div>
-  );
-
-  const Step6Review = () => (
-    <div className="max-w-3xl mx-auto p-4">
-      <h2 className="text-xl font-semibold mb-3">Review</h2>
-      <div className="mb-3 border p-3 rounded-lg">
-        <strong>Location:</strong> {selectedLocation?.title || '—'}
-      </div>
-      <div className="mb-3 border p-3 rounded-lg">
-        <strong>Dates:</strong>{' '}
-        {startDate && endDate
-          ? `${startDate.toDateString()} – ${endDate.toDateString()}`
-          : '—'}
-      </div>
-      
-    </div>
-  );
-
-  // --- render main flow ---
-  return (
-    <div className="py-8">
-      <div className="mx-auto bg-white" style={{ maxWidth: "80%" }}>
-        {step === 1 && (
-          <Step1Location
-            initialSelectedLocation={selectedLocation}
-            onSelect={handleLocationSelect}
-          />
-        )}
-        {step === 2 && (
+  // --- content renderer ---
+  const renderStepContent = () => {
+    switch (step) {
+      case 1:
+        return <Step1Location initialSelectedLocation={selectedLocation} onSelect={handleLocationSelect} />;
+      case 2:
+        return (
           <Step2SelectDates
             startDatePreTrip={startDate?.toISOString()}
             endDatePreTrip={endDate?.toISOString()}
             onDatesSelected={handleDatesSelected}
-            
           />
-        )}
-        {step === 3 && <Step3Preferences />}
-        {step === 4 && <Step4Budget />}
-        {step === 5 && <Step5Privacy />}
-        {step === 6 && <Step6Review />}
+        );
+      case 3:
+        return <Step3Preferences selectedPreferences={selectedPreferences} setPreferences={setSelectedPreferences} />;
+      case 4:
+        return <Step4Budget selectedBudget={selectedBudget} setSelectedBudget={setSelectedBudget} />;
+      case 5:
+        return <Step5Privacy selectedPrivacy={selectedPrivacy} setSelectedPrivacy={setSelectedPrivacy} />;
+      case 6:
+        return <Step6Review />;
+      default:
+        return (
+          <div className="py-10 text-center text-gray-600">Unknown step</div>
+        );
+    }
+  };
 
-        {/* Step controls */}
-        <div className="mt-6 flex justify-between items-center text-sm text-gray-500">
-          <div>
-            Step {step} / {TOTAL_STEPS}
-          </div>
-          <div className="flex gap-3">
+  return (
+    <div className="" style={{minHeight: '80vh',paddingBottom:20}}>
+      <div className="mx-auto bg-white" style={{ maxWidth: '900px' }}>
+        {headerEl}
+
+        {/* main content */}
+        <div className="px-6">
+          {renderStepContent()}
+        </div>
+
+        {/* desktop controls */}
+        {/* {!isMobile && (
+          <div className="flex gap-3 items-center justify-end px-6 mt-6 mb-6">
             {step > 1 && (
               <button onClick={goBack} className="px-3 py-2 border rounded">
                 Back
@@ -225,16 +394,42 @@ export default function CreateTripScreen() {
               <button
                 onClick={goNext}
                 disabled={!canGoNext}
-                className={`px-3 py-2 rounded ${canGoNext
-                  ? 'bg-blue-600 text-white hover:bg-blue-700'
-                  : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                className={`px-4 py-2 rounded ${canGoNext ? 'bg-primary-600 text-white' : 'bg-blue-100 text-blue-400 cursor-not-allowed'}`}
+              >
+                Next
+              </button>
+            )}
+          </div>
+        )} */}
+
+        {/* mobile controls */}
+        {/* {isMobile ? ( */}
+        {step !== TOTAL_STEPS && (
+          <div className="flex w-full gap-2 mt-5 px-6">
+            {step > 1 && (
+              <button
+                onClick={goBack}
+                className="w-1/2 px-3 py-3 border rounded-md font-medium bg-white text-gray-700"
+              >
+                Back
+              </button>
+            )}
+            {step < TOTAL_STEPS && (
+              <button
+                onClick={goNext}
+                disabled={!canGoNext}
+                className={`${step > 1 ? 'w-1/2' : 'w-full'
+                  } px-3 py-3 rounded-md font-medium transition-colors ${canGoNext
+                    ? 'bg-primary-1 text-white'
+                    : 'bg-blue-100 text-blue-400 cursor-not-allowed'
                   }`}
               >
                 Next
               </button>
             )}
           </div>
-        </div>
+        )}
+        {/* ) : null} */}
       </div>
     </div>
   );

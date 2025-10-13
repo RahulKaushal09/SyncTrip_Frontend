@@ -19,6 +19,7 @@
   --primary-3: #B8E8FF;
   --primary-4: #E3F5FF;
   --primary-5: #F2FAFF;
+  --primary-background: var(--primary-1) +"19";
   /* Hover */
   --primary-hover: #007EB2;
   /* Secondary Colors */
@@ -597,6 +598,12 @@ input {
   background-color: var(--background);
 }
 
+.btn-matching-color{
+  background: linear-gradient(90deg, #B75DFF 0%, #F3359E 100%) !important;
+  color: #fff !important;
+  border: none !important;
+
+}
 .btn-black:hover {
   background-color: #202020 !important;
   color: #fff !important;
@@ -968,4 +975,33 @@ input {
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.chipsBox {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.chip {
+  background-color: var(--primary-background);
+  color: var(--primary-1);
+  border: 1px solid var(--primary-1);
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  white-space: nowrap; /* keeps text in one line */
+}
+
+.chip.selected {
+  background-color: var(--primary-1);
+  color: #fff;
+}
+
+.chip:hover {
+  background-color: var(--primary-1);
+  color: #fff;
 }

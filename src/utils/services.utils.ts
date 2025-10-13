@@ -8,7 +8,25 @@ export class CommonServices {
             .replace(/\s+/g, "-")          // Replace spaces with hyphens
             .replace(/-+/g, "-");          // Replace multiple hyphens with single
     };
-static convertLongBestTimeNameToShortNotations = (bestTime: string): string => {
+    static formatRange(s: string, e: string) {
+        if (!s || !e) return "";
+        try {
+            const sd = new Date(s);
+            const ed = new Date(e);
+            const optsMonthDay: Intl.DateTimeFormatOptions = { month: "long", day: "numeric" };
+            const year = ed.getFullYear();
+            const left = sd.toLocaleDateString(undefined, optsMonthDay);
+            const right =
+                // sd.getMonth() === ed.getMonth() && sd.getFullYear() === ed.getFullYear()
+                //     ? ed.getDate().toString()
+                //     : 
+                ed.toLocaleDateString(undefined, optsMonthDay);
+            return `${left} to ${right}, ${year}`;
+        } catch {
+            return `${s} to ${e}`;
+        }
+    }
+    static convertLongBestTimeNameToShortNotations = (bestTime: string): string => {
         if (!bestTime) return 'N/A';
 
         const bestTimeMap: Record<string, string> = {
