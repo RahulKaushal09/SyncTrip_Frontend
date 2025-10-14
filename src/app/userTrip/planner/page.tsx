@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 import { GoogleMap, DirectionsService, DirectionsRenderer, Marker, Polyline } from '@react-google-maps/api';
 import { Plus, Star } from "lucide-react";
+import Image from 'next/image';
 
 import { MapProvider } from '@/components/createTrip/MapProvider';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -137,44 +138,52 @@ const PlaceCard: React.FC<PlaceCardProps> = ({ place, onAdd }) => {
     <div className="group bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all mb-3 overflow-hidden">
       {/* Image carousel */}
       <div className="relative w-full h-40">
-        <img
-          src={images[currentImg]}
-          alt={place.title}
-          className="w-full h-full object-cover transition-all duration-300"
-        />
-        {images.length > 1 && (
-          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex space-x-1">
-            {images.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setCurrentImg(i)}
-                className={`w-2 h-2 rounded-full ${
-                  currentImg === i ? "bg-white" : "bg-gray-400"
-                }`}
-              />
-            ))}
+        {images?.length ? (
+          <>
+            <Image
+              src={images[currentImg]}
+              alt={place.title || 'Place image'}
+              className="w-full h-full object-cover transition-all duration-300"
+              width={400}
+              height={160}
+            />
+            {images.length > 1 && (
+              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex space-x-1">
+                {images.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setCurrentImg(i)}
+                    className={`w-2 h-2 rounded-full ${currentImg === i ? "bg-white" : "bg-gray-400"}`}
+                  />
+                ))}
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
+            No image
           </div>
         )}
         {/* Add button (floating on image) */}
-        {showAddButton &&(
-        <button
-          onClick={onAdd}
-          className="absolute top-2 right-2 bg-white/80 hover:bg-blue-500 hover:text-white transition-colors rounded-full p-2 shadow-md"
-        >
-          <Plus size={18} />
-        </button>
+        {showAddButton && (
+          <button
+            onClick={onAdd}
+            className="absolute top-2 right-2 bg-white/80 hover:bg-blue-500 hover:text-white transition-colors rounded-full p-2 shadow-md"
+          >
+            <Plus size={18} />
+          </button>
         )}
       </div>
 
       {/* Info */}
-      <div className="p-3 flex" style={{justifyContent:"space-between"}}>
+      <div className="p-3 flex" style={{ justifyContent: "space-between" }}>
         <h3 className="font-semibold text-gray-800 text-sm truncate">
           {place.title}
         </h3>
         {place.rating && (
-          <div style={{display:"flex",gap:5}}>
-          <Star size={18} color="var(--warning-1)" />
-          <p className="text-xs text-gray-500 truncate">{place.rating}</p>
+          <div style={{ display: "flex", gap: 5 }}>
+            <Star size={18} color="var(--warning-1)" fill="var(--warning-1)" />
+            <p className="text-xs  truncate">{place.rating}</p>
           </div>
         )}
       </div>
@@ -634,38 +643,38 @@ const TripPlannerPage: React.FC = () => {
         {/* Right Sidebar (Search + Places + Itinerary) */}
         <div className="absolute left-0 top-0 h-full w-96 bg-white shadow-lg flex flex-col">
           {/* Search Bar */}
-  <div className="p-3 border-b border-gray-200 flex items-center space-x-2">
-    
-    <input
-      type="text"
-      placeholder="Search places to visit"
-      value={searchQuery}
-      onChange={(e) => setSearchQuery(e.target.value)}
-      className="flex-1 bg-gray-50 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-    />
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      className="w-5 h-5 text-gray-500"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-    >
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35M10 18a8 8 0 100-16 8 8 0 000 16z" />
-    </svg>
-  </div>
+          <div className="p-3 border-b border-gray-200 flex items-center space-x-2">
 
-  {/* Places List */}
-  <div className="flex-1 overflow-y-auto p-3" style={{scrollbarWidth:"none"}}>
-    {/* <h2 className="text-base font-semibold mb-3 text-gray-700">Places to Visit</h2> */}
+            <input
+              type="text"
+              placeholder="Search places to visit"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="flex-1 bg-gray-50 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-5 h-5 text-gray-500"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35M10 18a8 8 0 100-16 8 8 0 000 16z" />
+            </svg>
+          </div>
 
-    {filteredPlaces.map((place) => (
-      <PlaceCard
-        key={place.id}
-        place={place}
-        onAdd={() => addPlaceToDay(place, isOverview ? openOverviewIdx : selectedDayIdx)}
-      />
-    ))}
-  </div>
+          {/* Places List */}
+          <div className="flex-1 overflow-y-auto p-3" style={{ scrollbarWidth: "none" }}>
+            {/* <h2 className="text-base font-semibold mb-3 text-gray-700">Places to Visit</h2> */}
+
+            {filteredPlaces.map((place) => (
+              <PlaceCard
+                key={place.id}
+                place={place}
+                onAdd={() => addPlaceToDay(place, isOverview ? openOverviewIdx : selectedDayIdx)}
+              />
+            ))}
+          </div>
 
           {/* Itinerary Panel */}
 
@@ -721,7 +730,7 @@ const TripPlannerPage: React.FC = () => {
                       onClick={() => toggleOptimizeForDay(activeDay.id)}
                       className="text-blue-500"
                     >
-                      {optimizeByDay[activeDay.id] ? 'Optimize ✓' : 'Optimize'}
+                      {optimizeByDay[activeDay?.id] ? 'Optimize ✓' : 'Optimize'}
                     </button>
                   </div>
 
@@ -768,40 +777,40 @@ const TripPlannerPage: React.FC = () => {
             className="fixed right-0 top-0 h-full w-16  flex flex-col items-center "
             style={{ zIndex: 30 }} // stays above itinerary
           >
-            <div className="py-4 space-y-2" style={{overflow:"scroll",scrollbarWidth:"none"}}>
-            {['Overview', ...days.map(d => d.label)].map((label, i) => (
-              <button
-                key={label + i}
-                onClick={() => {
-                  if (label === 'Overview') {
-                    if (isOverview && showPanel) setShowPanel(false);
-                    else {
-                      setIsOverview(true);
-                      setShowPanel(true);
-                    }
-                  } else {
-                    const idx = days.findIndex(d => d.label === label);
-                    if (idx >= 0) {
-                      if (selectedDayIdx === idx && showPanel) {
-                        setShowPanel(false);
-                      } else {
-                        setIsOverview(false);
-                        setSelectedDayIdx(idx);
+            <div className="py-4 space-y-2" style={{ overflow: "scroll", scrollbarWidth: "none" }}>
+              {['Overview', ...days.map(d => d.label)].map((label, i) => (
+                <button
+                  key={label + i}
+                  onClick={() => {
+                    if (label === 'Overview') {
+                      if (isOverview && showPanel) setShowPanel(false);
+                      else {
+                        setIsOverview(true);
                         setShowPanel(true);
                       }
+                    } else {
+                      const idx = days.findIndex(d => d.label === label);
+                      if (idx >= 0) {
+                        if (selectedDayIdx === idx && showPanel) {
+                          setShowPanel(false);
+                        } else {
+                          setIsOverview(false);
+                          setSelectedDayIdx(idx);
+                          setShowPanel(true);
+                        }
+                      }
                     }
-                  }
-                }}
-                className={`w-12 h-12 rounded-lg text-sm flex items-center justify-center text-center transition-all
+                  }}
+                  className={`w-12 h-12 rounded-lg text-sm flex items-center justify-center text-center transition-all
           ${isOverview && label === 'Overview' || (!isOverview && days[selectedDayIdx]?.label === label)
-                    ? 'bg-blue-500 text-white shadow'
-                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
-              >
-                {label === 'Overview' ? 'Overview' : 'Day'+i}
-              </button>
-            ))}
+                      ? 'bg-blue-500 text-white shadow'
+                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+                >
+                  {label === 'Overview' ? 'Overview' : 'Day' + i}
+                </button>
+              ))}
 
-            
+
             </div>
           </div>
         </div>
