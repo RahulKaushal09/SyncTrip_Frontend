@@ -19,6 +19,8 @@ import { redirect } from 'next/navigation';
 const NavbarClient = ({ }) => {
   const [LoadingUser, setLoadingUser] = useState(true);
     const { user, isLoggedIn, logout, openLogin } = useLogin(); // ⬅️ use context directly
+const pathname = usePathname();
+    const shouldHideNavbar =  pathname.includes('userTrip/planner');
 
   // const cookie = Cookies.get('userInfo');
   // const [user, setUser] = useState<User | null>(() => {
@@ -59,7 +61,7 @@ const NavbarClient = ({ }) => {
   // }
     const { showLoader } = useLoader();
 
-  const pathname = usePathname();
+  // const pathname = usePathname();
   const router = useRouter();
   // const { logout, openLogin } = useLogin();
   const [pageType, setPageType] = useState("");
@@ -110,7 +112,7 @@ const NavbarClient = ({ }) => {
   const toggleDropdown = () => setShowDropdown(!showDropdown);
   const handleLoginClick = () => openLogin();
   return (
-    <nav className={`navbar navbar-expand-lg navbar-light ${isSticky ? "sticky" : ""}`} style={{ paddingTop: "10px" }}>
+    <nav className={`navbar navbar-expand-lg navbar-light ${isSticky ? "sticky" : ""}`} style={{ paddingTop: "10px",  display: shouldHideNavbar ? 'none' : 'flex' }}>
       <div className="container-fluid">
         <Link href="/" onClick={() => redirectBtnClick("/")} className="navbar-brand" style={{ width: "100px" }}>
           <Image src={SyncTripLogo} alt="SyncTrip" style={{ width: "100%" }} />
