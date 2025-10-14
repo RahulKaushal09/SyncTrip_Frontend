@@ -13,6 +13,9 @@ import { LocationServices } from '@/utils/location.utils';
 import TripServices from '@/utils/trip.utils';
 import { PlacesToVisit, UserTripActivity } from '@/types';
 import '../../../styles/tripPlanner.css';
+import { IsUserProfileComplete } from '@/utils';
+import toast from 'react-hot-toast';
+
 // ---------------------------------------------
 // TYPES
 // ---------------------------------------------
@@ -44,10 +47,8 @@ interface DayPlan {
 }
 
 // ---------------------------------------------
-// MOCK DATA
+// HELPERS (kept mostly same)
 // ---------------------------------------------
-
-
 const makeDay = (id: string, label: string, date?: string): DayPlan => ({
   id,
   label,
@@ -56,11 +57,6 @@ const makeDay = (id: string, label: string, date?: string): DayPlan => ({
   route: { signature: null, coords: null, polyline: null, distanceKm: null, waypointOrder: null, legDistancesKm: null },
 });
 
-
-
-// ---------------------------------------------
-// HELPERS
-// ---------------------------------------------
 function haversineKm(a: LatLng, b: LatLng): number {
   const R = 6371;
   const dLat = ((b.latitude - a.latitude) * Math.PI) / 180;
@@ -122,22 +118,22 @@ function buildOptimizedOrder(count: number, waypointOrder: number[] | null): num
 }
 
 // ---------------------------------------------
-// COMPONENTS
+// PLACE CARD / ACTIVITY CARD
 // ---------------------------------------------
-
 interface PlaceCardProps {
   place: PlacesToVisit;
   onAdd: () => void;
+  showDescription?: boolean;
 }
 
-const PlaceCard: React.FC<PlaceCardProps> = ({ place, onAdd }) => {
+const PlaceCard: React.FC<PlaceCardProps> = ({ place, onAdd, showDescription = false }) => {
   const [currentImg, setCurrentImg] = useState(0);
   const images = place.image || [];
-  const showAddButton = place.coordinates && place.coordinates.lat && place.coordinates.long;
+  const showAddButton = !!(place.coordinates && place.coordinates.lat && place.coordinates.long);
   return (
-    <div className="group bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all mb-3 overflow-hidden">
+    <div className="group bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all mb-3 overflow-hidden max-w-sm">
       {/* Image carousel */}
-      <div className="relative w-full h-40">
+      <div className="relative w-full h-32 md:h-40">
         {images?.length ? (
           <>
             <Image
@@ -176,15 +172,22 @@ const PlaceCard: React.FC<PlaceCardProps> = ({ place, onAdd }) => {
       </div>
 
       {/* Info */}
-      <div className="p-3 flex" style={{ justifyContent: "space-between" }}>
-        <h3 className="font-semibold text-gray-800 text-sm truncate">
-          {place.title}
-        </h3>
-        {place.rating && (
-          <div style={{ display: "flex", gap: 5 }}>
-            <Star size={18} color="var(--warning-1)" fill="var(--warning-1)" />
-            <p className="text-xs  truncate">{place.rating}</p>
-          </div>
+      <div className="p-3 flex flex-col">
+        <div className="flex justify-between items-start mb-2">
+          <h3 className="font-semibold text-gray-800 text-sm truncate flex-1 pr-2">
+            {place.title}
+          </h3>
+          {place.rating && (
+            <div className="flex items-center gap-1">
+              <Star size={14} color="var(--warning-1)" fill="var(--warning-1)" />
+              <p className="text-xs truncate">{place.rating}</p>
+            </div>
+          )}
+        </div>
+        {place.description && showDescription && (
+          <p className="text-xs text-gray-500 line-clamp-3 mb-2">
+            {place.description}
+          </p>
         )}
       </div>
     </div>
@@ -203,7 +206,6 @@ const ActivityCard: React.FC<{
     </div>
     <div className="flex-1">
       <h3 className="text-sm font-semibold">{place.title}</h3>
-      {/* <p className="text-xs text-gray-500">{place.tag} • {place.rating} ★</p> */}
       {distanceKm != null && (
         <p className="text-xs text-gray-500">Distance: {distanceKm.toFixed(1)} km</p>
       )}
@@ -226,7 +228,6 @@ function generateDays(start: string | Date, end: string | Date): DayPlan[] {
   let index = 1;
 
   while (current <= endDate) {
-    // format date however you like, e.g. “January 21”
     const label = `Day ${index}`;
     const dateString = current.toLocaleDateString('en-US', {
       month: 'long',
@@ -234,8 +235,6 @@ function generateDays(start: string | Date, end: string | Date): DayPlan[] {
     });
 
     days.push(makeDay(`d${index}`, label, dateString));
-
-    // increment
     current.setDate(current.getDate() + 1);
     index++;
   }
@@ -246,15 +245,20 @@ function generateDays(start: string | Date, end: string | Date): DayPlan[] {
 // ---------------------------------------------
 // MAIN PAGE
 // ---------------------------------------------
-// http://localhost:3000/userTrip/planner?tripId=43c3d093-f00d-4976-83fb-28457e373b1d
 const TripPlannerPage: React.FC = () => {
   const router = useRouter();
-  const searchParams = useSearchParams();
+  if (!IsUserProfileComplete()) {
+    // Redirect to profile completion page
+    toast.error('Please complete your profile before planning a trip.');
+    router.replace('/explore');
+    return null;
+  }
 
+  const searchParams = useSearchParams();
   const tripId = searchParams?.get('tripId');
   const showHotelsAfter = searchParams?.get('showHotelsAfter') === 'true';
-  const [showPanel, setShowPanel] = useState(false);
 
+  const [showPanel, setShowPanel] = useState(false);
   const [placesToVisit, setPlacesToVisit] = useState<PlacesToVisit[]>([]);
   const [days, setDays] = useState<DayPlan[]>([]);
   const [selectedDayIdx, setSelectedDayIdx] = useState(0);
@@ -265,21 +269,38 @@ const TripPlannerPage: React.FC = () => {
   const [routeCoords, setRouteCoords] = useState<LatLng[]>([]);
   const [totalDistanceKm, setTotalDistanceKm] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [mainLocationLatitude, setMainLocationLatitude] = useState<number>(28.6139); // Default to New Delhi
-  const [mainLocationLongitude, setMainLocationLongitude] = useState<number>(77.209); // Default to New Delhi
+  const [mainLocationLatitude, setMainLocationLatitude] = useState<number>(28.6139); // default New Delhi
+  const [mainLocationLongitude, setMainLocationLongitude] = useState<number>(77.209);
 
   const [tripDetails, setTripDetails] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const mapRef = useRef<google.maps.Map | null>(null);
+  const activeDayIdRef = useRef<string | null>(null);
+
+  const [selectedPlace, setSelectedPlace] = useState<PlacesToVisit | null>(null);
 
   const activeDay = days[isOverview ? openOverviewIdx : selectedDayIdx];
   const activeOptimize = optimizeByDay[activeDay?.id ?? ''] ?? false;
+  useEffect(() => { activeDayIdRef.current = activeDay?.id ?? null; }, [activeDay?.id]);
 
   const mapContainerStyle = { width: '100%', height: '100vh' };
-  // const center = { lat: 48.85837, lng: 2.294481 }; // Eiffel Tower
   const [center, setCenter] = useState<{ lat: number; lng: number }>({ lat: mainLocationLatitude, lng: mainLocationLongitude });
 
+  const [panelWidthPx, setPanelWidthPx] = useState<number>(420); // used to slide days bar left when panel opens
+
+  // compute panel width on mount / resize (mirrors CSS min(420px, 90vw))
+  useEffect(() => {
+    const compute = () => {
+      const w = Math.min(420, Math.floor(window.innerWidth * 0.9));
+      setPanelWidthPx(w);
+    };
+    compute();
+    window.addEventListener('resize', compute);
+    return () => window.removeEventListener('resize', compute);
+  }, []);
+
+  // Loaders
   const loadActivities = (activities: UserTripActivity[]) => {
     try {
       const updatedDays = [...days];
@@ -319,18 +340,16 @@ const TripPlannerPage: React.FC = () => {
       setDays(updatedDays);
       setLoading(false);
     } catch (err) {
-      console.error('Error loading trip activities');
+      console.error('Error loading trip activities', err);
     }
   };
+
 
   useEffect(() => {
     const fetchDetails = async (locationId: string) => {
       if (!locationId) {
-        // showInAppNotification('Error: Missing destination ID');
-        // navigation.goBack();
         router.replace('/userTrips');
-      }
-      else {
+      } else {
         const LocationDetailsFields = [
           LocationFields.ID,
           LocationFields.TITLE,
@@ -339,13 +358,7 @@ const TripPlannerPage: React.FC = () => {
           LocationFields.PLACES_TO_VISIT,
         ];
         const LocationDetails = await LocationServices.fetchLocationDetails(locationId, LocationDetailsFields);
-        if (!LocationDetails) {
-          // showInAppNotification('Error: Could not fetch location details');
-          // navigation.goBack();
-          // router.replace('/userTrips');
-          return;
-        }
-
+        if (!LocationDetails) return;
         setMainLocationLatitude(LocationDetails.fullDetails?.coordinates?.lat as number);
         setMainLocationLongitude(LocationDetails.fullDetails?.coordinates?.long as number);
         setCenter({ lat: LocationDetails.fullDetails?.coordinates?.lat as number, lng: LocationDetails.fullDetails?.coordinates?.long as number });
@@ -357,47 +370,69 @@ const TripPlannerPage: React.FC = () => {
         setLoading(false);
       }
     };
+
     const fetchTripDetails = async () => {
-      if (!tripId) {
-        // showInAppNotification('Error: Missing trip ID');
-        // navigation.goBack();
-        // router.replace('/userTrips');
-        return;
-      }
+      if (!tripId) return;
       try {
         const tripDetails_ = await TripServices.fetchTripDetails(tripId);
-        if (!tripDetails_) {
-          // showInAppNotification('Error: Could not fetch trip details');
-          // navigation.goBack();
-          // router.replace('/userTrips');
-          return;
-        }
+        if (!tripDetails_) return;
         setTripDetails(tripDetails_);
         setDays(() =>
           tripDetails_.startDate && tripDetails_.endDate
             ? generateDays(tripDetails_.startDate, tripDetails_.endDate)
             : []);
-        // Set main location coords if available
         if (tripDetails_.locationId) {
           await fetchDetails(tripDetails_.locationId);
         }
-
-      }
-      catch (error) {
-        // showInAppNotification('Error fetching trip details');
-        // navigation.goBack();
-        // router.replace('/userTrips');
+      } catch (error) {
+        console.error('Error fetching trip', error);
       }
       setLoading(false);
     };
     fetchTripDetails();
-  }, [tripId]);
+    // only on mount / tripId
+  }, [tripId, router]);
 
   useEffect(() => {
     if (tripDetails?.activities && tripDetails.activities.length > 0 && placesToVisit.length > 0) {
       loadActivities(tripDetails.activities);
     }
   }, [tripDetails, placesToVisit]);
+
+  // Fit map to all places on load — robust with padding and center
+  useEffect(() => {
+    if (!mapRef.current) return;
+    if (!placesToVisit || placesToVisit.length === 0) {
+      if (center?.lat && center?.lng) {
+        try {
+          mapRef.current.setCenter({ lat: center.lat, lng: center.lng });
+          mapRef.current.setZoom(12);
+        } catch (e) { /* ignore */ }
+      }
+      return;
+    }
+    const validPlaces = placesToVisit.filter(p => p?.coordinates?.lat && p?.coordinates?.long);
+    if (validPlaces.length === 0) return;
+
+    setTimeout(() => {
+      try {
+        const bounds = new google.maps.LatLngBounds();
+        validPlaces.forEach(place => bounds.extend({
+          lat: place.coordinates.lat,
+          lng: place.coordinates.long
+        }));
+        if (center?.lat && center?.lng) bounds.extend({ lat: center.lat, lng: center.lng });
+        mapRef.current!.fitBounds(bounds, {
+          top: 80,
+          bottom: 40,
+          left: 40,
+          right: 440
+        } as any);
+      } catch (e) {
+        // map might not be ready
+      }
+    }, 0);
+  }, [placesToVisit, center]);
 
   const saveTrip = async () => {
     if (saving) return;
@@ -423,7 +458,6 @@ const TripPlannerPage: React.FC = () => {
       if (!res) {
         throw new Error('Save failed');
       }
-      console.log('Trip saved successfully!');
       if (showHotelsAfter) {
         router.push(`/userTrip/hotelSelection?tripId=${tripId}&locationId=${tripDetails.locationId}`);
       } else {
@@ -437,97 +471,128 @@ const TripPlannerPage: React.FC = () => {
     }
   };
 
-  // Fit map to bounds
+  // Fit map to coords
   const fitMapTo = useCallback((coords: LatLng[]) => {
     if (!mapRef.current || !coords.length) return;
-
-    if (coords.length === 1) {
-      mapRef.current.setCenter({ lat: coords[0].latitude, lng: coords[0].longitude });
-      mapRef.current.setZoom(15);
-      return;
-    }
-
-    const bounds = new google.maps.LatLngBounds();
-    coords.forEach(coord => bounds.extend({ lat: coord.latitude, lng: coord.longitude }));
-    mapRef.current.fitBounds(bounds, { top: 80, right: 400, bottom: 40, left: 40 });
+    try {
+      if (coords.length === 1) {
+        mapRef.current.setCenter({ lat: coords[0].latitude, lng: coords[0].longitude });
+        mapRef.current.setZoom(15);
+        return;
+      }
+      const bounds = new google.maps.LatLngBounds();
+      coords.forEach(coord => bounds.extend({ lat: coord.latitude, lng: coord.longitude }));
+      mapRef.current.fitBounds(bounds, { top: 80, right: 400, bottom: 40, left: 40 } as any);
+    } catch (e) { /* ignore */ }
   }, []);
 
-  // Directions callback
+  // Directions callback (keeps days state consistent)
   const directionsCallback = useCallback((response: google.maps.DirectionsResult | null, status: google.maps.DirectionsStatus) => {
     if (response !== null && status === 'OK') {
-      setDirections(response);
-
+      const dayId = activeDayIdRef.current;
+      if (!dayId) return;
       const route = response.routes[0];
       const totalKm = route.legs.reduce((sum, leg) => sum + (leg.distance?.value ?? 0) / 1000, 0);
       const legDistancesKm = route.legs.map(leg => (leg.distance?.value ?? 0) / 1000);
-      let orderedPlaces = activeDay.activities.map(a => a.place);
-      if (activeOptimize && route.waypoint_order) {
-        const optimizedOrder = buildOptimizedOrder(orderedPlaces.length, route.waypoint_order);
-        orderedPlaces = optimizedOrder.map(i => orderedPlaces[i]);
-      }
-      const activitiesWithDistances = attachDistancesToActivities(orderedPlaces, legDistancesKm);
-
-      setTotalDistanceKm(totalKm);
-
+      const overviewCoords = route.overview_path.map(p => ({ latitude: p.lat(), longitude: p.lng() }));
       setDays(prev => {
-        const next = [...prev];
-        const dIdx = next.findIndex(d => d.id === activeDay.id);
-        if (dIdx >= 0) {
-          next[dIdx] = {
-            ...next[dIdx],
+        const next = prev.map(d => {
+          if (d.id !== dayId) return d;
+          let orderedPlaces = d.activities.map(a => a.place);
+          if ((optimizeByDay[dayId] ?? false) && route.waypoint_order) {
+            const optimizedOrder = buildOptimizedOrder(orderedPlaces.length, route.waypoint_order);
+            orderedPlaces = optimizedOrder.map(i => orderedPlaces[i]);
+          }
+          const activitiesWithDistances = attachDistancesToActivities(orderedPlaces, legDistancesKm);
+          return {
+            ...d,
             activities: activitiesWithDistances,
             route: {
-              signature: routeSignature(activitiesWithDistances, activeOptimize),
-              coords: route.overview_path.map(p => ({ latitude: p.lat(), longitude: p.lng() })),
+              signature: routeSignature(activitiesWithDistances, (optimizeByDay[dayId] ?? false)),
+              coords: overviewCoords,
               polyline: route.overview_polyline,
               distanceKm: totalKm,
-              waypointOrder: activeOptimize ? route.waypoint_order ?? null : null,
-              legDistancesKm,
-            },
+              waypointOrder: (optimizeByDay[dayId] ?? false) ? route.waypoint_order ?? null : null,
+              legDistancesKm: legDistancesKm.length ? legDistancesKm : null,
+            }
           };
-        }
+        });
         return next;
       });
 
-      fitMapTo(route.overview_path.map(p => ({ latitude: p.lat(), longitude: p.lng() })));
+      setDirections(response);
+      setTotalDistanceKm(totalKm);
+      fitMapTo(overviewCoords);
     } else {
-      console.error('Directions request failed:', status);
-      setDirections(null);
-      setTotalDistanceKm(null);
+      if (response === null) {
+        setDirections(null);
+        setTotalDistanceKm(null);
+      }
+      console.error('Directions request result:', status);
     }
-  }, [activeDay, activeOptimize, fitMapTo]);
+  }, [fitMapTo, optimizeByDay]);
 
-  // Directions options
+  // Convert lat/lng -> pixel position on page relative to map container
+  const getPixelPositionFromLatLng = useCallback((lat: number, lng: number) => {
+    if (!mapRef.current) return null;
+    const map = mapRef.current;
+    const projection = map.getProjection?.();
+    if (!projection) return null;
+    const bounds = map.getBounds?.();
+    if (!bounds) return null;
+
+    try {
+      const ne = projection.fromLatLngToPoint(bounds.getNorthEast());
+      const sw = projection.fromLatLngToPoint(bounds.getSouthWest());
+      const worldPoint = projection.fromLatLngToPoint(new google.maps.LatLng(lat, lng));
+      const scale = Math.pow(2, map.getZoom() ?? 0);
+      if (!ne || !sw || !worldPoint || !scale) return null;
+      const x = (worldPoint.x - sw.x) * scale;
+      const y = (worldPoint.y - ne.y) * scale;
+
+      const mapDiv = map.getDiv();
+      const rect = mapDiv.getBoundingClientRect();
+      // Return pixel coordinates relative to page (so we can absolutely position an overlay)
+      return {
+        x: rect.left + x,
+        y: rect.top + y
+      };
+    } catch (e) {
+      return null;
+    }
+  }, []);
+
+  // Directions options computed
   const directionsOptions = useMemo(() => {
     if (!activeDay || isOverview || activeDay.activities.length < 2) return null;
-
     const places = activeDay.activities.map(a => a.place);
     const waypoints = places.slice(1, -1).map(place => ({
       location: { lat: place.coordinates.lat, lng: place.coordinates.long },
       stopover: true,
     }));
-
+    console.log('Requesting directions for', {places, waypoints, optimize: activeOptimize});
     return {
       origin: { lat: places[0].coordinates.lat, lng: places[0].coordinates.long },
       destination: { lat: places[places.length - 1].coordinates.lat, lng: places[places.length - 1].coordinates.long },
       waypoints,
       optimizeWaypoints: activeOptimize,
       travelMode: google.maps.TravelMode.DRIVING,
-      provideRouteAlternatives: false,
-      avoidFerries: false,
-      avoidHighways: false,
-      avoidTolls: false,
+      // provideRouteAlternatives: false,
+      // avoidFerries: false,
+      // avoidHighways: false,
+      // avoidTolls: false,
     } as google.maps.DirectionsRequest;
   }, [activeDay, isOverview, activeOptimize]);
 
+  
+  // Use cached route if signatures match (avoid new Directions requests)
   useEffect(() => {
     if (!activeDay || isOverview) {
-      setDirections(null);
+      setDirections(null); 
       setRouteCoords([]);
       setTotalDistanceKm(null);
       return;
     }
-
     const sig = routeSignature(activeDay.activities, activeOptimize);
     if (activeDay.route.signature === sig && activeDay.route.coords && activeDay.route.coords.length > 1) {
       setDirections(null);
@@ -540,7 +605,7 @@ const TripPlannerPage: React.FC = () => {
     }
   }, [activeDay, activeOptimize, isOverview, fitMapTo]);
 
-  // Handlers
+  // Drag/drop handlers
   const addPlaceToDay = useCallback((place: PlacesToVisit, dayIndex: number) => {
     setDays(prev => {
       const next = [...prev];
@@ -567,20 +632,21 @@ const TripPlannerPage: React.FC = () => {
     });
   }, []);
 
+  // IMPORTANT: droppableId and draggableId must be strings and unique across the DragDropContext.
   const onDragEnd = useCallback((result: DropResult, dayIndex: number) => {
     if (!result.destination) return;
-    const newActivities = [...days[dayIndex].activities];
-    const [reorderedItem] = newActivities.splice(result.source.index, 1);
-    newActivities.splice(result.destination.index, 0, reorderedItem);
     setDays(prev => {
       const next = [...prev];
       const day = { ...next[dayIndex] };
+      const newActivities = Array.from(day.activities);
+      const [moved] = newActivities.splice(result.source.index, 1);
+      newActivities.splice(result.destination!.index, 0, moved);
       day.activities = newActivities.map(a => ({ ...a, distanceKm: null }));
       day.route = { signature: null, coords: null, polyline: null, distanceKm: null, waypointOrder: null, legDistancesKm: null };
       next[dayIndex] = day;
       return next;
     });
-  }, [days]);
+  }, []);
 
   const toggleOptimizeForDay = useCallback((dayId: string) => {
     setOptimizeByDay(prev => ({ ...prev, [dayId]: !(prev[dayId] ?? false) }));
@@ -590,109 +656,169 @@ const TripPlannerPage: React.FC = () => {
     place.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  return (
-    <MapProvider>
-      <div className="relative h-screen w-screen">
-        {/* Map Background */}
+  const dayIndex = isOverview ? openOverviewIdx : selectedDayIdx;
+  const expectedSig = routeSignature(activeDay?.activities ?? [], activeOptimize);
 
-        <GoogleMap
-          mapContainerStyle={mapContainerStyle}
-          center={center}
-          zoom={12}
-          onLoad={map => {
-            mapRef.current = map;
-          }}
-          options={{
-            styles: [{ featureType: 'poi', stylers: [{ visibility: 'simplified' }] }],
-          }}
-        >
-          {/* Markers */}
-          {activeDay?.activities.map((item, idx) => (
-            <Marker
-              key={item.place.id}
-              position={{ lat: item.place.coordinates.lat, lng: item.place.coordinates.long }}
-              title={`${idx + 1}. ${item.place.title}`}
-              label={{ text: `${idx + 1}`, color: 'white', fontSize: '12px', fontWeight: 'bold' }}
+  // click anywhere on map -> close selectedPlace
+  useEffect(() => {
+    if (!mapRef.current) return;
+    const map = mapRef.current;
+    const listener = map.addListener("click", () => setSelectedPlace(null));
+    return () => {
+      if (listener) google.maps.event.removeListener(listener);
+    };
+  }, []);
+
+
+
+  // UI & layout helpers
+  const itineraryPanelVisible = showPanel;
+  const daysBarRightOffset = itineraryPanelVisible ? panelWidthPx : 0;
+
+  return (
+    <div className="flex h-screen w-screen">
+      {/* Left narrow search/places column */}
+      <div className="relative left-0 top-0 h-full w-96 bg-white shadow-lg flex flex-col z-40">
+        {/* Search Bar */}
+        <div className="p-3 border-b border-gray-200 flex items-center space-x-2">
+          <input
+            type="text"
+            placeholder="Search places to visit"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="flex-1 bg-gray-50 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35M10 18a8 8 0 100-16 8 8 0 000 16z" />
+          </svg>
+        </div>
+
+        <div className="flex-1 overflow-y-auto p-3" style={{ scrollbarWidth: "none" }}>
+          {filteredPlaces.map((place) => (
+            <PlaceCard
+              key={place.id}
+              place={place}
+              onAdd={() => addPlaceToDay(place, isOverview ? openOverviewIdx : selectedDayIdx)}
             />
           ))}
-
-          {/* Directions */}
-          {directionsOptions && (
-            <DirectionsService
-              options={directionsOptions}
-              callback={directionsCallback}
-            />
-          )}
-
-          {directions && (
-            <DirectionsRenderer
-              options={{
-                directions,
-                polylineOptions: { strokeColor: '#C2185B', strokeWeight: 5 },
-              }}
-            />
-          )}
-          {routeCoords.length > 1 && !directions && (
-            <Polyline
-              path={routeCoords.map(c => ({ lat: c.latitude, lng: c.longitude }))}
-              options={{ strokeColor: '#C2185B', strokeWeight: 5 }}
-            />
-          )}
-        </GoogleMap>
-
-        {/* Right Sidebar (Search + Places + Itinerary) */}
-        <div className="absolute left-0 top-0 h-full w-96 bg-white shadow-lg flex flex-col">
-          {/* Search Bar */}
-          <div className="p-3 border-b border-gray-200 flex items-center space-x-2">
-
-            <input
-              type="text"
-              placeholder="Search places to visit"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="flex-1 bg-gray-50 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-5 h-5 text-gray-500"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35M10 18a8 8 0 100-16 8 8 0 000 16z" />
-            </svg>
-          </div>
-
-          {/* Places List */}
-          <div className="flex-1 overflow-y-auto p-3" style={{ scrollbarWidth: "none" }}>
-            {/* <h2 className="text-base font-semibold mb-3 text-gray-700">Places to Visit</h2> */}
-
-            {filteredPlaces.map((place) => (
-              <PlaceCard
-                key={place.id}
-                place={place}
-                onAdd={() => addPlaceToDay(place, isOverview ? openOverviewIdx : selectedDayIdx)}
-              />
-            ))}
-          </div>
-
-          {/* Itinerary Panel */}
-
         </div>
-        <div className="">
-          {/* Itinerary panel — slides under days bar */}
-          <div
-            className={`absolute top-0 right-0 h-full w-96 bg-white shadow-xl border-l border-gray-200 flex flex-col transform transition-transform duration-300 ${showPanel ? 'translate-x-0' : 'translate-x-full'
-              }`}
-            style={{ zIndex: 20 }} // under days bar
+      </div>
+
+      <MapProvider>
+        <div className="relative h-screen w-screen overflow-hidden">
+          <GoogleMap
+            mapContainerStyle={mapContainerStyle}
+            center={center}
+            zoom={12}
+            onLoad={map => { mapRef.current = map; }}
+            options={{
+              // Disable default UI and only show zoom control
+              disableDefaultUI: true,
+              zoomControl: true,
+              mapTypeControl: false,
+              streetViewControl: false,
+              fullscreenControl: false,
+              styles: [{ featureType: 'poi', stylers: [{ visibility: 'simplified' }] }],
+            }}
           >
-            <button
-              onClick={saveTrip}
-              disabled={saving}
-              className="bg-blue-500 text-white p-2 rounded m-2"
-            >
-              {saving ? 'Saving...' : 'Save'}
-            </button>
+            {/* Map markers */}
+            {placesToVisit.map((place) => {
+              if (!place.coordinates || !place.coordinates.lat || !place.coordinates.long) return null;
+              const isActive = activeDay?.activities.some(a => a.place.id === place.id);
+              const activeIndex = isActive ? activeDay.activities.findIndex(a => a.place.id === place.id) : -1;
+              return (
+                <Marker
+                  key={String(place.id)}
+                  position={{ lat: place.coordinates.lat, lng: place.coordinates.long }}
+                  icon={isActive ? undefined : { url: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png' }}
+                  label={
+                    isActive
+                      ? {
+                        text: `${activeIndex + 1}`,
+                        color: 'white',
+                        fontSize: '12px',
+                        fontWeight: 'bold'
+                      }
+                      : undefined
+                  }
+                  onClick={() => setSelectedPlace(place)}
+                />
+              );
+            })}
+
+            {/* Directions service / renderer */}
+            {/* {directionsOptions && activeDay && (activeDay.route.signature !== expectedSig) && (
+              <DirectionsService options={directionsOptions} callback={directionsCallback} />
+            )} */}
+            {directionsOptions && activeDay && (activeDay.route.signature !== routeSignature(activeDay.activities, activeOptimize)) && (
+              <DirectionsService options={directionsOptions} callback={directionsCallback} />
+            )}
+
+            {directions && (
+              <DirectionsRenderer
+                options={{
+                  directions,
+                  polylineOptions: { strokeColor: '#C2185B', strokeWeight: 5 },
+                }}
+              />
+            )}
+
+            {routeCoords.length > 1 && !directions && (
+              <Polyline
+                path={routeCoords.map(c => ({ lat: c.latitude, lng: c.longitude }))}
+                options={{ strokeColor: '#C2185B', strokeWeight: 5 }}
+              />
+            )}
+          </GoogleMap>
+
+          {/* Total Distance Overlay */}
+          {!isOverview && activeDay?.activities.length >= 2 && totalDistanceKm != null && (
+            <div style={{
+              position: 'absolute',
+              top: '20px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              backgroundColor: 'white',
+              padding: '8px 16px',
+              borderRadius: '8px',
+              boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+              zIndex: 10,
+              fontSize: '14px',
+              fontWeight: 'bold',
+              whiteSpace: 'nowrap'
+            }}>
+              Total Distance: {totalDistanceKm.toFixed(1)} km
+            </div>
+          )}
+
+          {/* Itinerary panel */}
+          <div
+            className={`fixed top-0 right-0 h-full bg-white shadow-xl border-l border-gray-200 flex flex-col transform transition-transform duration-300`}
+            style={{
+              zIndex: 60,
+              width: `min(420px, 90vw)`,
+              transform: showPanel ? 'translateX(0)' : 'translateX(100%)'
+            }}
+          >
+            <div className="p-2 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setShowPanel(false)}
+                  className="text-gray-600 hover:text-gray-900"
+                  aria-label="Close itinerary"
+                >
+                  Close
+                </button>
+              </div>
+              <button
+                onClick={saveTrip}
+                disabled={saving}
+                className="bg-blue-500 text-white p-2 rounded"
+              >
+                {saving ? 'Saving...' : 'Save'}
+              </button>
+            </div>
+
             <div className="flex-1 p-4 overflow-y-auto">
               {isOverview ? (
                 <>
@@ -708,7 +834,7 @@ const TripPlannerPage: React.FC = () => {
                         <div className="mt-2">
                           {day.activities.map((item, idx) => (
                             <ActivityCard
-                              key={item.place.id}
+                              key={String(item.place.id)}
                               place={item.place}
                               distanceKm={item.distanceKm}
                               index={idx}
@@ -726,20 +852,24 @@ const TripPlannerPage: React.FC = () => {
                     <h2 className="text-lg font-semibold">
                       {activeDay?.date || activeDay?.label}
                     </h2>
-                    <button
+                    {/* <button
                       onClick={() => toggleOptimizeForDay(activeDay.id)}
                       className="text-blue-500"
                     >
                       {optimizeByDay[activeDay?.id] ? 'Optimize ✓' : 'Optimize'}
-                    </button>
+                    </button> */}
                   </div>
 
                   <DragDropContext onDragEnd={result => onDragEnd(result, selectedDayIdx)}>
-                    <Droppable droppableId="activities">
+                    <Droppable droppableId={`activities-${selectedDayIdx}`}>
                       {(provided) => (
                         <div {...provided.droppableProps} ref={provided.innerRef}>
                           {activeDay?.activities.map((item, index) => (
-                            <Draggable key={item.place.id} draggableId={item.place.id} index={index}>
+                            <Draggable
+                              key={String(item.place.id)}
+                              draggableId={String(item.place.id)}
+                              index={index}
+                            >
                               {(provided) => (
                                 <div
                                   ref={provided.innerRef}
@@ -772,54 +902,97 @@ const TripPlannerPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Fixed days vertical bar */}
+          {/* Days vertical bar (slides left when panel opens) */}
           <div
-            className="fixed right-0 top-0 h-full w-16  flex flex-col items-center "
-            style={{ zIndex: 30 }} // stays above itinerary
+            className="fixed right-0 top-0 h-full w-16 flex flex-col items-center transition-all duration-300"
+            style={{ zIndex: 70, right: `${daysBarRightOffset}px` }}
           >
-            <div className="py-4 space-y-2" style={{ overflow: "scroll", scrollbarWidth: "none" }}>
+            <div className="py-4 space-y-2 overflow-y-auto" style={{ maxHeight: '100vh' }}>
               {['Overview', ...days.map(d => d.label)].map((label, i) => (
                 <button
                   key={label + i}
                   onClick={() => {
                     if (label === 'Overview') {
-                      if (isOverview && showPanel) setShowPanel(false);
-                      else {
+                      if (isOverview) {
+                        setShowPanel(prev => !prev);
+                      } else {
                         setIsOverview(true);
+                        setOpenOverviewIdx(0);
                         setShowPanel(true);
                       }
                     } else {
                       const idx = days.findIndex(d => d.label === label);
-                      if (idx >= 0) {
-                        if (selectedDayIdx === idx && showPanel) {
-                          setShowPanel(false);
-                        } else {
-                          setIsOverview(false);
-                          setSelectedDayIdx(idx);
-                          setShowPanel(true);
-                        }
+                      if (idx < 0) return;
+                      if (!isOverview && selectedDayIdx === idx) {
+                        setShowPanel(prev => !prev);
+                      } else {
+                        setIsOverview(false);
+                        setSelectedDayIdx(idx);
+                        setShowPanel(true);
                       }
                     }
                   }}
                   className={`w-12 h-12 rounded-lg text-sm flex items-center justify-center text-center transition-all
-          ${isOverview && label === 'Overview' || (!isOverview && days[selectedDayIdx]?.label === label)
+                    ${(isOverview && label === 'Overview') || (!isOverview && days[selectedDayIdx]?.label === label)
                       ? 'bg-blue-500 text-white shadow'
                       : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
                 >
-                  {label === 'Overview' ? 'Overview' : 'Day' + i}
+                  {label === 'Overview' ? 'All' : 'Day' + i}
                 </button>
               ))}
-
-
             </div>
           </div>
-        </div>
 
-      </div>
-    </MapProvider>
+          {/* Selected place overlay: positioned 20px above marker using map container rect */}
+          {selectedPlace && mapRef.current && (
+            <div
+              className="fixed inset-0 z-50 pointer-events-none"
+              onClick={() => setSelectedPlace(null)}
+            >
+              {(() => {
+                const pos = getPixelPositionFromLatLng(
+                  selectedPlace.coordinates.lat,
+                  selectedPlace.coordinates.long
+                );
+                if (!pos) return null;
+
+                // We want the overlay 20px ABOVE the marker
+                const overlayLeft = pos.x;
+                const overlayTop = pos.y - 20; // 20px up
+
+                return (
+                  <div
+                    className="absolute pointer-events-auto"
+                    style={{
+                      left: overlayLeft,
+                      top: overlayTop,
+                      transform: "translate(-50%, -100%)", // center horizontally and sit above marker
+                      width: 320,
+                      maxWidth: 'calc(100vw - 140px)',
+                    }}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <div className="bg-transparent shadow-none border-none">
+                      <PlaceCard
+                        place={selectedPlace}
+                        onAdd={() => {
+                          addPlaceToDay(selectedPlace, dayIndex);
+                          setSelectedPlace(null);
+                          setShowPanel(true);
+                        }}
+                        showDescription={true}
+                      />
+                    </div>
+                  </div>
+                );
+              })()}
+            </div>
+          )}
+
+        </div>
+      </MapProvider>
+    </div>
   );
 };
-
-
 
 export default TripPlannerPage;

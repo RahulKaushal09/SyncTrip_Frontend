@@ -4,7 +4,7 @@ import apiClient from "./apiClient";
 
 class TripServices {
 
-    static async fetchTripDetails(tripId: string,fields: string[] = []) {
+    static async fetchTripDetails(tripId: string,fields: string[] = []): Promise<UserTrip> {
         try {
             const res = await apiClient.get(`/app/getUserTripDetails/${tripId}`, { params: { fields } });
             return res.data.trip as UserTrip;

@@ -46,6 +46,10 @@ export const isUserLoggedIn = (): boolean => {
     const token = localStorage.getItem('userToken');
     return !!token;
 };
+export const IsUserProfileComplete = (): boolean => {
+    const user = getCurrentUser();
+    return user && user.profileCompleted ? user.profileCompleted : false;
+};
 
 export const getCurrentUser = (): User | null => {
     if (typeof window === 'undefined') return null;
