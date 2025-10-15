@@ -20,6 +20,10 @@ import InfoSwitch from '@/components/switch/infoSwitchButtons';
 import toast from 'react-hot-toast';
 import { LocationServices } from '@/utils/location.utils';
 import WeatherServices from '@/utils/WeatherServices.utils';
+import { AlertTriangle, Clock, Heart, Lock, MapPin, Shield, Users, Wallet } from 'lucide-react';
+import LocationCardShortDescription from '@/components/Cards/locationShortDescriptionCard';
+import { SwitchButtons } from '@/components/switch/2SwitchButtons';
+import ItinerarySection from '@/components/Trips/ItinearySection';
 
 
 
@@ -46,6 +50,177 @@ function normalizeRestaurants(input: Location['restaurantsandfoods']): Restauran
     return [];
 }
 
+
+// const AboutSection: React.FC<{ location: Location; aboutTab: 'cultures' | 'festivals'; setAboutTab: (tab: 'cultures' | 'festivals') => void }> = ({ location, aboutTab, setAboutTab }) => {
+//   const localsData = aboutTab === 'cultures' ? (location.cultures || []) : (location.festivals || []);
+//   return (
+//     <View>
+//       <View style={styles.descriptionContainer}>
+//         <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 12 }}>Highlights: </Text>
+//         <Text style={styles.descriptionText}>{location.description || '—'}</Text>
+//       </View>
+//       <View style={{ paddingHorizontal: 20, marginTop: 25, display: 'flex', flexDirection: 'column', gap: 15 }}>
+//         <LocationCardShortDescription
+//           icon="clock"
+//           title="Ideal Duration 5 days"
+//           subtitle="Check availability to see starting time"
+//           variant="filled"
+//         />
+//         <LocationCardShortDescription
+//           icon="users"
+//           title="Group Tour"
+//           subtitle="Find your buddies and forge lifelong friendship"
+//           variant="outlined"
+//         />
+//       </View>
+//       <View style={{ paddingHorizontal: 20, marginTop: 25 }}>
+//         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+//           <Text style={[styles.headingText]}>About Local</Text>
+//           <View style={{ flex: 1 }} />
+//           <View style={locals.segmentWrap}>
+//             <TouchableOpacity
+//               onPress={() => setAboutTab('cultures')}
+//               style={[locals.segment, aboutTab === 'cultures' && locals.segmentActive]}
+//             >
+//               <Text style={[locals.segmentText, aboutTab === 'cultures' && locals.segmentTextActive]}>Cultures</Text>
+//             </TouchableOpacity>
+//             <TouchableOpacity
+//               onPress={() => setAboutTab('festivals')}
+//               style={[locals.segment, aboutTab === 'festivals' && locals.segmentActive]}
+//             >
+//               <Text style={[locals.segmentText, aboutTab === 'festivals' && locals.segmentTextActive]}>Festivals</Text>
+//             </TouchableOpacity>
+//           </View>
+//         </View>
+//         {localsData.map((item, idx) => (
+//           <View key={idx} style={{ paddingTop: 8 }}>
+//             <CultureFestivalsCard
+//               title={item.name}
+//               desc={item.description}
+//               img={first(item.images)?.image_url}
+//               // tag={aboutTab === 'cultures' ? 'Culture' : 'Festival'}
+//               timings={item.timings}
+//               village={item.village}
+//             />
+//           </View>
+//         ))}
+//         {localsData.length === 0 && <ListEmpty />}
+//       </View>
+//     </View>
+//   );
+// };
+
+
+const AboutSections: React.FC<{
+    shortDescription: string;
+    longDesc: string;
+    cultures?: Culture[];
+    festivals?: Festival[];
+    aboutTab: 'cultures' | 'festivals';
+    setAboutTab: (tab: 'cultures' | 'festivals') => void;
+}> = ({ shortDescription, longDesc, aboutTab, setAboutTab, cultures, festivals }) => {
+    const [description, setDescription] = useState(shortDescription || '');
+    const toggleDescription = () => {
+        if (description === shortDescription) {
+            setDescription(longDesc || '');
+        } else {
+            setDescription(shortDescription || '');
+        }
+    };
+const localsData = aboutTab === 'cultures' ? cultures : festivals;
+
+  return (
+    <div>
+      {/* --- About Description --- */}
+      <div className="descriptionContainer">
+        <p className="text-lg font-bold mb-3">Highlights:</p>
+        <p className="descriptionText">{description || '—'}</p>
+
+        {longDesc && (
+          <button
+            className="view-more-btn" style={{marginTop:10}}
+            onClick={toggleDescription}
+          >
+            {description === shortDescription ? 'Read More' : 'Show Less'}
+          </button>
+        )}
+      </div>
+
+      {/* --- Safety Tips Grid --- */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
+        <LocationCardShortDescription
+          Icon={Lock}
+          title="Keep Personal Info Private"
+          subtitle="Don't share sensitive details until you build trust"
+          variant="filled"
+        />
+        <LocationCardShortDescription
+          Icon={MapPin}
+          title="Meet in Public First"
+          subtitle="Always choose public, well-lit places"
+          variant="outlined"
+        />
+        <LocationCardShortDescription
+          Icon={Users}
+          title="Travel with a Companion"
+          subtitle="Bring a friend when meeting new people"
+          variant="filled"
+        />
+        <LocationCardShortDescription
+          Icon={AlertTriangle}
+          title="Stay Alert & Prepared"
+          subtitle="Keep belongings safe & emergency contacts handy"
+          variant="outlined"
+        />
+        <LocationCardShortDescription
+          Icon={Wallet}
+          title="Clarify Costs Upfront"
+          subtitle="Agree on expense sharing before the trip starts"
+          variant="filled"
+        />
+        <LocationCardShortDescription
+          Icon={Shield}
+          title="Report If Uncomfortable"
+          subtitle="Report or block immediately if unsafe"
+          variant="outlined"
+        />
+        <LocationCardShortDescription
+          Icon={Heart}
+          title="Respect & Be Kind"
+          subtitle="Respect fellow travelers and follow community rules"
+          variant="filled"
+        />
+      </div>
+
+      {/* --- Cultures / Festivals Section --- */}
+      <div className="" style={{marginTop:30}}>
+        <SwitchButtons
+            options={[
+                { text: 'Cultures', value: 'cultures', onClick: () => setAboutTab('cultures') },
+                { text: 'Festivals', value: 'festivals', onClick: () => setAboutTab('festivals') },
+            ]}
+            selectedValue={aboutTab}
+            setSelectedValue={(value) => setAboutTab(value as 'cultures' | 'festivals')}
+        />
+        {/*  */}
+
+        {localsData && localsData.length > 0 ? (
+          <CultureFestivalsSection
+            data={localsData}
+            heading={
+              aboutTab === 'cultures'
+                ? `Local Cultures`
+                : `Festivals & Celebrations`
+            }
+            type={aboutTab === 'cultures' ? 'culture' : 'festival'}
+          />
+        ) : (
+          <div className="text-gray-500">No data available.</div>
+        )}
+      </div>
+    </div>
+  );
+};
 
 
 export default function UserTripDetailsPage() {
@@ -76,7 +251,7 @@ export default function UserTripDetailsPage() {
         LocationFields.HOTELS,
         LocationFields.RESTAURANTS_AND_FOODS,
         LocationFields.COORDINATES,
-        LocationFields.FULL_DETAILS
+        LocationFields.FULL_DESCRIPTION
     ];
     // const [tripData, setTripData] = useState<UserTrip | null>(null);
     // const [locationData, setLocationData] = useState<Location | null>(null);
@@ -86,7 +261,7 @@ export default function UserTripDetailsPage() {
 
     const [hotelIds, setHotelIds] = useState<string[]>([]);
     const [restaurantIds, setRestaurantIds] = useState<string[]>([]);
-    const [location, setLocation] = useState<Location | null>(null);
+    const [location, setLocation] = useState<Location>();
     const [isWishlisted, setWishlisted] = useState(false);
     const [tripDetails, setTripDetails] = useState<UserTrip>({} as UserTrip);
     const [weatherDays, setWeatherDays] = useState<DayWeather[]>([]);
@@ -99,7 +274,7 @@ export default function UserTripDetailsPage() {
     const [isLoadingPlaces, setIsLoadingPlaces] = useState(true);
 
     // @ts-ignore
-useEffect(() => {
+    useEffect(() => {
         const handleResize = () => {
             setIsMobile(window.innerWidth <= 768);
         }
@@ -114,6 +289,9 @@ useEffect(() => {
             try {
                 const tripFields = [userTripFields.ID, userTripFields.START_DATE, userTripFields.END_DATE];
                 // fetch location details and trip details in parallel
+                console.log('Fetching location and trip details for', locationId, tripId);
+
+                console.log(locationFields);
                 const [locationDetails, tripData] = await Promise.all([
                     LocationServices.fetchLocationDetails(locationId as string, locationFields),
                     TripServices.fetchTripDetails(tripId as string, tripFields),
@@ -182,7 +360,7 @@ useEffect(() => {
     // Normalize lists from location
     // const places = useMemo(() => normalizePlaces(location.placesToVisit), [location]);
     // const hotels = useMemo(() => normalizeHotels(location.hotels), [location]);
-    if (location === null) {
+    if (location == null) {
         return <div className="flex items-center justify-center h-screen">
             <p>Loading...</p>
         </div>
@@ -209,53 +387,6 @@ useEffect(() => {
 
 
 
-    
-    // useEffect(() => {
-    //     if (!tripId) {
-    //         router.back();
-    //         return;
-    //     }
-
-    //     const fetchData = async () => {
-    //         try {
-    //             // Fetch Trip Data
-    //             const trip = await TripServices.fetchTripDetails(tripId);
-    //             if (!trip || !trip.locationId) {
-    //                 router.back();
-    //                 return;
-    //             }
-    //             setTripData(trip);
-
-    //             // Fetch Location Data
-    //             const location = await ApiService.fetchLocationById(trip.locationId);
-    //             if (!location) {
-    //                 router.back();
-    //                 return;
-    //             }
-
-    //             const placeIds = location.placesToVisit || [];
-    //             const places = await ApiService.getPlacesByIds(placeIds as string[]);
-
-    //             location.placesToVisit = (places || []).map(place => ({
-    //                 ...place,
-    //                 image: place.image?.map(img => decodeURIComponent(img)) || ['https://via.placeholder.com/300x200?text=No+Image']
-    //             }));
-
-    //             setLocationData(location);
-    //         } catch (err) {
-    //             console.error('Error fetching trip or location data:', err);
-    //             router.back();
-    //         } finally {
-    //             setLoading(false);
-    //         }
-    //     };
-
-    //     fetchData();
-    // }, [tripId, router]);
-
-    // if (loading) return <div>Loading...</div>;
-    // if (!locationData) return notFound();
-
     const pageType = PageTypeEnum.USER_TRIP;
     // return <LocationPageDetails locationData={locationData} uuid={tripId as string} />;
     return (
@@ -270,44 +401,24 @@ useEffect(() => {
                 rating={location?.rating}
                 country={location?.country}
             />
+            <LocationImageGallery locationImages={location?.images as string[]} locationName={location?.title} />
 
-            <LocationImageGallery locationImages={location?.images} locationName={location?.title} />
-            <InfoSwitch data={{}} />
-
-            {isMobile && (
-                <></>
-                // <AddLocationCard
-                //     locationId={locationData?.id}
-                //     showBtns
-                //     pageType={pageType}
-                //     btnsStyle={{ width: '45%' }}
-                //     style={{ marginBottom: '50px', marginLeft: '0px' }}
-                //     ctaAction={() => }
-                //     title={locationData?.title}
-                //     rating={locationData?.rating}
-                //     reviews={getRandomNumberReviews()}
-                //     bestTime={locationData?.best_time}
-                //     placesToVisit={locationData?.placesNumberToVisit || '10'}
-                //     HotelsToStay={locationData?.hotels?.length || '10'}
-                //     MainImage={locationData?.images?.[0]}
-                //     onLoginClick={ctaAction}
-                //     EnrollInTrip={() => { }}
-                //     alreadyEnrolled={false}
-                //     timelines={[]}
-                // />
-            )}
+            <InfoSwitch data={{
+                about: <AboutSections
+                    shortDescription={location.description as string}
+                    longDesc={location.fullDetails?.full_description as string}
+                    aboutTab={aboutTab}
+                    setAboutTab={setAboutTab}
+                    cultures={location.cultures}
+                    festivals={location.festivals}
+                />,
+                itinerary:<ItinerarySection tripId={tripId as string} />  
+            }} />
+            
 
             <div className="row" style={{ position: 'relative' }}>
                 <div className={!isMobile ? 'col-lg-8' : 'col-lg-12'}>
-                    {!isMobile && (
-                        <Description
-                            pageType={pageType}
-                            shortDescription={location?.description}
-                            fullDescription={location?.fullDetails?.full_description}
-                            bestTime={location?.best_time}
-                            showEssentials={false}
-                        />
-                    )}
+                   
                     {/* <PlacesToVisitSection
                         title={locationData?.title}
                         places={locationData?.placesToVisit as PlacesToVisit[]}
@@ -320,39 +431,10 @@ useEffect(() => {
                         parentId={locationData?.id}
                         parentType="location"
                     /> */}
-                    <CultureFestivalsSection data={location?.cultures as Culture[]} heading={`Local Cultures of ${location?.title}`} type="culture" />
-
-                    <CultureFestivalsSection data={location?.festivals as Festival[]} heading={`Festivals of ${location?.title}`} type="festival" />
-                    {/* <LocationMapSection
-                        latitude={locationData?.fullDetails?.coordinates?.lat as number}
-                        longitude={locationData?.fullDetails?.coordinates?.long as number}
-                    /> */}
+                    
                 </div>
 
-                {!isMobile && (
-                    <div className="col-lg-4" style={{ marginBottom: '17px' }}>
-                        <div style={{ position: 'sticky', top: '80px', zIndex: 50 }}>
-                            {/* <AddLocationCard
-                    locationId={locationData?.id}
-
-                                showBtns
-                                pageType={pageType}
-                                ctaAction={ctaAction}
-                                title={locationData?.title}
-                                rating={locationData?.rating}
-                                reviews={getRandomNumberReviews()}
-                                bestTime={locationData?.best_time}
-                                placesToVisit={locationData?.placesNumberToVisit || '10'}
-                                HotelsToStay={locationData?.hotels?.length || '10'}
-                                MainImage={locationData?.images?.[0]}
-                                onLoginClick={ctaAction}
-                                EnrollInTrip={() => { }}
-                                alreadyEnrolled={false}
-                                timelines={[]}
-                            /> */}
-                        </div>
-                    </div>
-                )}
+                
             </div>
         </div>
     );

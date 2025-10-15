@@ -65,6 +65,7 @@ export const LocationFields = Object.freeze({
     HOTELS: 'hotels',
     RESTAURANTS_AND_FOODS: 'restaurantsandfoods',
     PLACES_TO_VISIT: 'placesToVisit',
+    FULL_DESCRIPTION: 'fullDetails.full_description',
     FULL_DETAILS: 'fullDetails',
     CULTURES: 'cultures',
     FESTIVALS: 'festivals',

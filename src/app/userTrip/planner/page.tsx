@@ -229,12 +229,13 @@ function generateDays(start: string | Date, end: string | Date): DayPlan[] {
 
   while (current <= endDate) {
     const label = `Day ${index}`;
-    const dateString = current.toLocaleDateString('en-US', {
-      month: 'long',
-      day: 'numeric'
-    });
 
-    days.push(makeDay(`d${index}`, label, dateString));
+    // store an ISO date string as the canonical date (unambiguous)
+    const isoDate = current.toISOString(); // e.g. '2025-10-15T...'
+
+    // keep the user-facing short display separately if needed; you can compute it when rendering
+    days.push(makeDay(`d${index}`, label, isoDate));
+
     current.setDate(current.getDate() + 1);
     index++;
   }
@@ -495,9 +496,14 @@ const TripPlannerPage: React.FC = () => {
       const totalKm = route.legs.reduce((sum, leg) => sum + (leg.distance?.value ?? 0) / 1000, 0);
       const legDistancesKm = route.legs.map(leg => (leg.distance?.value ?? 0) / 1000);
       const overviewCoords = route.overview_path.map(p => ({ latitude: p.lat(), longitude: p.lng() }));
+      console.log('Directions fetched:', { dayId, totalKm, legDistancesKm, overviewCoords });
       setDays(prev => {
+
         const next = prev.map(d => {
+          console.log('Checking day for update:', d, dayId);
           if (d.id !== dayId) return d;
+          console.log('Updating day with new route:', dayId);
+          console.log('Previous activities:', d);
           let orderedPlaces = d.activities.map(a => a.place);
           if ((optimizeByDay[dayId] ?? false) && route.waypoint_order) {
             const optimizedOrder = buildOptimizedOrder(orderedPlaces.length, route.waypoint_order);
@@ -570,7 +576,7 @@ const TripPlannerPage: React.FC = () => {
       location: { lat: place.coordinates.lat, lng: place.coordinates.long },
       stopover: true,
     }));
-    console.log('Requesting directions for', {places, waypoints, optimize: activeOptimize});
+    console.log('Requesting directions for', { places, waypoints, optimize: activeOptimize });
     return {
       origin: { lat: places[0].coordinates.lat, lng: places[0].coordinates.long },
       destination: { lat: places[places.length - 1].coordinates.lat, lng: places[places.length - 1].coordinates.long },
@@ -584,11 +590,11 @@ const TripPlannerPage: React.FC = () => {
     } as google.maps.DirectionsRequest;
   }, [activeDay, isOverview, activeOptimize]);
 
-  
+
   // Use cached route if signatures match (avoid new Directions requests)
   useEffect(() => {
     if (!activeDay || isOverview) {
-      setDirections(null); 
+      setDirections(null);
       setRouteCoords([]);
       setTotalDistanceKm(null);
       return;
@@ -850,8 +856,11 @@ const TripPlannerPage: React.FC = () => {
                 <>
                   <div className="flex justify-between items-center mb-2">
                     <h2 className="text-lg font-semibold">
-                      {activeDay?.date || activeDay?.label}
+                      {activeDay?.date
+                        ? new Date(activeDay.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric' })
+                        : activeDay?.label}
                     </h2>
+
                     {/* <button
                       onClick={() => toggleOptimizeForDay(activeDay.id)}
                       className="text-blue-500"

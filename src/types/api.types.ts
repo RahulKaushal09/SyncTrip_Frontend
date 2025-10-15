@@ -148,6 +148,8 @@ export interface PlacesToVisit {
     createdAt?: Date;
     updatedAt?: Date;
     type?: string;
+    filterTags?: string[];
+    tag?: string; // Adventure, Cultural, Historical, Nature, Religious, etc.
 }
 
 

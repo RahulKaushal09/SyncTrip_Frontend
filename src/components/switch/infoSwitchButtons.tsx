@@ -1,5 +1,6 @@
 'use client';
 
+import '../../../styles/style.css';
 import React, { useState } from 'react';
 
 type TabKey = 'about' | 'itinerary' | 'stay' | 'restaurants' | 'places';
@@ -35,8 +36,8 @@ const InfoSwitch: React.FC<InfoSwitchProps> = ({ data }) => {
             onClick={() => setActiveTab(tab.key)}
             className={`px-4 py-2 rounded-t-lg font-medium transition-all ${
               activeTab === tab.key
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                ? 'active-switch-button'
+                : 'inactive-switch-button'
             }`}
           >
             {tab.label}
@@ -45,7 +46,7 @@ const InfoSwitch: React.FC<InfoSwitchProps> = ({ data }) => {
       </div>
 
       {/* Tab Content */}
-      <div className="p-4 rounded-lg bg-white border shadow-sm min-h-[200px]">
+      <div className="">
         {activeTab === 'about' && data.about}
         {activeTab === 'itinerary' && data.itinerary}
         {activeTab === 'stay' && data.stay}

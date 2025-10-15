@@ -9,6 +9,7 @@
   /* Base */
   --white: #ffffff;
   --black: #222222;
+  --gray: #9C9FAF;
   --text: #0d344b;
 
   --background: #FFFFFF;
@@ -212,15 +213,22 @@
   background: var(--primary-5);
 }
 
-.button-secondary {
+.btn-secondary {
   background: var(--secondary-1);
   color: var(--white);
   border: none;
   border-radius: 4px;
   transition: background 0.2s;
 }
+.btn-secondary-text{
+  background: transparent;
+  color: var(--secondary-1);
+  border: 2px solid var(--secondary-1);
+  border-radius: 4px;
+  transition: background 0.2s, color 0.2s;
+}
 
-.button-secondary:hover {
+.btn-secondary:hover {
   background: var(--secondary-5);
 }
 
@@ -794,7 +802,7 @@ input {
 }
 
 .view-more-btn {
-  background: #00bcd4;
+  background: var(--secondary-1);
   color: white;
   border: none;
   padding: 10px 20px;
@@ -805,7 +813,8 @@ input {
 }
 
 .view-more-btn:hover {
-  background: #0097a7;
+  background: var(--secondary-2);
+  color: var(--secondary-1);
 }
 
 @media (max-width: 480px) {

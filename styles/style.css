@@ -1,0 +1,31 @@
+.active-switch-button{
+    background-color: var(--secondary-1);
+    color: white;
+}
+.inactive-switch-button{
+    background-color: var(--secondary-4);
+    color: black;
+    
+}
+.inactive-switch-button:hover{
+    background-color: var(--secondary-1);
+    color: white;
+}
+
+
+.descriptionContainer{
+    border-radius: 8px;
+    background-color: var(--primary-background);
+    padding: 16px;
+    border-width: 1px;
+    border-color: var(--neutral-5);
+    /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+.headingText{
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: var(--secondary-1);
+}
