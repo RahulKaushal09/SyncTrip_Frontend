@@ -11,9 +11,10 @@ interface DescriptionProps {
     shortDescription?: string;
     fullDescription?: string;
     bestTime?: string;
+    showEssentials?: boolean;
 }
 
-const Description = ({ pageType, shortDescription, fullDescription, bestTime }: DescriptionProps) => {
+const Description = ({ pageType, shortDescription, fullDescription, bestTime,showEssentials = true }: DescriptionProps) => {
     const [isExpanded, setIsExpanded] = useState(false);
 
     const toggleDescription = () => {
@@ -22,7 +23,7 @@ const Description = ({ pageType, shortDescription, fullDescription, bestTime }: 
 
     return (
         <div className="travel-info-container">
-            {pageType !== PageTypeEnum.TRIP && (
+            {pageType !== PageTypeEnum.TRIP && showEssentials && (
                 <div className="info-grid">
                     <div className="essentials-section">
                         <h2 className='DescriptionHeading'><strong>Essentials</strong></h2>

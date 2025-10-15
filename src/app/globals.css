@@ -10,8 +10,8 @@
   --white: #ffffff;
   --black: #222222;
   --text: #0d344b;
- 
-  --background:#FFFFFF;
+
+  --background: #FFFFFF;
 
   /* Primary Colors */
   --primary-1: #3ABEF5;
@@ -29,7 +29,7 @@
   --secondary-4: #E3F5FF;
   --secondary-5: #F7FAFD;
   /* Hover */
-  --secondary-hover:#173350;
+  --secondary-hover: #173350;
   /* Neutrals */
   --neutral-1: #80838D;
   --neutral-2: #B9BBC6;
@@ -61,9 +61,11 @@
   /* typography  */
   --font-serif: 'Lisu Bosa', serif;
   --font-sans: 'Inter', Arial, sans-serif;
-  --container-padding-x: 5%; /* mobile default */
+  --container-padding-x: 5%;
+  /* mobile default */
   --container-padding-y: 40px;
 }
+
 @media (min-width: 640px) {
   :root {
     --container-padding-x: 40px;
@@ -89,9 +91,10 @@
 
 /* usage */
 .container-custom {
-  padding: var(--container-padding-y) var(--container-padding-x) ;
+  padding: var(--container-padding-y) var(--container-padding-x);
   max-width: -webkit-fill-available !important;
 }
+
 /*================= Color Library End ==================== */
 /* ============ Backgound Colors ============ */
 .bg-primary-1 {
@@ -441,28 +444,34 @@ body {
   margin-right: 60px; */
   margin-top: 80px !important;
 }
-.fullwidth{
-    /* margin-left: -60px;
+
+.fullwidth {
+  /* margin-left: -60px;
     margin-right: -60px; */
 }
-.marginSectionLeftRight{
-    margin-left: 60px;
+
+.marginSectionLeftRight {
+  margin-left: 60px;
   margin-right: 60px;
 }
-.paddingSectionLeftRight{
-    padding-left: 60px;
+
+.paddingSectionLeftRight {
+  padding-left: 60px;
   padding-right: 60px;
 }
+
 /* Responsive Margins */
 @media screen and (max-width: 1050px) and (min-width: 990px) {
-  .marginSectionLeftRight{
-    margin-left:30px;
-    margin-right:30px;
+  .marginSectionLeftRight {
+    margin-left: 30px;
+    margin-right: 30px;
   }
-  .paddingSectionLeftRight{
+
+  .paddingSectionLeftRight {
     padding-left: 30px;
-  padding-right: 30px;
-}
+    padding-right: 30px;
+  }
+
   .App {
     /* margin: 80px 30px 0px 80px; */
     margin: 80px 0px 0px 0px;
@@ -471,14 +480,16 @@ body {
 }
 
 @media screen and (max-width: 990px) {
-  .marginSectionLeftRight{
-    margin-left:0px;
-    margin-right:0px;
+  .marginSectionLeftRight {
+    margin-left: 0px;
+    margin-right: 0px;
   }
-  .paddingSectionLeftRight{
+
+  .paddingSectionLeftRight {
     padding-left: 0px;
-  padding-right: 0px;
-}
+    padding-right: 0px;
+  }
+
   .App {
     margin: 0;
     margin-top: 60px !important;
@@ -545,14 +556,14 @@ input {
   justify-content: center;
   align-items: center;
   gap: 10px;
-  border:1px solid var(--secondary-1) !important;
+  border: 1px solid var(--secondary-1) !important;
   transition: transform 0.2s ease-in-out !important;
   width: 100%;
 }
 
 .btn-white-home-hero:hover {
   /* margin-top: -5px !important; */
-  transform:translateY(-5px) !important;
+  transform: translateY(-5px) !important;
   background-color: #fff;
   color: var(--secondary-1) !important;
 }
@@ -571,7 +582,7 @@ input {
 
 .homebtnprimary:hover {
   /* margin-top: -5px !important; */
-  transform:translateY(-5px) !important;
+  transform: translateY(-5px) !important;
 
   background-color: var(--primary-1) !important;
   color: #fff !important;
@@ -588,22 +599,25 @@ input {
   background-color: #000 !important;
   color: #fff !important;
 }
-.btn-primary{
+
+.btn-primary {
   background-color: var(--primary-1) !important;
   color: #fff !important;
 }
-.btn-primary-border{
+
+.btn-primary-border {
   border: 2px solid var(--primary-1) !important;
   color: var(--primary-1) !important;
   background-color: var(--background);
 }
 
-.btn-matching-color{
+.btn-matching-color {
   background: linear-gradient(90deg, #B75DFF 0%, #F3359E 100%) !important;
   color: #fff !important;
   border: none !important;
 
 }
+
 .btn-black:hover {
   background-color: #202020 !important;
   color: #fff !important;
@@ -740,7 +754,7 @@ input {
   .HomePage {
     margin: 0 40px;
   }
-  
+
 }
 
 @media screen and (max-width: 500px) {
@@ -748,10 +762,11 @@ input {
     padding: 5px 10px !important;
     font-size: 14px !important;
   }
-  .hideInMobile{
-    display:none !important;
+
+  .hideInMobile {
+    display: none !important;
   }
- 
+
 
 }
 
@@ -828,17 +843,18 @@ input {
 
 /* ANIMATION CSS  */
 /* ===== Motion vars (tweak once, reuse everywhere) ===== */
-:root{
-  --motion-ease: cubic-bezier(.22,.61,.36,1);
+:root {
+  --motion-ease: cubic-bezier(.22, .61, .36, 1);
   --motion-dur: .6s;
   --motion-delay: 0s;
-  --motion-distance: 24px;   /* px, %, etc. */
+  --motion-distance: 24px;
+  /* px, %, etc. */
   --motion-rotate: 8deg;
   --motion-scale: .96;
 }
 
 /* ===== Base hook ===== */
-.m-animate{
+.m-animate {
   opacity: 0;
   transform: translateZ(0);
   animation-duration: var(--motion-dur);
@@ -850,128 +866,299 @@ input {
 
 /* Toggle this class (or add .play) to run the animation */
 .m-animate.is-inview,
-.m-animate.play{ opacity: 1; }
+.m-animate.play {
+  opacity: 1;
+}
+
 /* ===== Variants ===== */
 .m-rotate-loop {
   animation: m-rotate-loop 4s linear infinite;
 }
+
 @keyframes m-rotate-loop {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
 }
-.m-fade-in{ animation-name: m-fade-in; }
-@keyframes m-fade-in{
-  from{ opacity: 0; } to{ opacity: 1; }
+
+.m-fade-in {
+  animation-name: m-fade-in;
 }
 
-.m-slide-up{ animation-name: m-slide-up; }
-@keyframes m-slide-up{
-  from{ opacity: 0; transform: translateY(var(--motion-distance)); }
-  to{ opacity: 1; transform: translateY(0); }
+@keyframes m-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
-.m-slide-down{ animation-name: m-slide-down; }
-@keyframes m-slide-down{
-  from{ opacity: 0; transform: translateY(calc(var(--motion-distance) * -1)); }
-  to{ opacity: 1; transform: translateY(0); }
+.m-slide-up {
+  animation-name: m-slide-up;
 }
 
-.m-slide-left{ animation-name: m-slide-left; }
-@keyframes m-slide-left{
-  from{ opacity: 0; transform: translateX(var(--motion-distance)); }
-  to{ opacity: 1; transform: translateX(0); }
+@keyframes m-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(var(--motion-distance));
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.m-slide-right{ animation-name: m-slide-right; }
-@keyframes m-slide-right{
-  from{ opacity: 0; transform: translateX(calc(var(--motion-distance) * -1)); }
-  to{ opacity: 1; transform: translateX(0); }
+.m-slide-down {
+  animation-name: m-slide-down;
 }
 
-.m-zoom-in{ animation-name: m-zoom-in; }
-@keyframes m-zoom-in{
-  from{ opacity: 0; transform: scale(var(--motion-scale)); }
-  to{ opacity: 1; transform: scale(1); }
+@keyframes m-slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(calc(var(--motion-distance) * -1));
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.m-rotate-in{ animation-name: m-rotate-in; }
-@keyframes m-rotate-in{
-  from{
+.m-slide-left {
+  animation-name: m-slide-left;
+}
+
+@keyframes m-slide-left {
+  from {
+    opacity: 0;
+    transform: translateX(var(--motion-distance));
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.m-slide-right {
+  animation-name: m-slide-right;
+}
+
+@keyframes m-slide-right {
+  from {
+    opacity: 0;
+    transform: translateX(calc(var(--motion-distance) * -1));
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.m-zoom-in {
+  animation-name: m-zoom-in;
+}
+
+@keyframes m-zoom-in {
+  from {
+    opacity: 0;
+    transform: scale(var(--motion-scale));
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.m-rotate-in {
+  animation-name: m-rotate-in;
+}
+
+@keyframes m-rotate-in {
+  from {
     opacity: 0;
     transform: translateY(var(--motion-distance)) rotate(var(--motion-rotate));
   }
-  to{
+
+  to {
     opacity: 1;
     transform: translateY(0) rotate(0);
   }
 }
 
-.m-blur-in{ animation-name: m-blur-in; }
-@keyframes m-blur-in{
-  from{ opacity: 0; filter: blur(12px); }
-  to{ opacity: 1; filter: blur(0); }
+.m-blur-in {
+  animation-name: m-blur-in;
+}
+
+@keyframes m-blur-in {
+  from {
+    opacity: 0;
+    filter: blur(12px);
+  }
+
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
 }
 
 /* ===== Stagger container =====
    - Use --stagger-step to control gap between items
    - Set --i on children (0,1,2,...) or rely on nth-child snippet below
 */
-.m-stagger{ --stagger-step: 80ms; }
-.m-stagger > *{
+.m-stagger {
+  --stagger-step: 80ms;
+}
+
+.m-stagger>* {
   --i: var(--i, 0);
   animation-delay: calc(var(--motion-delay) + var(--stagger-step) * var(--i));
 }
 
 /* Auto-index up to 20 children (optional; delete if you prefer inline --i) */
-.m-stagger > *:nth-child(1){ --i: 0; }
-.m-stagger > *:nth-child(2){ --i: 1; }
-.m-stagger > *:nth-child(3){ --i: 2; }
-.m-stagger > *:nth-child(4){ --i: 3; }
-.m-stagger > *:nth-child(5){ --i: 4; }
-.m-stagger > *:nth-child(6){ --i: 5; }
-.m-stagger > *:nth-child(7){ --i: 6; }
-.m-stagger > *:nth-child(8){ --i: 7; }
-.m-stagger > *:nth-child(9){ --i: 8; }
-.m-stagger > *:nth-child(10){ --i: 9; }
-.m-stagger > *:nth-child(11){ --i: 10; }
-.m-stagger > *:nth-child(12){ --i: 11; }
-.m-stagger > *:nth-child(13){ --i: 12; }
-.m-stagger > *:nth-child(14){ --i: 13; }
-.m-stagger > *:nth-child(15){ --i: 14; }
-.m-stagger > *:nth-child(16){ --i: 15; }
-.m-stagger > *:nth-child(17){ --i: 16; }
-.m-stagger > *:nth-child(18){ --i: 17; }
-.m-stagger > *:nth-child(19){ --i: 18; }
-.m-stagger > *:nth-child(20){ --i: 19; }
-
-/* ===== Looping/ambient motions ===== */
-.m-float{ animation: m-float 4s ease-in-out infinite; }
-@keyframes m-float{
-  0%,100%{ transform: translateY(0); }
-  50%{ transform: translateY(-6px); }
+.m-stagger>*:nth-child(1) {
+  --i: 0;
 }
 
-.m-pulse{ animation: m-pulse 2s ease-in-out infinite; }
-@keyframes m-pulse{
-  0%,100%{ opacity: 1; }
-  50%{ opacity: .6; }
+.m-stagger>*:nth-child(2) {
+  --i: 1;
+}
+
+.m-stagger>*:nth-child(3) {
+  --i: 2;
+}
+
+.m-stagger>*:nth-child(4) {
+  --i: 3;
+}
+
+.m-stagger>*:nth-child(5) {
+  --i: 4;
+}
+
+.m-stagger>*:nth-child(6) {
+  --i: 5;
+}
+
+.m-stagger>*:nth-child(7) {
+  --i: 6;
+}
+
+.m-stagger>*:nth-child(8) {
+  --i: 7;
+}
+
+.m-stagger>*:nth-child(9) {
+  --i: 8;
+}
+
+.m-stagger>*:nth-child(10) {
+  --i: 9;
+}
+
+.m-stagger>*:nth-child(11) {
+  --i: 10;
+}
+
+.m-stagger>*:nth-child(12) {
+  --i: 11;
+}
+
+.m-stagger>*:nth-child(13) {
+  --i: 12;
+}
+
+.m-stagger>*:nth-child(14) {
+  --i: 13;
+}
+
+.m-stagger>*:nth-child(15) {
+  --i: 14;
+}
+
+.m-stagger>*:nth-child(16) {
+  --i: 15;
+}
+
+.m-stagger>*:nth-child(17) {
+  --i: 16;
+}
+
+.m-stagger>*:nth-child(18) {
+  --i: 17;
+}
+
+.m-stagger>*:nth-child(19) {
+  --i: 18;
+}
+
+.m-stagger>*:nth-child(20) {
+  --i: 19;
+}
+
+/* ===== Looping/ambient motions ===== */
+.m-float {
+  animation: m-float 4s ease-in-out infinite;
+}
+
+@keyframes m-float {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.m-pulse {
+  animation: m-pulse 2s ease-in-out infinite;
+}
+
+@keyframes m-pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: .6;
+  }
 }
 
 /* ===== Hover utilities (no extra JS) ===== */
-.hov-lift{ transition: transform .2s var(--motion-ease), box-shadow .2s var(--motion-ease); }
-.hov-lift:hover{ transform: translateY(-4px); }
+.hov-lift {
+  transition: transform .2s var(--motion-ease), box-shadow .2s var(--motion-ease);
+}
+
+.hov-lift:hover {
+  transform: translateY(-4px);
+}
 
 /* ===== Respect reduced motion ===== */
-@media (prefers-reduced-motion: reduce){
-  *{ animation: none !important; transition: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
 }
+
 .clamp-4 {
   display: -webkit-box;
-  -webkit-line-clamp: 4;   /* limit to 4 lines */
+  -webkit-line-clamp: 4;
+  /* limit to 4 lines */
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -993,7 +1180,8 @@ input {
   font-size: 14px;
   cursor: pointer;
   transition: background-color 0.3s, color 0.3s;
-  white-space: nowrap; /* keeps text in one line */
+  white-space: nowrap;
+  /* keeps text in one line */
 }
 
 .chip.selected {
@@ -1004,4 +1192,17 @@ input {
 .chip:hover {
   background-color: var(--primary-1);
   color: #fff;
+}
+
+@media (max-width: 600px) {
+  .infoSwitchButtons {
+    /* Add any specific styles for the InfoSwitchButtons component here */
+    overflow: scroll;
+    scrollbar-width: none;
+
+    margin-right: -41px;
+    padding-right: 40px;
+    margin-left: -40px;
+    padding-left: 40px;
+  }
 }

@@ -7,6 +7,7 @@ export const PageTypeEnum = Object.freeze({
     TRIP: "trips",
     HOME: "home",
     PROFILE: "profile",
+    USER_TRIP: "userTrip",
 } as const);
 
 export const typeOfLocationCardEnum = Object.freeze({
@@ -66,7 +67,8 @@ export const LocationFields = Object.freeze({
     PLACES_TO_VISIT: 'placesToVisit',
     FULL_DETAILS: 'fullDetails',
     CULTURES: 'cultures',
-    FESTIVALS: 'festivals'
+    FESTIVALS: 'festivals',
+    FILTER_TAGS: 'filterTags',
 });
 export const TripFields = Object.freeze({
     TRIP_ID: 'id',
@@ -137,6 +139,21 @@ export const UserFields = Object.freeze({
     VIEW_COUNT: 'viewCount'
 });
 
+
+export const userTripFields = Object.freeze({
+    ID: 'id',
+    USER_ID: 'userId',
+    LOCATION_ID: 'locationId',
+    LOCATION_NAME: 'locationName',
+    TRIP_NAME: 'tripName',
+    START_DATE: 'startDate',
+    END_DATE: 'endDate',
+    BUDGET: 'budget',
+    INTERESTS: 'interests',
+    PRIVACY: 'privacy',
+    ACTIVITIES: 'activities'
+});
+
 // Type exports for TypeScript
 export type PageType = typeof PageTypeEnum[keyof typeof PageTypeEnum];
 export type ProfileCardType = typeof ProfileCardEnum[keyof typeof ProfileCardEnum];
@@ -145,3 +162,5 @@ export type TripStatus = typeof TripStatusEnum[keyof typeof TripStatusEnum];
 export type NotificationType = typeof NotificationTypeEnum[keyof typeof NotificationTypeEnum];
 export type LocationField = typeof LocationFields[keyof typeof LocationFields];
 export type UserField = typeof UserFields[keyof typeof UserFields];
+export type userTripFields = typeof userTripFields[keyof typeof userTripFields];
+

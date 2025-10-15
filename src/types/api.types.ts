@@ -205,6 +205,7 @@ export interface Hotel {
         };
     };
     isWishlisted?: boolean;
+    price?: number;
 }
 
 export interface Trip {

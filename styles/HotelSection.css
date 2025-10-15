@@ -82,6 +82,18 @@ h2 {
     color: black;
     z-index: 10;
 }
+.hotel-price {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: #fff;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8em;
+    color: black;
+    z-index: 10;
+}
+
 
 .favorite-btn {
     background: none;

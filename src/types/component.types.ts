@@ -126,3 +126,19 @@ export interface BlogPost {
     rating?: string;
     featured?: boolean;
 }
+
+
+export type DayWeather = {
+  date: string; // ISO YYYY-MM-DD
+  temp: number; // main temperature (°C)
+  minTemp?: number;
+  maxTemp?: number;
+  description?: string; // e.g. 'Snowy'
+  cloud?: number; // %
+  wind_kmh?: number; // km/h
+  sunrise?: string; // '06:03'
+  sunset?: string; // '17:30'
+  precipitation?: number; // %
+  icon?: string; // emoji or className for icon
+  available?: boolean; // is data available for this day
+};
