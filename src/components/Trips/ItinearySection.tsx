@@ -9,6 +9,8 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import { PlacesToVisit, UserTrip, UserTripActivity } from "@/types";
 import { LocationServices } from "@/utils/location.utils";
 import ActivityRowForTrip from "./ActivityRowForTrip";
+import { useRouter } from "next/navigation";
+import FullScreenLoader from "../Loader/FullScreenLoader";
 
 // Types
 type Coordinates = { lat: number; long: number };
@@ -129,7 +131,7 @@ const ItinerarySection: React.FC<{ tripId: string }> = ({ tripId }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [tripData, setTripData] = useState<UserTrip>({} as UserTrip);
-
+  const router = useRouter();
   useEffect(() => {
     const fetchItineraryData = async () => {
       try {
@@ -247,13 +249,14 @@ const ItinerarySection: React.FC<{ tripId: string }> = ({ tripId }) => {
   };
 
   const openEditItineraryScreen = () => {
+    router.push('/userTrip/planner?tripId=' + tripId);
     // navigate("TripPlannerManually", { tripId: tripId, showHotelsAfter: false });
   };
 
   if (loading) {
     return (
       <div style={{ display: "flex", flex: 1, justifyContent: "center", alignItems: "center" }}>
-        loading...
+        <FullScreenLoader isVisible={true} />
       </div>
     );
   }
@@ -333,12 +336,10 @@ const ItinerarySection: React.FC<{ tripId: string }> = ({ tripId }) => {
           );
         })}
 
-        <div style={{ marginTop: 20 }}>
+        <div style={{ marginTop: 20, display: "flex", justifyContent: "center" }}>
           <button className="btn btn-secondary"
             style={{
-             
-              marginTop: 20,
-              borderWidth: 0,
+              width:100,
             }}
             onClick={openEditItineraryScreen}
           >

@@ -216,20 +216,21 @@
 .btn-secondary {
   background: var(--secondary-1);
   color: var(--white);
-  border: none;
+  border: 1px solid var(--secondary-1) !important;
+  /* border: none; */
   border-radius: 4px;
   transition: background 0.2s;
 }
-.btn-secondary-text{
-  background: transparent;
-  color: var(--secondary-1);
-  border: 2px solid var(--secondary-1);
+/* .btn-secondary-text{
+  color: white;
   border-radius: 4px;
   transition: background 0.2s, color 0.2s;
-}
+} */
 
 .btn-secondary:hover {
   background: var(--secondary-5);
+  color:var(--secondary-1);
+  
 }
 
 .button-error {
@@ -534,7 +535,7 @@ input {
   display: inline-block;
   padding: 10px 20px !important;
   /* Vertical and horizontal padding for button height and width */
-  border: none !important;
+  border: none ;
   /* Remove default border */
   border-radius: 9px !important;
   /* Rounded corners */

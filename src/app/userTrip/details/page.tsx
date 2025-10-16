@@ -24,6 +24,7 @@ import { AlertTriangle, Clock, Heart, Lock, MapPin, Shield, Users, Wallet } from
 import LocationCardShortDescription from '@/components/Cards/locationShortDescriptionCard';
 import { SwitchButtons } from '@/components/switch/2SwitchButtons';
 import ItinerarySection from '@/components/Trips/ItinearySection';
+import WeatherRangeCard from '@/components/Trips/WeatherRangeForTrip';
 
 
 
@@ -112,13 +113,15 @@ function normalizeRestaurants(input: Location['restaurantsandfoods']): Restauran
 
 
 const AboutSections: React.FC<{
+    weatherDays?: DayWeather[];
+    tripDetails?: UserTrip;
     shortDescription: string;
     longDesc: string;
     cultures?: Culture[];
     festivals?: Festival[];
     aboutTab: 'cultures' | 'festivals';
     setAboutTab: (tab: 'cultures' | 'festivals') => void;
-}> = ({ shortDescription, longDesc, aboutTab, setAboutTab, cultures, festivals }) => {
+}> = ({ weatherDays, tripDetails, shortDescription, longDesc, aboutTab, setAboutTab, cultures, festivals }) => {
     const [description, setDescription] = useState(shortDescription || '');
     const toggleDescription = () => {
         if (description === shortDescription) {
@@ -127,99 +130,107 @@ const AboutSections: React.FC<{
             setDescription(shortDescription || '');
         }
     };
-const localsData = aboutTab === 'cultures' ? cultures : festivals;
+    const localsData = aboutTab === 'cultures' ? cultures : festivals;
 
-  return (
-    <div>
-      {/* --- About Description --- */}
-      <div className="descriptionContainer">
-        <p className="text-lg font-bold mb-3">Highlights:</p>
-        <p className="descriptionText">{description || '—'}</p>
+    return (
+        <div>
+            {/* --- About Description --- */}
+            <div className="descriptionContainer">
+                <p className="text-lg font-bold mb-3">Highlights:</p>
+                <p className="descriptionText">{description || '—'}</p>
 
-        {longDesc && (
-          <button
-            className="view-more-btn" style={{marginTop:10}}
-            onClick={toggleDescription}
-          >
-            {description === shortDescription ? 'Read More' : 'Show Less'}
-          </button>
-        )}
-      </div>
+                {longDesc && (
+                    <button
+                        className="view-more-btn" style={{ marginTop: 10 }}
+                        onClick={toggleDescription}
+                    >
+                        {description === shortDescription ? 'Read More' : 'Show Less'}
+                    </button>
+                )}
+            </div>
 
-      {/* --- Safety Tips Grid --- */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
-        <LocationCardShortDescription
-          Icon={Lock}
-          title="Keep Personal Info Private"
-          subtitle="Don't share sensitive details until you build trust"
-          variant="filled"
-        />
-        <LocationCardShortDescription
-          Icon={MapPin}
-          title="Meet in Public First"
-          subtitle="Always choose public, well-lit places"
-          variant="outlined"
-        />
-        <LocationCardShortDescription
-          Icon={Users}
-          title="Travel with a Companion"
-          subtitle="Bring a friend when meeting new people"
-          variant="filled"
-        />
-        <LocationCardShortDescription
-          Icon={AlertTriangle}
-          title="Stay Alert & Prepared"
-          subtitle="Keep belongings safe & emergency contacts handy"
-          variant="outlined"
-        />
-        <LocationCardShortDescription
-          Icon={Wallet}
-          title="Clarify Costs Upfront"
-          subtitle="Agree on expense sharing before the trip starts"
-          variant="filled"
-        />
-        <LocationCardShortDescription
-          Icon={Shield}
-          title="Report If Uncomfortable"
-          subtitle="Report or block immediately if unsafe"
-          variant="outlined"
-        />
-        <LocationCardShortDescription
-          Icon={Heart}
-          title="Respect & Be Kind"
-          subtitle="Respect fellow travelers and follow community rules"
-          variant="filled"
-        />
-      </div>
+            {/* --- Safety Tips Grid --- */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
+                <LocationCardShortDescription
+                    Icon={Lock}
+                    title="Keep Personal Info Private"
+                    subtitle="Don't share sensitive details until you build trust"
+                    variant="filled"
+                />
+                <LocationCardShortDescription
+                    Icon={MapPin}
+                    title="Meet in Public First"
+                    subtitle="Always choose public, well-lit places"
+                    variant="outlined"
+                />
+                <LocationCardShortDescription
+                    Icon={Users}
+                    title="Travel with a Companion"
+                    subtitle="Bring a friend when meeting new people"
+                    variant="filled"
+                />
+                <LocationCardShortDescription
+                    Icon={AlertTriangle}
+                    title="Stay Alert & Prepared"
+                    subtitle="Keep belongings safe & emergency contacts handy"
+                    variant="outlined"
+                />
+                <LocationCardShortDescription
+                    Icon={Wallet}
+                    title="Clarify Costs Upfront"
+                    subtitle="Agree on expense sharing before the trip starts"
+                    variant="filled"
+                />
+                <LocationCardShortDescription
+                    Icon={Shield}
+                    title="Report If Uncomfortable"
+                    subtitle="Report or block immediately if unsafe"
+                    variant="outlined"
+                />
+                <LocationCardShortDescription
+                    Icon={Heart}
+                    title="Respect & Be Kind"
+                    subtitle="Respect fellow travelers and follow community rules"
+                    variant="filled"
+                />
+            </div>
+            <div style={{marginTop:40}}>
+                <h4 style={{marginBottom:30}}>Weather Updates</h4>
+            <WeatherRangeCard
+                days={weatherDays as DayWeather[]}
+                startDate={tripDetails?.startDate ?? "2025-01-16"}
+                endDate={tripDetails?.endDate ?? "2025-02-01"}
+                initialSelectedDate={tripDetails?.startDate ?? weatherDays?.[0]?.date}
+            />
+            </div>
+            {/* --- Cultures / Festivals Section --- */}
+            <div className="" style={{ marginTop: 30 }}>
+                <SwitchButtons
+                    options={[
+                        { text: 'Cultures', value: 'cultures', onClick: () => setAboutTab('cultures') },
+                        { text: 'Festivals', value: 'festivals', onClick: () => setAboutTab('festivals') },
+                    ]}
+                    selectedValue={aboutTab}
+                    setSelectedValue={(value) => setAboutTab(value as 'cultures' | 'festivals')}
+                />
+                {/*  */}
 
-      {/* --- Cultures / Festivals Section --- */}
-      <div className="" style={{marginTop:30}}>
-        <SwitchButtons
-            options={[
-                { text: 'Cultures', value: 'cultures', onClick: () => setAboutTab('cultures') },
-                { text: 'Festivals', value: 'festivals', onClick: () => setAboutTab('festivals') },
-            ]}
-            selectedValue={aboutTab}
-            setSelectedValue={(value) => setAboutTab(value as 'cultures' | 'festivals')}
-        />
-        {/*  */}
-
-        {localsData && localsData.length > 0 ? (
-          <CultureFestivalsSection
-            data={localsData}
-            heading={
-              aboutTab === 'cultures'
-                ? `Local Cultures`
-                : `Festivals & Celebrations`
-            }
-            type={aboutTab === 'cultures' ? 'culture' : 'festival'}
-          />
-        ) : (
-          <div className="text-gray-500">No data available.</div>
-        )}
-      </div>
-    </div>
-  );
+                {localsData && localsData.length > 0 ? (
+                    <CultureFestivalsSection
+                        data={localsData}
+                        heading={
+                            aboutTab === 'cultures'
+                                ? `Local Cultures`
+                                : `Festivals & Celebrations`
+                        }
+                        type={aboutTab === 'cultures' ? 'culture' : 'festival'}
+                    />
+                ) : (
+                    <div className="text-gray-500">No data available.</div>
+                )}
+            </div>
+        </div>
+    );
 };
 
 
@@ -405,6 +416,8 @@ export default function UserTripDetailsPage() {
 
             <InfoSwitch data={{
                 about: <AboutSections
+                    tripDetails={tripDetails}
+                    weatherDays={weatherDays}
                     shortDescription={location.description as string}
                     longDesc={location.fullDetails?.full_description as string}
                     aboutTab={aboutTab}
@@ -412,13 +425,31 @@ export default function UserTripDetailsPage() {
                     cultures={location.cultures}
                     festivals={location.festivals}
                 />,
-                itinerary:<ItinerarySection tripId={tripId as string} />  
+                itinerary: <ItinerarySection tripId={tripId as string} />,
+                stay: <BookingHotelsAndStaysSection
+                        hotelIds={location?.hotels || []}
+                        locationName={location?.title}
+                        parentId={location?.id}
+                        parentType="location"
+                    />,
+                places: <PlacesToVisitSection
+                    title={location?.title}
+                    places={location?.placesToVisit as PlacesToVisit[]}
+                    parentId={location?.id}
+                    parentType="location"
+                />,
+                // restaurants: <BookingHotelsAndStaysSection
+                //     hotelIds={location?.restaurantsandfoods || []}
+                //     locationName={location?.title}
+                //     parentId={location?.id}
+                //     parentType="location"
+                // />
             }} />
-            
+
 
             <div className="row" style={{ position: 'relative' }}>
                 <div className={!isMobile ? 'col-lg-8' : 'col-lg-12'}>
-                   
+
                     {/* <PlacesToVisitSection
                         title={locationData?.title}
                         places={locationData?.placesToVisit as PlacesToVisit[]}
@@ -431,10 +462,10 @@ export default function UserTripDetailsPage() {
                         parentId={locationData?.id}
                         parentType="location"
                     /> */}
-                    
+
                 </div>
 
-                
+
             </div>
         </div>
     );

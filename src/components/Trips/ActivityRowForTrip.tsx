@@ -18,8 +18,8 @@ const styles = {
     alignItems: "flex-start" as const,
   },
   activityImg: {
-    width: 90,
-    height: 90,
+    width: 140,
+    height: 140,
     borderRadius: 12,
     marginRight: 12,
     objectFit: "cover" as const,
@@ -115,8 +115,8 @@ function ActivityRowForTrip({
       <Image
         src={place.image?.[0] || "/placeholder.jpg"}
         alt={place.title}
-        width={90}
-        height={90}
+        width={140}
+        height={140}
         style={styles.activityImg}
       />
 
@@ -129,6 +129,9 @@ function ActivityRowForTrip({
         </div>
 
         <span style={styles.activityTitle}>{place.title}</span>
+        <div>
+        <span >{place.description}</span>
+        </div>
       </div>
 
       <div style={styles.rightside}>
