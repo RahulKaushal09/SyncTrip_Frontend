@@ -424,26 +424,6 @@ export default function UserTripDetailsPage() {
             }} />
 
 
-            <div className="row" style={{ position: 'relative' }}>
-                <div className={!isMobile ? 'col-lg-8' : 'col-lg-12'}>
-
-                    {/* <PlacesToVisitSection
-                        title={locationData?.title}
-                        places={locationData?.placesToVisit as PlacesToVisit[]}
-                        parentId={locationData?.id}
-                        parentType="location"
-                    /> */}
-                    {/* <BookingHotelsAndStaysSection
-                        hotelIds={locationData?.hotels || []}
-                        locationName={locationData?.title}
-                        parentId={locationData?.id}
-                        parentType="location"
-                    /> */}
-
-                </div>
-
-
-            </div>
         </div>
     );
 }

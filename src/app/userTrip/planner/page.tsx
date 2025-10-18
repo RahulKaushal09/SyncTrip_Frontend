@@ -257,6 +257,10 @@ const TripPlannerPage: React.FC = () => {
 
   const searchParams = useSearchParams();
   const tripId = searchParams?.get('tripId');
+  if(tripId===null){
+    router.replace('/explore');
+    return null;
+  }
   const showHotelsAfter = searchParams?.get('showHotelsAfter') === 'true';
 
   const [showPanel, setShowPanel] = useState(false);
@@ -460,9 +464,9 @@ const TripPlannerPage: React.FC = () => {
         throw new Error('Save failed');
       }
       if (showHotelsAfter) {
-        router.push(`/userTrip/hotelSelection?tripId=${tripId}&locationId=${tripDetails.locationId}`);
+        router.replace(`/userTrip/hotelSelection?tripId=${tripId}&locationId=${tripDetails.locationId}`);
       } else {
-        router.push(`/userTrip/details?tripId=${tripId}&locationId=${tripDetails.locationId}`);
+        router.replace(`/userTrip/details?tripId=${tripId}&locationId=${tripDetails.locationId}`);
       }
     } catch (err: any) {
       console.error('Save error:', err);
@@ -674,7 +678,15 @@ const TripPlannerPage: React.FC = () => {
       if (listener) google.maps.event.removeListener(listener);
     };
   }, []);
-
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
 
   // UI & layout helpers
@@ -682,9 +694,9 @@ const TripPlannerPage: React.FC = () => {
   const daysBarRightOffset = itineraryPanelVisible ? panelWidthPx : 0;
 
   return (
-    <div className="flex h-screen w-screen">
+    <div className="flex h-screen w-screen tripPlannerContainer">
       {/* Left narrow search/places column */}
-      <div className="relative left-0 top-0 h-full w-96 bg-white shadow-lg flex flex-col z-40">
+      {!isMobile && <div className="relative left-0 top-0 h-full w-96 bg-white shadow-lg flex flex-col z-40">
         {/* Search Bar */}
         <div className="p-3 border-b border-gray-200 flex items-center space-x-2">
           <input
@@ -708,7 +720,7 @@ const TripPlannerPage: React.FC = () => {
             />
           ))}
         </div>
-      </div>
+      </div>}
 
       <MapProvider>
         <div className="relative h-screen w-screen overflow-hidden">
@@ -728,7 +740,7 @@ const TripPlannerPage: React.FC = () => {
             }}
           >
             {/* Map markers */}
-            {placesToVisit.map((place) => {
+            { placesToVisit.map((place) => {
               if (!place.coordinates || !place.coordinates.lat || !place.coordinates.long) return null;
               const isActive = activeDay?.activities.some(a => a.place.id === place.id);
               const activeIndex = isActive ? activeDay.activities.findIndex(a => a.place.id === place.id) : -1;
@@ -751,6 +763,7 @@ const TripPlannerPage: React.FC = () => {
                 />
               );
             })}
+            
 
             {/* Directions service / renderer */}
             {/* {directionsOptions && activeDay && (activeDay.route.signature !== expectedSig) && (
@@ -834,7 +847,10 @@ const TripPlannerPage: React.FC = () => {
                         onClick={() => setOpenOverviewIdx(i)}
                         className="w-full text-left font-semibold"
                       >
-                        {day.date || day.label} ({day.activities.length} Activities)
+                         {day?.date
+                          ? new Date(day.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric' })
+                          : day?.label} <span className="text-gray-500">({day.activities.length} Activities)</span>
+                        {/* {day.date || day.label} ({day.activities.length} Activities) */}
                       </button>
                       {openOverviewIdx === i && (
                         <div className="mt-2">

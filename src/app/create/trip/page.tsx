@@ -324,12 +324,12 @@ export default function CreateTripScreen() {
             </button>
 
             {/* Optional second CTA */}
-            <button
+            {/* <button
               onClick={() => publishTripAndNavigateToMatching(false)}
               className="w-full btn btn-matching-color"
             >
               Start Matching
-            </button>
+            </button> */}
           </div>
         </div>
       </div>

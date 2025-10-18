@@ -29,11 +29,16 @@ export const ROUTES = {
     // LOGIN: '/login',
     // REGISTER: '/register',
     TRIPS: '/trips',
+    USER_TRIPS: '/userTrips',
+    USER_TRIP_PLANNER: '/userTrip/planner',
+    USER_TRIP_DETAILS: '/userTrip/details',
+    CREATE_TRIP:'/create/trip',
     BLOGS:'/blogs',
     EXPLORE:'/explore',
     PROFILE: '/profile',
     LOCATIONS: '/locations',
     HOW_IT_WORKS: '/how-it-works',
+    TERMS_OF_SERVICE: '/terms-of-service',
 } as const;
 
 export const BREAKPOINTS = {

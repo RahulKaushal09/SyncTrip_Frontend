@@ -102,7 +102,7 @@ const HomeHeroSection: React.FC = () => {
                                 </button>
                             </div>
                             <div className="col-lg-5 col-md-5 col-sm-6">
-                                <button className="btn btn-white-home-hero text-secondary-1 b2" onClick={() => triggerLogin(() => redirectToUrl(ROUTES.EXPLORE))}>
+                                <button className="btn btn-white-home-hero text-secondary-1 b2" onClick={() => triggerLogin(() => redirectToUrl(ROUTES.CREATE_TRIP))}>
                                     <Icon name={ICONS_CLASS.PlayIcon.iconName} />
                                     Create a Trip
                                 </button>

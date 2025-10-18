@@ -40,7 +40,7 @@ export default function LocationHotelCard({
   isWishlisted,
   onBookingClick,
 }: Props) {
-  const imgs = h.hotel_images && h.hotel_images.length > 0 ? h.hotel_images : ["https://picsum.photos/600/400?random=13"];
+  const imgs = h.hotel_images && h.hotel_images.length > 0 ? h.hotel_images : ["https://static.vecteezy.com/system/resources/thumbnails/004/141/669/small_2x/no-photo-or-blank-image-icon-loading-images-or-missing-image-mark-image-not-available-or-image-coming-soon-sign-simple-nature-silhouette-in-frame-isolated-illustration-vector.jpg"];
   const [showSheet, setShowSheet] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
 

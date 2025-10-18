@@ -4,6 +4,9 @@ import { Users, Shield, Calendar, MapPin, Heart, Zap } from "lucide-react";
 import { useEffect } from "react";
 import "../../../styles/home/features.css";
 import { triggerLogin } from "@/utils";
+import { ROUTES } from "@/constants/config";
+import { useLoader } from "../providers/LoaderContext";
+import { useRouter } from "next/navigation";
 
 const features = [
   {
@@ -75,6 +78,7 @@ const features = [
 
 export function FeaturesSection() {
   // Intersection Observer for in-view animations
+  
   useEffect(() => {
     const elements = document.querySelectorAll(".m-animate");
     const observer = new IntersectionObserver(
@@ -91,7 +95,13 @@ export function FeaturesSection() {
     elements.forEach(el => observer.observe(el));
     return () => observer.disconnect();
   }, []);
-
+  const {showLoader} = useLoader();
+  const router = useRouter();
+const redirectToUrl = (redirectUrl: string) => {
+        // Implement your redirect logic here
+        showLoader();
+        router.push(redirectUrl);
+    };
   return (
     <section id="features" className="features-section container-custom" >
         {/* Title */}
@@ -132,7 +142,7 @@ export function FeaturesSection() {
 
         {/* CTA */}
         <div className="cta-wrapper m-animate m-zoom-in">
-          <div className="cta-btn" onClick={() => triggerLogin()}>
+          <div className="cta-btn" onClick={() => { triggerLogin(); redirectToUrl(ROUTES.EXPLORE); }}>
             <span>Ready to start your journey?</span> 
           </div>
         </div>

@@ -18,9 +18,9 @@ import { redirect } from 'next/navigation';
 
 const NavbarClient = ({ }) => {
   const [LoadingUser, setLoadingUser] = useState(true);
-    const { user, isLoggedIn, logout, openLogin } = useLogin(); // ⬅️ use context directly
-const pathname = usePathname();
-    const shouldHideNavbar =  pathname.includes('userTrip/planner');
+  const { user, isLoggedIn, logout, openLogin } = useLogin(); // ⬅️ use context directly
+  const pathname = usePathname();
+  const shouldHideNavbar = pathname.includes('userTrip/planner');
 
   // const cookie = Cookies.get('userInfo');
   // const [user, setUser] = useState<User | null>(() => {
@@ -32,8 +32,8 @@ const pathname = usePathname();
   //     return null;
   //   }
   // });
-  
-   useEffect(() => {
+
+  useEffect(() => {
     // as soon as context has finished checking localStorage, stop loading skeleton
     setLoadingUser(false);
   }, [user, isLoggedIn]);
@@ -59,7 +59,7 @@ const pathname = usePathname();
   //     user = null;
   //   }
   // }
-    const { showLoader } = useLoader();
+  const { showLoader } = useLoader();
 
   // const pathname = usePathname();
   const router = useRouter();
@@ -72,7 +72,7 @@ const pathname = usePathname();
   const closeDrawer = () => setMobileNavOpen(false);
   // const redirectBtnClick = (redirectionLink: string) => router.push(redirectionLink);
   const redirectBtnClick = (redirectionLink: string) => {
-    if(pathname !== redirectionLink) showLoader();
+    if (pathname !== redirectionLink) showLoader();
     router.push(redirectionLink);
   };
   const handleCtaAction = () => {
@@ -112,7 +112,7 @@ const pathname = usePathname();
   const toggleDropdown = () => setShowDropdown(!showDropdown);
   const handleLoginClick = () => openLogin();
   return (
-    <nav className={`navbar navbar-expand-lg navbar-light ${isSticky ? "sticky" : ""}`} style={{ paddingTop: "10px",  display: shouldHideNavbar ? 'none' : 'flex' }}>
+    <nav className={`navbar navbar-expand-lg navbar-light ${isSticky ? "sticky" : ""}`} style={{ paddingTop: "10px", display: shouldHideNavbar ? 'none' : 'flex' }}>
       <div className="container-fluid">
         <Link href="/" onClick={() => redirectBtnClick("/")} className="navbar-brand" style={{ width: "100px" }}>
           <Image src={SyncTripLogo} alt="SyncTrip" style={{ width: "100%" }} />
@@ -132,16 +132,24 @@ const pathname = usePathname();
                 Explore
               </span>
             </li>
-            <li className="nav-item"
-              onClick={() => redirectBtnClick(ROUTES.BLOGS)}
+              <li className="nav-item"
+                onClick={() => redirectBtnClick(ROUTES.BLOGS)}
+                style={{ cursor: "pointer" }}>
+                <span className="nav-link">
+                  Blogs
+                </span>
+              </li>
+              {isLoggedIn && <li className="nav-item"
+              onClick={() => redirectBtnClick(ROUTES.USER_TRIPS)}
               style={{ cursor: "pointer" }}>
               <span className="nav-link">
-                Blogs
+                My Trips
               </span>
-            </li>
+            </li>}
+
             <li className="nav-item" onClick={handleCtaAction} style={{ cursor: "pointer" }}>
               <span className="nav-link">
-                {pageType === PageTypeEnum.TRIP ? "Create Trip" : "Trips"}
+                {pageType === PageTypeEnum.TRIP ? "Create Trip" : "Group Trips"}
               </span>
             </li>
 
@@ -265,19 +273,22 @@ const pathname = usePathname();
           </div>
         </div>
         <ul className="navbar-nav" style={{ alignItems: "flex-start", padding: "1rem" }}>
-          <li className="nav-item" onClick={()=>{redirectBtnClick(ROUTES.EXPLORE); closeDrawer();}}>
-              <span className="nav-link">Explore</span>
-            </li>
-            <li className="nav-item" onClick={()=>{redirectBtnClick(ROUTES.BLOGS); closeDrawer();}}>
-              <span className="nav-link">Blogs</span>
-            </li>
+          <li className="nav-item" onClick={() => { redirectBtnClick(ROUTES.EXPLORE); closeDrawer(); }}>
+            <span className="nav-link">Explore</span>
+          </li>
+          <li className="nav-item" onClick={() => { redirectBtnClick(ROUTES.BLOGS); closeDrawer(); }}>
+            <span className="nav-link">Blogs</span>
+          </li>
+          {isLoggedIn && <li className="nav-item" onClick={() => { redirectBtnClick(ROUTES.USER_TRIPS); closeDrawer(); }}>
+            <span className="nav-link">My Trips</span>
+          </li>}
           {pageType == PageTypeEnum.TRIP ? (
             <li className="nav-item" onClick={handleLoginClick}>
               <span className="nav-link">Create Trip</span>
             </li>
           ) : (
             <li className="nav-item" onClick={() => { redirectBtnClick(ROUTES.TRIPS); closeDrawer(); }}>
-              <span className="nav-link">Trips</span>
+              <span className="nav-link">Group Trips</span>
             </li>
           )}
 
