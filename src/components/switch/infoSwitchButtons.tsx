@@ -13,18 +13,19 @@ interface InfoSwitchProps {
     restaurants?: React.ReactNode;
     places?: React.ReactNode;
   };
+  onTabChange?: (tab: TabKey) => void;
 }
 
-const InfoSwitch: React.FC<InfoSwitchProps> = ({ data }) => {
+const InfoSwitch: React.FC<InfoSwitchProps> = ({ data, onTabChange }) => {
   const [activeTab, setActiveTab] = useState<TabKey>('about');
 
   const tabs: { key: TabKey; label: string }[] = [
     { key: 'about', label: 'About' },
     { key: 'itinerary', label: 'Itinerary' },
     { key: 'stay', label: 'Stay' },
-    { key: 'restaurants', label: 'Restaurants' },
-    { key: 'places', label: 'Places to Visit' },
-  ];
+    data.restaurants && { key: 'restaurants', label: 'Restaurants' },
+    data.places && { key: 'places', label: 'Places to Visit' },
+  ].filter(Boolean) as { key: TabKey; label: string }[];
 
   return (
     <div className="w-full">
@@ -33,7 +34,10 @@ const InfoSwitch: React.FC<InfoSwitchProps> = ({ data }) => {
         {tabs.map(tab => (
           <button
             key={tab.key}
-            onClick={() => setActiveTab(tab.key)}
+            onClick={() => {
+              setActiveTab(tab.key);
+              onTabChange?.(tab.key);
+            }}
             className={`px-4 py-2 rounded-t-lg font-medium transition-all ${
               activeTab === tab.key
                 ? 'active-switch-button'

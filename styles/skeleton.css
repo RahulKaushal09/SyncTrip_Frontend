@@ -1,0 +1,138 @@
+/* ================================
+   🩶 Global Skeleton Library
+   ================================ */
+
+/* Base Skeleton Wrapper */
+.skeleton-box {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--backgroundLightApp, #f9fafb);
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0px 2px 4px rgba(0,0,0,0.04);
+  overflow: hidden;
+  position: relative;
+}
+
+/* Shimmer effect keyframes */
+@keyframes shimmer {
+  0% {
+    background-position: -450px 0;
+  }
+  100% {
+    background-position: 450px 0;
+  }
+}
+
+/* Skeleton base line */
+.skeleton-line {
+  border-radius: 6px;
+  background: linear-gradient(
+    90deg,
+    rgba(230, 230, 230, 0.8) 25%,
+    rgba(245, 245, 245, 0.9) 50%,
+    rgba(230, 230, 230, 0.8) 75%
+  );
+  background-size: 900px 100%;
+  animation: shimmer 1.6s infinite linear;
+}
+
+/* Skeleton Image Placeholder */
+.skeleton-image {
+  width: 100%;
+  height: 140px;
+  border-radius: 12px;
+  background: linear-gradient(
+    90deg,
+    rgba(225, 225, 225, 0.8) 25%,
+    rgba(240, 240, 240, 0.9) 50%,
+    rgba(225, 225, 225, 0.8) 75%
+  );
+  background-size: 800px 100%;
+  animation: shimmer 1.6s infinite linear;
+}
+
+/* Skeleton Row (horizontal grouping) */
+.skeleton-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+/* Circle for avatar / icon placeholders */
+.skeleton-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(
+    90deg,
+    rgba(225, 225, 225, 0.8) 25%,
+    rgba(240, 240, 240, 0.9) 50%,
+    rgba(225, 225, 225, 0.8) 75%
+  );
+  background-size: 800px 100%;
+  animation: shimmer 1.6s infinite linear;
+}
+
+/* Skeleton Card Container (for list or grid items) */
+.skeleton-card {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+/* Skeleton for titles or section headers */
+.skeleton-title {
+  height: 20px;
+  width: 60%;
+  margin-bottom: 12px;
+  border-radius: 6px;
+  background: linear-gradient(
+    90deg,
+    rgba(230, 230, 230, 0.8) 25%,
+    rgba(245, 245, 245, 0.9) 50%,
+    rgba(230, 230, 230, 0.8) 75%
+  );
+  background-size: 800px 100%;
+  animation: shimmer 1.6s infinite linear;
+}
+
+/* Skeleton Text lines for body placeholders */
+.skeleton-text {
+  height: 14px;
+  width: 100%;
+  margin-bottom: 8px;
+  border-radius: 6px;
+  background: linear-gradient(
+    90deg,
+    rgba(230, 230, 230, 0.8) 25%,
+    rgba(245, 245, 245, 0.9) 50%,
+    rgba(230, 230, 230, 0.8) 75%
+  );
+  background-size: 800px 100%;
+  animation: shimmer 1.6s infinite linear;
+}
+
+/* Narrow text line for smaller sublines */
+.skeleton-text.small {
+  width: 70%;
+}
+
+/* ================================
+   📱 Responsive tweaks
+   ================================ */
+@media (max-width: 768px) {
+  .skeleton-box {
+    padding: 12px;
+  }
+  .skeleton-line {
+    height: 12px;
+  }
+  .skeleton-image {
+    height: 120px;
+  }
+}

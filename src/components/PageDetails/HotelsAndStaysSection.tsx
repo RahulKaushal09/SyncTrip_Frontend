@@ -15,7 +15,7 @@ interface HotelImageCarouselProps {
     locationName: string;
 }
 
-const HotelImageCarousel: React.FC<HotelImageCarouselProps> = ({ images, locationName }) => {
+export const HotelImageCarousel: React.FC<HotelImageCarouselProps> = ({ images, locationName }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [validImages, setValidImages] = useState<string[]>([]);
 
@@ -30,7 +30,7 @@ const HotelImageCarousel: React.FC<HotelImageCarouselProps> = ({ images, locatio
             if (currentIndex >= filtered.length) setCurrentIndex(0);
             return filtered.length > 0
                 ? filtered
-                : ['https://wbksuxwcqnzuppviunfz.supabase.co/storage/v1/object/public/hotel-images/emptyState.jpg'];
+                : ['https://static.vecteezy.com/system/resources/thumbnails/004/141/669/small_2x/no-photo-or-blank-image-icon-loading-images-or-missing-image-mark-image-not-available-or-image-coming-soon-sign-simple-nature-silhouette-in-frame-isolated-illustration-vector.jpg'];
         });
     };
 
@@ -45,11 +45,11 @@ const HotelImageCarousel: React.FC<HotelImageCarouselProps> = ({ images, locatio
     };
 
     if (validImages.length === 0) {
-        validImages.push('https://wbksuxwcqnzuppviunfz.supabase.co/storage/v1/object/public/hotel-images/emptyState.jpg');
+        validImages.push('https://static.vecteezy.com/system/resources/thumbnails/004/141/669/small_2x/no-photo-or-blank-image-icon-loading-images-or-missing-image-mark-image-not-available-or-image-coming-soon-sign-simple-nature-silhouette-in-frame-isolated-illustration-vector.jpg');
     }
 
     return (
-        <div className="carousel" style={{ position: 'relative', width: '100%', minHeight: '300px', height: '300px' }}>
+        <div className="carousel" style={{ position: 'relative', width: '100%',height:"auto" }}>
             <Image
                 src={validImages[currentIndex]}
                 alt={`${locationName}`}

@@ -48,6 +48,7 @@ export interface UserTripActivity {
   dayLabel: string;
   dayDate: string; // or Date if you parse it
   placeId: string;
+  placeDetails?:PlacesToVisit;
   order: number;
   distanceKm?: number;
   routeSignature?: string;
@@ -208,6 +209,7 @@ export interface Hotel {
     };
     isWishlisted?: boolean;
     price?: number;
+    hotelLinks?: string[];
 }
 
 export interface Trip {

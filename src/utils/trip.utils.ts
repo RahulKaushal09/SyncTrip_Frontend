@@ -6,7 +6,11 @@ class TripServices {
 
     static async fetchTripDetails(tripId: string,fields: string[] = []): Promise<UserTrip> {
         try {
-            const res = await apiClient.get(`/app/getUserTripDetails/${tripId}`, { params: { fields } });
+            const res = await apiClient.get(`/app/getUserTripDetails/${tripId}`, {
+                params: {
+                    fields: fields.join(","),
+                },
+            });
             return res.data.trip as UserTrip;
         }
         catch (error) {

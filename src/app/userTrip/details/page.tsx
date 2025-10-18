@@ -1,21 +1,14 @@
 'use client';
 
-import { notFound, useRouter, useSearchParams } from 'next/navigation';
+import {  useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { ApiService } from '@/utils/api.utils';
-import LocationPageDetails from '@/components/PageDetails/LocationPageDetails';
 import TripServices from '@/utils/trip.utils';
 import { Culture, DayWeather, Festival, Hotel, Location, PlacesToVisit, Restaurants, UserTrip } from '@/types';
 import LocationHeader from '@/components/PageDetails/LocationHeader';
 import LocationImageGallery from '@/components/PageDetails/locationImages';
-import AddLocationCard from '@/components/Cards/AddLocationCard';
-import Description from '@/components/PageDetails/Description';
-import PlacesToVisitSection from '@/components/PageDetails/PlacesToVisitSection';
-import HotelsAndStaysSection from '@/components/PageDetails/HotelsAndStaysSection';
+
 import CultureFestivalsSection from '@/components/PageDetails/CultureFestivalsSection';
-import PlanTripDates from '@/components/PageDetails/PlanTripDates';
-import { LocationFields, PageTypeEnum, userTripFields } from '@/constants';
-import BookingHotelsAndStaysSection from '@/components/Cards/bookingHotelCard';
+import { LocationFields, PageTypeEnum, typeOfLocationCardEnum, userTripFields } from '@/constants';
 import InfoSwitch from '@/components/switch/infoSwitchButtons';
 import toast from 'react-hot-toast';
 import { LocationServices } from '@/utils/location.utils';
@@ -25,6 +18,9 @@ import LocationCardShortDescription from '@/components/Cards/locationShortDescri
 import { SwitchButtons } from '@/components/switch/2SwitchButtons';
 import ItinerarySection from '@/components/Trips/ItinearySection';
 import WeatherRangeCard from '@/components/Trips/WeatherRangeForTrip';
+import HotelsSection from '@/components/Trips/HotelSectionTrip';
+import PlacesToVisitSection from '@/components/PageDetails/PlacesToVisitSection';
+import FullScreenLoader from '@/components/Loader/FullScreenLoader';
 
 
 
@@ -50,66 +46,6 @@ function normalizeRestaurants(input: Location['restaurantsandfoods']): Restauran
     }
     return [];
 }
-
-
-// const AboutSection: React.FC<{ location: Location; aboutTab: 'cultures' | 'festivals'; setAboutTab: (tab: 'cultures' | 'festivals') => void }> = ({ location, aboutTab, setAboutTab }) => {
-//   const localsData = aboutTab === 'cultures' ? (location.cultures || []) : (location.festivals || []);
-//   return (
-//     <View>
-//       <View style={styles.descriptionContainer}>
-//         <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 12 }}>Highlights: </Text>
-//         <Text style={styles.descriptionText}>{location.description || '—'}</Text>
-//       </View>
-//       <View style={{ paddingHorizontal: 20, marginTop: 25, display: 'flex', flexDirection: 'column', gap: 15 }}>
-//         <LocationCardShortDescription
-//           icon="clock"
-//           title="Ideal Duration 5 days"
-//           subtitle="Check availability to see starting time"
-//           variant="filled"
-//         />
-//         <LocationCardShortDescription
-//           icon="users"
-//           title="Group Tour"
-//           subtitle="Find your buddies and forge lifelong friendship"
-//           variant="outlined"
-//         />
-//       </View>
-//       <View style={{ paddingHorizontal: 20, marginTop: 25 }}>
-//         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
-//           <Text style={[styles.headingText]}>About Local</Text>
-//           <View style={{ flex: 1 }} />
-//           <View style={locals.segmentWrap}>
-//             <TouchableOpacity
-//               onPress={() => setAboutTab('cultures')}
-//               style={[locals.segment, aboutTab === 'cultures' && locals.segmentActive]}
-//             >
-//               <Text style={[locals.segmentText, aboutTab === 'cultures' && locals.segmentTextActive]}>Cultures</Text>
-//             </TouchableOpacity>
-//             <TouchableOpacity
-//               onPress={() => setAboutTab('festivals')}
-//               style={[locals.segment, aboutTab === 'festivals' && locals.segmentActive]}
-//             >
-//               <Text style={[locals.segmentText, aboutTab === 'festivals' && locals.segmentTextActive]}>Festivals</Text>
-//             </TouchableOpacity>
-//           </View>
-//         </View>
-//         {localsData.map((item, idx) => (
-//           <View key={idx} style={{ paddingTop: 8 }}>
-//             <CultureFestivalsCard
-//               title={item.name}
-//               desc={item.description}
-//               img={first(item.images)?.image_url}
-//               // tag={aboutTab === 'cultures' ? 'Culture' : 'Festival'}
-//               timings={item.timings}
-//               village={item.village}
-//             />
-//           </View>
-//         ))}
-//         {localsData.length === 0 && <ListEmpty />}
-//       </View>
-//     </View>
-//   );
-// };
 
 
 const AboutSections: React.FC<{
@@ -268,7 +204,7 @@ export default function UserTripDetailsPage() {
     // const [locationData, setLocationData] = useState<Location | null>(null);
     // const [loading, setLoading] = useState(true);
     const [isMobile, setIsMobile] = useState(false);
-
+    const [isLoadingPage, setIsLoadingPage] = useState(true);
 
     const [hotelIds, setHotelIds] = useState<string[]>([]);
     const [restaurantIds, setRestaurantIds] = useState<string[]>([]);
@@ -322,35 +258,40 @@ export default function UserTripDetailsPage() {
                     // expect { days: DayWeather[], forecastAvailableUntil: 'YYYY-MM-DD' }
                     setWeatherDays(resp.days || []);
                     setForecastAvailableUntil(resp.forecastAvailableUntil || null);
+
                 }
             } catch (err) {
                 console.error('Failed to load location / trip / weather', err);
             } finally {
                 setWeatherLoading(false);
+                setIsLoadingPage(false);
             }
         };
         load();
     }, [locationId, tripId]);
     // Top tab (About / Places / Stay / Restaurant)
     const [selectedKey, setSelectedKey] = useState<string>('about');
+    const [isLoadingItinerary, setIsLoadingItinerary] = useState(false);
+    const [ItineraryTripDetails, setItineraryTripDetails] = useState<UserTrip | null>(null);
     // Sub-toggle inside About: "cultures" vs "festivals"
     const [aboutTab, setAboutTab] = useState<'cultures' | 'festivals'>('cultures');
+    const [places, setPlaces] = useState<PlacesToVisit[]>([]);
     const [hotels, setHotels] = useState<Hotel[]>([]);
     const [restaurants, setRestaurants] = useState<Restaurants[]>([]);
     const OnChangeActivityFilter = async (key: string) => {
-        // if (key === "places" && places.length === 0) {
-        //   setIsLoadingPlaces(true);
-        //   // fetch places details from placesIds
-        //   // const firstPlaces = await LocationService.getPaginatedPlaces(placesIds, 0, 10, user?.token);
-        //   // setPlaces(firstPlaces);
-        //   // setPlacesPage(1);
-        //   // setHasMorePlaces(firstPlaces.length === 10);
-        //   // //
-        //   const PlacesToVisit = await LocationService.getPlacesToVisitByIds(placesIds, user?.token);
-        //   // console.log("Fetched PlacesToVisit:", PlacesToVisit);
-        //   setPlaces(normalizePlaces(PlacesToVisit));
-        //   setIsLoadingPlaces(false);
-        // }
+        if (key === "places" && places.length === 0) {
+          setIsLoadingPlaces(true);
+          // fetch places details from placesIds
+          // const firstPlaces = await LocationService.getPaginatedPlaces(placesIds, 0, 10, user?.token);
+          // setPlaces(firstPlaces);
+          // setPlacesPage(1);
+          // setHasMorePlaces(firstPlaces.length === 10);
+          // //
+          const PlacesToVisit = await LocationServices.getPlacesToVisitByIds(location?.placesToVisit as string[]);
+          // console.log("Fetched PlacesToVisit:", PlacesToVisit);
+          setPlaces(normalizePlaces(PlacesToVisit));
+          setIsLoadingPlaces(false);
+        }
         if (key === "stay" && hotels.length === 0) {
             setIsLoadingHotels(true);
 
@@ -359,7 +300,37 @@ export default function UserTripDetailsPage() {
             setHotels(normalizeHotels(Hotels));
             setIsLoadingHotels(false);
         }
-        if (key === "eat" && restaurants.length === 0) {
+        if (key === "itinerary" && ItineraryTripDetails === null) {
+            setIsLoadingItinerary(true);
+            const tripFieldsForItineary = [userTripFields.ID, userTripFields.START_DATE, userTripFields.END_DATE, userTripFields.ACTIVITIES];
+            const tripDataForItineary = await TripServices.fetchTripDetails(tripId as string, tripFieldsForItineary);
+            const allPlaceIds = [
+                ...new Set(tripDataForItineary?.activities?.map((act) => act.placeId)),
+              ];
+              let placesData: PlacesToVisit[] = [];
+              if (places.length > 0) {
+                // Keep only places referenced by the itinerary (filter avoids undefined entries)
+                placesData = places.filter((place) => allPlaceIds.includes(place.id));
+              } else {
+                placesData =
+                  allPlaceIds.length > 0
+                    ? await LocationServices.getPlacesToVisitByIds(allPlaceIds)
+                    : [];
+              }
+              // Map activities to include full place details
+              const activitiesWithPlaces = tripDataForItineary.activities?.map((activity) => {
+                const placeDetails = placesData.find((place) => place.id === activity.placeId);
+                return {
+                  ...activity,
+                  placeDetails: placeDetails ? placeDetails : undefined,
+                };
+              }) || [];
+              tripDataForItineary.activities = activitiesWithPlaces;
+              console.log("Itinerary Trip Data with Places:", tripDataForItineary);
+            setIsLoadingItinerary(false);
+            setItineraryTripDetails(tripDataForItineary);
+        }
+        if (key === "restaurants" && restaurants.length === 0) {
             setIsLoadingRestaurants(true);
 
             const Restaurants = await LocationServices.getRestaurantsByIds(restaurantIds);
@@ -371,10 +342,12 @@ export default function UserTripDetailsPage() {
     // Normalize lists from location
     // const places = useMemo(() => normalizePlaces(location.placesToVisit), [location]);
     // const hotels = useMemo(() => normalizeHotels(location.hotels), [location]);
-    if (location == null) {
-        return <div className="flex items-center justify-center h-screen">
-            <p>Loading...</p>
-        </div>
+    if (isLoadingPage) {
+        return <FullScreenLoader isVisible={true} />   
+     }
+    if(!location){
+        router.back();
+        return null;
     }
     const handleBack = () => {
         // Navigate to MainTabs → Home
@@ -414,7 +387,7 @@ export default function UserTripDetailsPage() {
             />
             <LocationImageGallery locationImages={location?.images as string[]} locationName={location?.title} />
 
-            <InfoSwitch data={{
+            <InfoSwitch onTabChange={(tab)=>OnChangeActivityFilter(tab)} data={{
                 about: <AboutSections
                     tripDetails={tripDetails}
                     weatherDays={weatherDays}
@@ -425,19 +398,23 @@ export default function UserTripDetailsPage() {
                     cultures={location.cultures}
                     festivals={location.festivals}
                 />,
-                itinerary: <ItinerarySection tripId={tripId as string} />,
-                stay: <BookingHotelsAndStaysSection
-                        hotelIds={location?.hotels || []}
-                        locationName={location?.title}
-                        parentId={location?.id}
-                        parentType="location"
-                    />,
+                itinerary: <ItinerarySection tripId={tripId as string} loading={isLoadingItinerary} tripDetails={ItineraryTripDetails as UserTrip} />,
+                
+                stay:<HotelsSection
+                    hotels={hotels}
+                    totalHotels={hotels.length}
+                    locationUUID={location?.id as string}
+                    isLoading={isLoadingHotels}
+                    selectionHotels={[]}
+                />,
                 places: <PlacesToVisitSection
                     title={location?.title}
-                    places={location?.placesToVisit as PlacesToVisit[]}
+                    places={places}
                     parentId={location?.id}
-                    parentType="location"
-                />,
+                    parentType={typeOfLocationCardEnum.location}
+                    isLoading={isLoadingPlaces}
+                />
+
                 // restaurants: <BookingHotelsAndStaysSection
                 //     hotelIds={location?.restaurantsandfoods || []}
                 //     locationName={location?.title}

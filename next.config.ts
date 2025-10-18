@@ -35,8 +35,13 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "wbksuxwcqnzuppviunfz.supabase.co",
-        pathname: "/storage/**",
+        hostname: "synctrip.in",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "static.vecteezy.com",
+        pathname: "/**",
       },
       {
         protocol: "https",
@@ -61,6 +66,11 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'via.placeholder.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
         pathname: '/**',
       },
     ],

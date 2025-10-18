@@ -36,9 +36,8 @@ h2 {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
     gap: 20px;
-
-
 }
+
 
 .coursel-dots-custom {
     /* position: absolute;
@@ -175,8 +174,8 @@ h3 {
     .hotels-grid {
         grid-template-columns: 1fr;
         justify-items: center;
-
     }
+    
 
     .hotel-card {
         /* margin: 0 10px; */

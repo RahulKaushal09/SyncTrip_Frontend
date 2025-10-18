@@ -10,8 +10,7 @@ import { PlacesToVisit, UserTrip, UserTripActivity } from "@/types";
 import { LocationServices } from "@/utils/location.utils";
 import ActivityRowForTrip from "./ActivityRowForTrip";
 import { useRouter } from "next/navigation";
-import FullScreenLoader from "../Loader/FullScreenLoader";
-
+import "../../../styles/skeleton.css"
 // Types
 type Coordinates = { lat: number; long: number };
 type Activity = {
@@ -125,115 +124,192 @@ export const styles = {
     fontSize: 12,
   },
 };
+// ither provide trip Id or tripDetails with acitvities and places too
 
-const ItinerarySection: React.FC<{ tripId: string }> = ({ tripId }) => {
+
+const ItinerarySection: React.FC<{ tripId: string, tripDetails: UserTrip, loading: boolean }> = ({ tripId, tripDetails, loading }) => {
+  if (loading) {
+    return (
+      <>
+        <div className="skeleton-card">
+          <div className="skeleton-row">
+            <div className="skeleton-image" style={{ width: "140px" }}></div>
+            <div style={{ flex: 1 }}>
+              <div className="skeleton-title"></div>
+              <div className="skeleton-text"></div>
+              <div className="skeleton-text small"></div>
+            </div>
+          </div>
+        </div>
+        <div className="skeleton-card">
+          <div className="skeleton-row">
+            <div className="skeleton-image" style={{ width: "140px" }}></div>
+            <div style={{ flex: 1 }}>
+              <div className="skeleton-title"></div>
+              <div className="skeleton-text"></div>
+              <div className="skeleton-text small"></div>
+            </div>
+          </div>
+        </div>
+        <div className="skeleton-card">
+          <div className="skeleton-row">
+            <div className="skeleton-image" style={{ width: "140px" }}></div>
+            <div style={{ flex: 1 }}>
+              <div className="skeleton-title"></div>
+              <div className="skeleton-text"></div>
+              <div className="skeleton-text small"></div>
+            </div>
+          </div>
+        </div>
+        <div className="skeleton-card">
+          <div className="skeleton-row">
+            <div className="skeleton-image" style={{ width: "140px" }}></div>
+            <div style={{ flex: 1 }}>
+              <div className="skeleton-title"></div>
+              <div className="skeleton-text"></div>
+              <div className="skeleton-text small"></div>
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  }
+
   const [days, setDays] = useState<DayPlan[]>([]);
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [tripData, setTripData] = useState<UserTrip>({} as UserTrip);
   const router = useRouter();
+
+
+  const setTripDetailsOnPage = async (tripData_: UserTrip) => {
+    const start = new Date(tripData_.startDate);
+    const end = new Date(tripData_.endDate);
+    const totalDays = Math.max(
+      1,
+      Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1
+    );
+
+    const activityGroups: { [dayId: string]: UserTripActivity[] } = {};
+
+    let placesData: PlacesToVisit[] = [];
+
+
+    tripData_?.activities?.forEach((act) => {
+      if (!activityGroups[act.dayId]) activityGroups[act.dayId] = [];
+      activityGroups[act.dayId].push(act);
+    });
+    if (tripData_?.activities && tripData_?.activities.length > 0) {
+      tripData_?.activities?.forEach((act) => {
+        if (act.placeId === act.placeDetails?.id) {
+          // all good
+          placesData = [...placesData, act.placeDetails];
+        }
+      });
+    }
+    console.log("Places data collected from activities:", placesData);
+    if (placesData.length === 0) {
+      const allPlaceIds = [
+        ...new Set(tripData_?.activities?.map((act) => act.placeId)),
+      ];
+      placesData =
+        allPlaceIds.length > 0
+          ? await LocationServices.getPlacesToVisitByIds(allPlaceIds)
+          : [];
+    }
+    const placesMap: { [id: string]: PlacesToVisit } = placesData.reduce(
+      (map, place) => {
+        map[place.id] = place;
+        return map;
+      },
+      {} as { [id: string]: PlacesToVisit }
+    );
+
+    const dayPlans: DayPlan[] = Array.from({ length: totalDays }).map(
+      (_, idx) => {
+        const date = new Date(start);
+        date.setDate(start.getDate() + idx);
+
+        console.log("Processing day:", idx + 1, date.toDateString());
+        const dayKey =
+          Object.keys(activityGroups).find((k) => {
+            if (activityGroups[k][0]?.dayDate) {
+              console.log("Matching dayDate:", new Date(activityGroups[k][0].dayDate).toDateString(), "with", date.toDateString());
+              return (
+                new Date(activityGroups[k][0].dayDate).toDateString() ===
+                date.toDateString()
+              );
+            }
+            return k === `d${idx + 1}` || k === `day-${idx + 1}`;
+          }) ?? null;
+
+        const acts = dayKey ? activityGroups[dayKey] : [];
+
+        const activities: Activity[] = acts
+          .filter((act) => placesMap[act.placeId])
+          .sort((a, b) => a.order - b.order)
+          .map((act) => ({
+            id: act.placeId,
+            place: placesMap[act.placeId],
+            distanceKm: act.distanceKm,
+          }));
+
+        const totalDistance = acts.reduce(
+          (sum, act) => sum + (act.distanceKm || 0),
+          0
+        );
+
+        const firstAct = acts[0];
+        console.log("First activity for the day:", firstAct);
+        const route: RouteCache = {
+          signature: firstAct?.routeSignature || null,
+          coords: null,
+          polyline: firstAct?.polyline || null,
+          distanceKm: totalDistance,
+          waypointOrder: null,
+          legDistancesKm: acts.map((act) => act.distanceKm || 0),
+        };
+
+        return {
+          id: dayKey || `day-${idx + 1}`,
+          label: `Day ${idx + 1}`,
+          date: date.toISOString().split("T")[0],
+          activities,
+          route,
+        };
+      }
+    );
+    setDays(dayPlans);
+  }
+
+
   useEffect(() => {
-    const fetchItineraryData = async () => {
+    const fetchItineraryData = async (tripDetails: UserTrip) => {
       try {
-        setLoading(true);
+        // setLoading(true);
         setError(null);
         console.log("Fetching trip details for tripId:", tripId);
-        const tripData_: UserTrip = await TripServices.fetchTripDetails(tripId);
-        console.log("Fetched trip data:", tripData_);
+        let tripData_: UserTrip = null as any;
+        console.log("Using provided tripDetails:", tripDetails);
+        if (tripDetails) {
+          tripData_ = tripDetails;
+        } else {
+          tripData_ = await TripServices.fetchTripDetails(tripId);
+        }
         if (!tripData_) throw new Error("Trip data not found");
         setTripData(tripData_);
 
-        const start = new Date(tripData_.startDate);
-        const end = new Date(tripData_.endDate);
-        const totalDays = Math.max(
-          1,
-          Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1
-        );
-
-        const activityGroups: { [dayId: string]: UserTripActivity[] } = {};
-        tripData_?.activities?.forEach((act) => {
-          if (!activityGroups[act.dayId]) activityGroups[act.dayId] = [];
-          activityGroups[act.dayId].push(act);
-        });
-
-        const allPlaceIds = [
-          ...new Set(tripData_?.activities?.map((act) => act.placeId)),
-        ];
-        const placesData: PlacesToVisit[] =
-          allPlaceIds.length > 0
-            ? await LocationServices.getPlacesToVisitByIds(allPlaceIds)
-            : [];
-        const placesMap: { [id: string]: PlacesToVisit } = placesData.reduce(
-          (map, place) => {
-            map[place.id] = place;
-            return map;
-          },
-          {} as { [id: string]: PlacesToVisit }
-        );
-
-        const dayPlans: DayPlan[] = Array.from({ length: totalDays }).map(
-          (_, idx) => {
-            const date = new Date(start);
-            date.setDate(start.getDate() + idx);
-
-            console.log("Processing day:", idx + 1, date.toDateString());
-            const dayKey =
-              Object.keys(activityGroups).find((k) => {
-                if (activityGroups[k][0]?.dayDate) {
-                    console.log("Matching dayDate:", new Date(activityGroups[k][0].dayDate).toDateString(), "with", date.toDateString());
-                  return (
-                    new Date(activityGroups[k][0].dayDate).toDateString() ===
-                    date.toDateString()
-                  );
-                }
-                return k === `d${idx + 1}` || k === `day-${idx + 1}`;
-              }) ?? null;
-
-            const acts = dayKey ? activityGroups[dayKey] : [];
-
-            const activities: Activity[] = acts
-              .filter((act) => placesMap[act.placeId])
-              .sort((a, b) => a.order - b.order)
-              .map((act) => ({
-                id: act.placeId,
-                place: placesMap[act.placeId],
-                distanceKm: act.distanceKm,
-              }));
-
-            const totalDistance = acts.reduce(
-              (sum, act) => sum + (act.distanceKm || 0),
-              0
-            );
-
-            const firstAct = acts[0];
-            console.log("First activity for the day:", firstAct);
-            const route: RouteCache = {
-              signature: firstAct?.routeSignature || null,
-              coords: null,
-              polyline: firstAct?.polyline || null,
-              distanceKm: totalDistance,
-              waypointOrder: null,
-              legDistancesKm: acts.map((act) => act.distanceKm || 0),
-            };
-
-            return {
-              id: dayKey || `day-${idx + 1}`,
-              label: `Day ${idx + 1}`,
-              date: date.toISOString().split("T")[0],
-              activities,
-              route,
-            };
-          }
-        );
-        setDays(dayPlans);
       } catch (err) {
         setError("Failed to load itinerary. Please try again.");
       } finally {
-        setLoading(false);
+        // setLoading(false);
       }
     };
 
-    fetchItineraryData();
+    fetchItineraryData(tripDetails);
+    if (loading === false) {
+      setTripDetailsOnPage(tripDetails);
+    }
   }, [tripId]);
 
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
@@ -253,13 +329,6 @@ const ItinerarySection: React.FC<{ tripId: string }> = ({ tripId }) => {
     // navigate("TripPlannerManually", { tripId: tripId, showHotelsAfter: false });
   };
 
-  if (loading) {
-    return (
-      <div style={{ display: "flex", flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <FullScreenLoader isVisible={true} />
-      </div>
-    );
-  }
 
   if (error) {
     return (
@@ -339,7 +408,7 @@ const ItinerarySection: React.FC<{ tripId: string }> = ({ tripId }) => {
         <div style={{ marginTop: 20, display: "flex", justifyContent: "center" }}>
           <button className="btn btn-secondary"
             style={{
-              width:100,
+              width: 100,
             }}
             onClick={openEditItineraryScreen}
           >

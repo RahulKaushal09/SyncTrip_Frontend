@@ -7,6 +7,7 @@ import LocationCard from '../LocationCard/LocationCard';
 import PlacesToVisitMap from './../Maps/PlacesToVisitMap';
 import { typeOfLocationCardEnum, WishlistTypeEnum } from '@/constants';
 import { PlacesToVisit } from '@/types';
+import LocationCardSkeleton from '../LocationCard/LocationCardSkeleton';
 
 interface Coordinates {
     lat: number;
@@ -19,9 +20,18 @@ interface Props {
     places: PlacesToVisit[];
     parentId: string;
     parentType: string;
+    isLoading?: boolean;
 }
 
-const PlacesToVisitSection: React.FC<Props> = ({ title, places, parentId, parentType }) => {
+const PlacesToVisitSection: React.FC<Props> = ({ title, places, parentId, parentType, isLoading }) => {
+    if (isLoading) {
+        return (<div className="placesToVisitGrid" style={{display:"grid",marginBottom:50}}>
+            {Array.from({ length: 8 }).map((_, i) => (
+                <LocationCardSkeleton key={i} />
+            ))}
+        </div>)
+    }
+    console.log("props in PlacesToVisitSection:", { title, places, parentId, parentType });
     const [activePlaceShow, setActivePlaceShow] = useState(places.length);
     const [previousShowMore, setPreviousShowMore] = useState(6);
     const [showMap, setShowMap] = useState(false);
