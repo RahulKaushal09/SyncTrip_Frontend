@@ -111,8 +111,8 @@ export interface Location {
     images?: string[];
     photos_old?: string[];
     images_old?: string[];
-    hotels?: string[];
-    restaurantsandfoods?: string[];
+    hotels?: Hotel[] | string[];
+    restaurantsandfoods?: Restaurants[] | string[];
     placesToVisit?: PlacesToVisit[] | string[];
     locationConnectedWith?: string;
     cultures?: Culture[];

@@ -45,8 +45,8 @@ export default function LocationSelector({
 
                 setResults((res || []) as Location[]);
                 setError(null);
-            } catch (err: any) {
-                if (err.name !== "AbortError") {
+            } catch (err: unknown) {
+                if (err !== "AbortError") {
                     setError("Failed to load results");
                     setResults([]);
                 }

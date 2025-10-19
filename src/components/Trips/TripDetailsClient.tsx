@@ -183,7 +183,7 @@ export default function TripDetailsContentClient({
                     )}
                     {(tripData.selectedHotelId.length > 0 || hotelIds.length > 0) && (
                         <HotelsAndStaysSection
-                            hotelIds={tripData.selectedHotelId.length > 0 ? tripData.selectedHotelId : hotelIds}
+                            hotelIds={tripData.selectedHotelId.length > 0 ? tripData.selectedHotelId : hotelIds as string[]}
                             locationName={tripData.title}
                             parentId={updatedLocationData.id}
                             parentType="location"

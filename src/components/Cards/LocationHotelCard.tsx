@@ -17,13 +17,15 @@ type Props = {
   onBookingClick?: (hotel: Hotel) => void;
 };
 
-const formatPriceHotel = (price: any) => {
+const formatPriceHotel = (price: number | string | { amount: number }) => {
   if (price == null) return "";
   if (typeof price === "number") return String(price);
   if (typeof price === "string") return price;
   if (typeof price === "object") {
     if ("amount" in price) return String(price.amount);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if ("value" in price) return String((price as any).value);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if ("display" in price) return String((price as any).display);
     return JSON.stringify(price);
   }
@@ -72,10 +74,10 @@ export default function LocationHotelCard({
           </div>
           {!h.price && !(h.hotelLinks && h.hotelLinks.length > 0) ? "" : (<div style={styles.hr} />)}
           {/* <div style={styles.hr} /> */}
-
-          {(h.price && (h.price as any).amount) || (h.hotelLinks && h.hotelLinks.length > 0) ? (
+          
+          {h.price || (h.hotelLinks && h.hotelLinks.length > 0) ? (
             <div style={{ ...styles.rowSB, justifyContent: "flex-end", width: "100%", position: "relative" }}>
-              {h.price && (h.price as any).amount && (
+              {h.price && (
                 <div style={{ position: "absolute", left: 0 }}>
                   <div style={styles.priceText}>₹ {formatPriceHotel(h.price)} / Night</div>
                 </div>

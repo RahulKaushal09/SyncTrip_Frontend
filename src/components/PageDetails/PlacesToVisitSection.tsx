@@ -24,14 +24,7 @@ interface Props {
 }
 
 const PlacesToVisitSection: React.FC<Props> = ({ title, places, parentId, parentType, isLoading }) => {
-    if (isLoading) {
-        return (<div className="placesToVisitGrid" style={{display:"grid",marginBottom:50}}>
-            {Array.from({ length: 8 }).map((_, i) => (
-                <LocationCardSkeleton key={i} />
-            ))}
-        </div>)
-    }
-    console.log("props in PlacesToVisitSection:", { title, places, parentId, parentType });
+
     const [activePlaceShow, setActivePlaceShow] = useState(places.length);
     const [previousShowMore, setPreviousShowMore] = useState(6);
     const [showMap, setShowMap] = useState(false);
@@ -58,7 +51,13 @@ const PlacesToVisitSection: React.FC<Props> = ({ title, places, parentId, parent
     const toggleShowOnMap = () => {
         setShowMap(!showMap);
     };
-
+    if (isLoading) {
+        return (<div className="placesToVisitGrid" style={{ display: "grid", marginBottom: 50 }}>
+            {Array.from({ length: 8 }).map((_, i) => (
+                <LocationCardSkeleton key={i} />
+            ))}
+        </div>)
+    }
     return (
         <div className="hotels-container" style={{ marginBottom: "50px" }}>
             {places.length !== 0 && (

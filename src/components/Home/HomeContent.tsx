@@ -163,8 +163,8 @@ export default function HomeContent({ initialLocations, initialHasMore }: HomeCo
         }
 
         const lowerSearch = searchTerm.toLowerCase();
-        const startsWith = [];
-        const includes = [];
+        const startsWith: Location[] = [];
+        const includes: Location[] = [];
 
         for (const location of locations) {
             const title = location.title?.toLowerCase() || "";

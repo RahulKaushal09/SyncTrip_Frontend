@@ -1,7 +1,7 @@
 'use client';
 
-import {  useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { Suspense, useEffect, useState } from 'react';
 import TripServices from '@/utils/trip.utils';
 import { Culture, DayWeather, Festival, Hotel, Location, PlacesToVisit, Restaurants, UserTrip } from '@/types';
 import LocationHeader from '@/components/PageDetails/LocationHeader';
@@ -27,7 +27,7 @@ import RestaurantsSection from '@/components/Trips/RestaurantsSection';
 
 function normalizePlaces(input: Location['placesToVisit']): PlacesToVisit[] {
     if (!input) return [];
-    if (Array.isArray(input) && input.length > 0 && typeof (input as any)[0] === 'object') {
+    if (Array.isArray(input) && input.length > 0 && typeof (input as PlacesToVisit[])[0] === 'object') {
         return input as PlacesToVisit[];
     }
     // string[] fallback → show nothing (or map to minimal objects if you have a resolver)
@@ -35,15 +35,15 @@ function normalizePlaces(input: Location['placesToVisit']): PlacesToVisit[] {
 }
 function normalizeHotels(input: Location['hotels']): Hotel[] {
     if (!input) return [];
-    if (Array.isArray(input) && input.length > 0 && typeof (input as any)[0] === 'object') {
-        return input as any as Hotel[];
+    if (Array.isArray(input) && input.length > 0 && typeof (input as Hotel[])[0] === 'object') {
+        return input as Hotel[];
     }
     return [];
 }
 function normalizeRestaurants(input: Location['restaurantsandfoods']): Restaurants[] {
     if (!input) return [];
-    if (Array.isArray(input) && input.length > 0 && typeof (input as any)[0] === 'object') {
-        return input as any as Restaurants[];
+    if (Array.isArray(input) && input.length > 0 && typeof (input as Restaurants[])[0] === 'object') {
+        return input as Restaurants[];
     }
     return [];
 }
@@ -131,14 +131,14 @@ const AboutSections: React.FC<{
                     variant="filled"
                 />
             </div>
-            <div style={{marginTop:40}}>
-                <h4 style={{marginBottom:30}}>Weather Updates</h4>
-            <WeatherRangeCard
-                days={weatherDays as DayWeather[]}
-                startDate={tripDetails?.startDate ?? "2025-01-16"}
-                endDate={tripDetails?.endDate ?? "2025-02-01"}
-                initialSelectedDate={tripDetails?.startDate ?? weatherDays?.[0]?.date}
-            />
+            <div style={{ marginTop: 40 }}>
+                <h4 style={{ marginBottom: 30 }}>Weather Updates</h4>
+                <WeatherRangeCard
+                    days={weatherDays as DayWeather[]}
+                    startDate={tripDetails?.startDate ?? "2025-01-16"}
+                    endDate={tripDetails?.endDate ?? "2025-02-01"}
+                    initialSelectedDate={tripDetails?.startDate ?? weatherDays?.[0]?.date}
+                />
             </div>
             {/* --- Cultures / Festivals Section --- */}
             <div className="" style={{ marginTop: 30 }}>
@@ -170,8 +170,14 @@ const AboutSections: React.FC<{
     );
 };
 
-
 export default function UserTripDetailsPage() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <UserTripDetailsPageContent />
+        </Suspense>
+    );
+}
+function UserTripDetailsPageContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const tripId = searchParams?.get('tripId');
@@ -221,7 +227,6 @@ export default function UserTripDetailsPage() {
     const [isLoadingHotels, setIsLoadingHotels] = useState(true);
     const [isLoadingPlaces, setIsLoadingPlaces] = useState(true);
 
-    // @ts-ignore
     useEffect(() => {
         const handleResize = () => {
             setIsMobile(window.innerWidth <= 768);
@@ -246,8 +251,8 @@ export default function UserTripDetailsPage() {
                 ]);
                 console.log(locationDetails);
                 setLocation(locationDetails);
-                setHotelIds(locationDetails?.hotels || []);
-                setRestaurantIds(locationDetails?.restaurantsandfoods || []);
+                setHotelIds(locationDetails?.hotels as string[] || []);
+                setRestaurantIds(locationDetails?.restaurantsandfoods as string[] || []);
                 setWishlisted(locationDetails?.isWishlisted || false);
 
                 setTripDetails({ startDate: tripData.startDate, endDate: tripData.endDate } as UserTrip);
@@ -281,17 +286,19 @@ export default function UserTripDetailsPage() {
     const [restaurants, setRestaurants] = useState<Restaurants[]>([]);
     const OnChangeActivityFilter = async (key: string) => {
         if (key === "places" && places.length === 0) {
-          setIsLoadingPlaces(true);
-          // fetch places details from placesIds
-          // const firstPlaces = await LocationService.getPaginatedPlaces(placesIds, 0, 10, user?.token);
-          // setPlaces(firstPlaces);
-          // setPlacesPage(1);
-          // setHasMorePlaces(firstPlaces.length === 10);
-          // //
-          const PlacesToVisit = await LocationServices.getPlacesToVisitByIds(location?.placesToVisit as string[]);
-          // console.log("Fetched PlacesToVisit:", PlacesToVisit);
-          setPlaces(normalizePlaces(PlacesToVisit));
-          setIsLoadingPlaces(false);
+            setIsLoadingPlaces(true);
+            // fetch places details from placesIds
+            // const firstPlaces = await LocationService.getPaginatedPlaces(placesIds, 0, 10, user?.token);
+            // setPlaces(firstPlaces);
+            // setPlacesPage(1);
+            // setHasMorePlaces(firstPlaces.length === 10);
+            // //
+            const PlacesToVisit = await LocationServices.getPlacesToVisitByIds(location?.placesToVisit as string[]);
+            // console.log("Fetched PlacesToVisit:", PlacesToVisit);
+            setPlaces(normalizePlaces(PlacesToVisit));
+            setIsLoadingPlaces(false);
+            setSelectedKey(key);
+            return;
         }
         if (key === "stay" && hotels.length === 0) {
             setIsLoadingHotels(true);
@@ -300,6 +307,8 @@ export default function UserTripDetailsPage() {
             // console.log("Fetched Hotels:", Hotels);
             setHotels(normalizeHotels(Hotels));
             setIsLoadingHotels(false);
+            setSelectedKey(key);
+            return;
         }
         if (key === "itinerary" && ItineraryTripDetails === null) {
             setIsLoadingItinerary(true);
@@ -307,46 +316,51 @@ export default function UserTripDetailsPage() {
             const tripDataForItineary = await TripServices.fetchTripDetails(tripId as string, tripFieldsForItineary);
             const allPlaceIds = [
                 ...new Set(tripDataForItineary?.activities?.map((act) => act.placeId)),
-              ];
-              let placesData: PlacesToVisit[] = [];
-              if (places.length > 0) {
+            ];
+            let placesData: PlacesToVisit[] = [];
+            if (places.length > 0) {
                 // Keep only places referenced by the itinerary (filter avoids undefined entries)
                 placesData = places.filter((place) => allPlaceIds.includes(place.id));
-              } else {
+            } else {
                 placesData =
-                  allPlaceIds.length > 0
-                    ? await LocationServices.getPlacesToVisitByIds(allPlaceIds)
-                    : [];
-              }
-              // Map activities to include full place details
-              const activitiesWithPlaces = tripDataForItineary.activities?.map((activity) => {
+                    allPlaceIds.length > 0
+                        ? await LocationServices.getPlacesToVisitByIds(allPlaceIds)
+                        : [];
+            }
+            // Map activities to include full place details
+            const activitiesWithPlaces = tripDataForItineary.activities?.map((activity) => {
                 const placeDetails = placesData.find((place) => place.id === activity.placeId);
                 return {
-                  ...activity,
-                  placeDetails: placeDetails ? placeDetails : undefined,
+                    ...activity,
+                    placeDetails: placeDetails ? placeDetails : undefined,
                 };
-              }) || [];
-              tripDataForItineary.activities = activitiesWithPlaces;
-              console.log("Itinerary Trip Data with Places:", tripDataForItineary);
+            }) || [];
+            tripDataForItineary.activities = activitiesWithPlaces;
+            console.log("Itinerary Trip Data with Places:", tripDataForItineary);
             setIsLoadingItinerary(false);
             setItineraryTripDetails(tripDataForItineary);
+            setSelectedKey(key);
+            return;
         }
         if (key === "restaurants" && restaurants.length === 0) {
+            
             setIsLoadingRestaurants(true);
 
             const Restaurants = await LocationServices.getRestaurantsByIds(restaurantIds);
             setRestaurants(normalizeRestaurants(Restaurants));
             setIsLoadingRestaurants(false);
+            setSelectedKey(key);
+            return;
         }
-        setSelectedKey(key);
+
     }
     // Normalize lists from location
     // const places = useMemo(() => normalizePlaces(location.placesToVisit), [location]);
     // const hotels = useMemo(() => normalizeHotels(location.hotels), [location]);
     if (isLoadingPage) {
-        return <FullScreenLoader isVisible={true} />   
-     }
-    if(!location){
+        return <FullScreenLoader isVisible={true} />
+    }
+    if (!location) {
         router.back();
         return null;
     }
@@ -388,7 +402,7 @@ export default function UserTripDetailsPage() {
             />
             <LocationImageGallery locationImages={location?.images as string[]} locationName={location?.title} />
 
-            <InfoSwitch onTabChange={(tab)=>OnChangeActivityFilter(tab)} data={{
+            <InfoSwitch onTabChange={(tab) => OnChangeActivityFilter(tab)} data={{
                 about: <AboutSections
                     tripDetails={tripDetails}
                     weatherDays={weatherDays}
@@ -400,8 +414,8 @@ export default function UserTripDetailsPage() {
                     festivals={location.festivals}
                 />,
                 itinerary: <ItinerarySection tripId={tripId as string} loading={isLoadingItinerary} tripDetails={ItineraryTripDetails as UserTrip} />,
-                
-                stay:<HotelsSection
+
+                stay: <HotelsSection
                     hotels={hotels}
                     totalHotels={hotels.length}
                     locationUUID={location?.id as string}
@@ -415,7 +429,7 @@ export default function UserTripDetailsPage() {
                     parentType={typeOfLocationCardEnum.location}
                     isLoading={isLoadingPlaces}
                 />,
-                restaurants: <RestaurantsSection restaurants={restaurants} totalRestaurants={restaurants.length} locationUUID={location?.id as string} isLoading={isLoadingRestaurants}  />,
+                restaurants: <RestaurantsSection restaurants={restaurants} totalRestaurants={restaurants.length} locationUUID={location?.id as string} isLoading={isLoadingRestaurants} />,
                 // restaurants: <BookingHotelsAndStaysSection
                 //     hotelIds={location?.restaurantsandfoods || []}
                 //     locationName={location?.title}

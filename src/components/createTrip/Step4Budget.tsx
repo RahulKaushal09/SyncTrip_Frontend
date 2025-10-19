@@ -18,7 +18,7 @@ const Step4Budget: FC<Step4BudgetProps> = ({ selectedBudget, setSelectedBudget }
         <strong>Set your trip budget</strong>
       </h2>
       <p style={{ color: "rgb(102, 102, 102)", marginBottom: "16px" }}>
-        Let us know your budget preference, and we'll craft an itinerary that suits your financial comfort.
+        Let us know your budget preference, and we&apos;ll craft an itinerary that suits your financial comfort.
 
       </p>
 

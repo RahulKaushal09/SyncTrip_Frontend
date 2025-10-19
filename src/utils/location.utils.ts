@@ -1,4 +1,4 @@
-import { Location } from "@/types";
+import { Hotel, Location } from "@/types";
 import apiClient from "./apiClient";
 import { LocationFields } from "@/constants/enums";
 
@@ -61,7 +61,7 @@ export class LocationServices {
             const res = await apiClient.post(`/hotels/getHotelsByIds`, { hotelIds });
             // clean hotel_name for nay number wiht . ex 76. 67. etc 
             if(res.data && Array.isArray(res.data)) {
-                res.data = res.data.map((h: any) => {
+                res.data = res.data.map((h: Hotel) => {
                     if(h.hotel_name) {
                         h.hotel_name = h.hotel_name.replace(/^\d+(\.\s*)?/, '').trim();
                     }

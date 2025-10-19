@@ -153,7 +153,7 @@ const LocationPageDetails = ({ uuid, locationData }: { uuid: string; locationDat
                         parentType="location"
                     />
                     <HotelsAndStaysSection
-                        hotelIds={locationData?.hotels || []}
+                        hotelIds={locationData?.hotels as string[]|| []}
                         locationName={locationData?.title}
                         parentId={uuid}
                         parentType="location"

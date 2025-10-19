@@ -20,6 +20,7 @@ type Activity = {
 };
 type RouteCache = {
   signature: string | null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   coords: any[] | null;
   polyline: string | null;
   distanceKm: number | null;
@@ -128,53 +129,7 @@ export const styles = {
 
 
 const ItinerarySection: React.FC<{ tripId: string, tripDetails: UserTrip, loading: boolean }> = ({ tripId, tripDetails, loading }) => {
-  if (loading) {
-    return (
-      <>
-        <div className="skeleton-card">
-          <div className="skeleton-row">
-            <div className="skeleton-image" style={{ width: "140px" }}></div>
-            <div style={{ flex: 1 }}>
-              <div className="skeleton-title"></div>
-              <div className="skeleton-text"></div>
-              <div className="skeleton-text small"></div>
-            </div>
-          </div>
-        </div>
-        <div className="skeleton-card">
-          <div className="skeleton-row">
-            <div className="skeleton-image" style={{ width: "140px" }}></div>
-            <div style={{ flex: 1 }}>
-              <div className="skeleton-title"></div>
-              <div className="skeleton-text"></div>
-              <div className="skeleton-text small"></div>
-            </div>
-          </div>
-        </div>
-        <div className="skeleton-card">
-          <div className="skeleton-row">
-            <div className="skeleton-image" style={{ width: "140px" }}></div>
-            <div style={{ flex: 1 }}>
-              <div className="skeleton-title"></div>
-              <div className="skeleton-text"></div>
-              <div className="skeleton-text small"></div>
-            </div>
-          </div>
-        </div>
-        <div className="skeleton-card">
-          <div className="skeleton-row">
-            <div className="skeleton-image" style={{ width: "140px" }}></div>
-            <div style={{ flex: 1 }}>
-              <div className="skeleton-title"></div>
-              <div className="skeleton-text"></div>
-              <div className="skeleton-text small"></div>
-            </div>
-          </div>
-        </div>
-      </>
-    );
-  }
-
+  
   const [days, setDays] = useState<DayPlan[]>([]);
   // const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -284,29 +239,29 @@ const ItinerarySection: React.FC<{ tripId: string, tripDetails: UserTrip, loadin
 
 
   useEffect(() => {
-    const fetchItineraryData = async (tripDetails: UserTrip) => {
-      try {
-        // setLoading(true);
-        setError(null);
-        console.log("Fetching trip details for tripId:", tripId);
-        let tripData_: UserTrip = null as any;
-        console.log("Using provided tripDetails:", tripDetails);
-        if (tripDetails) {
-          tripData_ = tripDetails;
-        } else {
-          tripData_ = await TripServices.fetchTripDetails(tripId);
-        }
-        if (!tripData_) throw new Error("Trip data not found");
-        setTripData(tripData_);
+    // const fetchItineraryData = async (tripDetails: UserTrip) => {
+    //   try {
+    //     // setLoading(true);
+    //     setError(null);
+    //     console.log("Fetching trip details for tripId:", tripId);
+    //     let tripData_: UserTrip = {} as UserTrip;
+    //     console.log("Using provided tripDetails:", tripDetails);
+    //     if (tripDetails) {
+    //       tripData_ = tripDetails;
+    //     } else {
+    //       // tripData_ = await TripServices.fetchTripDetails(tripId);
+    //     }
+    //     if (!tripData_) throw new Error("Trip data not found");
+    //     setTripData(tripData_);
 
-      } catch (err) {
-        setError("Failed to load itinerary. Please try again.");
-      } finally {
-        // setLoading(false);
-      }
-    };
+    //   } catch (err) {
+    //     setError("Failed to load itinerary. Please try again.");
+    //   } finally {
+    //     // setLoading(false);
+    //   }
+    // };
 
-    fetchItineraryData(tripDetails);
+    // fetchItineraryData(tripDetails);
     if (loading === false) {
       setTripDetailsOnPage(tripDetails);
     }
@@ -324,8 +279,56 @@ const ItinerarySection: React.FC<{ tripId: string, tripDetails: UserTrip, loadin
     setExpanded((prev) => ({ ...prev, [dayId]: !prev[dayId] }));
   };
 
+  if (loading || !tripDetails?.activities) {
+
+    return (
+      <>
+        <div className="skeleton-card">
+          <div className="skeleton-row">
+            <div className="skeleton-image" style={{ width: "140px" }}></div>
+            <div style={{ flex: 1 }}>
+              <div className="skeleton-title"></div>
+              <div className="skeleton-text"></div>
+              <div className="skeleton-text small"></div>
+            </div>
+          </div>
+        </div>
+        <div className="skeleton-card">
+          <div className="skeleton-row">
+            <div className="skeleton-image" style={{ width: "140px" }}></div>
+            <div style={{ flex: 1 }}>
+              <div className="skeleton-title"></div>
+              <div className="skeleton-text"></div>
+              <div className="skeleton-text small"></div>
+            </div>
+          </div>
+        </div>
+        <div className="skeleton-card">
+          <div className="skeleton-row">
+            <div className="skeleton-image" style={{ width: "140px" }}></div>
+            <div style={{ flex: 1 }}>
+              <div className="skeleton-title"></div>
+              <div className="skeleton-text"></div>
+              <div className="skeleton-text small"></div>
+            </div>
+          </div>
+        </div>
+        <div className="skeleton-card">
+          <div className="skeleton-row">
+            <div className="skeleton-image" style={{ width: "140px" }}></div>
+            <div style={{ flex: 1 }}>
+              <div className="skeleton-title"></div>
+              <div className="skeleton-text"></div>
+              <div className="skeleton-text small"></div>
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  }
+
   const openEditItineraryScreen = () => {
-    router.push('/userTrip/planner?tripId=' + tripId);
+    router.push('/userTrip/planner?tripId=' + tripDetails.id);
     // navigate("TripPlannerManually", { tripId: tripId, showHotelsAfter: false });
   };
 
@@ -339,12 +342,12 @@ const ItinerarySection: React.FC<{ tripId: string, tripDetails: UserTrip, loadin
   }
 
   if (days.length === 0) {
-    return (
-      <div style={{ display: "flex", flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <span>No itinerary available.</span>
-      </div>
-    );
-  }
+  return (
+    <div style={{ display: "flex", flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <span>No itinerary available.</span>
+    </div>
+  );
+}
 
   return (
     <div style={styles.screen}>
@@ -370,9 +373,9 @@ const ItinerarySection: React.FC<{ tripId: string, tripDetails: UserTrip, loadin
 
                 <div style={styles.headerRight}>
                   {isOpen ? (
-                    <ChevronUp style={styles.chev as any} />
+                    <ChevronUp style={styles.chev } />
                   ) : (
-                    <ChevronDown style={styles.chev as any} />
+                    <ChevronDown style={styles.chev } />
                   )}
                 </div>
               </div>

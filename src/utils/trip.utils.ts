@@ -1,5 +1,5 @@
 
-import { UserTrip } from "@/types";
+import { UserTrip, UserTripActivity } from "@/types";
 import apiClient from "./apiClient";
 
 class TripServices {
@@ -29,7 +29,7 @@ class TripServices {
             throw error;
         }
     }
-    static async saveTripActivities(tripDetails: UserTrip, activities: any[], getClosestHotels?: boolean) {
+    static async saveTripActivities(tripDetails: UserTrip, activities: UserTripActivity[], getClosestHotels?: boolean) {
         try {
             const res = await apiClient.post('/app/saveUserTripActivities', {
                 tripId: tripDetails.id,

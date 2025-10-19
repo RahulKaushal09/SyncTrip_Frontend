@@ -73,6 +73,11 @@ const nextConfig: NextConfig = {
         hostname: 'localhost',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'picsum.photos',
+        pathname: '/**',
+      },
     ],
   },
 };

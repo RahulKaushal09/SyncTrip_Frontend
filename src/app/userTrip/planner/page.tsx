@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useRef, useMemo, Suspense } from 'react';
 // import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 import {
   DragDropContext,
@@ -18,7 +18,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { LocationFields } from '@/constants';
 import { LocationServices } from '@/utils/location.utils';
 import TripServices from '@/utils/trip.utils';
-import { PlacesToVisit, UserTripActivity } from '@/types';
+import { PlacesToVisit, UserTrip, UserTripActivity } from '@/types';
 import '../../../styles/tripPlanner.css';
 import { IsUserProfileComplete } from '@/utils';
 import toast from 'react-hot-toast';
@@ -231,7 +231,7 @@ function generateDays(start: string | Date, end: string | Date): DayPlan[] {
   const startDate = new Date(start);
   const endDate = new Date(end);
 
-  let current = new Date(startDate);
+  const current = new Date(startDate);
   let index = 1;
 
   while (current <= endDate) {
@@ -253,21 +253,22 @@ function generateDays(start: string | Date, end: string | Date): DayPlan[] {
 // ---------------------------------------------
 // MAIN PAGE
 // ---------------------------------------------
-const TripPlannerPage: React.FC = () => {
+
+export default function TripPlannerPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <TripPlannerPageContent />
+    </Suspense>
+  );
+}
+
+const TripPlannerPageContent: React.FC = () => {
   const router = useRouter();
-  if (!IsUserProfileComplete()) {
-    // Redirect to profile completion page
-    toast.error('Please complete your profile before planning a trip.');
-    router.replace('/explore');
-    return null;
-  }
+  
 
   const searchParams = useSearchParams();
   const tripId = searchParams?.get('tripId');
-  if (tripId === null) {
-    router.replace('/explore');
-    return null;
-  }
+  
   const showHotelsAfter = searchParams?.get('showHotelsAfter') === 'true';
 
   const [showPanel, setShowPanel] = useState(false);
@@ -284,7 +285,7 @@ const TripPlannerPage: React.FC = () => {
   const [mainLocationLatitude, setMainLocationLatitude] = useState<number>(28.6139); // default New Delhi
   const [mainLocationLongitude, setMainLocationLongitude] = useState<number>(77.209);
 
-  const [tripDetails, setTripDetails] = useState<any>(null);
+  const [tripDetails, setTripDetails] = useState<UserTrip | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const mapRef = useRef<google.maps.Map | null>(null);
@@ -315,6 +316,7 @@ const TripPlannerPage: React.FC = () => {
     return () => window.removeEventListener('resize', compute);
   }, []);
 
+  
   // Loaders
   const loadActivities = (activities: UserTripActivity[]) => {
     try {
@@ -442,7 +444,7 @@ const TripPlannerPage: React.FC = () => {
           bottom: 40,
           left: 40,
           right: 440
-        } as any);
+        } as google.maps.Padding);
       } catch (e) {
         // map might not be ready
       }
@@ -459,6 +461,7 @@ const TripPlannerPage: React.FC = () => {
           activities.push({
             dayId: day.id,
             dayLabel: day.label,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             dayDate: day.date ? new Date(day.date) : null as any,
             placeId: act.place.id,
             order,
@@ -469,18 +472,18 @@ const TripPlannerPage: React.FC = () => {
         });
       });
 
-      const res = await TripServices.saveTripActivities(tripDetails, activities, true);
+      const res = await TripServices.saveTripActivities(tripDetails as UserTrip, activities, true);
       if (!res) {
         throw new Error('Save failed');
       }
       if (showHotelsAfter) {
-        router.replace(`/userTrip/hotelSelection?tripId=${tripId}&locationId=${tripDetails.locationId}`);
+        router.replace(`/userTrip/hotelSelection?tripId=${tripId}&locationId=${tripDetails?.locationId}`);
       } else {
-        router.replace(`/userTrip/details?tripId=${tripId}&locationId=${tripDetails.locationId}`);
+        router.replace(`/userTrip/details?tripId=${tripId}&locationId=${tripDetails?.locationId}`);
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Save error:', err);
-      alert(`Save failed: ${err.message}`);
+      alert(`Save failed: ${err instanceof Error ? err.message : 'Unknown error'}`);
     } finally {
       setSaving(false);
     }
@@ -497,7 +500,7 @@ const TripPlannerPage: React.FC = () => {
       }
       const bounds = new google.maps.LatLngBounds();
       coords.forEach(coord => bounds.extend({ lat: coord.latitude, lng: coord.longitude }));
-      mapRef.current.fitBounds(bounds, { top: 80, right: 400, bottom: 40, left: 40 } as any);
+      mapRef.current.fitBounds(bounds, { top: 80, right: 400, bottom: 40, left: 40 } as google.maps.Padding);
     } catch (e) { /* ignore */ }
   }, []);
 
@@ -845,6 +848,16 @@ useEffect(() => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  if (tripId === null) {
+    router.replace('/explore');
+    return null;
+  }
+  if (!IsUserProfileComplete()) {
+    // Redirect to profile completion page
+    toast.error('Please complete your profile before planning a trip.');
+    router.replace('/explore');
+    return null;
+  }
 
   // UI & layout helpers
   const itineraryPanelVisible = showPanel;
@@ -1207,4 +1220,4 @@ useEffect(() => {
   );
 };
 
-export default TripPlannerPage;
+// export default TripPlannerPage;

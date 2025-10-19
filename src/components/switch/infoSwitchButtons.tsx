@@ -34,9 +34,10 @@ const InfoSwitch: React.FC<InfoSwitchProps> = ({ data, onTabChange }) => {
         {tabs.map(tab => (
           <button
             key={tab.key}
-            onClick={() => {
+            onClick={async () => {
+              
+              await onTabChange?.(tab.key);
               setActiveTab(tab.key);
-              onTabChange?.(tab.key);
             }}
             className={`px-4 py-2 rounded-t-lg font-medium transition-all ${
               activeTab === tab.key

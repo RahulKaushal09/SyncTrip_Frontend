@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { Suspense, useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Step1Location from '@/components/createTrip/Step1Location';
 import Step2SelectDates from '@/components/createTrip/step2Date';
@@ -15,8 +15,15 @@ import TripServices from '@/utils/trip.utils';
 
 const TOTAL_STEPS = 6;
 const formatISODateOnly = (d: Date) => d.toISOString().split('T')[0];
-
 export default function CreateTripScreen() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <CreateTripContent />
+    </Suspense>
+  );
+}
+
+function CreateTripContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
