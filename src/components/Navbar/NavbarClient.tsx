@@ -75,8 +75,13 @@ const NavbarClient = ({ }) => {
     if (pathname !== redirectionLink) showLoader();
     router.push(redirectionLink);
   };
-  const handleCtaAction = () => {
-    redirectBtnClick("/trips");
+  const createTripOrGroupTripBtn = () => {
+    if(pageType === PageTypeEnum.TRIP){
+      openLogin(()=>{redirectBtnClick(ROUTES.CREATE_TRIP)});
+    }
+    else{
+      redirectBtnClick(ROUTES.TRIPS);
+    }
   };
 
   // useEffect(() => {
@@ -147,7 +152,7 @@ const NavbarClient = ({ }) => {
               </span>
             </li>}
 
-            <li className="nav-item" onClick={handleCtaAction} style={{ cursor: "pointer" }}>
+            <li className="nav-item" onClick={createTripOrGroupTripBtn} style={{ cursor: "pointer" }}>
               <span className="nav-link">
                 {pageType === PageTypeEnum.TRIP ? "Create Trip" : "Group Trips"}
               </span>
@@ -283,7 +288,7 @@ const NavbarClient = ({ }) => {
             <span className="nav-link">My Trips</span>
           </li>}
           {pageType == PageTypeEnum.TRIP ? (
-            <li className="nav-item" onClick={handleLoginClick}>
+            <li className="nav-item" onClick={() => { openLogin(()=>{redirectBtnClick(ROUTES.CREATE_TRIP)}); }}>
               <span className="nav-link">Create Trip</span>
             </li>
           ) : (

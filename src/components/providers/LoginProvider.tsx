@@ -50,6 +50,7 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
     const [showFullProfile, setShowFullProfile] = useState(false);
 
     const openLogin = useCallback((callback?: (user: User, requiresPhone?: boolean) => void, options: LoginOptions = {}) => {
+        console.log("openLogin called with options:", options);
         setOnLoginCallback(() => callback || (() => { }));
         setLoginOptions(options);
         setShowLogin(true);
