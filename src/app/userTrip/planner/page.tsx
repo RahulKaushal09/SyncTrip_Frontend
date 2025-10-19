@@ -1,9 +1,16 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
+// import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  DropResult,
+} from '@hello-pangea/dnd';
 import { GoogleMap, DirectionsService, DirectionsRenderer, Marker, Polyline } from '@react-google-maps/api';
 import { Plus, Star } from "lucide-react";
+
 import Image from 'next/image';
 
 import { MapProvider } from '@/components/createTrip/MapProvider';
@@ -257,7 +264,7 @@ const TripPlannerPage: React.FC = () => {
 
   const searchParams = useSearchParams();
   const tripId = searchParams?.get('tripId');
-  if(tripId===null){
+  if (tripId === null) {
     router.replace('/explore');
     return null;
   }
@@ -281,6 +288,9 @@ const TripPlannerPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const mapRef = useRef<google.maps.Map | null>(null);
+  const [overlayPosition, setOverlayPosition] = useState<{ x: number; y: number } | null>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);  // For the absolute-positioned popup div
+  const [isDragging, setIsDragging] = useState(false);
   const activeDayIdRef = useRef<string | null>(null);
 
   const [selectedPlace, setSelectedPlace] = useState<PlacesToVisit | null>(null);
@@ -543,8 +553,36 @@ const TripPlannerPage: React.FC = () => {
   }, [fitMapTo, optimizeByDay]);
 
   // Convert lat/lng -> pixel position on page relative to map container
+  // const getPixelPositionFromLatLng = useCallback((lat: number, lng: number) => {
+  //   if (!mapRef.current) return null;
+  //   const map = mapRef.current;
+  //   const projection = map.getProjection?.();
+  //   if (!projection) return null;
+  //   const bounds = map.getBounds?.();
+  //   if (!bounds) return null;
+
+  //   try {
+  //     const ne = projection.fromLatLngToPoint(bounds.getNorthEast());
+  //     const sw = projection.fromLatLngToPoint(bounds.getSouthWest());
+  //     const worldPoint = projection.fromLatLngToPoint(new google.maps.LatLng(lat, lng));
+  //     const scale = Math.pow(2, map.getZoom() ?? 0);
+  //     if (!ne || !sw || !worldPoint || !scale) return null;
+  //     const x = (worldPoint.x - sw.x) * scale;
+  //     const y = (worldPoint.y - ne.y) * scale;
+
+  //     const mapDiv = map.getDiv();
+  //     const rect = mapDiv.getBoundingClientRect();
+  //     // Return pixel coordinates relative to page (so we can absolutely position an overlay)
+  //     return {
+  //       x: rect.left + x,
+  //       y: rect.top + y
+  //     };
+  //   } catch (e) {
+  //     return null;
+  //   }
+  // }, []);
   const getPixelPositionFromLatLng = useCallback((lat: number, lng: number) => {
-    if (!mapRef.current) return null;
+    if (!mapRef.current || !lat || !lng) return null;  // Add this safety
     const map = mapRef.current;
     const projection = map.getProjection?.();
     if (!projection) return null;
@@ -571,6 +609,37 @@ const TripPlannerPage: React.FC = () => {
       return null;
     }
   }, []);
+  useEffect(() => {
+    if (!selectedPlace || !mapRef.current) {
+      setOverlayPosition(null);  // Reset when no selection
+      return;
+    }
+
+    const map = mapRef.current;
+    const lat = selectedPlace.coordinates.lat;
+    const lng = selectedPlace.coordinates.long;
+
+    // Initial position
+    const initialPos = getPixelPositionFromLatLng(lat, lng);
+    if (initialPos) {
+      setOverlayPosition(initialPos);
+    }
+
+    // Listen for map changes
+    const events = ['dragend', 'zoom_changed', 'idle'];  // 'idle' covers post-pan/zoom settling
+    const handlers: google.maps.MapsEventListener[] = events.map(event =>
+      google.maps.event.addListener(map, event, () => {
+        const pos = getPixelPositionFromLatLng(lat, lng);
+        if (pos) {
+          setOverlayPosition(pos);
+        }
+      })
+    );
+
+    return () => {
+      handlers.forEach(handler => google.maps.event.removeListener(handler));
+    };
+  }, [selectedPlace, getPixelPositionFromLatLng]);
 
   // Directions options computed
   const directionsOptions = useMemo(() => {
@@ -670,14 +739,102 @@ const TripPlannerPage: React.FC = () => {
   const expectedSig = routeSignature(activeDay?.activities ?? [], activeOptimize);
 
   // click anywhere on map -> close selectedPlace
-  useEffect(() => {
-    if (!mapRef.current) return;
-    const map = mapRef.current;
-    const listener = map.addListener("click", () => setSelectedPlace(null));
-    return () => {
-      if (listener) google.maps.event.removeListener(listener);
-    };
-  }, []);
+  // useEffect(() => {
+  //   if (!mapRef.current) return;
+  //   const map = mapRef.current;
+  //   const listener = map.addListener("click", () => setSelectedPlace(null));
+  //   return () => {
+  //     if (listener) google.maps.event.removeListener(listener);
+  //   };
+  // }, []);
+  // useEffect(() => {
+  //   if (!mapRef.current) return;
+  //   const map = mapRef.current;
+  //   const listener = map.addListener("click", (event: google.maps.MapMouseEvent) => {
+  //     // Optional: Check if click is far from marker to avoid accidental closes, but not needed
+  //     setSelectedPlace(null);
+  //   });
+  //   return () => {
+  //     if (listener) google.maps.event.removeListener(listener);
+  //   };
+  // }, []);
+  
+useEffect(() => {
+  if (!mapRef.current) return;
+
+  const map = mapRef.current;
+  let mouseDownPos: { x: number; y: number } | null = null;
+  let touchStartPos: { x: number; y: number } | null = null;
+  const dragThreshold = 5; // Pixels; small threshold to detect intentional drags
+
+  // Mouse: Track mousedown position
+  const mouseDownListener = map.addListener('mousedown', (e: google.maps.MapMouseEvent) => {
+    // Use the DOM event's clientX/clientY instead of the non-existent e.pixel
+    const dom = e.domEvent as MouseEvent | undefined;
+    if (dom) {
+      mouseDownPos = { x: dom.clientX, y: dom.clientY };
+    }
+  });
+
+  // Touch: Track touchstart position
+  const touchStartListener = google.maps.event.addDomListener(map.getDiv(), 'touchstart', (e: TouchEvent) => {
+    if (e.touches.length === 1) {
+      touchStartPos = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    }
+  });
+
+  // Mouse: Detect drag movement
+  const dragListener = map.addListener('drag', () => {
+    setIsDragging(true);
+  });
+
+  // Touch: Detect touchmove (drag)
+  const touchMoveListener = google.maps.event.addDomListener(map.getDiv(), 'touchmove', (e: TouchEvent) => {
+    if (e.touches.length === 1) {
+      setIsDragging(true);
+    }
+  });
+
+  // Click handler: Close popup only if not dragging
+  const clickListener = map.addListener('click', (e: google.maps.MapMouseEvent) => {
+    if (!isDragging && selectedPlace) {
+      // Optional: For mouse, check if movement was minimal (click, not drag)
+      const dom = e.domEvent as MouseEvent | undefined;
+      if (mouseDownPos && dom) {
+        const dx = Math.abs(dom.clientX - mouseDownPos.x);
+        const dy = Math.abs(dom.clientY - mouseDownPos.y);
+        if (dx <= dragThreshold && dy <= dragThreshold) {
+          setSelectedPlace(null);
+        }
+      } else {
+        // No mouseDownPos (e.g., touch or programmatic click) — close if not dragging
+        setSelectedPlace(null);
+      }
+    }
+  });
+
+  // Reset dragging state after drag ends
+  const dragEndListener = map.addListener('dragend', () => {
+    setIsDragging(false);
+    mouseDownPos = null;
+  });
+
+  // Touch: Reset after touch ends
+  const touchEndListener = google.maps.event.addDomListener(map.getDiv(), 'touchend', () => {
+    setIsDragging(false);
+    touchStartPos = null;
+  });
+
+  return () => {
+    google.maps.event.removeListener(mouseDownListener);
+    google.maps.event.removeListener(dragListener);
+    google.maps.event.removeListener(clickListener);
+    google.maps.event.removeListener(dragEndListener);
+    google.maps.event.removeListener(touchMoveListener);
+    google.maps.event.removeListener(touchEndListener);
+    google.maps.event.removeListener(touchStartListener);
+  };
+}, [selectedPlace]);
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
     const checkMobile = () => {
@@ -740,7 +897,7 @@ const TripPlannerPage: React.FC = () => {
             }}
           >
             {/* Map markers */}
-            { placesToVisit.map((place) => {
+            {placesToVisit.map((place) => {
               if (!place.coordinates || !place.coordinates.lat || !place.coordinates.long) return null;
               const isActive = activeDay?.activities.some(a => a.place.id === place.id);
               const activeIndex = isActive ? activeDay.activities.findIndex(a => a.place.id === place.id) : -1;
@@ -763,7 +920,7 @@ const TripPlannerPage: React.FC = () => {
                 />
               );
             })}
-            
+
 
             {/* Directions service / renderer */}
             {/* {directionsOptions && activeDay && (activeDay.route.signature !== expectedSig) && (
@@ -847,7 +1004,7 @@ const TripPlannerPage: React.FC = () => {
                         onClick={() => setOpenOverviewIdx(i)}
                         className="w-full text-left font-semibold"
                       >
-                         {day?.date
+                        {day?.date
                           ? new Date(day.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric' })
                           : day?.label} <span className="text-gray-500">({day.activities.length} Activities)</span>
                         {/* {day.date || day.label} ({day.activities.length} Activities) */}
@@ -969,7 +1126,7 @@ const TripPlannerPage: React.FC = () => {
           </div>
 
           {/* Selected place overlay: positioned 20px above marker using map container rect */}
-          {selectedPlace && mapRef.current && (
+          {/* {selectedPlace && mapRef.current && (
             <div
               className="fixed inset-0 z-50 pointer-events-none"
               onClick={() => setSelectedPlace(null)}
@@ -1011,6 +1168,36 @@ const TripPlannerPage: React.FC = () => {
                   </div>
                 );
               })()}
+            </div>
+          )} */}
+          {selectedPlace && mapRef.current && overlayPosition && (
+            <div
+              className="fixed inset-0 z-50 pointer-events-none"  // Removed redundant onClick (disabled anyway)
+            >
+              <div
+                ref={overlayRef}
+                className="absolute pointer-events-auto"
+                style={{
+                  left: `${overlayPosition.x}px`,
+                  top: `${overlayPosition.y}px`,  // No -20; transform pulls it above
+                  transform: "translate(-50%, -100%)",  // Center horizontally, fully above marker
+                  width: 320,
+                  maxWidth: 'calc(100vw - 140px)',
+                }}
+                onClick={(e) => e.stopPropagation()}  // Prevent map click from firing
+              >
+                <div className="bg-transparent shadow-none border-none">
+                  <PlaceCard
+                    place={selectedPlace}
+                    onAdd={() => {
+                      addPlaceToDay(selectedPlace, dayIndex);
+                      setSelectedPlace(null);
+                      setShowPanel(true);
+                    }}
+                    showDescription={true}
+                  />
+                </div>
+              </div>
             </div>
           )}
 

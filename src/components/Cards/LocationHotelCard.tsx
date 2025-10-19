@@ -77,7 +77,7 @@ export default function LocationHotelCard({
             <div style={{ ...styles.rowSB, justifyContent: "flex-end", width: "100%", position: "relative" }}>
               {h.price && (h.price as any).amount && (
                 <div style={{ position: "absolute", left: 0 }}>
-                  <div style={styles.priceText}>₹ {formatPriceHotel(h.price)}/ Night</div>
+                  <div style={styles.priceText}>₹ {formatPriceHotel(h.price)} / Night</div>
                 </div>
               )}
 

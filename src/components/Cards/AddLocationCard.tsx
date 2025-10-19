@@ -198,11 +198,11 @@ const AddLocationCard: React.FC<AddLocationCardProps> = ({
 
             {showBtns && (
                 <div className="location-card-buttons" ref={btnReference}>
-                    {pageType === PageTypeEnum.LOCATION && (
+                    {/* {pageType === PageTypeEnum.LOCATION && (
                         <button className="btn btn-white" onClick={ctaAction} style={btnsStyle}>
                             Explore itinerary
                         </button>
-                    )}
+                    )} */}
                     <button className="btn btn-black" onClick={btn2CTA} style={btnsStyle}>
                         {btn2Text}
                     </button>

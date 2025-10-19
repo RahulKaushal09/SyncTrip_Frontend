@@ -716,6 +716,7 @@ input {
 }
 
 .heart-icon {
+  outline: none;
   fill: transparent;
   stroke: white;
   stroke-width: 20;

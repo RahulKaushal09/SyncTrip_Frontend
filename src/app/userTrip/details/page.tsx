@@ -21,6 +21,7 @@ import WeatherRangeCard from '@/components/Trips/WeatherRangeForTrip';
 import HotelsSection from '@/components/Trips/HotelSectionTrip';
 import PlacesToVisitSection from '@/components/PageDetails/PlacesToVisitSection';
 import FullScreenLoader from '@/components/Loader/FullScreenLoader';
+import RestaurantsSection from '@/components/Trips/RestaurantsSection';
 
 
 
@@ -413,8 +414,8 @@ export default function UserTripDetailsPage() {
                     parentId={location?.id}
                     parentType={typeOfLocationCardEnum.location}
                     isLoading={isLoadingPlaces}
-                />
-
+                />,
+                restaurants: <RestaurantsSection restaurants={restaurants} totalRestaurants={restaurants.length} locationUUID={location?.id as string} isLoading={isLoadingRestaurants}  />,
                 // restaurants: <BookingHotelsAndStaysSection
                 //     hotelIds={location?.restaurantsandfoods || []}
                 //     locationName={location?.title}

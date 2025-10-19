@@ -2,6 +2,8 @@
  * Enum constants for the application
  */
 
+import { rest } from "lodash";
+
 export const PageTypeEnum = Object.freeze({
     LOCATION: "location",
     TRIP: "trips",
@@ -27,7 +29,7 @@ export const WishlistTypeEnum = Object.freeze({
     placeToVisit: 'placeToVisit',
     trip: 'trip',
     activity: 'activity',
-    food: 'food',
+    restaurant: 'restaurant',
     transport: 'transport',
     other: 'other',
 } as const);

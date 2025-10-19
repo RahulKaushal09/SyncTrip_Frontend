@@ -191,7 +191,8 @@ export interface Restaurants {
     description?: string; // admin/manual
     tags?: string[]; // keywords, searchable
     type?: string;
-
+    filterTags?: string[];
+    isWishlisted?: boolean;
 
 }
 
