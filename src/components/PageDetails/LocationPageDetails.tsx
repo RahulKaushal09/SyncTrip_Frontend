@@ -144,6 +144,7 @@ const LocationPageDetails = ({ uuid, locationData }: { uuid: string; locationDat
                             shortDescription={locationData?.description}
                             fullDescription={locationData?.fullDetails?.full_description}
                             bestTime={locationData?.best_time}
+                            showEssentials={false}
                         />
                     )}
                     <PlacesToVisitSection
@@ -160,7 +161,7 @@ const LocationPageDetails = ({ uuid, locationData }: { uuid: string; locationDat
                     />
                     <CultureFestivalsSection data={locationData?.cultures as Culture[]} heading={`Local Cultures of ${locationData?.title}`} type="culture" />
                     <PlanTripDates pageType={pageType as string} ctaAction={ctaAction}
-                        EnrollInTrip={() => { }} />
+                        EnrollInTrip={() => { }} locationId={locationData?.id} />
                     <CultureFestivalsSection data={locationData?.festivals as Festival[]} heading={`Festivals of ${locationData?.title}`} type="festival" />
                     {/* <LocationMapSection
                         latitude={locationData?.fullDetails?.coordinates?.lat as number}

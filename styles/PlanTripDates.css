@@ -67,6 +67,10 @@
     width: 50%;
 }
 
+.react-datepicker__day-names {
+    text-align: center !important;
+
+}
 
 
 .react-datepicker__header {

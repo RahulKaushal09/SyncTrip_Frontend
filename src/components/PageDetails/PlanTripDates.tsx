@@ -17,6 +17,7 @@ const DatePicker = dynamic(
 import 'react-datepicker/dist/react-datepicker.css';
 import '../../../styles/PlanTripDates.css';
 import { triggerLogin } from './../../utils/login.utils';
+import { useRouter } from 'next/navigation';
 
 interface PlanTripDatesProps {
     pageType: string;
@@ -24,6 +25,8 @@ interface PlanTripDatesProps {
     ctaAction: () => void;
     startDatePreTrip?: string | null;
     endDatePreTrip?: string | null;
+    locationId?: string; // ✅ add this
+
 }
 
 const PlanTripDates: React.FC<PlanTripDatesProps> = ({
@@ -32,7 +35,10 @@ const PlanTripDates: React.FC<PlanTripDatesProps> = ({
     ctaAction,
     startDatePreTrip,
     endDatePreTrip,
+    locationId
 }) => {
+    const router = useRouter();
+
     const [startDate, setStartDate] = useState<Date | null>(null);
     const [endDate, setEndDate] = useState<Date | null>(null);
     const [selectedMonth, setSelectedMonth] = useState<Date>(new Date());
@@ -87,15 +93,34 @@ const PlanTripDates: React.FC<PlanTripDatesProps> = ({
         setEndDate(null);
     }, [,]);
 
-    const createTrip = useCallback(() => {
-        if (startDate && endDate) {
-            console.log(`Trip planned from ${startDate.toDateString()} to ${endDate.toDateString()}`);
-            btn2CTA();
-        } else {
-            alert('Please select both start and end dates.');
-        }
-    }, [, startDate, endDate, btn2CTA]);
+    // const createTrip = useCallback(() => {
+    //     if (startDate && endDate) {
+    //         console.log(`Trip planned from ${startDate.toDateString()} to ${endDate.toDateString()}`);
+    //         btn2CTA();
+    //     } else {
+    //         alert('Please select both start and end dates.');
+    //     }
+    // }, [, startDate, endDate, btn2CTA]);
 
+    const createTrip = useCallback(() => {
+        if (!startDate || !endDate) {
+            alert('Please select both start and end dates.');
+            return;
+        }
+
+        const start = startDate.toISOString().split('T')[0];
+        const end = endDate.toISOString().split('T')[0];
+        const locationId_ = locationId || '';
+
+        const navigateToTrip = () => {
+            router.push(`/create/trip?locationId=${locationId_}&start=${start}&end=${end}`);
+        };
+
+        // ✅ trigger login first if user not logged in
+        triggerLogin(() => {
+            navigateToTrip();
+        });
+    }, [startDate, endDate, router, locationId]);
     // const jsonLd = {
     //     '@context': 'https://schema.org',
     //     '@type': 'Event',
@@ -152,7 +177,7 @@ const PlanTripDates: React.FC<PlanTripDatesProps> = ({
                 />
             </div>
             <div className="button-container row">
-                {pageType === PageTypeEnum.LOCATION && (
+                {/* {pageType === PageTypeEnum.LOCATION && (
                     <div className="col-lg-6 col-md-12 col-sm-12 zeroPaddingInMobile-btn-1000">
                         <button
                             className="btn btn-black create-itinerary"
@@ -163,13 +188,13 @@ const PlanTripDates: React.FC<PlanTripDatesProps> = ({
                             Use Synctrip Itinerary
                         </button>
                     </div>
-                )}
+                )} */}
                 <div
-                    className={`${pageType === PageTypeEnum.TRIP ? 'col-lg-12' : 'col-lg-6'
+                    className={`${pageType === PageTypeEnum.TRIP ? 'col-lg-12' : 'col-lg-12'
                         } col-md-12 col-sm-12 zeroPaddingInMobile-btn-1000`}
                 >
                     <button
-                        className="view-more-btn create-trip"
+                        className="btn btn-primary create-trip"
                         style={{ borderRadius: '9px', width: '100%', textAlign: 'center' }}
                         onClick={createTrip}
                         aria-label={pageType === PageTypeEnum.LOCATION ? 'Create Trip' : 'Join Trip'}
