@@ -145,7 +145,7 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
                             setUser(updatedUser);
                             StorageUtils.setUser(updatedUser);
                             setShowFullProfile(false);
-                            window.location.reload();
+                            // window.location.reload();
                         }}
                     />
                 )}
