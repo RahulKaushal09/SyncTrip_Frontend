@@ -30,6 +30,7 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
         travelGoal: '',
         languages: '',
         dateOfBirth: '',
+        sex: '',
     });
 
     const [searchTerm, setSearchTerm] = useState('');
@@ -239,7 +240,21 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
                             required
                         />
                     </div>
-
+                    {user.sex === undefined && (
+                    // Gender selection
+                    <select
+                        name="sex"
+                        className="login-popup-input"
+                        onChange={handleChange}
+                        value={form.sex}
+                        disabled={isLoading}
+                    >
+                        <option value="" disabled>Please select your gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    )}
                     {/* Preferred Destinations */}
                     <div className="full-profile-section">
                         <label>Favorite travel destinations?</label>
