@@ -242,9 +242,13 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
                     </div>
                     {user.sex === undefined && (
                     // Gender selection
+                        <div className="full-profile-section gender-section">
+                    <label htmlFor="dateOfBirth">
+                            Gender <span className="required-star">*</span>
+                        </label>
                     <select
                         name="sex"
-                        className="login-popup-input"
+                        className="full-profile-input"
                         onChange={handleChange}
                         value={form.sex}
                         disabled={isLoading}
@@ -254,6 +258,7 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
                         <option value="Female">Female</option>
                         <option value="Other">Other</option>
                     </select>
+                    </div>
                     )}
                     {/* Preferred Destinations */}
                     <div className="full-profile-section">
