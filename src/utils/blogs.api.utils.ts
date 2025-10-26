@@ -22,11 +22,13 @@ export class BlogsApiServices {
 
         const allBlogsResponse = await fetch(
             `${API_CONFIG.BACKEND_BASE_URL}/api/blogs/all?${queryParams.toString()}`,
+            
             {
+                next: { revalidate: 7200 }, // ✅ cache for 2 hours
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ limit: 100 }), // body
-                cache: "no-store"
+                // cache: "no-store"
             }
         );
 
