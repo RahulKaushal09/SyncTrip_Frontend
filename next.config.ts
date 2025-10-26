@@ -4,6 +4,15 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 });
 
 const nextConfig: NextConfig = {
+  async redirects() {
+    return [
+      {
+        source: '/sitemap.xml',
+        destination: '/api/sitemap',
+        permanent: true,
+      },
+    ];
+  },
   reactStrictMode: false,
   async headers() {
     return [

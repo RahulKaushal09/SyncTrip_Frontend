@@ -120,6 +120,23 @@ export const TripFields = Object.freeze({
     TRIP_RATING: 'tripRating',
     REMARK: 'remark'
 });
+export const blogfields = Object.freeze({
+    ID: 'id',
+    TITLE: 'title',
+    CONTENT: 'content',
+    FEATURED_IMAGE: 'featuredImage',
+    RELATED_LOCATIONS: 'relatedLocations',
+    CREATED_AT: 'createdAt',
+    SLUG: 'slug',
+    UPDATED_AT: 'updatedAt',
+
+    SEO: 'seo',
+    AUTHOR: 'author',
+    READ_TIME: 'readTime',
+    RATING: 'rating',
+    FEATURED: 'featured',
+    FILTER_TAGS: 'filterTags',
+});
 export const UserFields = Object.freeze({
     ID: 'id',
     NAME: 'name',
