@@ -4,12 +4,13 @@ import React, { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { ApiService } from "@/utils/api.utils"; // adjust path
 import "../../../styles/Common/feedbackModal.css";
+import { User } from "@/types";
 
 type Props = {
   feedBackFormOpen: boolean;
   setFeedbackFormOpen: (v: boolean) => void;
   isLoggedIn: boolean;
-  user?: any;
+  user?: User | null;
 };
 
 const SMILEY_LABELS = [
@@ -30,7 +31,7 @@ export default function FeedbackModal({ feedBackFormOpen, setFeedbackFormOpen, i
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pageUrl, setPageUrl] = useState("");
-  const [metadata, setMetadata] = useState<Record<string, any>>({});
+  const [metadata, setMetadata] = useState<Record<string, unknown>>({});
 
   // prepare portal container
   const [mounted, setMounted] = useState(false);
@@ -101,7 +102,7 @@ export default function FeedbackModal({ feedBackFormOpen, setFeedbackFormOpen, i
         ...metadata,
         providedName: !isLoggedIn ? name || undefined : undefined,
         providedEmail: !isLoggedIn ? email || undefined : undefined,
-        authUser: isLoggedIn ? { id: user?._id, email: user?.email, name: user?.name } : undefined,
+        authUser: isLoggedIn ? { id: user?.id, email: user?.email, name: user?.name } : undefined,
       },
       isAnonymous: !!isAnon,
     };

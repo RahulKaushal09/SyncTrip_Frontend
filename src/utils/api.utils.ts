@@ -82,7 +82,7 @@ export class ApiService {
     feedbackText: string;
     rating?: number | null;
     pageUrl?: string;
-    metadata?: Record<string, any>;
+    metadata?: Record<string, unknown>;
     isAnonymous?: boolean;
     userName?: string;
     userEmail?: string;
@@ -92,23 +92,16 @@ export class ApiService {
     const url = `${API_CONFIG.BACKEND_BASE_URL}${endpoint}`;
 
     try {
-      const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
-      const headers: Record<string, string> = { "Content-Type": "application/json" };
-      if (token && isLoggedIn) {
-        headers["Authorization"] = `Bearer ${token}`;
-      }
+     
+const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+    };
+      const response = await apiClient.post(url, payload,{headers});
 
-      const response = await fetch(url, {
-        method: "POST",
-        headers,
-        body: JSON.stringify(payload),
-      });
+      const data = await response.data;
 
-      const data = await response.json().catch(() => ({}));
-
-      if (!response.ok) {
-        // include backend error message if present
-        const errMsg = data && data.message ? data.message : `Failed to send feedback: ${response.status}`;
+      if (response && (response.status < 200 || response.status >= 300)) {
+        const errMsg = data && (data as any).message ? (data as any).message : `Failed to send feedback: ${response.status}`;
         throw new Error(errMsg);
       }
 
