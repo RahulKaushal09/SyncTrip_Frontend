@@ -15,6 +15,8 @@ import Cookies from 'js-cookie';
 import { useLoader } from '@/components/providers/LoaderContext';
 // import { triggerLogin } from "@/utils";
 import { redirect } from 'next/navigation';
+import { set } from "lodash";
+import FeedbackModal from "../common/FeedbackModal";
 
 const NavbarClient = ({ }) => {
   const [LoadingUser, setLoadingUser] = useState(true);
@@ -68,7 +70,7 @@ const NavbarClient = ({ }) => {
 
   const [showDropdown, setShowDropdown] = useState(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
-
+  const [feedBackFormOpen, setFeedbackFormOpen] = useState(false);
   const closeDrawer = () => setMobileNavOpen(false);
   // const redirectBtnClick = (redirectionLink: string) => router.push(redirectionLink);
   const redirectBtnClick = (redirectionLink: string) => {
@@ -76,13 +78,14 @@ const NavbarClient = ({ }) => {
     router.push(redirectionLink);
   };
   const createTripOrGroupTripBtn = () => {
-    if(pageType === PageTypeEnum.TRIP){
-      openLogin(()=>{redirectBtnClick(ROUTES.CREATE_TRIP)});
+    if (pageType === PageTypeEnum.TRIP) {
+      openLogin(() => { redirectBtnClick(ROUTES.CREATE_TRIP) });
     }
-    else{
+    else {
       redirectBtnClick(ROUTES.TRIPS);
     }
   };
+
 
   // useEffect(() => {
   //   const fetchUser = async () => {
@@ -137,14 +140,15 @@ const NavbarClient = ({ }) => {
                 Explore
               </span>
             </li>
-              <li className="nav-item"
-                onClick={() => redirectBtnClick(ROUTES.BLOGS)}
-                style={{ cursor: "pointer" }}>
-                <span className="nav-link">
-                  Blogs
-                </span>
-              </li>
-              {isLoggedIn && <li className="nav-item"
+            <li className="nav-item"
+              onClick={() => redirectBtnClick(ROUTES.BLOGS)}
+              style={{ cursor: "pointer" }}>
+              <span className="nav-link">
+                Blogs
+              </span>
+            </li>
+            
+            {isLoggedIn && <li className="nav-item"
               onClick={() => redirectBtnClick(ROUTES.USER_TRIPS)}
               style={{ cursor: "pointer" }}>
               <span className="nav-link">
@@ -157,7 +161,13 @@ const NavbarClient = ({ }) => {
                 {pageType === PageTypeEnum.TRIP ? "Create Trip" : "Group Trips"}
               </span>
             </li>
-
+<li className="nav-item"
+              onClick={() => setFeedbackFormOpen(true)}
+              style={{ cursor: "pointer" }}>
+              <span className="nav-link">
+                {isLoggedIn ? 'Feedback' : 'Contact'}
+              </span>
+            </li>
             <li className="nav-item dropdown">
               {LoadingUser ? (
                 <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px" }}>
@@ -224,6 +234,20 @@ const NavbarClient = ({ }) => {
         </div>
       </div>
 
+
+
+      {feedBackFormOpen && (
+        <FeedbackModal
+          feedBackFormOpen={feedBackFormOpen}
+          setFeedbackFormOpen={setFeedbackFormOpen}
+          isLoggedIn={isLoggedIn}
+          user={user}
+        />
+      )}
+
+
+
+
       {mobileNavOpen && (
         <div className="mobile-overlay" onClick={closeDrawer}></div>
       )}
@@ -288,7 +312,7 @@ const NavbarClient = ({ }) => {
             <span className="nav-link">My Trips</span>
           </li>}
           {pageType == PageTypeEnum.TRIP ? (
-            <li className="nav-item" onClick={() => { openLogin(()=>{redirectBtnClick(ROUTES.CREATE_TRIP)}); }}>
+            <li className="nav-item" onClick={() => { openLogin(() => { redirectBtnClick(ROUTES.CREATE_TRIP) }); }}>
               <span className="nav-link">Create Trip</span>
             </li>
           ) : (
@@ -296,6 +320,13 @@ const NavbarClient = ({ }) => {
               <span className="nav-link">Group Trips</span>
             </li>
           )}
+          <li className="nav-item"
+              onClick={() =>{ closeDrawer(); setFeedbackFormOpen(true)}}
+              style={{ cursor: "pointer" }}>
+              <span className="nav-link">
+                {isLoggedIn ? 'Feedback' : 'Contact'}
+              </span>
+            </li>
 
           {user ? (
             // <li className="nav-item" onClick={() => { window.location.href = "/profile"; closeDrawer(); }}>

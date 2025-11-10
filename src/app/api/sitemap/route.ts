@@ -1,4 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?>
+// app/api/sitemap/route.ts
+import { BlogPost } from '@/types';
+import { BlogsApiServices } from '@/utils';
+import { stat } from 'fs';
+import { NextResponse } from 'next/server';
+// import { getAllBlogPosts } from '../../../lib/blog'; // Adjust according to your project structure
+
+
+const staticSitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
   <url>
@@ -19,66 +27,6 @@
   <url>
     <loc>https://synctrip.in/blogs</loc>
     <lastmod>2025-08-08</lastmod>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://synctrip.in/blogs/pushkar-camel-fair-2025-last-minute-planner</loc>
-    <lastmod>2025-10-30</lastmod>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://synctrip.in/blogs/pilgrimage-november-kartik-purnima-guru-nanak</loc>
-    <lastmod>2025-11-05</lastmod>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://synctrip.in/blogs/top-offbeat-november-getaways-india</loc>
-    <lastmod>2025-11-10</lastmod>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://synctrip.in/blogs/himachal-post-monsoon-travel</loc>
-    <lastmod>2025-09-08</lastmod>
-    <priority>0.9</priority>
-  </url>
-   <url>
-    <loc>https://synctrip.in/blogs/post-diwali-mini-breaks</loc>
-    <lastmod>2025-10-26</lastmod>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://synctrip.in/blogs/diwali-2025-best-fireworks-destinations</loc>
-    <lastmod>2025-10-06</lastmod>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://synctrip.in/blogs/india-monsoon-travel-safety</loc>
-    <lastmod>2025-09-08</lastmod>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://synctrip.in/blogs/manali-routes-monsoon-updates</loc>
-    <lastmod>2025-09-08</lastmod>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://synctrip.in/blogs/himachal-monsoon-fury-travel-advisory</loc>
-    <lastmod>2025-09-08</lastmod>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://synctrip.in/blogs/offbeat-places-to-visit-india-2025</loc>
-    <lastmod>2025-08-28</lastmod>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://synctrip.in/blogs/uttarakhand-landslides-travel-advisory-aug-2025</loc>
-    <lastmod>2025-08-28</lastmod>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://synctrip.in/blogs/munnar-august-2025-monsoon-travel-guide-tea-gardens-waterfalls</loc>
-    <lastmod>2025-08-18</lastmod>
     <priority>0.9</priority>
   </url>
   <url>
@@ -3985,5 +3933,60 @@
     <loc>https://synctrip.in/trips/0ed1df41-1b91-40e9-8bf0-47e21eb2a7fa_rishikesh-trip-in-India</loc>
     <lastmod>2025-07-27</lastmod>
     <priority>0.9</priority>
+  </url>`
+
+const generateSitemap = (blogPosts: BlogPost[]) => {
+  const siteUrl = 'https://synctrip.in'; // Your base URL
+
+//   const urls = blogPosts.map(post => ({
+//     loc: `${siteUrl}/blogs/${post.slug}`,
+//     lastmod,
+//     priority: '0.9'
+//   }));
+
+//   return urls;
+// };
+
+  // Generate dynamic blog URLs
+  const blogUrls = blogPosts.map(post => ({
+    loc: `blogs/${post.slug}`,
+    lastmod: post.createdAt,
+    priority: '0.9'
+  }));
+
+  // Combine static pages and dynamic blog pages
+  const urls = [ ...blogUrls];
+
+  // Convert to XML format
+  let xml = staticSitemap + urls.map(url => `
+  <url>
+    <loc>${siteUrl}/${url.loc}</loc>
+    <lastmod>${url.lastmod}</lastmod>
+    <priority>${url.priority}</priority>
   </url>
-</urlset>
+`).join('');
+    xml += `
+</urlset>`;
+  return xml;
+};
+
+export async function GET() {
+  try {
+        const blogPosts = await BlogsApiServices.fetchBlogsForSitemap();
+
+
+    const sitemapXml = generateSitemap(blogPosts);
+
+    return new NextResponse(sitemapXml, {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/xml', // 👈 important
+        'Cache-Control': 's-maxage=86400, stale-while-revalidate',
+      },
+    });
+  } catch (error) {
+    console.error('Sitemap generation failed:', error);
+    return new NextResponse('Error generating sitemap', { status: 500 });
+  }
+}
+

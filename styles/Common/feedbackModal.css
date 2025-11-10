@@ -1,0 +1,206 @@
+/* feedback modal - SyncTrip themed */
+:root {
+  --surface: #ffffff;
+  --glass: rgba(255,255,255,1);
+}
+
+.feedback-form-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 10, 18, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999; /* very high to overlay sticky navbar */
+  padding: 24px;
+}
+
+.feedback-form-content {
+  background: var(--glass);
+  border-radius: 14px;
+  width: 100%;
+  max-width: 520px;
+  padding: 22px;
+  position: relative;
+  border: 1px solid rgba(100, 120, 130, 0.06);
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+.close-button {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 22px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  color: #333;
+}
+
+.feedback-form-content h2 {
+  margin: 0 0 6px 0;
+  color: #0f172a;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.muted {
+  color: var(--neutral-1);
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+.feedback-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.row-inline {
+  display: flex;
+  gap: 10px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #e6eef0;
+  font-size: 14px;
+  outline: none;
+  transition: box-shadow .12s ease, border-color .12s ease;
+  background: #fff;
+}
+
+.field input:focus,
+.field textarea:focus {
+  border-color: var(--priimary-1);
+  box-shadow: 0 4px 18px rgba(101, 202, 211, 0.12);
+}
+
+.field textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.meta-row small {
+  color: var(--neutral-1);
+  font-size: 12px;
+  display: block;
+  margin-top: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.btn {
+  border-radius: 10px;
+  padding: 10px 14px;
+  cursor: pointer;
+  border: none;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.btn.primary {
+  background: var(--primary-1);
+  color: white;
+}
+
+.btn.ghost {
+  background: transparent;
+  color: var(--secondary-1);
+  border: 1px solid #eef3f4;
+}
+
+/* rating area */
+.rating-row {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rating-label {
+  font-weight: 600;
+  color: #0f172a;
+  font-size: 14px;
+}
+
+.rating-smileys {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.smiley {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  background: #fff;
+  border: 1px solid #f0f3f4;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow .12s ease, border-color .12s ease;
+  outline: none;
+}
+
+.smiley:hover {
+  transform: translateY(-4px) scale(1.03);
+  box-shadow: 0 8px 22px rgba(15,23,42,0.06);
+}
+
+.smiley.active {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 12px 28px rgba(40, 180, 170, 0.14);
+  border-color: var(--primary-1);
+  background: linear-gradient(180deg, rgba(101,202,211,0.12), #fff);
+}
+
+/* caption beside smileys */
+.rating-caption {
+  color: var(--neutral-1);
+  font-size: 13px;
+  margin-top: 2px;
+}
+
+/* error */
+.error {
+  color: #b91c1c;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+/* submitted */
+.feedback-submitted h2 {
+  margin-bottom: 6px;
+}
+.feedback-submitted .muted {
+  margin-bottom: 14px;
+}
+
+/* responsive tweaks */
+@media (max-width: 520px) {
+  .feedback-form-content {
+    padding: 16px;
+  }
+  .smiley { width: 40px; height: 40px; font-size: 18px; }
+  .row-inline { flex-direction: column; }
+}

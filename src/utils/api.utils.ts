@@ -61,6 +61,65 @@ export class ApiService {
       return null;
     }
   }
+
+  /**
+   * Send user feedback to backend.
+   * - If isLoggedIn is true, it will try to hit /api/feedback/submit (protected)
+   *   and automatically include Authorization header if token exists in localStorage.
+   * - Otherwise it will hit /api/feedback/public-submit.
+   *
+   * @param {Object} payload
+   *  - feedbackText (string) - required
+   *  - rating? (number)
+   *  - pageUrl? (string)
+   *  - metadata? (object)
+   *  - isAnonymous? (boolean)
+   *  - userName? (string) - optional for anon submissions
+   *  - userEmail? (string) - optional for anon submissions
+   * @param {boolean} isLoggedIn
+   */
+  static async sendUserFeedback(payload: {
+    feedbackText: string;
+    rating?: number | null;
+    pageUrl?: string;
+    metadata?: Record<string, any>;
+    isAnonymous?: boolean;
+    userName?: string;
+    userEmail?: string;
+    userId?: string; // optional if you want to send along, but backend reads req.user from token
+  }, isLoggedIn: boolean) {
+    const endpoint = isLoggedIn ? "/api/feedback/submit" : "/api/feedback/public-submit";
+    const url = `${API_CONFIG.BACKEND_BASE_URL}${endpoint}`;
+
+    try {
+      const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+      const headers: Record<string, string> = { "Content-Type": "application/json" };
+      if (token && isLoggedIn) {
+        headers["Authorization"] = `Bearer ${token}`;
+      }
+
+      const response = await fetch(url, {
+        method: "POST",
+        headers,
+        body: JSON.stringify(payload),
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        // include backend error message if present
+        const errMsg = data && data.message ? data.message : `Failed to send feedback: ${response.status}`;
+        throw new Error(errMsg);
+      }
+
+      return data;
+    } catch (error) {
+      console.error("ApiService.sendUserFeedback error:", error);
+      throw error;
+    }
+  }
+
+
   static async getServerSidePropsForEvents() {
     const defaultCityName = 'Delhi-NCR';
     let events: Events[] = [];

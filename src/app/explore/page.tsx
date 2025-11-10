@@ -172,10 +172,10 @@ export default async function Home() {
         initialHasMore={initialLocations.length >= 12}
       />
       <div className="HomePage paddingSectionLeftRight">
-        <FestivalsEvents
+        {/* <FestivalsEvents
           initialEvents={initialEvents}
           initialLocation={initialLocation}
-        />
+        /> */}
         <HomeClientSection randomLocations={randomLocations} />
       </div>
     </>

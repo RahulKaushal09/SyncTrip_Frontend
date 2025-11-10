@@ -3,16 +3,17 @@ import { Location } from "@/types";
 import { ICONS_CLASS } from "@/utils/icon.utils";
 import Icon from "../Icons/Icons";
 import "../../../styles/Locations/blogsLocationCard.css";
+import { useRouter } from 'next/navigation';
 
 interface LocationCardProps {
     location: Location;
 }
 
 const BlogsLocationCard = ({ location }: LocationCardProps) => {
+    const router = useRouter();
     const onCreateTrip = (locationId: string) => {
-        console.log("Creating trip for location:", locationId);
-        // Implement the logic to create a trip for the selected location
-        // This could involve navigating to a trip creation page or opening a modal
+        // Logic to create a trip
+        router.push(`/create/trip?locationId=${locationId}`);
     };
     return (
         <div className="location-card-blogs">
