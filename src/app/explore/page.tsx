@@ -140,8 +140,8 @@ export const revalidate = 3600;
 export default async function Home() {
   // Data fetching with error handling
   let initialLocations: Location[] = [];
-  let initialEvents: Events[] = [];
-  let initialLocation: string = 'India';
+  // let initialEvents: Events[] = [];
+  // let initialLocation: string = 'India';
 
   try {
 
@@ -149,9 +149,9 @@ export default async function Home() {
     // const tokenCookie = cookieStore.get('userToken')?.value || '';
     initialLocations = (await ApiService.fetchLocations(0, 20, fieldsToFetchForHome)).locations || [];
 
-    const eventsData = await ApiService.getServerSidePropsForEvents();
-    initialEvents = eventsData.initialEvents || [];
-    initialLocation = eventsData.initialLocation || 'India';
+    // const eventsData = await ApiService.getServerSidePropsForEvents();
+    // initialEvents = eventsData.initialEvents || [];
+    // initialLocation = eventsData.initialLocation || 'India';
 
   } catch (error) {
     console.error('Error fetching data for Home page:', error);

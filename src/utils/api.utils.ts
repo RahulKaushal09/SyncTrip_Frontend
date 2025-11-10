@@ -101,7 +101,7 @@ const headers: Record<string, string> = {
       const data = await response.data;
 
       if (response && (response.status < 200 || response.status >= 300)) {
-        const errMsg = data && (data as any).message ? (data as any).message : `Failed to send feedback: ${response.status}`;
+        const errMsg = data ;
         throw new Error(errMsg);
       }
 
