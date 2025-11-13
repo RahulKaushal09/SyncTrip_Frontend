@@ -17,6 +17,7 @@ import { useLoader } from '@/components/providers/LoaderContext';
 import { redirect } from 'next/navigation';
 import { set } from "lodash";
 import FeedbackModal from "../common/FeedbackModal";
+import NotificationBell from "./NotificationBell";
 
 const NavbarClient = ({ }) => {
   const [LoadingUser, setLoadingUser] = useState(true);
@@ -67,6 +68,7 @@ const NavbarClient = ({ }) => {
   const router = useRouter();
   // const { logout, openLogin } = useLogin();
   const [pageType, setPageType] = useState("");
+  const [ismobile, setIsMobile] = useState(false);  
 
   const [showDropdown, setShowDropdown] = useState(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
@@ -85,6 +87,16 @@ const NavbarClient = ({ }) => {
       redirectBtnClick(ROUTES.TRIPS);
     }
   };
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 990); // Example breakpoint for mobile
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize(); // Initial check
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
 
   // useEffect(() => {
@@ -125,10 +137,17 @@ const NavbarClient = ({ }) => {
         <Link href="/" onClick={() => redirectBtnClick("/")} className="navbar-brand" style={{ width: "100px" }}>
           <Image src={SyncTripLogo} alt="SyncTrip" style={{ width: "100%" }} />
         </Link>
-
+        {ismobile ? (
+        <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
+        <NotificationBell />
         <button className="navbar-toggler" onClick={() => setMobileNavOpen(!mobileNavOpen)}>
           <span className="navbar-toggler-icon"></span>
         </button>
+        </div>
+      ):
+      <button className="navbar-toggler" onClick={() => setMobileNavOpen(!mobileNavOpen)}>
+          <span className="navbar-toggler-icon"></span>
+        </button>}
         {/* <div className={`collapse navbar-collapse justify-content-end ${mobileNavOpen ? 'show' : ''}`} id="navbarNav"> */}
 
         <div className="collapse navbar-collapse justify-content-end" id="navbarNav" >
@@ -147,7 +166,7 @@ const NavbarClient = ({ }) => {
                 Blogs
               </span>
             </li>
-            
+
             {isLoggedIn && <li className="nav-item"
               onClick={() => redirectBtnClick(ROUTES.USER_TRIPS)}
               style={{ cursor: "pointer" }}>
@@ -161,7 +180,7 @@ const NavbarClient = ({ }) => {
                 {pageType === PageTypeEnum.TRIP ? "Create Trip" : "Group Trips"}
               </span>
             </li>
-<li className="nav-item"
+            <li className="nav-item"
               onClick={() => setFeedbackFormOpen(true)}
               style={{ cursor: "pointer" }}>
               <span className="nav-link">
@@ -199,33 +218,38 @@ const NavbarClient = ({ }) => {
                 </div>
               ) :
                 !LoadingUser && user ? (
-                  <Dropdown show={showDropdown} onToggle={setShowDropdown}>
-                    <div style={{ display: "flex", alignItems: "center" }}>
-                      <Dropdown.Toggle variant="link" onClick={toggleDropdown} style={{
-                        padding: "0",
-                        border: "none",
-                        background: "transparent",
-                        boxShadow: "none",
-                        display: "flex",
-                        alignItems: "center",
-                        color: "black",
-                        gap: "10px"
-                      }}>
-                        <Image
-                          src={user.profile_picture?.[0] || "https://via.placeholder.com/40"}
-                          alt="Profile"
-                          width={40}
-                          height={40}
-                          style={{ borderRadius: "50%", objectFit: "cover" }}
-                        />
-                        <span>{user.name}</span>
-                      </Dropdown.Toggle>
-                      <Dropdown.Menu align="end">
-                        <Dropdown.Item as={Link} href={`/user/${user.id}`}>Profile</Dropdown.Item>
-                        <Dropdown.Item onClick={logout}>Logout</Dropdown.Item>
-                      </Dropdown.Menu>
-                    </div>
-                  </Dropdown>
+                  <div className="flex items-center gap-4">
+                    {/* Notification Icon */}
+                    <NotificationBell />
+                    <Dropdown show={showDropdown} onToggle={setShowDropdown}>
+                      <div style={{ display: "flex", alignItems: "center" }}>
+
+                        <Dropdown.Toggle variant="link" onClick={toggleDropdown} style={{
+                          padding: "0",
+                          border: "none",
+                          background: "transparent",
+                          boxShadow: "none",
+                          display: "flex",
+                          alignItems: "center",
+                          color: "black",
+                          gap: "10px"
+                        }}>
+                          <Image
+                            src={user.profile_picture?.[0] || "https://via.placeholder.com/40"}
+                            alt="Profile"
+                            width={40}
+                            height={40}
+                            style={{ borderRadius: "50%", objectFit: "cover", width: "40px", height: "40px" }}
+                          />
+                          <span>{user.name}</span>
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu align="end">
+                          <Dropdown.Item as={Link} href={`/user/${user.id}`}>Profile</Dropdown.Item>
+                          <Dropdown.Item onClick={logout}>Logout</Dropdown.Item>
+                        </Dropdown.Menu>
+                      </div>
+                    </Dropdown>
+                  </div>
                 ) : (
                   <button className="btn btn-primary ms-2" onClick={handleLoginClick}>Login / Register</button>
                 )}
@@ -280,7 +304,7 @@ const NavbarClient = ({ }) => {
                   alt="Profile"
                   width={40}
                   height={40}
-                  style={{ borderRadius: "50%", objectFit: "cover" }}
+                  style={{ borderRadius: "50%", objectFit: "cover", width: "40px", height: "40px" }}
                 />
                 <span className="ms-2 mt-2">{user?.name || "User"}</span>
 
@@ -321,12 +345,12 @@ const NavbarClient = ({ }) => {
             </li>
           )}
           <li className="nav-item"
-              onClick={() =>{ closeDrawer(); setFeedbackFormOpen(true)}}
-              style={{ cursor: "pointer" }}>
-              <span className="nav-link">
-                {isLoggedIn ? 'Feedback' : 'Contact'}
-              </span>
-            </li>
+            onClick={() => { closeDrawer(); setFeedbackFormOpen(true) }}
+            style={{ cursor: "pointer" }}>
+            <span className="nav-link">
+              {isLoggedIn ? 'Feedback' : 'Contact'}
+            </span>
+          </li>
 
           {user ? (
             // <li className="nav-item" onClick={() => { window.location.href = "/profile"; closeDrawer(); }}>

@@ -1,12 +1,13 @@
 'use client'
 
 import React, { useEffect, useEffectEvent, useRef, useState } from 'react'
-import MatchingScreenHeader from '@/components/Header/MatchingScreenHeader'
+import MultipleTripSelectionHeader from '@/components/Header/MultipleTripSelectionHeader'
 import './matching.css'
 import apiClient from '@/utils/apiClient'
 import { useRouter, useSearchParams } from 'next/navigation'
 import TripServices from '@/utils/trip.utils'
 import { userTripFields } from '@/constants'
+import { UserTrip } from '@/types'
 
 export type Candidate = {
     id: string
@@ -52,10 +53,19 @@ export default function MatchingPage() {
     // get trip id from query 
     const router = useRouter();
     const searchParams = useSearchParams();
-    const tripId = searchParams?.get('tripId');
-    if (!tripId) {
-        router.replace('');
-    }
+    const [tripId, setTripId] = useState<string | null>(null);
+    useEffect(() => {
+        const id = searchParams?.get('tripId');
+        if (id) {
+            setTripId(id);
+        } else {
+            router.replace('');
+        }
+    }, [searchParams, router]);
+    // const tripId = searchParams?.get('tripId');
+    // if (!tripId) {
+    //     router.replace('');
+    // }
 
     const [profiles, setProfiles] = useState<Candidate[]>([])
     const [cursor, setCursor] = useState<any>(null)
@@ -79,6 +89,7 @@ export default function MatchingPage() {
     const [endDate, setEndDate] = useState<string>("");
     const [dateString, setDateString] = useState<string>("");
     const [matchPopupProfile, setMatchPopupProfile] = useState<Candidate | null>(null)
+    const [allTrips, setAllTrips] = useState<UserTrip[]>([]);
 
     const SWIPE_THRESHOLD = 100
     const current = profiles[index]
@@ -87,13 +98,33 @@ export default function MatchingPage() {
     // FETCH CANDIDATES FROM BACKEND
     // -------------------------------------
     useEffect(() => {
-        fetchTripDetails();
+        let mounted = true;
+        (async () => {
+            await loadTrips();
+            if (!mounted) return;
+            fetchTripDetails();
+        })();
         // cleanup RAF if any
         return () => {
+            mounted = false;
             if (rafRef.current) cancelAnimationFrame(rafRef.current)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
+
+    useEffect(() => {
+        if (!tripId) return;
+        loadTrips();
+        return () => {
+            if (rafRef.current) cancelAnimationFrame(rafRef.current)
+        }
+    }, [tripId]);
+
+    useEffect(() => {
+        if (tripId && allTrips.length > 0) {
+            fetchTripDetails();
+        }
+    }, [tripId, allTrips]);
     async function fetchCandidates() {
         try {
             let url = `/match/candidates?limit=10&locationId=${locationId}`
@@ -114,17 +145,37 @@ export default function MatchingPage() {
     useEffect(() => {
 
         fetchCandidates();
-    }, [locationId])
+    }, [locationId]);
+    async function loadTrips() {
+        try {
+            const trips: UserTrip[] = await TripServices.fetchUserTrips();
+            setAllTrips(trips);
+        } catch (err) {
+            console.error('Failed to fetch trips', err);
+        }
+    }
     async function fetchTripDetails() {
         try {
-            const tripDetailsFields = [userTripFields.ID, userTripFields.LOCATION_ID, userTripFields.LOCATION_NAME, userTripFields.START_DATE, userTripFields.END_DATE];
-            const tripDetails = await TripServices.fetchTripDetails(tripId as string, tripDetailsFields);
-            console.log('tripDetails', tripDetails);
-            setLocationId(tripDetails.locationId);
-            setTripName(tripDetails.locationName as string);
-            setStartDate(tripDetails.startDate as string);
-            setEndDate(tripDetails.endDate as string);
-            setDateString(formatDate(tripDetails.startDate as string) + " - " + formatDate(tripDetails.endDate as string));
+            // const tripDetailsFields = [userTripFields.ID, userTripFields.LOCATION_ID, userTripFields.LOCATION_NAME, userTripFields.START_DATE, userTripFields.END_DATE];
+            // const userTrips: UserTrip[] = await TripServices.fetchUserTrips();
+            // setAllTrips(userTrips);
+            if (!tripId) return;
+            allTrips.forEach((trip) => {
+                if (trip.id === tripId) {
+                    setLocationId(trip.locationId);
+                    setTripName(trip.locationName as string);
+                    setStartDate(trip.startDate as string);
+                    setEndDate(trip.endDate as string);
+                    setDateString(formatDate(trip.startDate as string) + " - " + formatDate(trip.endDate as string));
+                }
+            });
+            // const tripDetails: UserTrip = await TripServices.fetchTripDetails(tripId);
+            // console.log('tripDetails', tripDetails);
+            // setLocationId(tripDetails.locationId);
+            // setTripName(tripDetails.locationName as string);
+            // setStartDate(tripDetails.startDate as string);
+            // setEndDate(tripDetails.endDate as string);
+            // setDateString(formatDate(tripDetails.startDate as string) + " - " + formatDate(tripDetails.endDate as string));
 
         }
         catch (err) {
@@ -346,11 +397,11 @@ export default function MatchingPage() {
 
     function closePopup() {
         setMatchPopupProfile(null);
-  // unlock swiping for next interactions and advance past matched card
-  swipeLockRef.current = false;
-  setIndex(prev => Math.min(prev + 1, Math.max(0, profiles.length - 1)));
-  // fetch more if needed
-  if (profiles.length - (index + 1) < 3) fetchCandidates();
+        // unlock swiping for next interactions and advance past matched card
+        swipeLockRef.current = false;
+        setIndex(prev => Math.min(prev + 1, Math.max(0, profiles.length - 1)));
+        // fetch more if needed
+        if (profiles.length - (index + 1) < 3) fetchCandidates();
     }
 
     // -------------------------------------
@@ -359,7 +410,20 @@ export default function MatchingPage() {
     if (!current || locationId === null) {
         return (
             <main className="matchingpage">
-                <MatchingScreenHeader tripName={tripName ? tripName : "SyncTrip Travel Match"} dates={dateString} />
+                <MultipleTripSelectionHeader
+                    tripName={tripName}
+                    dates={dateString}
+                    tripId={tripId as string}
+                    allTrips={allTrips}
+                    onSelectTrip={(id, name, dates) => {
+                        setTripId(id);
+                        setTripName(name);
+                        setDateString(dates);
+                        // re-fetch trip details + candidates
+                        fetchTripDetails();
+                    }}
+                />
+                {/* <MultipleTripSelectionHeader tripName={tripName ? tripName : "SyncTrip Travel Match"} dates={dateString} setDates={setDateString} tripId={tripId as string} setSelectedTripId={setTripId} setSelectedTripName={setTripName} /> */}
                 <div className="empty">No more travelers nearby.</div>
             </main>
         )
@@ -370,7 +434,20 @@ export default function MatchingPage() {
     // -------------------------------------
     return (
         <main className="matchingpage">
-            <MatchingScreenHeader tripName={tripName} dates={dateString} />
+            <MultipleTripSelectionHeader
+                tripName={tripName}
+                dates={dateString}
+                tripId={tripId as string}
+                allTrips={allTrips}
+                onSelectTrip={(id, name, dates) => {
+                    setTripId(id);
+                    setTripName(name);
+                    setDateString(dates);
+                    // re-fetch trip details + candidates
+                    fetchTripDetails();
+                }}
+            />
+            {/* <MultipleTripSelectionHeader tripName={tripName} dates={dateString} setDates={setDateString} tripId={tripId as string} setSelectedTripId={setTripId} setSelectedTripName={setTripName} /> */}
 
             <section className="stage">
                 <div className="card-wrap">
@@ -416,7 +493,7 @@ export default function MatchingPage() {
                     <div className="match-card">
                         <h2>It's a Match!</h2>
 
-                        <img className="matchingImg" src={matchPopupProfile.userSnapshot.profile_picture[0]} alt={matchPopupProfile.userSnapshot.name}  />
+                        <img className="matchingImg" src={matchPopupProfile.userSnapshot.profile_picture[0]} alt={matchPopupProfile.userSnapshot.name} />
 
                         <p className="match-name">
                             {matchPopupProfile.userSnapshot.name}, {matchPopupProfile.userSnapshot.age}

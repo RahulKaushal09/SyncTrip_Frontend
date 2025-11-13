@@ -55,7 +55,7 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({ user, show, onToggle })
                     alt="Profile"
                     width={40}
                     height={40}
-                    style={{ borderRadius: "50%", objectFit: "cover" }}
+                    style={{ borderRadius: "50%", objectFit: "cover" ,width:"40px", height:"40px"}}
                 />
                 <span>{user.name}</span>
             </button>

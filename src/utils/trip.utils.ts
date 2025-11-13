@@ -52,9 +52,13 @@ class TripServices {
         return response.data;
     }
 
-    static async fetchUserTrips() {
+    static async fetchUserTrips(fields: string[] = []): Promise<UserTrip[]> {
         try {
-            const res = await apiClient.get(`/app/getUserTrips`);
+            const res = await apiClient.get(`/app/getUserTrips`, {
+                params: {
+                    fields: fields.join(","),
+                },
+            });
             return res.data.trips as UserTrip[];
         }
         catch (error) {
