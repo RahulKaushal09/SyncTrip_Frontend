@@ -31,6 +31,6 @@ export const TripPreferences = [
     { label: 'Flexible', description: 'No budget restrictions.', icon: 'globe' },
   ];
   export const TripPrivacyOptions = [
-    { label: 'Public Trip', description: 'Anyone can find and join your trip.', icon: 'globe' },
+    { label: 'Public Trip', description: 'Connect with anyone during your trip.', icon: 'globe' },
     { label: 'Invite only', description: 'Only people you invite can join.', icon: 'person-add' },
   ];

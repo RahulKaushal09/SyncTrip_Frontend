@@ -22,6 +22,7 @@ import { PlacesToVisit, UserTrip, UserTripActivity } from '@/types';
 import '../../../styles/tripPlanner.css';
 import { IsUserProfileComplete } from '@/utils';
 import toast from 'react-hot-toast';
+import { useLoader } from '@/components/providers/LoaderContext';
 
 // ---------------------------------------------
 // TYPES
@@ -295,6 +296,7 @@ const TripPlannerPageContent: React.FC = () => {
   const activeDayIdRef = useRef<string | null>(null);
 
   const [selectedPlace, setSelectedPlace] = useState<PlacesToVisit | null>(null);
+    const { showLoader, hideLoader } = useLoader();
 
   const activeDay = days[isOverview ? openOverviewIdx : selectedDayIdx];
   const activeOptimize = optimizeByDay[activeDay?.id ?? ''] ?? false;
@@ -443,17 +445,19 @@ const TripPlannerPageContent: React.FC = () => {
           top: 80,
           bottom: 40,
           left: 40,
-          right: 440
+          right: isMobile ? 150 :440
         } as google.maps.Padding);
       } catch (e) {
         // map might not be ready
       }
     }, 0);
+    
   }, [placesToVisit, center]);
 
   const saveTrip = async () => {
     if (saving) return;
     setSaving(true);
+    showLoader();
     try {
       const activities: UserTripActivity[] = [];
       days.forEach(day => {
@@ -478,14 +482,17 @@ const TripPlannerPageContent: React.FC = () => {
       }
       if (showHotelsAfter) {
         router.replace(`/userTrip/hotelSelection?tripId=${tripId}&locationId=${tripDetails?.locationId}`);
+
       } else {
         router.replace(`/userTrip/details?tripId=${tripId}&locationId=${tripDetails?.locationId}`);
+
       }
     } catch (err: unknown) {
       console.error('Save error:', err);
       alert(`Save failed: ${err instanceof Error ? err.message : 'Unknown error'}`);
     } finally {
       setSaving(false);
+      hideLoader();
     }
   };
 
@@ -991,24 +998,19 @@ useEffect(() => {
           >
             <div className="p-2 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <button
+                
+              </div>
+              <button
                   onClick={() => setShowPanel(false)}
-                  className="text-gray-600 hover:text-gray-900"
+                  className="text-gray-600 hover:text-gray-900 p-1"
                   aria-label="Close itinerary"
                 >
                   Close
                 </button>
-              </div>
-              <button
-                onClick={saveTrip}
-                disabled={saving}
-                className="bg-blue-500 text-white p-2 rounded"
-              >
-                {saving ? 'Saving...' : 'Save'}
-              </button>
             </div>
 
             <div className="flex-1 p-4 overflow-y-auto">
+              
               {isOverview ? (
                 <>
                   {days.map((day, i) => (
@@ -1103,6 +1105,13 @@ useEffect(() => {
             style={{ zIndex: 70, right: `${daysBarRightOffset}px` }}
           >
             <div className="py-4 space-y-2 overflow-y-auto" style={{ maxHeight: '100vh' }}>
+              <button
+                onClick={saveTrip}
+                disabled={saving}
+                className="bg-primary-1 text-white p-2 rounded"
+              >
+                {saving ? 'Saving...' : 'Save'}
+              </button>
               {['Overview', ...days.map(d => d.label)].map((label, i) => (
                 <button
                   key={label + i}
@@ -1129,7 +1138,7 @@ useEffect(() => {
                   }}
                   className={`w-12 h-12 rounded-lg text-sm flex items-center justify-center text-center transition-all
                     ${(isOverview && label === 'Overview') || (!isOverview && days[selectedDayIdx]?.label === label)
-                      ? 'bg-blue-500 text-white shadow'
+                      ? 'bg-secondary-1 text-white shadow'
                       : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
                 >
                   {label === 'Overview' ? 'All' : 'Day' + i}

@@ -22,7 +22,7 @@ const NavbarClient = ({ }) => {
   const [LoadingUser, setLoadingUser] = useState(true);
   const { user, isLoggedIn, logout, openLogin } = useLogin(); // ⬅️ use context directly
   const pathname = usePathname();
-  const shouldHideNavbar = pathname.includes('userTrip/planner');
+  const shouldHideNavbar = pathname.includes('userTrip/planner') || pathname.includes('userTrip/matching');
 
   // const cookie = Cookies.get('userInfo');
   // const [user, setUser] = useState<User | null>(() => {

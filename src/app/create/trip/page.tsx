@@ -13,7 +13,7 @@ import Step5Privacy from '@/components/createTrip/Step5Privacy';
 import { Pencil, MapPin, Calendar, Star, CreditCard, Lock } from "lucide-react";
 import TripServices from '@/utils/trip.utils';
 
-const TOTAL_STEPS = 6;
+const TOTAL_STEPS = 4;
 const formatISODateOnly = (d: Date) => d.toISOString().split('T')[0];
 export default function CreateTripScreen() {
   return (
@@ -139,9 +139,9 @@ function CreateTripContent() {
   const canGoNext =
     (step === 1 && !!selectedLocation) || 
     (step === 2 && !!startDate && !!endDate) || 
-    (step === 3 && selectedPreferences.length > 0) ||
-    (step === 4 && !!selectedBudget) ||
-    (step === 5 && !!selectedPrivacy) ||
+    // (step === 3 && selectedPreferences.length > 0) ||
+    // (step === 4 && !!selectedBudget) ||
+    (step === 3 && !!selectedPrivacy) ||
     step === TOTAL_STEPS;
 
   
@@ -174,7 +174,7 @@ function CreateTripContent() {
             // route to manual planner page
             router.replace(`/userTrip/planner?tripId=${createdTripId}`);
           } else {
-            router.replace(`/userTrip/${createdTripId}`);
+            router.replace(`/userTrip/matching?tripId=${createdTripId}`);
           }
         } else {
           console.error('Failed to create trip:', res);
@@ -297,7 +297,7 @@ function CreateTripContent() {
           onEdit={() => goEdit(2)}
         />
 
-        <Card
+        {/* <Card
           icon={<Star size={18} />}
           label="Interests"
           value={selectedPreferences.length ? selectedPreferences.join(', ') : '—'}
@@ -311,14 +311,14 @@ function CreateTripContent() {
           value={selectedBudget || '—'}
           pill
           onEdit={() => goEdit(4)}
-        />
+        /> */}
 
         <Card
           icon={<Lock size={18} />}
           label="Privacy"
           value={selectedPrivacy || '—'}
           pill
-          onEdit={() => goEdit(5)}
+          onEdit={() => goEdit(3)}
         />
 
         <div className="mt-6">
@@ -331,12 +331,12 @@ function CreateTripContent() {
             </button>
 
             {/* Optional second CTA */}
-            {/* <button
-              onClick={() => publishTripAndNavigateToMatching(false)}
+            <button
+              onClick={() => publishTripAndNavigate(false)}
               className="w-full btn btn-matching-color"
             >
               Start Matching
-            </button> */}
+            </button>
           </div>
         </div>
       </div>
@@ -356,13 +356,13 @@ function CreateTripContent() {
             onDatesSelected={handleDatesSelected}
           />
         );
+      // case 3:
+      //   return <Step3Preferences selectedPreferences={selectedPreferences} setPreferences={setSelectedPreferences} />;
+      // case 4:
+      //   return <Step4Budget selectedBudget={selectedBudget} setSelectedBudget={setSelectedBudget} />;
       case 3:
-        return <Step3Preferences selectedPreferences={selectedPreferences} setPreferences={setSelectedPreferences} />;
-      case 4:
-        return <Step4Budget selectedBudget={selectedBudget} setSelectedBudget={setSelectedBudget} />;
-      case 5:
         return <Step5Privacy selectedPrivacy={selectedPrivacy} setSelectedPrivacy={setSelectedPrivacy} />;
-      case 6:
+      case 4:
         return <Step6Review />;
       default:
         return (

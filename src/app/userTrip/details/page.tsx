@@ -22,6 +22,7 @@ import HotelsSection from '@/components/Trips/HotelSectionTrip';
 import PlacesToVisitSection from '@/components/PageDetails/PlacesToVisitSection';
 import FullScreenLoader from '@/components/Loader/FullScreenLoader';
 import RestaurantsSection from '@/components/Trips/RestaurantsSection';
+import BottomButtonHolder from '@/components/bottomSheets/BottomButtonHolder';
 
 
 
@@ -382,11 +383,14 @@ function UserTripDetailsPageContent() {
     };
 
 
-
+    const navigateToStartMatching = () => {
+        router.push(`/userTrip/matching?tripId=${tripId}`);
+    };
 
 
 
     const pageType = PageTypeEnum.USER_TRIP;
+    const bottomButtons = [{ text: "Start Matching", onClick: navigateToStartMatching, styleClass: "btn btn-matching-color" }];
     // return <LocationPageDetails locationData={locationData} uuid={tripId as string} />;
     return (
         <div className="DestinationPage paddingSectionLeftRight">
@@ -437,8 +441,7 @@ function UserTripDetailsPageContent() {
                 //     parentType="location"
                 // />
             }} />
-
-
+            <BottomButtonHolder buttons={bottomButtons} />
         </div>
     );
 }

@@ -13,7 +13,7 @@ const Step5Privacy: FC<step5PrivacyProps> = ({ selectedPrivacy, setSelectedPriva
       <strong>Choose privacy</strong>
     </h2>
     <p style={{ color: "rgb(102, 102, 102)", marginBottom: "16px" }}>
-                  Make your trip private for just you and your group, or public so fellow travelers can join.
+                  Make your trip private for just you and your group, or public to connect with fellow travelers.
 
     </p>
 

@@ -8,7 +8,7 @@ import { usePathname } from 'next/navigation';
 
 const Footer = () => {
     const pathname = usePathname();
-    const shouldHideFooter = pathname.includes('/chat') || pathname.includes('/create') || pathname.includes('userTrip/planner');
+    const shouldHideFooter = pathname.includes('/chat') || pathname.includes('/create') || pathname.includes('userTrip/planner') || pathname.includes('userTrip/matching');
 
     const companyLinks = [
         { name: 'About', url: '/about' },

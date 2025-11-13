@@ -42,8 +42,8 @@ export const styles = {
     backgroundColor: "var(--backgroundLightApp)",
   },
   container: {
-    padding: 15,
-    paddingBottom: 40,
+    // padding: 15,
+    marginBottom: 40,
   },
   dayCard: {
     marginBottom: 14,

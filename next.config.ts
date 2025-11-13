@@ -79,6 +79,16 @@ const nextConfig: NextConfig = {
         hostname: 'picsum.photos',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'wbksuxwcqnzuppviunfz.supabase.co',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'synctrip-backend.vercel.app',
+        pathname: '/**',
+      },
     ],
   },
 };
