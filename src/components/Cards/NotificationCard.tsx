@@ -12,13 +12,13 @@ export default function NotificationCard({ notif }) {
   let href = "#";
 
   if (clickAction?.type === "OPEN_CHAT") {
-    href = `/chat/${clickAction.payload.conversationId}`;
+    href = `/chats?chatId=${clickAction.payload.conversationId}`;
   }
-  if (clickAction?.type === "OPEN_PROFILE") {
-    href = `/profile/${clickAction.payload.profileId}`;
-  }
+  // if (clickAction?.type === "OPEN_PROFILE") {
+  //   href = `/profile/${clickAction.payload.profileId}`;
+  // }
   if (clickAction?.type === "OPEN_TRIP") {
-    href = `/trip/${clickAction.payload.tripId}`;
+    href = `/userTrip/details?tripId=${clickAction.payload.tripId}`;
   }
 
   return (

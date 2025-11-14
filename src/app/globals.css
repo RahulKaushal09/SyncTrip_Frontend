@@ -1224,3 +1224,9 @@ input {
     padding-left: 40px;
   }
 }
+
+.chatsPage{
+  position:fixed;
+  top:0;
+  width: 100%;
+}

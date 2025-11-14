@@ -3,7 +3,7 @@ import { is } from './../../.next/static/chunks/main';
  * API-related type definitions
  */
 
-import { Culture, Festival, Itinerary, TripTimeline } from "@/types";
+import { Chat, Culture, Festival, Itinerary, Message, TripTimeline } from "@/types";
 
 export interface ApiResponse<T = unknown> {
     success: boolean;
@@ -277,3 +277,14 @@ export interface Trip {
     selectedHotelId: string[];
 }
 
+
+
+export type FetchChatsResponse = Chat[];
+
+export interface FetchChatByIdResponse extends Chat {
+  messages: Message[]; // only in GET /api/chats/:chatId
+}
+
+export type FetchMessagesResponse = Message[];
+
+export interface SendMessageResponse extends Message {}

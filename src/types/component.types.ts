@@ -142,3 +142,51 @@ export type DayWeather = {
   icon?: string; // emoji or className for icon
   available?: boolean; // is data available for this day
 };
+
+
+export interface ChatUser {
+  id: string;
+  name: string;
+  email?: string;
+  profile_picture?: string;
+}
+
+export interface LatestMessageSender {
+  id: string;
+  name: string;
+  profile_picture?: string;
+}
+
+export interface LatestMessage {
+  id: string;
+  content: string;
+  sender: LatestMessageSender;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Chat {
+  id: string;
+  tripId: string;
+  isGroupChat: boolean;
+  users: ChatUser[];
+  latestMessage?: LatestMessage | null;
+  groupAdmin?: string | null;
+  chatName?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Message {
+  id: string;
+  chat: string;
+  sender: string;
+  content: string;
+  readBy: string[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ChatWithMessages extends Chat {
+  messages: Message[];
+}
