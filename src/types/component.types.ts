@@ -148,7 +148,7 @@ export interface ChatUser {
   id: string;
   name: string;
   email?: string;
-  profile_picture?: string;
+  profile_picture?: string[];
 }
 
 export interface LatestMessageSender {
@@ -165,14 +165,20 @@ export interface LatestMessage {
   updatedAt: string;
 }
 
+
 export interface Chat {
   id: string;
-  tripId: string;
+  tripMap: {
+    userId: string;
+    tripId: string;
+  }[];
+  matchId?: string;
+  isMatchChat: boolean;
   isGroupChat: boolean;
-  users: ChatUser[];
-  latestMessage?: LatestMessage | null;
-  groupAdmin?: string | null;
-  chatName?: string | null;
+  users: ChatUser[] | string[];
+  latestMessage?: LatestMessage;
+  groupAdmin?: ChatUser;
+  chatName: string;
   createdAt: string;
   updatedAt: string;
 }

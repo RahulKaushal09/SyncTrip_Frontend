@@ -282,6 +282,8 @@ export interface Trip {
 export type FetchChatsResponse = Chat[];
 
 export interface FetchChatByIdResponse extends Chat {
+    tripId: string; // only in GET /api/chats/:chatId
+    Chat:Chat,
   messages: Message[]; // only in GET /api/chats/:chatId
 }
 

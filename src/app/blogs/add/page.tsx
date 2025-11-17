@@ -13,6 +13,13 @@ import { BlogPost, Location } from '@/types';
 import { BlogsApiServices } from '@/utils';
 import { addBlogRequestSchema } from '@/classes/ApiRequest.classes';
 
+const stripFroalaCredit = (html) => {
+  if (!html) return html;
+  return html.replace(
+    /<p[^>]*data-f-id="pbf"[^>]*>[\s\S]*?<\/p>/gi,
+    ''
+  );
+};
 export default function AddBlogPage() {
   const [formData, setFormData] = useState<BlogPost>({
     title: '',
@@ -175,10 +182,11 @@ export default function AddBlogPage() {
   e.preventDefault();
 
   try {
+    const cleanedContent = stripFroalaCredit(formData.content);
     const payload: addBlogRequestSchema = {
       title: formData.title,
       slug: formData.slug,
-      content: formData.content,
+      content: cleanedContent,
       featuredImage: formData.featuredImage,
       relatedLocations: selectedLocationIds,
       seo: {
@@ -254,7 +262,11 @@ export default function AddBlogPage() {
 
         <FroalaEditor
           model={formData.content}
-          onModelChange={(content: string) => setFormData((prev) => ({ ...prev, content }))}
+          onModelChange={(content) => {
+    const cleaned = stripFroalaCredit(content);
+    setFormData((prev) => ({ ...prev, content: cleaned }));
+  }}
+          // onModelChange={(content: string) => setFormData((prev) => ({ ...prev, content }))}
           config={{
             placeholderText: 'Write your blog content here...',
             charCounterCount: true,

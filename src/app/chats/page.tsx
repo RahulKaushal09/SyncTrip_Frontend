@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import MultipleTripSelectionHeader from "@/components/Header/MultipleTripSelectionHeader";
 import ChatList from "@/components/Chats/ChatList";
@@ -9,197 +9,357 @@ import ChatApiService from "@/utils/chats.api.utils";
 import ChatHeader from "@/components/Chats/ChatHeader";
 import TripServices from "@/utils/trip.utils";
 import { useLogin } from "@/components/providers/LoginProvider";
+import { set } from "lodash";
+import { Chat, UserTrip } from "@/types";
+
+/**
+ * ChatsPage
+ *
+ * Rules implemented:
+ * - If chatId only in URL -> fetch chat to get tripId -> update url (chatId & tripId) -> open chat window (no chat list)
+ * - If tripId only in URL -> load chat list for that trip -> do not add chatId to url until user opens a chat
+ * - If both present -> verify chat belongs to trip, if mismatch set tripId from chat -> open chat
+ * - If neither -> fetch trips, auto-select first upcoming trip -> set tripId in url and load chats for it
+ *
+ * This code avoids loops by using `initializedRef` and by carefully sequencing async calls.
+ */
 
 export default function ChatsPage() {
     const router = useRouter();
     const searchParams = useSearchParams();
 
-    const queryChatId = searchParams?.get("chatId");
-    const queryTripId = searchParams?.get("tripId");
+    // Raw URL params (strings or null)
+    const rawChatId = searchParams?.get("chatId");
+    const rawTripId = searchParams?.get("tripId");
 
-    const [tripId, setTripId] = useState<string | null>(queryTripId);
-    const [chatId, setChatId] = useState<string | null>(queryChatId);
+    // Local state for selected trip and open chat
+    const [tripId, setTripId] = useState<string | null>(rawTripId);
+    const [chatId, setChatId] = useState<string | null>(rawChatId);
 
     const [allTrips, setAllTrips] = useState<any[]>([]);
-    const [tripName, setTripName] = useState("Select Trip");
+    const [tripName, setTripName] = useState<string>("Select Trip");
     const [tripDates, setTripDates] = useState<string | undefined>(undefined);
 
-    const [chats, setChats] = useState<any[]>([]);
-    const [activeChat, setActiveChat] = useState<any | null>(null);
-    const mounted = useRef(false);
-    const { user } = useLogin(); // ⬅️ use context directly
-    console.log(user);
+    const [chats, setChats] = useState<Chat[]>([]);
+    const [activeChat, setActiveChat] = useState<Chat | null>(null);
+
+    const mountedRef = useRef(false);
+    const initializedRef = useRef(false); // prevents double-initialization
+    const resolvingChatRef = useRef(false); // prevents duplicate chat resolution
+    const { user } = useLogin();
+
     useEffect(() => {
-        mounted.current = true;
-        return () => {
-            mounted.current = false;
-        };
+        mountedRef.current = true;
+        return () => { mountedRef.current = false; };
     }, []);
 
-    /* -----------------------------------------
-       STEP 1: Load User Trips → Select first trip if none selected
-    -------------------------------------------*/
-    const loadTrips = async () => {
+    /* ------------- UTIL: formatDate -------------- */
+    function formatDate(dateStr: string) {
         try {
-            const trips = await TripServices.fetchUserTrips(); // YOU MUST IMPLEMENT
+            const d = new Date(dateStr);
+            return `${d.getDate()} ${d.toLocaleString("en-GB", { month: "long" })}, ${d.getFullYear()}`;
+        } catch {
+            return dateStr;
+        }
+    }
+
+    /* ------------- Load trips and auto-pick first upcoming -------------- */
+    const loadAllTrips = async () => {
+        try {
+            const trips = await TripServices.fetchUserTrips();
+            const now = new Date();
+            const futureTrips = trips.filter((t: any) => new Date(t.endDate) >= now);
+            const usable = futureTrips.length > 0 ? futureTrips : trips;
+            if (!Array.isArray(usable)) {
+                router.replace("/");
+            }
+            // if(usable.length == 0 ) {
+            //     router.replace("/");
+            // }
+            setAllTrips(usable);
+            return trips;
+        } catch (err) {
+            console.error("getAllTrips error:", err);
+            return [];
+        }
+    };
+    const loadTripsAndMaybeAutoSelect = async () => {
+        try {
+            let trips: UserTrip[] = [];
+            if (allTrips.length === 0) {
+                trips = await loadAllTrips();
+            }
+            else {
+                trips = allTrips;
+            }
             if (!Array.isArray(trips)) return;
 
-            const futureTrips = trips.filter(
-                (t: any) => new Date(t.endDate) >= new Date()
-            );
+            // Keep only upcoming (endDate >= today). If none, keep all.
+            const now = new Date();
+            const futureTrips = trips.filter((t: any) => new Date(t.endDate) >= now);
+            const usable = futureTrips.length > 0 ? futureTrips : trips;
 
-            setAllTrips(futureTrips);
-            // If no tripId exists in URL → auto-select first trip
-            if (!tripId && futureTrips.length > 0) {
-                const first = futureTrips[0];
+            if (!mountedRef.current) return;
+            setAllTrips(usable);
+
+            // If there is already a tripId from URL, do not auto-select
+            if (rawTripId) {
+                setTripId(rawTripId);
+                usable.forEach((t) => {
+                    if (t.id === rawTripId) {
+                        setTripName(t.locationName || "Trip");
+                        setTripDates(`${formatDate(t.startDate)} - ${formatDate(t.endDate)}`);
+                    }
+                });
+                return;
+            };
+
+            // If no tripId in state and we have trips -> pick first
+            if (!tripId && usable.length > 0) {
+                const first = usable[0];
                 const formattedDates = `${formatDate(first.startDate)} - ${formatDate(first.endDate)}`;
-
                 setTripId(first.id as string);
-                setTripName(first.locationName + " Trip");
+                setTripName(first.locationName || "Trip");
                 setTripDates(formattedDates);
 
+                // Update URL to include tripId (no chatId)
                 router.replace(`/chats?tripId=${first.id}`);
-
-                await loadChats(first.id);
+                await loadChatsForTrip(first.id);
             }
         } catch (err) {
-            console.error("Failed to load trips", err);
+            console.error("loadTripsAndMaybeAutoSelect error:", err);
         }
     };
 
-    /* -----------------------------------------
-       STEP 2: Load Chats for selected Trip
-    -------------------------------------------*/
-    const loadChats = async (forTripId?: string | null) => {
+    /* ------------- Load chats for a trip -------------- */
+    const loadChatsForTrip = async (forTripId?: string | null) => {
         try {
             const data = await ChatApiService.fetchChats(forTripId || undefined);
-            setChats(data || []);
+            if (!mountedRef.current) return;
+            setChats(Array.isArray(data) ? data : []);
         } catch (err) {
-            console.error("Failed to load chats", err);
+            console.error("loadChatsForTrip error:", err);
+            if (mountedRef.current) setChats([]);
+        }
+    };
+    const updateTripNameAndDates = (tId: string) => {
+        const trip = allTrips.find((t) => t.id === tId);
+        if (trip) {
+            setTripName(trip.locationName || "Trip");
+            setTripDates(`${formatDate(trip.startDate)} - ${formatDate(trip.endDate)}`);
+        }
+    };
+    /* ------------- Resolve chatId only case: get tripId from chat and open chat -------------- */
+    const resolveChatIdToTripAndOpen = async (incomingChatId: string) => {
+        if (resolvingChatRef.current) return;
+        resolvingChatRef.current = true;
+
+        try {
+            const chatObj = await ChatApiService.getChatById(incomingChatId);
+            if (!mountedRef.current) return;
+
+            if (!chatObj) {
+                setChatId(null);
+                router.replace(`/chats${tripId ? `?tripId=${tripId}` : ""}`);
+                resolvingChatRef.current = false;
+                return;
+            }
+
+            const chatTripId = chatObj.tripId;
+
+            // CASE 1: URL had both tripId + chatId but mismatch
+            if (rawTripId && chatTripId && rawTripId !== chatTripId) {
+                setTripId(chatTripId);
+                updateTripNameAndDates(chatTripId);
+
+                router.replace(`/chats?chatId=${incomingChatId}&tripId=${chatTripId}`);
+                await openChatWindowOnly(incomingChatId, chatObj, chatTripId);
+                resolvingChatRef.current = false;
+                return;
+            }
+
+            // CASE 2: No tripId → set it from chat
+            if (!tripId && chatTripId) {
+                setTripId(chatTripId);
+                updateTripNameAndDates(chatTripId);
+
+                router.replace(`/chats?chatId=${incomingChatId}&tripId=${chatTripId}`);
+                await openChatWindowOnly(incomingChatId, chatObj, chatTripId);
+                resolvingChatRef.current = false;
+                return;
+            }
+
+            // CASE 3: tripId already correct → just open
+            await openChatWindowOnly(incomingChatId, chatObj);
+        } catch (err) {
+            console.error("resolveChatIdToTripAndOpen error:", err);
+        } finally {
+            resolvingChatRef.current = false;
         }
     };
 
-    /* -----------------------------------------
-       STEP 3: On Page Load → load trips & chats
-    -------------------------------------------*/
-    useEffect(() => {
-        loadTrips();
+    /* ------------- helper: open chat window only (hide list) -------------- */
 
-        if (tripId) loadChats(tripId);
-        else loadChats(undefined);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [tripId]);
+    const openChatWindowOnly = async (
+        cId: string,
+        chatObjFromServer?: Chat,
+        tripId_arg?: string
+    ) => {
+        setChatId(cId);
 
-    /* -----------------------------------------
-       STEP 4: Handle notification click (chatId but no tripId)
-    -------------------------------------------*/
-    useEffect(() => {
-        async function resolveChat() {
-            if (!chatId) return;
-            if (tripId) return openChat(chatId);
+        // Always load chats for the correct trip so we can populate users
+        const correctTrip = tripId_arg || tripId;
+        if (correctTrip) {
+            const allChats = await ChatApiService.fetchChats(correctTrip);
+            setChats(allChats);
 
-            // fetch chat and get trip id
-            try {
-                const resp = await ChatApiService.getChatById(chatId);
-                if (!resp) return;
-
-                setTripId(resp.tripId);
-
-                router.replace(`/chats?chatId=${chatId}&tripId=${resp.tripId}`);
-
-                await loadChats(resp.tripId);
-                await openChat(chatId);
-            } catch (err) {
-                console.error("Failed resolving chatId", err);
-            }
+            const fullChat = allChats.find((c: Chat) => c.id === cId) || null;
+            setActiveChat(fullChat);
+        } else {
+            // fallback
+            setActiveChat(chatObjFromServer || chats.find((c) => c.id === cId) || null);
         }
 
-        resolveChat();
-    }, [chatId]);
+        // update URL
+        if (tripId_arg || tripId) {
+            router.replace(`/chats?chatId=${cId}&tripId=${tripId_arg || tripId}`);
+        } else {
+            router.replace(`/chats?chatId=${cId}`);
+        }
+    };
+    // const openChatWindowOnly = (cId: string, chatObjFromServer?: Chat, tripId_arg?: string) => {
+    //     setChatId(cId);
+    //     setActiveChat((prev) => chatObjFromServer || prev || chats.find((c) => c.id === cId) || null);
+    //     // Ensure URL contains both
+    //     if (tripId || tripId_arg) router.replace(`/chats?chatId=${cId}&tripId=${tripId_arg || tripId}`);
+    //     else router.replace(`/chats?chatId=${cId}`);
+    // };
 
-    /* -----------------------------------------
-       SELECT TRIP (Header Bottom Sheet)
-    -------------------------------------------*/
-    const handleSelectTrip = async (id: string, name: string, dates: string) => {
+    /* ------------- Open chat from UI (user clicks in ChatList) -------------- */
+    const openChatFromList = (cId: string) => {
+        // Add chatId to URL (preserve tripId)
+        const q = tripId ? `?chatId=${cId}&tripId=${tripId}` : `?chatId=${cId}`;
+        router.replace(`/chats${q}`);
+        setChatId(cId);
+        setActiveChat(chats.find((c) => c.id === cId) || null);
+    };
+
+    /* ------------- Change trip from header -------------- */
+    const onSelectTripFromHeader = async (id: string, name: string, dates: string) => {
+        // set trip and update url; close any open chat
         setTripId(id);
         setTripName(name);
         setTripDates(dates);
 
+        // remove chatId when switching trips
+        setChatId(null);
+        setActiveChat(null);
+
         router.replace(`/chats?tripId=${id}`);
-
-        await loadChats(id);
-
-        // close chat if switching trips
-        setChatId(null);
-        setActiveChat(null);
+        await loadChatsForTrip(id);
     };
 
-    /* -----------------------------------------
-        OPEN CHAT
-    -------------------------------------------*/
-    const openChat = async (cId: string) => {
-        router.replace(`/chats?chatId=${cId}${tripId ? `&tripId=${tripId}` : ""}`);
-        setChatId(cId);
-
-        const found = chats.find((c) => c.id === cId) || null;
-        setActiveChat(found);
-    };
-
-    /* -----------------------------------------
-        BACK FROM CHAT (Mobile)
-    -------------------------------------------*/
+    /* ------------- Back from chat (mobile) -------------- */
     const onBackFromChat = () => {
-        router.replace(tripId ? `/chats?tripId=${tripId}` : `/chats`);
+        // remove only chatId from query, keep tripId
+        if (tripId) {
+            router.replace(`/chats?tripId=${tripId}`);
+        } else {
+            router.replace(`/chats`);
+        }
         setChatId(null);
         setActiveChat(null);
     };
 
+    /* ------------- INITIALIZATION logic: runs once when page loads -------------- */
+    useEffect(() => {
+        // Ensure we run initialization only once on the client
+        if (initializedRef.current) return;
+        initializedRef.current = true;
+
+        (async () => {
+            await loadAllTrips();
+            // If the URL had a chatId (with or without tripId)
+            if (rawChatId && !rawTripId) {
+                // Defer to resolution function which will also set tripId if needed
+                await resolveChatIdToTripAndOpen(rawChatId);
+                return;
+            }
+
+            // No chatId in URL -> if tripId present, load that trip's chats
+            if (rawTripId && !rawChatId) {
+                setTripId(rawTripId);
+                // Optionally fetch trip meta to show name/dates (if you have an endpoint)
+                // We'll still try to get trips for header list
+                await loadTripsAndMaybeAutoSelect(); // this will NOT overwrite tripId because rawTripId exists
+                await loadChatsForTrip(rawTripId);
+                return;
+            }
+            await loadTripsAndMaybeAutoSelect();
+
+            // Neither chatId nor tripId -> load trips and auto-select first upcoming
+        })();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []); // run once client-side
+
+
+    useEffect(() => {
+        if (!tripId || allTrips.length === 0) return;
+
+        const trip = allTrips.find((t) => t.id === tripId);
+        if (trip) {
+            setTripName(trip.locationName || "Trip");
+            setTripDates(`${formatDate(trip.startDate)} - ${formatDate(trip.endDate)}`);
+        }
+    }, [tripId, allTrips]);
+    /* ------------- When tripId changes due to user interaction after init -------------- */
+    useEffect(() => {
+        // If the page is initialized and user changed tripId programmatically (e.g., select header),
+        // reload chats for that tripId. Do NOT auto-open a chat.
+        if (!initializedRef.current) return;
+        if (!tripId) return;
+        loadChatsForTrip(tripId);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [tripId]);
+
+    /* ---------- Render ---------- */
     return (
         <div className="chatsPage">
             <div className="min-h-screen bg-white">
-
-                {/* Trip selector shown ONLY in chat list view */}
-                {!chatId ? (
+                {/* Header: if chat window open -> show small ChatHeader (with back); else show trip selector */}
+                {!chatId && !activeChat ? (
                     <MultipleTripSelectionHeader
                         tripName={tripName}
                         dates={tripDates}
                         allTrips={allTrips}
-                        onSelectTrip={handleSelectTrip}
+                        onSelectTrip={onSelectTripFromHeader}
                     />
                 ) : (
-                    <ChatHeader chat={activeChat} onBack={onBackFromChat} />
+                    activeChat && (
+                        <ChatHeader chat={activeChat} onBack={onBackFromChat} />
+                    )
                 )}
 
                 <div className="flex flex-col md:flex-row">
-
-                    {/* LEFT SIDE = CHAT LIST */}
+                    {/* Chat list - visible when no chatId OR on desktop */}
                     <div className={`w-full md:w-1/3 ${chatId ? "hidden md:block" : "block"}`}>
                         <ChatList
                             chats={chats}
                             selectedChatId={chatId}
-                            onOpenChat={(id) => openChat(id)}
+                            onOpenChat={(id: string) => openChatFromList(id)}
                         />
                     </div>
 
-                    {/* RIGHT SIDE = CHAT WINDOW */}
+                    {/* Chat window */}
                     <div className={`w-full md:w-2/3 ${!chatId ? "hidden md:block" : "block"}`}>
                         {chatId ? (
                             <ChatWindow chatId={chatId} currentUserId={user ? user.id : "0"} />
                         ) : (
-                            <div className="p-8 text-center text-gray-500">
-                                Select a chat to start messaging
-                            </div>
+                            <div className="p-8 text-center text-gray-500">Select a chat to start messaging</div>
                         )}
                     </div>
-
                 </div>
             </div>
         </div>
     );
-}
-
-/* ------------ UTIL --------------- */
-function formatDate(date: string): string {
-    const d = new Date(date);
-    return `${d.getDate()} ${d.toLocaleString("en-GB", { month: "long" })}, ${d.getFullYear()}`;
 }

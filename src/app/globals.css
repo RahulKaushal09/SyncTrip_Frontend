@@ -232,6 +232,16 @@
   color:var(--secondary-1);
   
 }
+.btn-secondary-outline{
+  opacity: 1;
+  border: 1px solid var(--secondary-1) !important;
+  background: var(--white);
+  color: var(--secondary-1) !important;
+  border-radius: 4px;
+  transition: background 0.2s;
+
+
+}
 
 .button-error {
   background: var(--error-1);

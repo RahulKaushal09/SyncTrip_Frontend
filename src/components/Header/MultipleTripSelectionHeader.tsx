@@ -89,7 +89,41 @@ export default function MultipleTripSelectionHeader({
 
       <div style={textColumnStyle} onClick={handleTripClick}>
         <div style={titleStyle}>{tripName}</div>
+        <div className="flex flex-row align-items-center">
         {dates ? <div style={datesStyle}>{dates}</div> : null}
+        {/* toggle drop down/up icon */}
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            setShowSheet((s) => !s);
+          }}
+          aria-label={showSheet ? "Close trip selector" : "Open trip selector"}
+          style={{
+            ...buttonStyle,
+            padding: 4,
+            marginLeft: 8,
+            width: 32,
+            height: 32,
+            borderRadius: 6,
+          }}
+        >
+          <svg
+            viewBox="0 0 24 24"
+            style={{
+              ...iconStyle,
+              width: 18,
+              height: 18,
+              transition: "transform 0.18s ease",
+              transform: showSheet ? "rotate(180deg)" : "rotate(0deg)",
+            }}
+            aria-hidden
+          >
+            <path d="M7 10l5 5 5-5z" />
+          </svg>
+        </button>
+        
+        </div>
       </div>
 
       {showSheet && (

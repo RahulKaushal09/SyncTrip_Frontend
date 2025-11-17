@@ -1,0 +1,27 @@
+.myMessage{
+    border: 1px solid var(--primary-1);
+    color: var(--primary-1);
+    min-height: 40px;
+    margin-left: auto;
+    background: var(--white);
+    padding: 8px 12px;
+    border-radius: 8px;
+    box-shadow: var(--shadow-sm);
+
+}
+.otherPersonMessage{
+    border: 1px solid var(--secondary-1);
+    color: var(--secondary-1);
+    min-height: 40px;
+    background: var(--white);
+    padding: 8px 12px;
+    border-radius: 8px;
+    box-shadow: var(--shadow-sm);
+}
+
+.mineTimeInfoText{
+    color: var(--neutral-3);
+}
+.otherTimeInfoText{
+    color: var(--neutral-3);
+}
