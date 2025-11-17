@@ -73,9 +73,9 @@ export default function MultipleTripSelectionHeader({
     setShowSheet(true);
   };
 
-  const handleSelectTrip = (trip: any) => {
+  const handleSelectTrip = (trip: UserTrip) => {
     const formattedDates = `${formatDate(trip.startDate)} - ${formatDate(trip.endDate)}`;
-    onSelectTrip?.(trip.id, trip.name, formattedDates);
+    onSelectTrip?.(trip.id as string, trip.locationName as string, formattedDates);
     setShowSheet(false);
   };
 

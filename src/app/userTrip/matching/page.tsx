@@ -475,11 +475,11 @@ export default function MatchingPage() {
                         tabIndex={0}
                     >
                         <img src={current.userSnapshot.profile_picture[0]} alt={current.userSnapshot.name} />
-                        <div className="meta">
-                            <div className="title">
+                        <div className="MatchingCardMeta">
+                            <div className="MatchingCardTitle">
                                 <span>{current.userSnapshot.name}, {current.userSnapshot.age}</span>
                             </div>
-                            <div className="activities">
+                            <div className="MatchingCardActivities">
                                 {current.tripSnapshot.interests?.join(" • ")}
                             </div>
                         </div>

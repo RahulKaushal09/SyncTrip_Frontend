@@ -27,7 +27,7 @@ export default function ChatsPage() {
     const [chats, setChats] = useState<any[]>([]);
     const [activeChat, setActiveChat] = useState<any | null>(null);
     const mounted = useRef(false);
-      const { user} = useLogin(); // ⬅️ use context directly
+    const { user } = useLogin(); // ⬅️ use context directly
     console.log(user);
     useEffect(() => {
         mounted.current = true;
@@ -49,7 +49,6 @@ export default function ChatsPage() {
             );
 
             setAllTrips(futureTrips);
-
             // If no tripId exists in URL → auto-select first trip
             if (!tripId && futureTrips.length > 0) {
                 const first = futureTrips[0];
@@ -185,7 +184,7 @@ export default function ChatsPage() {
                     {/* RIGHT SIDE = CHAT WINDOW */}
                     <div className={`w-full md:w-2/3 ${!chatId ? "hidden md:block" : "block"}`}>
                         {chatId ? (
-                            <ChatWindow chatId={chatId} currentUserId={user? user.id:"0"} />
+                            <ChatWindow chatId={chatId} currentUserId={user ? user.id : "0"} />
                         ) : (
                             <div className="p-8 text-center text-gray-500">
                                 Select a chat to start messaging

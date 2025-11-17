@@ -26,7 +26,7 @@ export default function ChatList({ chats = [], selectedChatId, currentUserId, on
               <div className="font-semibold">{other?.name || c.chatName || "Group"}</div>
               <div className="text-sm text-gray-500 truncate">{c.latestMessage?.content ?? c.chatName ?? ""}</div>
             </div>
-            <div className="text-xs text-gray-400">{new Date(c.updatedAt).toLocaleTimeString()}</div>
+            {c.updatedAt && <div className="text-xs text-gray-400">{new Date(c.updatedAt).toLocaleTimeString()}</div>}
           </div>
         );
       })}
