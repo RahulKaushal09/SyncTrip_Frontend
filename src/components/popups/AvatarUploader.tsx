@@ -24,25 +24,59 @@ export default function AvatarUploader({
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [isDragging, setIsDragging] = useState(false);
 
-  // Create preview from incoming file value
+  // Keep track of the last object URL so we can revoke it reliably
+  const lastObjectUrlRef = useRef<string | null>(null);
+
+  // Helper: revoke last object URL if any
+  const revokeLastObjectUrl = () => {
+    if (lastObjectUrlRef.current) {
+      try {
+        URL.revokeObjectURL(lastObjectUrlRef.current);
+      } catch (err) {
+        /* ignore revoke errors */
+      }
+      lastObjectUrlRef.current = null;
+    }
+  };
+
+  // If parent provides a File `value`, create preview for it.
+  // Also if parent clears (value === null) and no local preview, remove preview.
   useEffect(() => {
-    if (value) {
+    // If we have an explicitly provided File from parent, create a preview
+    if (value instanceof File) {
+      // revoke previous
+      revokeLastObjectUrl();
       const url = URL.createObjectURL(value);
+      lastObjectUrlRef.current = url;
       setPreviewUrl(url);
       return () => {
-        URL.revokeObjectURL(url);
+        // cleanup when value changes/unmount
+        revokeLastObjectUrl();
       };
-    } else {
+    }
+
+    // If parent sent null and we are not holding any local preview, clear preview
+    if (!value && !existingImageUrl) {
+      revokeLastObjectUrl();
       setPreviewUrl(null);
     }
-  }, [value]);
 
-  // If no file but existingImageUrl provided, show that
-  useEffect(() => {
+    // If parent cleared value but provided an existingImageUrl (string), use that
     if (!value && existingImageUrl) {
+      revokeLastObjectUrl();
       setPreviewUrl(existingImageUrl);
     }
-  }, [existingImageUrl, value]);
+
+    // Note: intentionally not returning a cleanup that revokes existingImageUrl since that is external URL.
+  }, [value, existingImageUrl]);
+
+  // Immediately create preview when user picks a file (don't wait for parent update)
+  const createPreviewForFile = (file: File) => {
+    revokeLastObjectUrl();
+    const url = URL.createObjectURL(file);
+    lastObjectUrlRef.current = url;
+    setPreviewUrl(url);
+  };
 
   const openFilePicker = () => {
     inputRef.current?.click();
@@ -52,7 +86,11 @@ export default function AvatarUploader({
     if (!files || files.length === 0) return;
     const file = files[0];
     if (!file.type.startsWith("image/")) return;
+    // set immediate preview for best UX
+    createPreviewForFile(file);
+    // notify parent
     onChange(file);
+    // Do not clear the input value here — leave it so user can change to a different file.
   };
 
   const onInputChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -79,11 +117,30 @@ export default function AvatarUploader({
     setIsDragging(false);
   };
 
+  // Clear handler: revoke preview, clear input value, notify parent
   const clear = (e?: React.MouseEvent) => {
     e?.stopPropagation();
-    onChange(null);
+    revokeLastObjectUrl();
     setPreviewUrl(null);
+
+    // clear native file input so selecting the same file again triggers change event
+    if (inputRef.current) {
+      try {
+        inputRef.current.value = "";
+      } catch (err) {
+        // some browsers restrict this, ignore
+      }
+    }
+
+    onChange(null);
   };
+
+  // cleanup when unmounting
+  useEffect(() => {
+    return () => {
+      revokeLastObjectUrl();
+    };
+  }, []);
 
   return (
     <div className={styles["uploader-root"]}>
@@ -106,6 +163,7 @@ export default function AvatarUploader({
         <div className={styles["avatar-inner"]}>
           {previewUrl ? (
             // preview image
+            // eslint-disable-next-line @next/next/no-img-element
             <img src={previewUrl} alt="Profile preview" className={styles["avatar-img"]} />
           ) : (
             // placeholder SVG (person icon)
@@ -116,10 +174,8 @@ export default function AvatarUploader({
           )}
         </div>
 
-        {/* dashed outer ring */}
         <span className={styles["outer-ring"]} />
 
-        {/* add badge */}
         <button
           type="button"
           className={styles["add-badge"]}
@@ -134,7 +190,6 @@ export default function AvatarUploader({
           </svg>
         </button>
 
-        {/* hidden file input (accept camera on mobile) */}
         <input
           id={id}
           ref={inputRef}
@@ -146,7 +201,6 @@ export default function AvatarUploader({
           aria-hidden="true"
         />
 
-        {/* clear / remove (only show if preview present and not required) */}
         {!required && previewUrl && (
           <button
             type="button"
@@ -165,7 +219,7 @@ export default function AvatarUploader({
 
       <div className={styles["uploader-meta"]}>
         <div className={styles["uploader-title"]}>Upload photo</div>
-        <div className={styles["uploader-sub"]}>Square image • max 5MB</div>
+        <div className={styles["uploader-sub"]}>Image • max 5MB</div>
       </div>
     </div>
   );

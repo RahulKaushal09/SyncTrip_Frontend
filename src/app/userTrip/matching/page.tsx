@@ -90,7 +90,7 @@ export default function MatchingPage() {
     const [dateString, setDateString] = useState<string>("");
     const [matchPopupProfile, setMatchPopupProfile] = useState<Candidate | null>(null)
     const [allTrips, setAllTrips] = useState<UserTrip[]>([]);
-
+    const [matchChatId, setMatchChatId] = useState<string | null>(null);
     const SWIPE_THRESHOLD = 100
     const current = profiles[index]
 
@@ -388,6 +388,7 @@ export default function MatchingPage() {
             if (data?.match && current) {
                 // show match popup using the current profile (we already had it)
                 setMatchPopupProfile(current)
+                setMatchChatId(data.chatId);
             }
             return data
         } catch (err: any) {
@@ -399,11 +400,20 @@ export default function MatchingPage() {
 
     function closePopup() {
         setMatchPopupProfile(null);
+        setMatchChatId(null);
         // unlock swiping for next interactions and advance past matched card
+
         swipeLockRef.current = false;
         setIndex(prev => Math.min(prev + 1, Math.max(0, profiles.length - 1)));
         // fetch more if needed
         if (profiles.length - (index + 1) < 3) fetchCandidates();
+    }
+    function startChat() {
+        // navigate to chat using matchPopupProfile.matchId or chatId
+        if (matchChatId) {
+            // assuming you have chatId from the swipe response stored somewhere
+            router.push(`/chats?chatId=${matchChatId}`);
+        }
     }
 
     // -------------------------------------
@@ -493,7 +503,7 @@ export default function MatchingPage() {
             {matchPopupProfile && (
                 <div className="match-overlay" role="dialog" aria-modal="true">
                     <div className="match-card">
-                        <h2>It's a Match!</h2>
+                        <h2>It&apos;s a Match!</h2>
 
                         <img className="matchingImg" src={matchPopupProfile.userSnapshot.profile_picture[0]} alt={matchPopupProfile.userSnapshot.name} />
 
@@ -505,7 +515,7 @@ export default function MatchingPage() {
                         </p>
 
                         <button onClick={closePopup}>Close</button>
-                        <button>Start Chat</button>
+                        <button onClick={startChat}>Start Chat</button>
                     </div>
                 </div>
             )}

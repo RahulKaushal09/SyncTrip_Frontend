@@ -12,9 +12,26 @@ import Step4Budget from '@/components/createTrip/Step4Budget';
 import Step5Privacy from '@/components/createTrip/Step5Privacy';
 import { Pencil, MapPin, Calendar, Star, CreditCard, Lock } from "lucide-react";
 import TripServices from '@/utils/trip.utils';
+import { useLoader } from '@/components/providers/LoaderContext';
+import { toast } from 'react-hot-toast';
 
 const TOTAL_STEPS = 4;
-const formatISODateOnly = (d: Date) => d.toISOString().split('T')[0];
+// const formatISODateOnly = (d: Date) => d.toISOString().split('T')[0];
+const pad = (n: number) => String(n).padStart(2, '0');
+
+const formatLocalDateOnly = (d: Date) => {
+  // returns YYYY-MM-DD using local date components
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+};
+
+const parseLocalDateOnly = (s: string | null | undefined) => {
+  // parse "YYYY-MM-DD" as local date (midnight local)
+  if (!s) return null;
+  const parts = s.split('-').map(Number);
+  if (parts.length !== 3 || parts.some(isNaN)) return null;
+  const [y, m, day] = parts;
+  return new Date(y, m - 1, day);
+};
 export default function CreateTripScreen() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -39,8 +56,8 @@ function CreateTripContent() {
 
   // const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
   const [isMobile, setIsMobile] = useState(false);
-  useEffect(() => { 
-    if( typeof window !== 'undefined' && window.innerWidth<=768){
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.innerWidth <= 768) {
       setIsMobile(true);
 
     }
@@ -49,13 +66,16 @@ function CreateTripContent() {
   const [editingFromModify, setEditingFromModify] = useState<boolean>(false);
 
   const [selectedLocation, setSelectedLocation] = useState<Location | undefined>();
-  const [startDate, setStartDate] = useState<Date | null>(startParam ? new Date(startParam) : null);
-  const [endDate, setEndDate] = useState<Date | null>(endParam ? new Date(endParam) : null);
+  const [startDate, setStartDate] = useState<Date | null>(parseLocalDateOnly(startParam));
+const [endDate, setEndDate] = useState<Date | null>(parseLocalDateOnly(endParam));
+
+  // const [startDate, setStartDate] = useState<Date | null>(startParam ? new Date(startParam) : null);
+  // const [endDate, setEndDate] = useState<Date | null>(endParam ? new Date(endParam) : null);
 
   const [selectedPreferences, setSelectedPreferences] = useState<string[]>([]);
   const [selectedBudget, setSelectedBudget] = useState<string>('');
   const [selectedPrivacy, setSelectedPrivacy] = useState<string>('');
-
+  const { showLoader, hideLoader } = useLoader();
   useEffect(() => {
     const parseLocationId = async () => {
       if (locationIdParam && !selectedLocation) {
@@ -72,8 +92,8 @@ function CreateTripContent() {
   }, [locationIdParam]);
 
   useEffect(() => {
-    if (startParam && !startDate) setStartDate(new Date(startParam));
-    if (endParam && !endDate) setEndDate(new Date(endParam));
+    if (startParam && !startDate) setStartDate(parseLocalDateOnly(startParam));
+  if (endParam && !endDate) setEndDate(parseLocalDateOnly(endParam));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [startParam, endParam]);
 
@@ -92,13 +112,13 @@ function CreateTripContent() {
         }
       }
       if ('start' in patch) {
-        if (patch.start) sp.set('start', formatISODateOnly(patch.start));
-        else sp.delete('start');
-      }
-      if ('end' in patch) {
-        if (patch.end) sp.set('end', formatISODateOnly(patch.end));
-        else sp.delete('end');
-      }
+  if (patch.start) sp.set('start', formatLocalDateOnly(patch.start));
+  else sp.delete('start');
+}
+if ('end' in patch) {
+  if (patch.end) sp.set('end', formatLocalDateOnly(patch.end));
+  else sp.delete('end');
+}
       const query = sp.toString();
       router.replace(query ? `${window.location.pathname}?${query}` : window.location.pathname);
     },
@@ -137,14 +157,14 @@ function CreateTripContent() {
   }, []);
 
   const canGoNext =
-    (step === 1 && !!selectedLocation) || 
-    (step === 2 && !!startDate && !!endDate) || 
+    (step === 1 && !!selectedLocation) ||
+    (step === 2 && !!startDate && !!endDate) ||
     // (step === 3 && selectedPreferences.length > 0) ||
     // (step === 4 && !!selectedBudget) ||
     (step === 3 && !!selectedPrivacy) ||
     step === TOTAL_STEPS;
 
-  
+
   const publishTripAndNavigateToMatching = useCallback(
     async (manual: boolean) => {
       try {
@@ -157,12 +177,13 @@ function CreateTripContent() {
 
   const publishTripAndNavigate = useCallback(
     async (manual: boolean) => {
+      showLoader();
       try {
-        const payload:UserTrip = {
+        const payload: UserTrip = {
           locationId: selectedLocation?.id ?? '',
           locationName: selectedLocation?.title ?? '',
-          startDate: startDate ? formatISODateOnly(startDate) : '',
-          endDate: endDate ? formatISODateOnly(endDate) : '',
+          startDate: startDate ? formatLocalDateOnly(startDate) : '',
+          endDate: endDate ? formatLocalDateOnly(endDate) : '',
           budget: selectedBudget,
           interests: selectedPreferences,
           privacy: selectedPrivacy,
@@ -172,15 +193,27 @@ function CreateTripContent() {
           const createdTripId = res.id;
           if (manual) {
             // route to manual planner page
+            toast.success('Trip created! Add your activities now.');
             router.replace(`/userTrip/planner?tripId=${createdTripId}`);
+            hideLoader();
+
           } else {
+            toast.success('Trip created! Start matching now...');
             router.replace(`/userTrip/matching?tripId=${createdTripId}`);
+            hideLoader();
+
           }
         } else {
           console.error('Failed to create trip:', res);
+          hideLoader();
+
         }
       } catch (err) {
         console.error('Error creating trip:', err);
+        hideLoader();
+
+      }
+      finally {
       }
     },
     [selectedLocation, startDate, endDate, selectedBudget, selectedPreferences, selectedPrivacy, router]
@@ -226,7 +259,7 @@ function CreateTripContent() {
   // --- Step 6: Modify / Review Component ---
   const Step6Review: React.FC = () => {
     const dateRange =
-      startDate && endDate ? CommonServices.formatRange(startDate.toISOString(),endDate.toISOString()) : '—';
+      startDate && endDate ? CommonServices.formatRange(startDate.toISOString(), endDate.toISOString()) : '—';
 
     const Card: React.FC<{
       icon: React.ReactNode;
@@ -372,7 +405,7 @@ function CreateTripContent() {
   };
 
   return (
-    <div className="" style={{minHeight: '80vh',paddingBottom:20}}>
+    <div className="" style={{ minHeight: '80vh', paddingBottom: 20 }}>
       <div className="mx-auto bg-white" style={{ maxWidth: '900px' }}>
         {headerEl}
 
