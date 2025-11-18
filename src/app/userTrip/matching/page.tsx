@@ -376,11 +376,13 @@ export default function MatchingPage() {
     // -------------------------------------
     async function sendSwipe(toTripProfileId: string, direction: "like" | "pass") {
         if (!toTripProfileId) return
+        if (!tripId) return
         try {
             // axios-like client returns { data }
             const res = await apiClient.post<SwipeResponse>('/match/swipe', {
                 toTripProfileId,
-                direction
+                direction,
+                tripId
             })
             const data = res.data
             if (data?.match && current) {
