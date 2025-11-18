@@ -203,6 +203,15 @@ export default function LoginPopup({ onClose, onLogin }: LoginPopupProps) {
     setIsLoading(false);
   };
 
+  useEffect(() => {
+    // Disable background scroll
+    document.body.style.overflow = "hidden";
+
+    return () => {
+        // Re-enable scroll when popup closes
+        document.body.style.overflow = "";
+    };
+}, []);
   return (
     <div className="login-popup-overlay">
       <div className="login-popup-container">

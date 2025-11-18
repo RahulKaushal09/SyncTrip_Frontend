@@ -8,6 +8,10 @@ import { User } from '../../types';
 import { Location } from '../../types';
 import '../../../styles/popups/FullProfilePopup.css';
 import { LocationFields } from '@/constants';
+import { DOBSelects } from './DOBSelects';
+import { useLoader } from '../providers/LoaderContext';
+import toast from 'react-hot-toast';
+import AvatarUploader from './AvatarUploader';
 
 interface FullProfilePopupProps {
     user: User;
@@ -19,11 +23,11 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
     const [form, setForm] = useState({
         travelStyles: [] as string[],
         travelerType: [] as string[],
-        dreamDestinations: '',
+        // dreamDestinations: '',
         matchGender: 'Any',
         ageGroup: '',
         showProfile: true,
-        allowInvites: true,
+        // allowInvites: true,
         wishlist: [] as string[],
         profilePicture: null as File | null,
         instagram: '',
@@ -39,6 +43,7 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
     const [locations, setLocations] = useState<Location[]>([]);
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const { showLoader, hideLoader } = useLoader();
     const LocationFieldsToFetch = [
         LocationFields.ID,
         LocationFields.TITLE
@@ -60,7 +65,15 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
         };
         getLocations();
     }, []);
+    useEffect(() => {
+        // Disable background scroll
+        document.body.style.overflow = "hidden";
 
+        return () => {
+            // Re-enable scroll when popup closes
+            document.body.style.overflow = "";
+        };
+    }, []);
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement> | undefined, field?: string, value?: string) => {
         if (e) {
             const { name, value: inputValue, type } = e.target;
@@ -100,15 +113,34 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
+        setError('');
         e.preventDefault();
 
         if (!form.dateOfBirth) {
             setError('Date of birth is required');
             return;
         }
+        else {
+            // Minimum age validation (18+)
+            const dob = new Date(form.dateOfBirth);
+            const today = new Date();
 
-        if (!user.profile_picture?.length && !form.profilePicture) {
+            let age = today.getFullYear() - dob.getFullYear();
+            const m = today.getMonth() - dob.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+                age--;
+            }
+
+            if (age < 18) {
+                setError("You must be 18 or older to continue.");
+                return; // STOP submit
+            }
+
+        }
+
+        if (!form.profilePicture) {
             setError('Profile picture is required');
+            toast.error('Profile picture is required');
             return;
         }
 
@@ -132,22 +164,30 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
         formData.append('preferredDestinations', JSON.stringify(selectedLocationIds));
 
         try {
+            showLoader();
             const response = await ApiService.completeProfile(formData);
 
             if (response.success) {
                 onProfileComplete(response.user);
                 onClose();
+                hideLoader();
+                toast.success('Profile completed successfully!');
             } else {
                 setError(response.message || 'Profile completion failed');
+                toast.error(response.message || 'Profile completion failed');
+                hideLoader();
             }
         } catch (error: unknown) {
             if (error instanceof Error) {
                 setError(error.message || 'An error occurred. Please try again.');
+                toast.error(error.message || 'An error occurred. Please try again.');
             } else {
                 setError('An unknown error occurred. Please try again.');
+
             }
         } finally {
             setIsLoading(false);
+            hideLoader();
         }
     };
 
@@ -218,10 +258,18 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
 
                     {/* Date of Birth */}
                     <div className="full-profile-section dob-section">
-                        <label htmlFor="dateOfBirth">
+                        {/* <label htmlFor="dateOfBirth">
                             Date of Birth <span className="required-star">*</span>
-                        </label>
-                        <DatePicker
+                        </label> */}
+
+                        <DOBSelects
+                            value={form.dateOfBirth || null}
+                            onChange={(v) => setForm((p) => ({ ...p, dateOfBirth: v }))}
+                            required
+                            label="Date of birth"
+                            showAge
+                        />
+                        {/* <DatePicker
                             id="dateOfBirth"
                             selected={form.dateOfBirth ? new Date(form.dateOfBirth) : null}
                             onChange={(date) =>
@@ -238,60 +286,32 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
                             yearDropdownItemNumber={100}
                             scrollableYearDropdown
                             required
-                        />
+                        /> */}
                     </div>
                     {user.sex === undefined && (
-                    // Gender selection
+                        // Gender selection
                         <div className="full-profile-section gender-section">
-                    <label htmlFor="dateOfBirth">
-                            Gender <span className="required-star">*</span>
-                        </label>
-                    <select
-                        name="sex"
-                        className="full-profile-input"
-                        onChange={handleChange}
-                        value={form.sex}
-                        disabled={isLoading}
-                    >
-                        <option value="" disabled>Please select your gender</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                        <option value="Other">Other</option>
-                    </select>
-                    </div>
+                            <label htmlFor="dateOfBirth">
+                                Gender <span className="required-star">*</span>
+                            </label>
+                            <select
+                                name="sex"
+                                className="full-profile-input"
+                                onChange={handleChange}
+                                value={form.sex}
+                                disabled={isLoading}
+                            >
+                                <option value="" disabled>Please select your gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
                     )}
                     {/* Preferred Destinations */}
                     <div className="full-profile-section">
                         <label>Favorite travel destinations?</label>
-                        <div className="full-profile-dropdown-container">
-                            <input
-                                type="text"
-                                className="full-profile-input full-profile-search"
-                                placeholder="Search destinations..."
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                onFocus={() => setIsDropdownOpen(true)}
-                                onBlur={() => setTimeout(() => setIsDropdownOpen(false), 200)}
-                            />
-                            {isDropdownOpen && (
-                                <div className="full-profile-dropdown">
-                                    {filteredLocations.filter(dest => !selectedLocationIds.includes(dest.id)).length > 0 ? (
-                                        filteredLocations.map((dest) =>
-                                            !selectedLocationIds.includes(dest.id) && (
-                                                <div
-                                                    key={dest.id}
-                                                    className="full-profile-dropdown-item"
-                                                    onMouseDown={() => handleDestinationSelect(dest)}
-                                                >
-                                                    {dest.title?.replace(/[0-9.]/g, "") || dest.title}
-                                                </div>
-                                            )
-                                        )
-                                    ) : (
-                                        <div className="full-profile-dropdown-item disabled">No matches found</div>
-                                    )}
-                                </div>
-                            )}
+                        {selectedTitles.length > 0 &&
                             <div className="full-profile-selected-destinations">
                                 {selectedTitles.map((title) => (
                                     <span key={title} className="full-profile-selected-tag">
@@ -311,11 +331,46 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
                                     </span>
                                 ))}
                             </div>
+                        }
+                        <div className="full-profile-dropdown-container">
+                            <input
+                                type="text"
+                                className="full-profile-input full-profile-search"
+                                placeholder="Search destinations..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                onFocus={() => setIsDropdownOpen(true)}
+                                onBlur={() => setTimeout(() => setIsDropdownOpen(false), 200)}
+                            />
+                            {isDropdownOpen && (
+                                <div className="full-profile-dropdown">
+                                    {filteredLocations.filter(dest => !selectedLocationIds.includes(dest.id)).length > 0 ? (
+                                        filteredLocations.map((dest) =>
+                                            !selectedLocationIds.includes(dest.id) && (
+                                                <div
+                                                    key={dest.id}
+                                                    className="full-profile-dropdown-item"
+                                                    onMouseDown={() => {
+                                                        handleDestinationSelect(dest)
+                                                        setSearchTerm("");
+                                                    }
+                                                    }
+                                                >
+                                                    {dest.title?.replace(/[0-9.]/g, "") || dest.title}
+                                                </div>
+                                            )
+                                        )
+                                    ) : (
+                                        <div className="full-profile-dropdown-item disabled">No matches found</div>
+                                    )}
+                                </div>
+                            )}
+
                         </div>
                     </div>
 
                     {/* Dream Destinations */}
-                    <div className="full-profile-section">
+                    {/* <div className="full-profile-section">
                         <label>Your dream travel spots?</label>
                         <input
                             type="text"
@@ -325,7 +380,7 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
                             placeholder="e.g., Leh-Ladakh, Maldives"
                             value={form.dreamDestinations}
                         />
-                    </div>
+                    </div> */}
 
                     {/* Match Gender */}
                     <div className="full-profile-section">
@@ -336,9 +391,10 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
                             onChange={handleChange}
                             value={form.matchGender}
                         >
-                            <option value="Same">Same gender only</option>
-                            <option value="Any">Anyone</option>
-                            <option value="Custom">Custom (later)</option>
+                            <option value="Anyone">Anyone</option>
+                            <option value="Friends">Friends</option>
+                            <option value="Family">Family</option>
+                            <option value="Partner">Partner</option>
                         </select>
                     </div>
 
@@ -360,7 +416,7 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
                     </div>
 
                     {/* Visibility & Invites */}
-                    <div className="full-profile-section">
+                    {/* <div className="full-profile-section">
                         <label>Profile settings:</label>
                         <label className="full-profile-checkbox">
                             <input
@@ -380,10 +436,30 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
                             />
                             Allow trip invites
                         </label>
-                    </div>
+                    </div> */}
 
                     {/* Profile Picture */}
+
                     <div className="full-profile-section">
+  <label>
+    Upload a profile picture *{' '}
+    {/* <span className="full-profile-optional">
+        
+      {user.profile_picture && user.profile_picture.length > 0 ? '(Optional)' : '(Required)'}
+    </span> */}
+  </label>
+
+  <AvatarUploader
+    value={form.profilePicture}
+    existingImageUrl={ null}
+    onChange={(file) => setForm((prev) => ({ ...prev, profilePicture: file }))}
+    required={!user.profile_picture || user.profile_picture.length === 0}
+    size={110} // adjust if you want bigger/smaller avatar
+  />
+</div>
+
+
+                    {/* <div className="full-profile-section">
                         <label>
                             Upload a profile picture{' '}
                             <span className="full-profile-optional">
@@ -398,7 +474,7 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
                             accept="image/*"
                             required={!user.profile_picture || user.profile_picture.length === 0}
                         />
-                    </div>
+                    </div> */}
 
                     {/* Optional Extras */}
                     <div className="full-profile-section">

@@ -1222,6 +1222,28 @@ input {
   color: #fff;
 }
 
+
+.chatsPage{
+  position:fixed;
+  top:0;
+  width: 100%;
+}
+
+/* 
+.rating-box-itineary{
+ 
+    width: -webkit-fill-available;
+} */
+.activityTagRow{
+  width: max-content;
+}
+
+@media (min-width: 600px) {
+.rightSideActivityRow{
+  right:10px;
+
+}
+}
 @media (max-width: 600px) {
   .infoSwitchButtons {
     /* Add any specific styles for the InfoSwitchButtons component here */
@@ -1233,10 +1255,7 @@ input {
     margin-left: -40px;
     padding-left: 40px;
   }
+  .rightSideActivityRow{
+  left:10px;
 }
-
-.chatsPage{
-  position:fixed;
-  top:0;
-  width: 100%;
 }

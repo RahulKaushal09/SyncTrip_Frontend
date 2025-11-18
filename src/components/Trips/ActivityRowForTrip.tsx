@@ -2,6 +2,7 @@ import React from "react";
 import Image from "next/image";
 import { PlacesToVisit } from "@/types";
 
+
 // Styles (no Tailwind, no inline)
 const styles = {
   activityCard: {
@@ -32,6 +33,7 @@ const styles = {
     marginBottom: 6,
     gap: 8,
     flexWrap: "wrap" as const,
+    
   },
   tagPill: {
     fontSize: 12,
@@ -85,7 +87,6 @@ const styles = {
   rightside: {
     position: "absolute" as const,
     top: 10,
-    right: 10,
     display: "flex",
     flexDirection: "column" as const,
     justifyContent: "space-between" as const,
@@ -95,6 +96,11 @@ const styles = {
   dragHandle: {
     marginLeft: 6,
   },
+  mobileRatingBox: {
+  position: "absolute",
+  top: 10,
+  left: 10,
+}
 };
 
 function ActivityRowForTrip({
@@ -110,6 +116,7 @@ function ActivityRowForTrip({
   CanRemove?: boolean;
   distanceKm?: number | null;
 }) {
+  const [isMobile, setIsMobile] = React.useState(window.innerWidth <= 768);
   return (
     <div style={styles.activityCard}>
       <Image
@@ -120,8 +127,8 @@ function ActivityRowForTrip({
         style={styles.activityImg}
       />
 
-      <div style={{ flex: 1, paddingRight: 60 }}>
-        <div style={styles.activityTagRow}>
+      <div style={{ flex: 1, paddingRight: 60,position: "relative" }}>
+        <div style={styles.activityTagRow} className="activityTagRow">
           <span style={styles.tagPill}>{place.tag || "Activity"}</span>
           {typeof distanceKm === "number" && (
             <span style={styles.distancePill}>{distanceKm.toFixed(1)} km</span>
@@ -130,11 +137,11 @@ function ActivityRowForTrip({
 
         <span style={styles.activityTitle}>{place.title}</span>
         <div>
-        <span >{place.description}</span>
+        {!isMobile && <span >{place.description}</span>}
         </div>
       </div>
 
-      <div style={styles.rightside}>
+      <div style={styles.rightside} className={'rightSideActivityRow'}>
         {CanRemove ? (
           <>
             <div onClick={onRemove} style={styles.removeBtn}>
@@ -148,7 +155,11 @@ function ActivityRowForTrip({
           </>
         ) : (
           place.rating && (
-            <div style={styles.ratingBox}>
+            <div className={'rating-box-itineary'}
+  style={
+    styles.ratingBox
+    }
+>
               <span style={styles.star}>★</span>
               <span style={styles.ratingText}>{place.rating.replaceAll("\n", "")}</span>
             </div>
