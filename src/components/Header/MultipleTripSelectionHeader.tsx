@@ -80,7 +80,7 @@ export default function MultipleTripSelectionHeader({
   };
 
   return (
-    <header style={containerStyle} className={className}>
+    <header style={containerStyle} className={`${className} border-b`}>
       <button type="button" onClick={onBack ? onBack : router.back} aria-label="Go back" style={buttonStyle}>
         <svg viewBox="0 0 24 24" style={iconStyle} aria-hidden>
           <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />

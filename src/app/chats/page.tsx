@@ -347,6 +347,7 @@ export default function ChatsPage() {
                             chats={chats}
                             selectedChatId={chatId}
                             onOpenChat={(id: string) => openChatFromList(id)}
+                            currentUserId={user ? user.id : "0"}
                         />
                     </div>
 
