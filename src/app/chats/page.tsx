@@ -198,6 +198,14 @@ export default function ChatsPage() {
         }
     };
 
+    useEffect(() => {
+        if (!chatId) return;
+        setActiveChat((prev) => {
+            if (prev && prev.id === chatId) return prev;
+            return chats.find((c) => c.id === chatId) || null;
+        }
+        );
+    }, [chatId, chats]);
     /* ------------- helper: open chat window only (hide list) -------------- */
 
     const openChatWindowOnly = async (
@@ -327,18 +335,17 @@ export default function ChatsPage() {
         <div className="chatsPage">
             <div className="min-h-screen bg-white">
                 {/* Header: if chat window open -> show small ChatHeader (with back); else show trip selector */}
-                {!chatId && !activeChat ? (
-                    <MultipleTripSelectionHeader
-                        tripName={tripName}
-                        dates={tripDates}
-                        allTrips={allTrips}
-                        onSelectTrip={onSelectTripFromHeader}
-                    />
-                ) : (
-                    activeChat && (
-                        <ChatHeader chat={activeChat} onBack={onBackFromChat} />
-                    )
-                )}
+                {chatId ? (
+    // ChatHeader should handle a null/undefined chat (showing loading UI)
+    <ChatHeader chat={activeChat} onBack={onBackFromChat} />
+) : (
+    <MultipleTripSelectionHeader
+        tripName={tripName}
+        dates={tripDates}
+        allTrips={allTrips}
+        onSelectTrip={onSelectTripFromHeader}
+    />
+)}
 
                 <div className="flex flex-col md:flex-row">
                     {/* Chat list - visible when no chatId OR on desktop */}

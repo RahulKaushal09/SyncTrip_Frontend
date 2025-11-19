@@ -18,6 +18,7 @@ import { redirect } from 'next/navigation';
 import { set } from "lodash";
 import FeedbackModal from "../common/FeedbackModal";
 import NotificationBell from "./NotificationBell";
+import ChatIcon from "./ChatIcon";
 
 const NavbarClient = ({ }) => {
   const [LoadingUser, setLoadingUser] = useState(true);
@@ -140,6 +141,7 @@ const NavbarClient = ({ }) => {
         {ismobile ? (
         <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
         <NotificationBell />
+        <ChatIcon />
         <button className="navbar-toggler" onClick={() => setMobileNavOpen(!mobileNavOpen)}>
           <span className="navbar-toggler-icon"></span>
         </button>
@@ -221,6 +223,8 @@ const NavbarClient = ({ }) => {
                   <div className="flex items-center gap-4">
                     {/* Notification Icon */}
                     <NotificationBell />
+
+                    <ChatIcon />
                     <Dropdown show={showDropdown} onToggle={setShowDropdown}>
                       <div style={{ display: "flex", alignItems: "center" }}>
 

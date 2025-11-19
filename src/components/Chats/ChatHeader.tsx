@@ -6,6 +6,7 @@ import { useLogin } from "../providers/LoginProvider";
 export default function ChatHeader({ chat, onBack }: { chat: Chat | null; onBack?: () => void; }) {
   const router = useRouter();
   const {user} = useLogin();
+  console.log("ChatHeader chat:", chat);
   const other = chat?.users?.find((u) => (u as ChatUser).id !== user?.id) || chat?.users?.[0];
   if(chat == null ) return null;
   return (

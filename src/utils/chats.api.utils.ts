@@ -57,6 +57,10 @@ import apiClient from "./apiClient";
 
 const ChatApiService = {
 
+  async fetchUnreadCount() {
+    const { data } = await apiClient.get<{ count: number }>("/chats/unread-count");
+    return data.count;
+  },
   async fetchChats(tripId?: string) {
     const params: any = {};
     if (tripId) params.tripId = tripId;
