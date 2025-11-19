@@ -11,6 +11,7 @@ import TripServices from "@/utils/trip.utils";
 import { useLogin } from "@/components/providers/LoginProvider";
 import { set } from "lodash";
 import { Chat, UserTrip } from "@/types";
+import { CommonServices } from "@/utils";
 
 /**
  * ChatsPage
@@ -108,7 +109,7 @@ export default function ChatsPage() {
                 usable.forEach((t) => {
                     if (t.id === rawTripId) {
                         setTripName(t.locationName || "Trip");
-                        setTripDates(`${formatDate(t.startDate)} - ${formatDate(t.endDate)}`);
+                        setTripDates(CommonServices.formatDateShortHeaderTripSelection(t.startDate, t.endDate));
                     }
                 });
                 return;
@@ -117,10 +118,10 @@ export default function ChatsPage() {
             // If no tripId in state and we have trips -> pick first
             if (!tripId && usable.length > 0) {
                 const first = usable[0];
-                const formattedDates = `${formatDate(first.startDate)} - ${formatDate(first.endDate)}`;
+                // const formattedDates = `${formatDate(first.startDate)} - ${formatDate(first.endDate)}`;
                 setTripId(first.id as string);
                 setTripName(first.locationName || "Trip");
-                setTripDates(formattedDates);
+                setTripDates(CommonServices.formatDateShortHeaderTripSelection(first.startDate, first.endDate));
 
                 // Update URL to include tripId (no chatId)
                 router.replace(`/chats?tripId=${first.id}`);
@@ -146,7 +147,7 @@ export default function ChatsPage() {
         const trip = allTrips.find((t) => t.id === tId);
         if (trip) {
             setTripName(trip.locationName || "Trip");
-            setTripDates(`${formatDate(trip.startDate)} - ${formatDate(trip.endDate)}`);
+            setTripDates(CommonServices.formatDateShortHeaderTripSelection(trip.startDate, trip.endDate));
         }
     };
     /* ------------- Resolve chatId only case: get tripId from chat and open chat -------------- */
@@ -317,7 +318,7 @@ export default function ChatsPage() {
         const trip = allTrips.find((t) => t.id === tripId);
         if (trip) {
             setTripName(trip.locationName || "Trip");
-            setTripDates(`${formatDate(trip.startDate)} - ${formatDate(trip.endDate)}`);
+            setTripDates(CommonServices.formatDateShortHeaderTripSelection(trip.startDate, trip.endDate));
         }
     }, [tripId, allTrips]);
     /* ------------- When tripId changes due to user interaction after init -------------- */
@@ -340,6 +341,7 @@ export default function ChatsPage() {
     <ChatHeader chat={activeChat} onBack={onBackFromChat} />
 ) : (
     <MultipleTripSelectionHeader
+        tripId={tripId || undefined}
         tripName={tripName}
         dates={tripDates}
         allTrips={allTrips}

@@ -73,6 +73,7 @@ export default function ChatIcon({ className = "", currentUserId, onClickOpen }:
     // optional callback (e.g., open drawer or custom navigation)
     if (onClickOpen) {
       onClickOpen();
+      return; 
       // still navigate unless callback handled it
     }
     router.push("/chats");

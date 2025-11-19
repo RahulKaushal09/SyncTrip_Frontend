@@ -173,7 +173,7 @@ export default function FeedbackModal({ feedBackFormOpen, setFeedbackFormOpen, i
                 <div className="rating-smileys" role="radiogroup" aria-label="Rate your experience">
                   {[1,2,3,4,5].map((n) => <Smiley key={n} idx={n} />)}
                 </div>
-                <div className="rating-caption">{ (hoverRating ?? rating) ? SMILEY_LABELS[(hoverRating ?? rating)! - 1] : "Select" }</div>
+                {/* <div className="rating-caption">{ (hoverRating ?? rating) ? SMILEY_LABELS[(hoverRating ?? rating)! - 1] : "Select" }</div> */}
               </div>
 
               {!isLoggedIn && (

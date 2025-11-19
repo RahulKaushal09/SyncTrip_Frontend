@@ -8,6 +8,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import TripServices from '@/utils/trip.utils'
 import { userTripFields } from '@/constants'
 import { UserTrip } from '@/types'
+import { CommonServices } from '@/utils'
 
 export type Candidate = {
     id: string
@@ -92,7 +93,9 @@ export default function MatchingPage() {
     const [allTrips, setAllTrips] = useState<UserTrip[]>([]);
     const [matchChatId, setMatchChatId] = useState<string | null>(null);
     const SWIPE_THRESHOLD = 100
-    const current = profiles[index]
+    // const current = profiles[index]
+    const current = index >= 0 && index < profiles.length ? profiles[index] : undefined
+
 
     // -------------------------------------
     // FETCH CANDIDATES FROM BACKEND
@@ -166,7 +169,7 @@ export default function MatchingPage() {
                     setTripName(trip.locationName as string);
                     setStartDate(trip.startDate as string);
                     setEndDate(trip.endDate as string);
-                    setDateString(formatDate(trip.startDate as string) + " - " + formatDate(trip.endDate as string));
+                    setDateString(CommonServices.formatDateShortHeaderTripSelection(trip.startDate as string, trip.endDate as string));
                 }
             });
             // const tripDetails: UserTrip = await TripServices.fetchTripDetails(tripId);
@@ -233,24 +236,43 @@ export default function MatchingPage() {
         deltaRef.current = e.clientX - startXRef.current
         // we let RAF loop push updates
     }
+    // function advanceCardAfterAnimation() {
+    //     setTimeout(() => {
+    //         setTransitioning(false)
+    //         setDx(0)
+    //         setRotation(0)
+    //         // safe increment: never go past profiles.length - 1
+    //         setIndex(prev => {
+    //             const next = prev + 1
+    //             return Math.min(next, Math.max(0, profiles.length - 1))
+    //         })
+    //         swipeLockRef.current = false
+    //         // prefetch using the latest index (use functional check)
+    //         setTimeout(() => {
+    //             // small delay ensures state updated; you could also compute with refs
+    //             if (profiles.length - (index + 1) < 3) fetchCandidates()
+    //         }, 0)
+    //     }, 300)
+    // }
     function advanceCardAfterAnimation() {
+    setTimeout(() => {
+        setTransitioning(false)
+        setDx(0)
+        setRotation(0)
+        // advance index — allow it to become profiles.length (one past last)
+        setIndex(prev => {
+            const next = prev + 1
+            // clamp between 0 and profiles.length (not profiles.length - 1)
+            return Math.min(Math.max(0, next), profiles.length)
+        })
+        swipeLockRef.current = false
+        // prefetch using the latest index (use functional check)
         setTimeout(() => {
-            setTransitioning(false)
-            setDx(0)
-            setRotation(0)
-            // safe increment: never go past profiles.length - 1
-            setIndex(prev => {
-                const next = prev + 1
-                return Math.min(next, Math.max(0, profiles.length - 1))
-            })
-            swipeLockRef.current = false
-            // prefetch using the latest index (use functional check)
-            setTimeout(() => {
-                // small delay ensures state updated; you could also compute with refs
-                if (profiles.length - (index + 1) < 3) fetchCandidates()
-            }, 0)
-        }, 300)
-    }
+            // small delay ensures state updated; you could also compute with refs
+            if (profiles.length - (index + 1) < 3) fetchCandidates()
+        }, 0)
+    }, 300)
+}
     async function onPointerUp(e: React.PointerEvent<HTMLDivElement>) {
         if (!isDragging) return
         setIsDragging(false)
@@ -363,13 +385,6 @@ export default function MatchingPage() {
             setTimeout(() => setTransitioning(false), 200)
         }
     }
-    const formatDate = (date: string): string => {
-        const d = new Date(date);
-        const day = d.getDate();
-        const year = d.getFullYear();
-        const monthName = d.toLocaleString('en-GB', { month: 'long' });
-        return `${day} ${monthName}, ${year}`;
-    };
 
     // -------------------------------------
     // SEND SWIPE TO BACKEND (axios-style)
@@ -397,17 +412,26 @@ export default function MatchingPage() {
             throw err
         }
     }
+function closePopup() {
+    setMatchPopupProfile(null);
+    setMatchChatId(null);
+    // unlock swiping for next interactions and advance past matched card
+    swipeLockRef.current = false;
+    // allow index to move one past last so UI shows "No more travelers"
+    setIndex(prev => Math.min(prev + 1, profiles.length));
+    // fetch more if needed
+    if (profiles.length - (index + 1) < 3) fetchCandidates();
+}
+    // function closePopup() {
+    //     setMatchPopupProfile(null);
+    //     setMatchChatId(null);
+    //     // unlock swiping for next interactions and advance past matched card
 
-    function closePopup() {
-        setMatchPopupProfile(null);
-        setMatchChatId(null);
-        // unlock swiping for next interactions and advance past matched card
-
-        swipeLockRef.current = false;
-        setIndex(prev => Math.min(prev + 1, Math.max(0, profiles.length - 1)));
-        // fetch more if needed
-        if (profiles.length - (index + 1) < 3) fetchCandidates();
-    }
+    //     swipeLockRef.current = false;
+    //     setIndex(prev => Math.min(prev + 1, Math.max(0, profiles.length - 1)));
+    //     // fetch more if needed
+    //     if (profiles.length - (index + 1) < 3) fetchCandidates();
+    // }
     function startChat() {
         // navigate to chat using matchPopupProfile.matchId or chatId
         if (matchChatId) {

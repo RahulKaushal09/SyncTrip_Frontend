@@ -1,5 +1,16 @@
 
 export class CommonServices {
+    static formatDateShortHeaderTripSelection(startDate: string, endDate: string): string {
+        const d = new Date(startDate);
+        const e = new Date(endDate);
+        const day = d.getDate();
+        const startMonthName = d.toLocaleString("en-GB", { month: "short" });
+        const endMonthName = e.toLocaleString("en-GB", { month: "short" });
+        const endDay = e.getDate();
+        const year = d.getFullYear();
+        return `${day} ${startMonthName} - ${endDay} ${endMonthName}, ${year}`;
+    }
+
     static customSlugify = (text: string) => {
         return text
             .toLowerCase()

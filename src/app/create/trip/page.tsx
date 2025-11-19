@@ -195,12 +195,12 @@ if ('end' in patch) {
             // route to manual planner page
             toast.success('Trip created! Add your activities now.');
             router.replace(`/userTrip/planner?tripId=${createdTripId}`);
-            hideLoader();
+            // hideLoader();
 
           } else {
             toast.success('Trip created! Start matching now...');
             router.replace(`/userTrip/matching?tripId=${createdTripId}`);
-            hideLoader();
+            // hideLoader();
 
           }
         } else {

@@ -1,6 +1,10 @@
 import { UserTrip } from "@/types";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import ChatIcon from "../Navbar/ChatIcon";
+import { CommonServices } from "@/utils";
+import path from "path";
+import MatchingUsersIcon from "../common/MatchingUsersIcon";
 
 // /d:/DOITBUNNYY/NextJs/SyncTrip_Frontend/src/components/Header/MatchingScreenHeader.tsx
 
@@ -33,9 +37,9 @@ const buttonStyle: React.CSSProperties = {
 
 const containerStyle: React.CSSProperties = {
     display: "flex",
-    alignItems: "center",
-    gap: 12,
+    
     padding: "12px 16px",
+    justifyContent: "space-between"
 };
 
 const textColumnStyle: React.CSSProperties = {
@@ -56,6 +60,7 @@ const datesStyle: React.CSSProperties = {
 };
 
 export default function MultipleTripSelectionHeader({
+  tripId,
   tripName,
   dates,
   onBack,
@@ -64,8 +69,10 @@ export default function MultipleTripSelectionHeader({
   onSelectTrip,
 }: Props) {
     const router = useRouter();
+    const pathName = usePathname();
   const [showSheet, setShowSheet] = useState(false);
   const [filteredTrips, setFilteredTrips] = useState<UserTrip[]>([]);
+  const [headerType, setHeaderType] = useState<'matching' | 'chat'>(pathName.includes('/chats') ? 'chat' : 'matching');
     useEffect(() => {
         setFilteredTrips(allTrips.filter(trip=>trip.endDate >= new Date().toISOString()));
     }, [allTrips]);
@@ -74,14 +81,23 @@ export default function MultipleTripSelectionHeader({
   };
 
   const handleSelectTrip = (trip: UserTrip) => {
-    const formattedDates = `${formatDate(trip.startDate)} - ${formatDate(trip.endDate)}`;
+        const formattedDates = `${CommonServices.formatDateShortHeaderTripSelection(trip.startDate, trip.endDate)}`;
+    // const formattedDates = `${formatDate(trip.startDate)} - ${formatDate(trip.endDate)}`;
     onSelectTrip?.(trip.id as string, trip.locationName as string, formattedDates);
     setShowSheet(false);
   };
 
+  const onChatOpen = () => {
+    router.push("/chats?tripId=" + tripId);
+  };
+  const onMatchingOpen = () => {
+    router.push("/userTrip/matching?tripId=" + tripId);
+  };
+
   return (
     <header style={containerStyle} className={`${className} border-b`}>
-      <button type="button" onClick={onBack ? onBack : router.back} aria-label="Go back" style={buttonStyle}>
+      <div style={{ display: "flex", alignItems: "center", width: "100%",gap: 12 }}>
+        <button type="button" onClick={onBack ? onBack : router.back} aria-label="Go back" style={buttonStyle}>
         <svg viewBox="0 0 24 24" style={iconStyle} aria-hidden>
           <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
         </svg>
@@ -125,6 +141,7 @@ export default function MultipleTripSelectionHeader({
         
         </div>
       </div>
+      </div>
 
       {showSheet && (
         <div style={sheetOverlayStyle} onClick={() => setShowSheet(false)}>
@@ -138,24 +155,26 @@ export default function MultipleTripSelectionHeader({
               >
                 <div>{trip.locationName}</div>
                 <div style={{ fontSize: 13, color: "#6b7280" }}>
-                  {formatDate(trip.startDate)} - {formatDate(trip.endDate)}
+                  {CommonServices.formatDateShortHeaderTripSelection(trip.startDate, trip.endDate)}
+                  {/* {formatDate(trip.startDate)} - {formatDate(trip.endDate)} */}
                 </div>
               </div>
             ))}
           </div>
         </div>
       )}
+      {headerType === 'matching' && tripId && (
+        <ChatIcon onClickOpen={() => onChatOpen()}/>
+      )}
+      {headerType === 'chat' && tripId && 
+      <MatchingUsersIcon onClickOpen={()=>onMatchingOpen()} />}
+
+
     </header>
   );
 }
 
-function formatDate(date: string): string {
-  const d = new Date(date);
-  const day = d.getDate();
-  const year = d.getFullYear();
-  const monthName = d.toLocaleString("en-GB", { month: "long" });
-  return `${day} ${monthName}, ${year}`;
-}
+
 
 const sheetOverlayStyle: React.CSSProperties = {
   position: "fixed",
