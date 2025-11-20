@@ -12,6 +12,8 @@ import { useLogin } from "@/components/providers/LoginProvider";
 import { set } from "lodash";
 import { Chat, UserTrip } from "@/types";
 import { CommonServices } from "@/utils";
+import toast from "react-hot-toast";
+import { useLoader } from "@/components/providers/LoaderContext";
 
 /**
  * ChatsPage
@@ -47,7 +49,10 @@ export default function ChatsPage() {
     const mountedRef = useRef(false);
     const initializedRef = useRef(false); // prevents double-initialization
     const resolvingChatRef = useRef(false); // prevents duplicate chat resolution
+    const [unreadByTrip, setUnreadByTrip] = useState<Record<string, number>>({});
+
     const { user } = useLogin();
+    const {showLoader,hideLoader} = useLoader();
 
     useEffect(() => {
         mountedRef.current = true;
@@ -64,24 +69,53 @@ export default function ChatsPage() {
         }
     }
 
+    const fetchUnreadByTrip = async () => {
+        try {
+            if (ChatApiService && typeof ChatApiService.fetchUnreadCount === "function") {
+                const res = await ChatApiService.fetchUnreadCount(); // same endpoint
+                if (res && typeof res === "object" && "byTrip" in res) {
+                    setUnreadByTrip(res.byTrip || {});
+                } else {
+                    setUnreadByTrip({});
+                }
+            } else {
+                // fallback to raw fetch
+                const r = await fetch("/api/chats/unread-count");
+                const data = await r.json();
+                setUnreadByTrip(data?.byTrip || {});
+            }
+        } catch (err) {
+            console.error("fetchUnreadByTrip error", err);
+            setUnreadByTrip({});
+        }
+    };
+    
     /* ------------- Load trips and auto-pick first upcoming -------------- */
     const loadAllTrips = async () => {
         try {
+            showLoader();
             const trips = await TripServices.fetchUserTrips();
             const now = new Date();
             const futureTrips = trips.filter((t: any) => new Date(t.endDate) >= now);
             const usable = futureTrips.length > 0 ? futureTrips : trips;
             if (!Array.isArray(usable)) {
                 router.replace("/");
+                return [];
             }
-            // if(usable.length == 0 ) {
-            //     router.replace("/");
-            // }
+
+            if(usable.length == 0 ) {
+                toast.error("No trips found. Please create a trip first.");
+                router.replace("/");
+                return [];
+            }
             setAllTrips(usable);
             return trips;
         } catch (err) {
             console.error("getAllTrips error:", err);
             return [];
+        }
+        finally{
+            hideLoader();
         }
     };
     const loadTripsAndMaybeAutoSelect = async () => {
@@ -198,6 +232,24 @@ export default function ChatsPage() {
             resolvingChatRef.current = false;
         }
     };
+    useEffect(() => {
+  let cancelled = false;
+
+  const run = async () => {
+    await fetchUnreadByTrip();
+  };
+  run();
+
+  const interval = setInterval(() => {
+    if (!cancelled) fetchUnreadByTrip();
+  }, 20000); // same 20s cadence
+
+  return () => {
+    cancelled = true;
+    clearInterval(interval);
+  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, []);
 
     useEffect(() => {
         if (!chatId) return;
@@ -337,17 +389,18 @@ export default function ChatsPage() {
             <div className="min-h-screen bg-white">
                 {/* Header: if chat window open -> show small ChatHeader (with back); else show trip selector */}
                 {chatId ? (
-    // ChatHeader should handle a null/undefined chat (showing loading UI)
-    <ChatHeader chat={activeChat} onBack={onBackFromChat} />
-) : (
-    <MultipleTripSelectionHeader
-        tripId={tripId || undefined}
-        tripName={tripName}
-        dates={tripDates}
-        allTrips={allTrips}
-        onSelectTrip={onSelectTripFromHeader}
-    />
-)}
+                    // ChatHeader should handle a null/undefined chat (showing loading UI)
+                    <ChatHeader chat={activeChat} onBack={onBackFromChat} />
+                ) : (
+                    <MultipleTripSelectionHeader
+                        tripId={tripId || undefined}
+                        tripName={tripName}
+                        dates={tripDates}
+                        allTrips={allTrips}
+                        onSelectTrip={onSelectTripFromHeader}
+                        unreadByTrip={unreadByTrip}
+                    />
+                )}
 
                 <div className="flex flex-col md:flex-row">
                     {/* Chat list - visible when no chatId OR on desktop */}

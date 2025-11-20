@@ -67,7 +67,7 @@ function CreateTripContent() {
 
   const [selectedLocation, setSelectedLocation] = useState<Location | undefined>();
   const [startDate, setStartDate] = useState<Date | null>(parseLocalDateOnly(startParam));
-const [endDate, setEndDate] = useState<Date | null>(parseLocalDateOnly(endParam));
+  const [endDate, setEndDate] = useState<Date | null>(parseLocalDateOnly(endParam));
 
   // const [startDate, setStartDate] = useState<Date | null>(startParam ? new Date(startParam) : null);
   // const [endDate, setEndDate] = useState<Date | null>(endParam ? new Date(endParam) : null);
@@ -75,6 +75,9 @@ const [endDate, setEndDate] = useState<Date | null>(parseLocalDateOnly(endParam)
   const [selectedPreferences, setSelectedPreferences] = useState<string[]>([]);
   const [selectedBudget, setSelectedBudget] = useState<string>('');
   const [selectedPrivacy, setSelectedPrivacy] = useState<string>('');
+  const [showPrivacyConfirm, setShowPrivacyConfirm] = useState(false);
+  const [pendingStartMatching, setPendingStartMatching] = useState(false);
+
   const { showLoader, hideLoader } = useLoader();
   useEffect(() => {
     const parseLocationId = async () => {
@@ -93,9 +96,14 @@ const [endDate, setEndDate] = useState<Date | null>(parseLocalDateOnly(endParam)
 
   useEffect(() => {
     if (startParam && !startDate) setStartDate(parseLocalDateOnly(startParam));
-  if (endParam && !endDate) setEndDate(parseLocalDateOnly(endParam));
+    if (endParam && !endDate) setEndDate(parseLocalDateOnly(endParam));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [startParam, endParam]);
+
+  const closePrivacyConfirm = useCallback(() => {
+    setShowPrivacyConfirm(false);
+    setPendingStartMatching(false);
+  }, []);
 
   const updateUrlParams = useCallback(
     (patch: { location?: Location | null; start?: Date | null; end?: Date | null }) => {
@@ -112,13 +120,13 @@ const [endDate, setEndDate] = useState<Date | null>(parseLocalDateOnly(endParam)
         }
       }
       if ('start' in patch) {
-  if (patch.start) sp.set('start', formatLocalDateOnly(patch.start));
-  else sp.delete('start');
-}
-if ('end' in patch) {
-  if (patch.end) sp.set('end', formatLocalDateOnly(patch.end));
-  else sp.delete('end');
-}
+        if (patch.start) sp.set('start', formatLocalDateOnly(patch.start));
+        else sp.delete('start');
+      }
+      if ('end' in patch) {
+        if (patch.end) sp.set('end', formatLocalDateOnly(patch.end));
+        else sp.delete('end');
+      }
       const query = sp.toString();
       router.replace(query ? `${window.location.pathname}?${query}` : window.location.pathname);
     },
@@ -174,9 +182,12 @@ if ('end' in patch) {
     },
     [selectedLocation, startDate, endDate, selectedBudget, selectedPreferences, selectedPrivacy, router]
   );
+const [isPublishing, setIsPublishing] = useState(false);
 
   const publishTripAndNavigate = useCallback(
     async (manual: boolean) => {
+      if (isPublishing) return;
+      setIsPublishing(true);
       showLoader();
       try {
         const payload: UserTrip = {
@@ -214,11 +225,32 @@ if ('end' in patch) {
 
       }
       finally {
+        setIsPublishing(false);
       }
     },
-    [selectedLocation, startDate, endDate, selectedBudget, selectedPreferences, selectedPrivacy, router]
+    [selectedLocation, startDate, endDate, selectedBudget, selectedPreferences, selectedPrivacy, router,isPublishing]
   );
-
+  const makeTripPublic =  useCallback(async () => {
+    // change privacy to public, then proceed with start-matching publish flow
+    setSelectedPrivacy((prev) => {
+      // preserve same casing if you need; store 'public' for safety
+      return 'Public Trip';
+    });
+    setShowPrivacyConfirm(false);
+    setPendingStartMatching(false);
+    // call publish flow with manual = false (start matching)
+  }, []);
+  // const confirmChangeToPublicAndStartMatching = useCallback(async () => {
+  //   // change privacy to public, then proceed with start-matching publish flow
+  //   setSelectedPrivacy((prev) => {
+  //     // preserve same casing if you need; store 'public' for safety
+  //     return 'public';
+  //   });
+  //   setShowPrivacyConfirm(false);
+  //   setPendingStartMatching(false);
+  //   // call publish flow with manual = false (start matching)
+  //   await publishTripAndNavigate(false);
+  // }, [publishTripAndNavigate]);
   // Memoized header element so ProgressBar does not remount unnecessarily
   const headerEl = useMemo(() => {
     return (
@@ -364,8 +396,23 @@ if ('end' in patch) {
             </button>
 
             {/* Optional second CTA */}
-            <button
+            {/* <button
               onClick={() => publishTripAndNavigate(false)}
+              className="w-full btn btn-matching-color"
+            >
+              Start Matching
+            </button> */}
+            <button
+              onClick={() => {
+                // if trip is currently invite only, show the popup
+                if ((selectedPrivacy || "").toLowerCase().includes("invite")) {
+                  setPendingStartMatching(true);
+                  setShowPrivacyConfirm(true);
+                  return;
+                }
+                // otherwise go ahead
+                publishTripAndNavigate(false);
+              }}
               className="w-full btn btn-matching-color"
             >
               Start Matching
@@ -373,6 +420,7 @@ if ('end' in patch) {
           </div>
         </div>
       </div>
+
     );
   };
 
@@ -459,6 +507,44 @@ if ('end' in patch) {
                 Next
               </button>
             )}
+          </div>
+        )}
+
+        {showPrivacyConfirm && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center">
+            {/* backdrop */}
+            <div
+              className="absolute inset-0 bg-black/40"
+              onClick={closePrivacyConfirm}
+              aria-hidden
+            />
+
+            {/* modal box */}
+            <div className="relative z-10 w-full max-w-md p-6 bg-white rounded-lg shadow-lg">
+              <h3 className="text-lg font-semibold mb-2">Change trip privacy?</h3>
+              <p className="text-sm text-gray-600 mb-4">
+                Your trip is set as <strong>{selectedPrivacy || 'invite only'}</strong>. To match with other travellers we need to make it public.
+              </p>
+
+              <div className="flex gap-3">
+                <button
+                  onClick={makeTripPublic}
+                  className="flex-1 px-4 py-2 rounded btn btn-primary"
+                >
+                  Change to public
+                </button>
+
+                <button
+                  onClick={() => {
+                    // simply close and do nothing
+                    closePrivacyConfirm();
+                  }}
+                  className="flex-1 px-4 py-2 rounded border bg-white text-gray-700"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
           </div>
         )}
         {/* ) : null} */}

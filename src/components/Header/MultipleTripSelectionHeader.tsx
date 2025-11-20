@@ -16,47 +16,48 @@ type Props = {
   className?: string;
   onSelectTrip?: (tripId: string, tripName: string, dates: string) => void;
   allTrips?: UserTrip[];
+  unreadByTrip?: Record<string, number>;
 };
 
 const iconStyle: React.CSSProperties = {
-    width: 20,
-    height: 20,
-    display: "block",
-    fill: "currentColor",
+  width: 20,
+  height: 20,
+  display: "block",
+  fill: "currentColor",
 };
 
 const buttonStyle: React.CSSProperties = {
-    background: "transparent",
-    border: "none",
-    padding: 8,
-    display: "inline-flex",
-    alignItems: "center",
-    justifyContent: "center",
-    cursor: "pointer",
+  background: "transparent",
+  border: "none",
+  padding: 8,
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  cursor: "pointer",
 };
 
 const containerStyle: React.CSSProperties = {
-    display: "flex",
-    
-    padding: "12px 16px",
-    justifyContent: "space-between"
+  display: "flex",
+
+  padding: "12px 16px",
+  justifyContent: "space-between"
 };
 
 const textColumnStyle: React.CSSProperties = {
-    display: "flex",
-    flexDirection: "column",
-    lineHeight: 1,
+  display: "flex",
+  flexDirection: "column",
+  lineHeight: 1,
 };
 
 const titleStyle: React.CSSProperties = {
-    fontSize: 16,
-    fontWeight: 600,
+  fontSize: 16,
+  fontWeight: 600,
 };
 
 const datesStyle: React.CSSProperties = {
-    fontSize: 13,
-    color: "#6b7280", // gray
-    marginTop: 2,
+  fontSize: 13,
+  color: "#6b7280", // gray
+  marginTop: 2,
 };
 
 export default function MultipleTripSelectionHeader({
@@ -67,21 +68,22 @@ export default function MultipleTripSelectionHeader({
   className,
   allTrips = [],
   onSelectTrip,
+  unreadByTrip,
 }: Props) {
-    const router = useRouter();
-    const pathName = usePathname();
+  const router = useRouter();
+  const pathName = usePathname();
   const [showSheet, setShowSheet] = useState(false);
   const [filteredTrips, setFilteredTrips] = useState<UserTrip[]>([]);
   const [headerType, setHeaderType] = useState<'matching' | 'chat'>(pathName.includes('/chats') ? 'chat' : 'matching');
-    useEffect(() => {
-        setFilteredTrips(allTrips.filter(trip=>trip.endDate >= new Date().toISOString()));
-    }, [allTrips]);
+  useEffect(() => {
+    setFilteredTrips(allTrips.filter(trip => trip.endDate >= new Date().toISOString()));
+  }, [allTrips]);
   const handleTripClick = () => {
     setShowSheet(true);
   };
 
   const handleSelectTrip = (trip: UserTrip) => {
-        const formattedDates = `${CommonServices.formatDateShortHeaderTripSelection(trip.startDate, trip.endDate)}`;
+    const formattedDates = `${CommonServices.formatDateShortHeaderTripSelection(trip.startDate, trip.endDate)}`;
     // const formattedDates = `${formatDate(trip.startDate)} - ${formatDate(trip.endDate)}`;
     onSelectTrip?.(trip.id as string, trip.locationName as string, formattedDates);
     setShowSheet(false);
@@ -96,58 +98,93 @@ export default function MultipleTripSelectionHeader({
 
   return (
     <header style={containerStyle} className={`${className} border-b`}>
-      <div style={{ display: "flex", alignItems: "center", width: "100%",gap: 12 }}>
+      <div style={{ display: "flex", alignItems: "center", width: "100%", gap: 12 }}>
         <button type="button" onClick={onBack ? onBack : router.back} aria-label="Go back" style={buttonStyle}>
-        <svg viewBox="0 0 24 24" style={iconStyle} aria-hidden>
-          <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
-        </svg>
-      </button>
-
-      <div style={textColumnStyle} onClick={handleTripClick}>
-        <div style={titleStyle}>{tripName}</div>
-        <div className="flex flex-row align-items-center">
-        {dates ? <div style={datesStyle}>{dates}</div> : null}
-        {/* toggle drop down/up icon */}
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            setShowSheet((s) => !s);
-          }}
-          aria-label={showSheet ? "Close trip selector" : "Open trip selector"}
-          style={{
-            ...buttonStyle,
-            padding: 4,
-            marginLeft: 8,
-            width: 32,
-            height: 32,
-            borderRadius: 6,
-          }}
-        >
-          <svg
-            viewBox="0 0 24 24"
-            style={{
-              ...iconStyle,
-              width: 18,
-              height: 18,
-              transition: "transform 0.18s ease",
-              transform: showSheet ? "rotate(180deg)" : "rotate(0deg)",
-            }}
-            aria-hidden
-          >
-            <path d="M7 10l5 5 5-5z" />
+          <svg viewBox="0 0 24 24" style={iconStyle} aria-hidden>
+            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
           </svg>
         </button>
-        
+
+        <div style={textColumnStyle} onClick={handleTripClick}>
+          <div style={titleStyle}>{tripName}</div>
+          <div className="flex flex-row align-items-center">
+            {dates ? <div style={datesStyle}>{dates}</div> : null}
+            {/* toggle drop down/up icon */}
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowSheet((s) => !s);
+              }}
+              aria-label={showSheet ? "Close trip selector" : "Open trip selector"}
+              style={{
+                ...buttonStyle,
+                padding: 4,
+                marginLeft: 8,
+                width: 32,
+                height: 32,
+                borderRadius: 6,
+              }}
+            >
+              <svg
+                viewBox="0 0 24 24"
+                style={{
+                  ...iconStyle,
+                  width: 18,
+                  height: 18,
+                  transition: "transform 0.18s ease",
+                  transform: showSheet ? "rotate(180deg)" : "rotate(0deg)",
+                }}
+                aria-hidden
+              >
+                <path d="M7 10l5 5 5-5z" />
+              </svg>
+            </button>
+
+          </div>
         </div>
-      </div>
       </div>
 
       {showSheet && (
         <div style={sheetOverlayStyle} onClick={() => setShowSheet(false)}>
           <div style={sheetStyle} onClick={(e) => e.stopPropagation()}>
             <h3 style={{ marginBottom: 8 }}>Select a Trip</h3>
-            {filteredTrips.map((trip) => (
+            {filteredTrips.map((trip) => {
+              const unreadForTrip = unreadByTrip?.[trip.id as string] || 0;
+
+              return (
+                <div
+                  key={trip.id}
+                  style={tripItemStyle}
+                  onClick={() => handleSelectTrip(trip)}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      gap: 8,
+                    }}
+                  >
+                    <div>
+                      <div>{trip.locationName}</div>
+                      <div style={{ fontSize: 13, color: "#6b7280" }}>
+                        {CommonServices.formatDateShortHeaderTripSelection(
+                          trip.startDate,
+                          trip.endDate
+                        )}
+                      </div>
+                    </div>
+
+                    {/* show unread badge only in chats header + if > 0 */}
+                    {headerType === "chat" && unreadForTrip > 0 && (
+                      <span style={unreadBadgeStyle}>{unreadForTrip}</span>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+            {/* {filteredTrips.map((trip) => (
               <div
                 key={trip.id}
                 style={tripItemStyle}
@@ -156,18 +193,17 @@ export default function MultipleTripSelectionHeader({
                 <div>{trip.locationName}</div>
                 <div style={{ fontSize: 13, color: "#6b7280" }}>
                   {CommonServices.formatDateShortHeaderTripSelection(trip.startDate, trip.endDate)}
-                  {/* {formatDate(trip.startDate)} - {formatDate(trip.endDate)} */}
                 </div>
               </div>
-            ))}
+            ))} */}
           </div>
         </div>
       )}
       {headerType === 'matching' && tripId && (
-        <ChatIcon onClickOpen={() => onChatOpen()}/>
+        <ChatIcon onClickOpen={() => onChatOpen()} />
       )}
-      {headerType === 'chat' && tripId && 
-      <MatchingUsersIcon onClickOpen={()=>onMatchingOpen()} />}
+      {headerType === 'chat' && tripId &&
+        <MatchingUsersIcon onClickOpen={() => onMatchingOpen()} />}
 
 
     </header>
@@ -204,4 +240,14 @@ const tripItemStyle: React.CSSProperties = {
   padding: "12px 8px",
   borderBottom: "1px solid #eee",
   cursor: "pointer",
+};
+const unreadBadgeStyle: React.CSSProperties = {
+  minWidth: 20,
+  padding: "2px 6px",
+  borderRadius: 999,
+  backgroundColor: "#EF4444", // red-500 style
+  color: "#fff",
+  fontSize: 12,
+  fontWeight: 600,
+  textAlign: "center",
 };

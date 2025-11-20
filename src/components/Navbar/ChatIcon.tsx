@@ -24,10 +24,22 @@ export default function ChatIcon({ className = "", currentUserId, onClickOpen }:
     try {
       setLoading(true);
       // Preferred: use a dedicated endpoint
+      // if (ChatApiService && typeof ChatApiService.fetchUnreadCount === "function") {
+      //   const res = await ChatApiService.fetchUnreadCount(); // expect number
+      //   if (!mountedRef.current) return;
+      //   setUnreadCount(typeof res === "number" ? res : 0);
+      // }
       if (ChatApiService && typeof ChatApiService.fetchUnreadCount === "function") {
-        const res = await ChatApiService.fetchUnreadCount(); // expect number
+        const res = await ChatApiService.fetchUnreadCount(); // now { count, byTrip } or number
         if (!mountedRef.current) return;
-        setUnreadCount(typeof res === "number" ? res : 0);
+
+        if (typeof res === "number") {
+          setUnreadCount(res);
+        } else if (res && typeof res.count === "number") {
+          setUnreadCount(res.count);              // 👈 use total unread chats
+        } else {
+          setUnreadCount(0);
+        }
       } else if (ChatApiService && typeof ChatApiService.fetchChats === "function") {
         // fallback: fetch recent chats and count unread messages (cheap heuristic)
         const chats = await ChatApiService.fetchChats();
@@ -73,7 +85,7 @@ export default function ChatIcon({ className = "", currentUserId, onClickOpen }:
     // optional callback (e.g., open drawer or custom navigation)
     if (onClickOpen) {
       onClickOpen();
-      return; 
+      return;
       // still navigate unless callback handled it
     }
     router.push("/chats");
@@ -89,7 +101,7 @@ export default function ChatIcon({ className = "", currentUserId, onClickOpen }:
     >
       {/* Chat bubble SVG */}
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-        <path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10z" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10z" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
 
       {/* unread badge */}

@@ -33,7 +33,6 @@ const filterTripsByStatus = (trips: UserTrip[], status: FilterKey) => {
 export default function AllTripsPage() {
   const router = useRouter();
   const { user } = useLogin(); // ⬅️ use context directly
-  
 
   const [trips, setTrips] = useState<UserTrip[]>([]);
   const [filter, setFilter] = useState<FilterKey>("all");
@@ -69,6 +68,10 @@ export default function AllTripsPage() {
     router.push(`/userTrip/details?tripId=${encodeURIComponent(tripId)}&locationId=${encodeURIComponent(locationId || "")}`);
   };
 
+  const onCreateTrip = () => {
+    router.push("/create/trip");
+  };
+
   const renderHeader = (
     <div style={styles.headerWrap}>
       {/* <MainHeader /> */}
@@ -83,19 +86,35 @@ export default function AllTripsPage() {
       <div style={styles.container}>
         {renderHeader}
         <div style={styles.listContent}>
-          {filteredTrips.map((trip) => (
-            <div key={trip.id} style={styles.tripRow}>
-              <TripCard
-                trip={trip}
-                onPressCard={() => openTripDetailsScreen(trip.id as string, trip.locationId as string)}
-                onPressEdit={() => openTripDetailsScreen(trip.id as string, trip.locationId as string)}
-              />
-            </div>
-          ))}
-
-          {filteredTrips.length === 0 && (
-            <div style={styles.emptyState}>
-              <p style={styles.emptyText}>No trips found.</p>
+          {filteredTrips.length > 0 ? (
+            filteredTrips.map((trip) => (
+              <div key={trip.id} style={styles.tripRow}>
+                <TripCard
+                  trip={trip}
+                  onPressCard={() => openTripDetailsScreen(trip.id as string, trip.locationId as string)}
+                  onPressEdit={() => openTripDetailsScreen(trip.id as string, trip.locationId as string)}
+                />
+              </div>
+            ))
+          ) : (
+            <div style={styles.emptyWrapper}>
+              <div style={styles.emptyCard}>
+                <h2 style={styles.emptyTitle}>No trips yet</h2>
+                <p style={styles.emptyText}>
+                  You haven't created any trips. Create your first trip to invite friends, build an itinerary and start matching with other travelers.
+                </p>
+                <div style={styles.emptyActions}>
+                  <button
+                  className="btn btn-secondary"
+                    onClick={onCreateTrip}
+                    aria-label="Create a new trip"
+                  >
+                    Create Trip
+                  </button>
+                  {/* Optional secondary action if you want */}
+                  {/* <button onClick={() => router.push('/explore')} style={styles.secondaryButton}>Browse locations</button> */}
+                </div>
+              </div>
             </div>
           )}
         </div>
@@ -105,44 +124,70 @@ export default function AllTripsPage() {
 }
 
 /* Styles (const) */
-// const styles: { [k: string]: React.CSSProperties } = {
-//   safe: { width: "100%", minHeight: "100vh", backgroundColor: "var(--background-light-app, #F8FAFC)" },
-//   container: { margin: "0 auto", padding: "24px 40px", display: "grid", gridTemplateColumns: "1fr", maxWidth: 800 },
-//   headerWrap: { marginBottom: 8 },
-//   listContent: { paddingBottom: 40 },
-//   tripRow: { marginBottom: 8 },
-//   emptyState: { padding: 20 },
-//   emptyText: { color: "#666" },
-// };
 const styles: { [k: string]: React.CSSProperties } = {
   safe: { width: "100%", minHeight: "100vh", backgroundColor: "var(--background-light-app, #F8FAFC)" },
   container: { margin: "0 auto", padding: "24px 40px", display: "grid", gridTemplateColumns: "1fr" }, // container for layout
   headerWrap: { marginBottom: 8 },
-  
+
   // Grid for trip cards
-  listContent: { 
+  listContent: {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))", // Auto-fill grid with minimum card width
     gap: "16px",  // spacing between cards
-    paddingBottom: 40 
+    paddingBottom: 40
   },
-  
+
   // Card row with consistent height and margin
-  tripRow: { 
-    display: "flex", 
+  tripRow: {
+    display: "flex",
     justifyContent: "center",  // Center each card in the grid cell
     height: "100%", // Ensure the card takes full height available within its grid cell
   },
-  
+
   // Empty state for when no trips are found
-  emptyState: { padding: 20 },
-  emptyText: { color: "#666" },
+  emptyWrapper: {
+    gridColumn: "1 / -1",
+    display: "flex",
+    justifyContent: "center",
+  },
+  emptyCard: {
+    maxWidth: 680,
+    width: "100%",
+    background: "#fff",
+    borderRadius: 12,
+    padding: 28,
+    boxShadow: "0 4px 18px rgba(15, 23, 42, 0.06)",
+    textAlign: "center",
+  },
+  emptyTitle: { fontSize: 20, margin: 0, marginBottom: 8, fontWeight: 700 },
+  emptyText: { color: "#666", marginBottom: 20, lineHeight: 1.4 },
+
+  emptyActions: { display: "flex", justifyContent: "center", gap: 12 },
+  primaryButton: {
+    background: "var(--primary-600, #1f6feb)",
+    color: "#fff",
+    padding: "10px 16px",
+    borderRadius: 8,
+    border: "none",
+    cursor: "pointer",
+    fontWeight: 600,
+    minWidth: 140,
+  },
+  secondaryButton: {
+    background: "#fff",
+    color: "#1f6feb",
+    padding: "10px 16px",
+    borderRadius: 8,
+    border: "1px solid #e6eefc",
+    cursor: "pointer",
+    fontWeight: 600,
+  },
 
   // You can add any other card-specific styles here if needed, like:
   tripCard: {
     height: "100%", // Maintain height of the card
-    display: "flex", 
-    flexDirection: "column", 
+    display: "flex",
+    flexDirection: "column",
     justifyContent: "space-between", // Ensure consistent content spacing in card
   }
 };

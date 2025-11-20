@@ -290,3 +290,10 @@ export interface FetchChatByIdResponse extends Chat {
 export type FetchMessagesResponse = Message[];
 
 export interface SendMessageResponse extends Message {}
+
+
+export interface UnreadCountResponse {
+  count: number;                                // total unread chats across ALL trips
+  byTrip: Record<string, number>;               // tripId -> unread chats count
+}
+export type UnreadByTrip = Record<string, number>;

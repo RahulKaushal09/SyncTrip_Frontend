@@ -69,7 +69,7 @@ const NavbarClient = ({ }) => {
   const router = useRouter();
   // const { logout, openLogin } = useLogin();
   const [pageType, setPageType] = useState("");
-  const [ismobile, setIsMobile] = useState(false);  
+  const [ismobile, setIsMobile] = useState(false);
 
   const [showDropdown, setShowDropdown] = useState(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
@@ -84,9 +84,9 @@ const NavbarClient = ({ }) => {
     if (pageType === PageTypeEnum.TRIP) {
       openLogin(() => { redirectBtnClick(ROUTES.CREATE_TRIP) });
     }
-    else {
-      redirectBtnClick(ROUTES.TRIPS);
-    }
+    // else {
+    //   redirectBtnClick(ROUTES.TRIPS);
+    // }
   };
   useEffect(() => {
     const handleResize = () => {
@@ -139,17 +139,17 @@ const NavbarClient = ({ }) => {
           <Image src={SyncTripLogo} alt="SyncTrip" style={{ width: "100%" }} />
         </Link>
         {ismobile ? (
-        <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
-        <NotificationBell />
-        <ChatIcon />
-        <button className="navbar-toggler" onClick={() => setMobileNavOpen(!mobileNavOpen)}>
-          <span className="navbar-toggler-icon"></span>
-        </button>
-        </div>
-      ):
-      <button className="navbar-toggler" onClick={() => setMobileNavOpen(!mobileNavOpen)}>
-          <span className="navbar-toggler-icon"></span>
-        </button>}
+          <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
+            <NotificationBell />
+            <ChatIcon />
+            <button className="navbar-toggler" onClick={() => setMobileNavOpen(!mobileNavOpen)}>
+              <span className="navbar-toggler-icon"></span>
+            </button>
+          </div>
+        ) :
+          <button className="navbar-toggler" onClick={() => setMobileNavOpen(!mobileNavOpen)}>
+            <span className="navbar-toggler-icon"></span>
+          </button>}
         {/* <div className={`collapse navbar-collapse justify-content-end ${mobileNavOpen ? 'show' : ''}`} id="navbarNav"> */}
 
         <div className="collapse navbar-collapse justify-content-end" id="navbarNav" >
@@ -177,11 +177,12 @@ const NavbarClient = ({ }) => {
               </span>
             </li>}
 
-            <li className="nav-item" onClick={createTripOrGroupTripBtn} style={{ cursor: "pointer" }}>
-              <span className="nav-link">
-                {pageType === PageTypeEnum.TRIP ? "Create Trip" : "Group Trips"}
-              </span>
-            </li>
+            {/* {pageType === PageTypeEnum.TRIP ? (
+              <li className="nav-item" onClick={createTripOrGroupTripBtn} style={{ cursor: "pointer" }}>
+                <span className="nav-link">
+                  {pageType === PageTypeEnum.TRIP ? "Create Trip" : "Group Trips"}
+                </span>
+              </li>) : null} */}
             <li className="nav-item"
               onClick={() => setFeedbackFormOpen(true)}
               style={{ cursor: "pointer" }}>
