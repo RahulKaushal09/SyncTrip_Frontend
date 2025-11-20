@@ -1,8 +1,13 @@
+// ChatWindow.tsx
 import React, { useEffect, useRef, useState } from "react";
+import { io, Socket } from "socket.io-client";
+
 import ChatApiService from "@/utils/chats.api.utils";
 import { Message } from "@/types";
+import { StorageUtils } from "@/utils";
 
-import "../../../styles/chats/chats.css"
+import "../../../styles/chats/chats.css";
+
 type Props = {
   chatId: string;
   currentUserId: string;
@@ -12,119 +17,257 @@ export default function ChatWindow({ chatId, currentUserId }: Props) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [remoteTyping, setRemoteTyping] = useState<{ userId: string } | null>(null);
+
   const msgsRef = useRef<HTMLDivElement | null>(null);
   const composerRef = useRef<HTMLDivElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
+  const socketRef = useRef<Socket | null>(null);
+  const typingTimeoutRef = useRef<number | null>(null);
+  const stopTypingTimerRef = useRef<number | null>(null);
+  const lastMessageIds = useRef<Set<string>>(new Set());
+
   // measure composer height so we can add bottom padding to messages container
   const [composerHeight, setComposerHeight] = useState<number>(72); // default
 
-  // fetch messages on chat change
+  /* ------------------ Socket: connect once ------------------ */
   useEffect(() => {
-    if (!chatId) return;
-    loadMessages();
+    // only run on client
+    if (typeof window === "undefined") return;
+
+    const token = StorageUtils.getToken();
+    const socket = io(process.env.NEXT_PUBLIC_BACKEND_BASE_URL || "/", {
+      auth: { token },
+      autoConnect: true,
+      transports: ["websocket"],
+    });
+
+    socketRef.current = socket;
+
+    // on connect: if chatId already present, join it (avoids join-before-connect race)
+    socket.on("connect", () => {
+      console.log("socket connected", socket.id);
+      if (chatId) {
+        socket.emit("join_chat", chatId);
+      }
+    });
+
+    socket.on("connect_error", (err: any) => {
+      console.error("socket connect_error", err);
+    });
+
+    // receive messages broadcast from server
+    socket.on("receive_message", (message: Message) => {
+      try {
+        if (!message || !message.id) return;
+        // if message belongs to another chat (just in case), ignore
+        // server normally emits only to the room, but sanity check:
+        if ((message as any).chat && chatId && (message as any).chat !== chatId) return;
+
+        if (lastMessageIds.current.has(message.id)) return;
+        lastMessageIds.current.add(message.id);
+
+        setMessages((prev) => [...prev, message]);
+        setTimeout(scrollToBottom, 40);
+      } catch (e) {
+        console.error("receive_message handler error", e);
+      }
+    });
+
+    // typing indicators from other users
+    socket.on("typing", ({ chatId: cId, userId }: { chatId: string; userId: string }) => {
+      if (cId === chatId && userId !== currentUserId) {
+        setRemoteTyping({ userId });
+      }
+    });
+
+    socket.on("stop_typing", ({ chatId: cId, userId }: { chatId: string; userId: string }) => {
+      if (cId === chatId && userId !== currentUserId) {
+        setRemoteTyping(null);
+      }
+    });
+
+    return () => {
+      socket.disconnect();
+      socketRef.current = null;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // run once
+
+  /* ------------------ Join/leave chat when chatId changes ------------------ */
+  useEffect(() => {
+    const socket = socketRef.current;
+
+    // reset dedupe BEFORE we load messages to avoid mixing old/new
+    lastMessageIds.current = new Set();
+
+    // leave previous handled by server when socket emits leave
+    // if socket already connected -> join now
+    if (socket) {
+      // leave all rooms first (optional, safe)
+      // join new chat
+      if (chatId) {
+        socket.emit("join_chat", chatId);
+      }
+    }
+
+    // load messages for this chat AFTER resetting dedupe
+    if (chatId) {
+      loadMessages();
+    } else {
+      // no chat selected -> clear UI
+      setMessages([]);
+    }
+
+    return () => {
+      if (socket && chatId) {
+        socket.emit("leave_chat", chatId);
+      }
+      // clear typing state when switching/closing
+      setRemoteTyping(null);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatId]);
 
-  // attach resize observer to composer to update padding
-  useEffect(() => {
-    if (!composerRef.current) return;
-    const ro = new ResizeObserver(() => {
-      setComposerHeight(composerRef.current?.offsetHeight || 72);
-    });
-    ro.observe(composerRef.current);
-    // initial
-    setComposerHeight(composerRef.current?.offsetHeight || 72);
-    return () => ro.disconnect();
-  }, [composerRef.current]);
+  /* ------------------ Typing emitter (debounced stop) ------------------ */
+  const emitTyping = () => {
+    const socket = socketRef.current;
+    if (!socket || !chatId) return;
 
-  useEffect(() => {
-    // whenever messages change scroll to bottom
-    scrollToBottom();
-    // small timeout to ensure browser layouts are done
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [messages]);
+    socket.emit("typing", chatId);
+    if (stopTypingTimerRef.current) {
+      window.clearTimeout(stopTypingTimerRef.current);
+    }
+    stopTypingTimerRef.current = window.setTimeout(() => {
+      socket.emit("stop_typing", chatId);
+      stopTypingTimerRef.current = null;
+    }, 1500);
+  };
 
+  /* ------------------ Messages loading & dedupe init ------------------ */
   const loadMessages = async () => {
     setLoading(true);
     try {
       const msgs = await ChatApiService.fetchMessages(chatId);
-      setMessages(Array.isArray(msgs) ? msgs : []);
-      // ensure bottom visible
+      const arr = Array.isArray(msgs) ? msgs : [];
+      setMessages(arr);
+
+      // init dedupe with loaded messages' ids
+      const ids = new Set(arr.map((m) => m.id));
+      lastMessageIds.current = ids;
+
+      // give UI time to layout
       setTimeout(() => scrollToBottom(), 80);
+
+      // optional: tell server we have read messages on open (you can implement mark-read endpoint or socket)
+      // e.g., socketRef.current?.emit('mark_read', { chatId });
     } catch (err) {
       console.error("Failed to load messages", err);
+      setMessages([]);
     } finally {
       setLoading(false);
     }
   };
 
+  /* ------------------ Send message (REST) + dedupe update ------------------ */
+  const handleSend = async () => {
+    if (!input.trim() || !chatId) return;
+
+    const content = input.trim();
+    try {
+      // Option A (recommended): use REST endpoint (server will persist and emit via req.io)
+      const saved: Message = await ChatApiService.sendMessage({ chatId, content });
+
+      // add saved.id to dedupe set immediately so socket broadcast doesn't duplicate
+      // if (saved && saved.id) lastMessageIds.current.add(saved.id);
+      if (saved && saved.id) {
+      if (!lastMessageIds.current.has(saved.id)) {
+        lastMessageIds.current.add(saved.id);
+        setMessages((s) => [...s, saved]);
+      } else {
+        // socket already handled it — nothing to do (optional: update existing pending state)
+        // console.debug("message already received via socket, skipping append", saved.id);
+      }
+    }
+
+      // append saved message to UI
+      // setMessages((s) => [...s, saved]);
+
+      // clear composer
+      setInput("");
+      if (textareaRef.current) {
+        textareaRef.current.style.height = "auto";
+      }
+
+      setTimeout(() => scrollToBottom(), 40);
+    } catch (err) {
+      console.error("send failed", err);
+      // you could show a toast here
+    }
+  };
+
+  /* ------------------ Scroll helpers ------------------ */
   const scrollToBottom = () => {
     if (!msgsRef.current) return;
-    // scroll smoothly to bottom (immediate for keyboard)
+    // immediate scroll
     msgsRef.current.scrollTop = msgsRef.current.scrollHeight;
   };
 
-  // handle textarea autosize (max rows)
+  /* ------------------ Composer autosize ------------------ */
   const autoSizeTextarea = () => {
     const ta = textareaRef.current;
     if (!ta) return;
     ta.style.height = "auto";
-    const maxHeight = 160; // px (approx 5 rows)
-    ta.style.height = `50px`;
+    const maxHeight = 160; // px
+    // set to scrollHeight but cap to maxHeight
+    const newHeight = Math.min(ta.scrollHeight, maxHeight);
+    ta.style.height = `${newHeight}px`;
     // update composer height manually in case observer doesn't fire immediately
     setComposerHeight(composerRef.current?.offsetHeight || 72);
   };
 
-  // run autosize when input changes
   useEffect(() => autoSizeTextarea(), [input]);
 
-  const handleSend = async () => {
-    if (!input.trim()) return;
-    try {
-      const saved: Message = await ChatApiService.sendMessage({ chatId, content: input.trim() });
-      setMessages((s) => [...s, saved]);
-      setInput("");
-      // reset textarea height
-      if (textareaRef.current) {
-        textareaRef.current.style.height = "auto";
-      }
-      setTimeout(() => scrollToBottom(), 40);
-    } catch (err) {
-      console.error("send failed", err);
-    }
-  };
+  /* ------------------ Composer ResizeObserver to update padding ------------------ */
+  useEffect(() => {
+    const el = composerRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(() => {
+      setComposerHeight(el.offsetHeight || 72);
+    });
+    ro.observe(el);
+    // initial
+    setComposerHeight(el.offsetHeight || 72);
+    return () => ro.disconnect();
+  }, []); // run once
 
-  // keyboard / focus helpers for mobile UX
+  /* ------------------ Scroll when messages change ------------------ */
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  /* ------------------ Keyboard / mobile helpers ------------------ */
   const onFocusInput = () => {
-    // ensure we scroll last message into view when keyboard open
     setTimeout(scrollToBottom, 250);
   };
 
+  /* ------------------ Render ------------------ */
   return (
-    // Use a container that is responsive: on mobile we want nearly full viewport height,
-    // on desktop we allow parent to control. If parent sets a height, internal layout remains fine.
-    <div className="flex flex-col h-[calc(100vh-64px)] md:h-[80vh]"> 
+    <div className="flex flex-col h-[calc(100vh-64px)] md:h-[80vh]">
       {/* messages area */}
       <div
         ref={msgsRef}
         className="flex-1 overflow-auto p-4 bg-white"
-        // give extra bottom padding equal to composer height so last messages don't hide behind composer
         style={{ paddingBottom: composerHeight + 12 }}
       >
         {loading && <div className="text-sm text-gray-400">Loading messages...</div>}
 
         <div className="flex flex-col gap-3">
           {messages.map((m) => {
-            const mine = m.sender === currentUserId || (m.sender as any)?.id === currentUserId;
-            // message bubble classes
-            const bubbleBase =
-              "";
-            const bubbleCls = mine
-              ? `${bubbleBase} myMessage`
-              : `${bubbleBase} otherPersonMessage`;
-
-            // responsive max widths
+            const mine =
+              m.sender === currentUserId || (m.sender as any)?.id === currentUserId;
+            const bubbleCls = mine ? "myMessage" : "otherPersonMessage";
             const containerCls = mine ? "flex justify-end" : "flex justify-start";
             const maxW = "max-w-[80%] md:max-w-[60%] lg:max-w-[50%]";
 
@@ -132,8 +275,13 @@ export default function ChatWindow({ chatId, currentUserId }: Props) {
               <div key={m.id} className={`${containerCls} px-2`}>
                 <div className={`${bubbleCls} ${maxW}`}>
                   <div className="text-sm whitespace-pre-wrap">{m.content}</div>
-                  <div className={`text-[10px] mt-1 ${mine ? "mineTimeInfoText" : "otherTimeInfoText"}`}>
-                    {new Date(m.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                  <div
+                    className={`text-[10px] mt-1 ${mine ? "mineTimeInfoText" : "otherTimeInfoText"}`}
+                  >
+                    {new Date(m.createdAt).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
                   </div>
                 </div>
               </div>
@@ -142,32 +290,26 @@ export default function ChatWindow({ chatId, currentUserId }: Props) {
         </div>
       </div>
 
-      {/* composer - sticky at bottom of container */}
+      {/* typing indicator (simple) */}
+      {remoteTyping && (
+        <div className="px-4 py-1 text-xs text-gray-500">{`typing...`}</div>
+      )}
+
+      {/* composer */}
       <div
         ref={composerRef}
         className="sticky bottom-0 bg-white border-t px-3 py-2 flex items-end gap-2"
-        // ensure composer respects iPhone safe area
         style={{ paddingBottom: "env(safe-area-inset-bottom)", zIndex: 10 }}
       >
-        {/* optional attachment / emoji button
-        <button
-          type="button"
-          className="p-2 rounded-md hover:bg-gray-100 active:bg-gray-200"
-          aria-label="Attach"
-        >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-gray-500">
-            <path d="M16.5 6.5L7.5 15.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
-            <path d="M20.5 12.5V18.5C20.5 19.0523 20.0523 19.5 19.5 19.5H12.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
-          </svg>
-        </button> */}
-
-        {/* growing textarea */}
         <div className="flex align-items-center flex-1">
           <textarea
             ref={textareaRef}
             value={input}
             onInput={autoSizeTextarea}
-            onChange={(e) => setInput(e.target.value)}
+            onChange={(e) => {
+              setInput(e.target.value);
+              emitTyping();
+            }}
             onFocus={onFocusInput}
             rows={1}
             placeholder="Type a message"
@@ -185,9 +327,7 @@ export default function ChatWindow({ chatId, currentUserId }: Props) {
         <div className="flex items-center gap-2">
           <button
             onClick={handleSend}
-            className={`btn ${
-              input.trim() ? "btn-secondary" : "btn-secondary-outline"
-            }`}
+            className={`btn ${input.trim() ? "btn-secondary" : "btn-secondary-outline"}`}
             disabled={!input.trim()}
             aria-label="Send"
           >

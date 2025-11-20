@@ -16,6 +16,8 @@ import { useLoader } from '@/components/providers/LoaderContext';
 import { toast } from 'react-hot-toast';
 
 const TOTAL_STEPS = 4;
+const MAX_TRIP_DAYS = 15;
+
 // const formatISODateOnly = (d: Date) => d.toISOString().split('T')[0];
 const pad = (n: number) => String(n).padStart(2, '0');
 
@@ -24,6 +26,18 @@ const formatLocalDateOnly = (d: Date) => {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 };
 
+
+const dayCountInclusiveLocal = (start: Date, end: Date) => {
+  const msPerDay = 24 * 60 * 60 * 1000;
+  const s = new Date(start.getFullYear(), start.getMonth(), start.getDate()).getTime();
+  const e = new Date(end.getFullYear(), end.getMonth(), end.getDate()).getTime();
+  return Math.floor((e - s) / msPerDay) + 1;
+};
+
+const isRangeWithinLimit = (s: Date | null, e: Date | null) => {
+  if (!s || !e) return false;
+  return dayCountInclusiveLocal(s, e) <= MAX_TRIP_DAYS;
+};
 const parseLocalDateOnly = (s: string | null | undefined) => {
   // parse "YYYY-MM-DD" as local date (midnight local)
   if (!s) return null;
@@ -166,30 +180,35 @@ function CreateTripContent() {
 
   const canGoNext =
     (step === 1 && !!selectedLocation) ||
-    (step === 2 && !!startDate && !!endDate) ||
+    (step === 2 && !!startDate && !!endDate && isRangeWithinLimit(startDate, endDate)) ||
     // (step === 3 && selectedPreferences.length > 0) ||
     // (step === 4 && !!selectedBudget) ||
     (step === 3 && !!selectedPrivacy) ||
     step === TOTAL_STEPS;
 
 
-  const publishTripAndNavigateToMatching = useCallback(
-    async (manual: boolean) => {
-      try {
-      }
-      catch (err) {
-      }
-    },
-    [selectedLocation, startDate, endDate, selectedBudget, selectedPreferences, selectedPrivacy, router]
-  );
-const [isPublishing, setIsPublishing] = useState(false);
+
+  const [isPublishing, setIsPublishing] = useState(false);
 
   const publishTripAndNavigate = useCallback(
     async (manual: boolean) => {
+
       if (isPublishing) return;
       setIsPublishing(true);
       showLoader();
       try {
+        if (!startDate || !endDate) {
+          toast.error('Please select trip start and end dates.');
+          hideLoader();
+          setIsPublishing(false);
+          return;
+        }
+        if (!isRangeWithinLimit(startDate, endDate)) {
+          toast.error(`Trip cannot be longer than ${MAX_TRIP_DAYS} days.`);
+          hideLoader();
+          setIsPublishing(false);
+          return;
+        }
         const payload: UserTrip = {
           locationId: selectedLocation?.id ?? '',
           locationName: selectedLocation?.title ?? '',
@@ -228,9 +247,9 @@ const [isPublishing, setIsPublishing] = useState(false);
         setIsPublishing(false);
       }
     },
-    [selectedLocation, startDate, endDate, selectedBudget, selectedPreferences, selectedPrivacy, router,isPublishing]
+    [selectedLocation, startDate, endDate, selectedBudget, selectedPreferences, selectedPrivacy, router, isPublishing]
   );
-  const makeTripPublic =  useCallback(async () => {
+  const makeTripPublic = useCallback(async () => {
     // change privacy to public, then proceed with start-matching publish flow
     setSelectedPrivacy((prev) => {
       // preserve same casing if you need; store 'public' for safety
@@ -523,7 +542,7 @@ const [isPublishing, setIsPublishing] = useState(false);
             <div className="relative z-10 w-full max-w-md p-6 bg-white rounded-lg shadow-lg">
               <h3 className="text-lg font-semibold mb-2">Change trip privacy?</h3>
               <p className="text-sm text-gray-600 mb-4">
-                Your trip is set as <strong>{selectedPrivacy || 'invite only'}</strong>. To match with other travellers we need to make it public.
+                Your trip preference is set to <strong>{selectedPrivacy || 'invite only'}</strong>.<br></br> <i className='text-xs '>(To match with other travellers the trip needs to be public)</i>
               </p>
 
               <div className="flex gap-3">

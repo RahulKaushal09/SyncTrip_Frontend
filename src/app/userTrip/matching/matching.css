@@ -131,3 +131,24 @@
   touch-action: none;
   -ms-touch-action: none;
 }
+
+.badge-previouslySkipped {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background-color: var(--secondary-1);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  z-index: 10;
+}
+
+.empty-innerBox{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  justify-content: center;
+}

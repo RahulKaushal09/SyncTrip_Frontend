@@ -21,6 +21,7 @@ interface LocationCardProps {
     imageInlineStyle?: React.CSSProperties;
     placeConnectedwithid?: string;
     cardId?: string;
+    showWishlistIcon?: boolean;
     isWishlisted?: boolean;
     typeOfWhishlistCardEnum: string;
     whishlistParentId?: string;
@@ -41,6 +42,7 @@ const LocationCard: React.FC<LocationCardProps> = ({
     imageInlineStyle,
     placeConnectedwithid,
     cardId,
+    showWishlistIcon = true,
     isWishlisted = false,
     typeOfWhishlistCardEnum,
     whishlistParentId,
@@ -182,7 +184,7 @@ const LocationCard: React.FC<LocationCardProps> = ({
                     )}
                 </Carousel>
 
-                {cardId && (
+                {showWishlistIcon && cardId && (
                     <HeartIcon
                         id={cardId}
                         parentId={whishlistParentId}

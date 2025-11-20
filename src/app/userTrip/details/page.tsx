@@ -222,11 +222,17 @@ function UserTripDetailsPageContent() {
     const [weatherDays, setWeatherDays] = useState<DayWeather[]>([]);
     const [weatherLoading, setWeatherLoading] = useState(false);
     const [forecastAvailableUntil, setForecastAvailableUntil] = useState<string | null>(null);
-
+    const [tripPrivacy, setTripPrivacy] = useState<'public' | 'private'>('private');
 
     const [isLoadingRestaurants, setIsLoadingRestaurants] = useState(true);
     const [isLoadingHotels, setIsLoadingHotels] = useState(true);
     const [isLoadingPlaces, setIsLoadingPlaces] = useState(true);
+    const [bottomButtons, setBottomButtons] = useState<{ text: string; onClick: () => void; styleClass?: string }[]>([]);
+
+
+    const navigateToStartMatching = () => {
+        router.push(`/userTrip/matching?tripId=${tripId}`);
+    };
 
     useEffect(() => {
         const handleResize = () => {
@@ -241,7 +247,7 @@ function UserTripDetailsPageContent() {
     useEffect(() => {
         const load = async () => {
             try {
-                const tripFields = [userTripFields.ID, userTripFields.START_DATE, userTripFields.END_DATE];
+                const tripFields = [userTripFields.ID, userTripFields.START_DATE, userTripFields.END_DATE,userTripFields.PRIVACY];
                 // fetch location details and trip details in parallel
                 console.log('Fetching location and trip details for', locationId, tripId);
 
@@ -250,6 +256,13 @@ function UserTripDetailsPageContent() {
                     LocationServices.fetchLocationDetails(locationId as string, locationFields),
                     TripServices.fetchTripDetails(tripId as string, tripFields),
                 ]);
+                if( tripData?.privacy  && tripData?.privacy.toLocaleLowerCase().includes('public')){
+                    setTripPrivacy('public');
+                    setBottomButtons([{ text: "Start Matching", onClick: navigateToStartMatching, styleClass: "btn btn-matching-color" }]);
+                }else{
+                    setTripPrivacy('private');
+
+                }
                 console.log(locationDetails);
                 setLocation(locationDetails);
                 setHotelIds(locationDetails?.hotels as string[] || []);
@@ -383,14 +396,11 @@ function UserTripDetailsPageContent() {
     };
 
 
-    const navigateToStartMatching = () => {
-        router.push(`/userTrip/matching?tripId=${tripId}`);
-    };
+    
 
 
 
     const pageType = PageTypeEnum.USER_TRIP;
-    const bottomButtons = [{ text: "Start Matching", onClick: navigateToStartMatching, styleClass: "btn btn-matching-color" }];
     // return <LocationPageDetails locationData={locationData} uuid={tripId as string} />;
     return (
         <div className="DestinationPage paddingSectionLeftRight">

@@ -98,7 +98,8 @@ const HomeHeroSection: React.FC = () => {
                             <div className="col-lg-5 col-md-5 col-sm-6">
                                 <button className="btn btn-blue homebtnprimary b2" onClick={() => redirectToUrl(ROUTES.EXPLORE)}>
                                     <Icon name={ICONS_CLASS.UsersIcon.iconName} />
-                                    Start Matching
+                                    {/* Start Matching */}
+                                    Explore Locations
                                 </button>
                             </div>
                             <div className="col-lg-5 col-md-5 col-sm-6">

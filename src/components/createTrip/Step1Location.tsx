@@ -146,6 +146,7 @@ export default function LocationSelector({
                         name={selected.title}
                         rating={selected.rating}
                         images={selected.photos}
+                        showWishlistIcon={false}
                         // inlineStyle={{ width: isMobile ? "100%" : "260px" }}
                         // imageInlineStyle={{ width: isMobile ? 500 : 260 }}
                         // whishlistParentId={parentId}

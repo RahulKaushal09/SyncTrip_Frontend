@@ -92,10 +92,31 @@ export default function MatchingPage() {
     const [matchPopupProfile, setMatchPopupProfile] = useState<Candidate | null>(null)
     const [allTrips, setAllTrips] = useState<UserTrip[]>([]);
     const [matchChatId, setMatchChatId] = useState<string | null>(null);
+    const [reviewMode, setReviewMode] = useState(false);
+
     const SWIPE_THRESHOLD = 100
     // const current = profiles[index]
     const current = index >= 0 && index < profiles.length ? profiles[index] : undefined
+    async function loadPassedProfiles() {
+        if (!tripId) return;
 
+        try {
+            const res = await apiClient.get(`/match/passed?tripId=${tripId}`);
+            const data = res.data;
+
+            if (data?.candidates?.length) {
+                setProfiles(data.candidates);
+                setIndex(0);
+                setReviewMode(true);
+            } else {
+                // no passes
+                setProfiles([]);
+                setReviewMode(true);
+            }
+        } catch (err) {
+            console.error("Failed to load passed profiles:", err);
+        }
+    }
 
     // -------------------------------------
     // FETCH CANDIDATES FROM BACKEND
@@ -255,24 +276,24 @@ export default function MatchingPage() {
     //     }, 300)
     // }
     function advanceCardAfterAnimation() {
-    setTimeout(() => {
-        setTransitioning(false)
-        setDx(0)
-        setRotation(0)
-        // advance index — allow it to become profiles.length (one past last)
-        setIndex(prev => {
-            const next = prev + 1
-            // clamp between 0 and profiles.length (not profiles.length - 1)
-            return Math.min(Math.max(0, next), profiles.length)
-        })
-        swipeLockRef.current = false
-        // prefetch using the latest index (use functional check)
         setTimeout(() => {
-            // small delay ensures state updated; you could also compute with refs
-            if (profiles.length - (index + 1) < 3) fetchCandidates()
-        }, 0)
-    }, 300)
-}
+            setTransitioning(false)
+            setDx(0)
+            setRotation(0)
+            // advance index — allow it to become profiles.length (one past last)
+            setIndex(prev => {
+                const next = prev + 1
+                // clamp between 0 and profiles.length (not profiles.length - 1)
+                return Math.min(Math.max(0, next), profiles.length)
+            })
+            swipeLockRef.current = false
+            // prefetch using the latest index (use functional check)
+            setTimeout(() => {
+                // small delay ensures state updated; you could also compute with refs
+                if (profiles.length - (index + 1) < 3) fetchCandidates()
+            }, 0)
+        }, 300)
+    }
     async function onPointerUp(e: React.PointerEvent<HTMLDivElement>) {
         if (!isDragging) return
         setIsDragging(false)
@@ -412,16 +433,16 @@ export default function MatchingPage() {
             throw err
         }
     }
-function closePopup() {
-    setMatchPopupProfile(null);
-    setMatchChatId(null);
-    // unlock swiping for next interactions and advance past matched card
-    swipeLockRef.current = false;
-    // allow index to move one past last so UI shows "No more travelers"
-    setIndex(prev => Math.min(prev + 1, profiles.length));
-    // fetch more if needed
-    if (profiles.length - (index + 1) < 3) fetchCandidates();
-}
+    function closePopup() {
+        setMatchPopupProfile(null);
+        setMatchChatId(null);
+        // unlock swiping for next interactions and advance past matched card
+        swipeLockRef.current = false;
+        // allow index to move one past last so UI shows "No more travelers"
+        setIndex(prev => Math.min(prev + 1, profiles.length));
+        // fetch more if needed
+        if (profiles.length - (index + 1) < 3) fetchCandidates();
+    }
     // function closePopup() {
     //     setMatchPopupProfile(null);
     //     setMatchChatId(null);
@@ -460,7 +481,26 @@ function closePopup() {
                     }}
                 />
                 {/* <MultipleTripSelectionHeader tripName={tripName ? tripName : "SyncTrip Travel Match"} dates={dateString} setDates={setDateString} tripId={tripId as string} setSelectedTripId={setTripId} setSelectedTripName={setTripName} /> */}
-                <div className="empty">No more travelers nearby.</div>
+                {/* <div className="empty">No more travelers nearby.</div> */}
+                <div className="empty">
+                    <div className='empty-innerBox'>
+                    <p>No more travelers nearby.</p>
+
+                    <button
+                        className="btn btn-secondary"
+                        style={{ marginTop: "16px" }}
+                        onClick={loadPassedProfiles}
+                    >
+                        View Previously Skipped Travellers
+                    </button>
+
+                    {reviewMode && profiles.length === 0 && (
+                        <p style={{ marginTop: 10, color: "#777" }}>
+                            You haven’t skipped anyone yet.
+                        </p>
+                    )}
+                    </div>
+                </div>
             </main>
         )
     }
@@ -519,6 +559,8 @@ function closePopup() {
                                 {current.tripSnapshot.interests?.join(" • ")}
                             </div>
                         </div>
+                        {reviewMode && <div className="badge-previouslySkipped">Previously Skipped</div>}
+
                     </div>
                 </div>
             </section>
