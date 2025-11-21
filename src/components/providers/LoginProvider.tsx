@@ -9,6 +9,9 @@ import { setLoginHandler, type LoginOptions } from '../../utils/login.utils';
 import { StorageUtils } from '../../utils';
 import { User } from '../../types';
 
+import { requestFcmToken, onForegroundNotification } from '../../utils/firebaseClient';
+import  apiClient  from '@/utils/apiClient';
+
 interface LoginContextType {
     user: User | null;
     isLoggedIn: boolean;
@@ -66,6 +69,44 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
         window.location.reload();
     }, []);
 
+// -------------- FCM registration logic --------------
+    // Register FCM token and save it to backend for the current user.
+    const registerFcmTokenForUser = useCallback(async (u: User | null) => {
+        if (typeof window === "undefined") return;
+        if (!u) return;
+        try {
+            // ask for permission and get token (this registers SW if necessary)
+            const token = await requestFcmToken();
+            if (!token) {
+                console.debug("FCM token not granted or failed to get token");
+                return;
+            }
+
+            // send to backend - use apiClient if available (it should attach auth header), else use fetch
+            try {
+                if (apiClient && typeof apiClient.post === "function") {
+                    await apiClient.post("/notifications/save-token", { token });
+                } else {
+                    // fallback - use fetch and attach Authorization
+                    const auth = StorageUtils.getToken();
+                    await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL || ""}/api/notifications/save-token`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            ...(auth ? { Authorization: `Bearer ${auth}` } : {}),
+                        },
+                        body: JSON.stringify({ token }),
+                    });
+                }
+                console.log("FCM token registered with backend");
+            } catch (err) {
+                console.error("Failed to save FCM token to backend", err);
+            }
+        } catch (err) {
+            console.error("registerFcmTokenForUser error", err);
+        }
+    }, []);
+
     const handleLogin = useCallback((user: User, requiresPhone = false) => {
         setUser(user);
         StorageUtils.setUser(user);
@@ -86,18 +127,30 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
             setShowFullProfile(true);
         }
         else{
+
             // User is fully logged in
             onLoginCallback(user, false);
+            registerFcmTokenForUser(user);
         }
 
         // Always run the external callback
         // onLoginCallback(user, requiresPhone);
-    }, [onLoginCallback, loginOptions]);
+    }, [onLoginCallback, loginOptions,registerFcmTokenForUser]);
 
     // Register login popup globally
     useEffect(() => {
         setLoginHandler(openLogin);
     }, [openLogin]);
+
+
+const handleProfileComplete = useCallback((updatedUser: User) => {
+        setUser(updatedUser);
+        StorageUtils.setUser(updatedUser);
+        setShowFullProfile(false);
+
+        onLoginCallback(updatedUser, false);
+        registerFcmTokenForUser(updatedUser);
+    }, [onLoginCallback, registerFcmTokenForUser]);
 
     const contextValue: LoginContextType = {
         user,
@@ -141,12 +194,13 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
                     <FullProfilePopup
                         user={user}
                         onClose={() => setShowFullProfile(false)}
-                        onProfileComplete={(updatedUser) => {
-                            setUser(updatedUser);
-                            StorageUtils.setUser(updatedUser);
-                            setShowFullProfile(false);
-                            // window.location.reload();
-                        }}
+                        // onProfileComplete={(updatedUser) => {
+                        //     setUser(updatedUser);
+                        //     StorageUtils.setUser(updatedUser);
+                        //     setShowFullProfile(false);
+                        //     // window.location.reload();
+                        // }}
+                        onProfileComplete={handleProfileComplete}
                     />
                 )}
             </LoginContext.Provider>
