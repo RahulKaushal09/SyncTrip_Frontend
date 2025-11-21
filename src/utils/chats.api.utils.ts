@@ -51,7 +51,8 @@ import {
   FetchChatByIdResponse,
   FetchMessagesResponse,
   SendMessageResponse,
-  UnreadCountResponse
+  UnreadCountResponse,
+  FetchChatsParams
 } from "@/types";
 import apiClient from "./apiClient";
 
@@ -63,7 +64,7 @@ const ChatApiService = {
     return data as UnreadCountResponse;
   },
   async fetchChats(tripId?: string) {
-    const params: any = {};
+    const params: FetchChatsParams = {};
     if (tripId) params.tripId = tripId;
 
     const { data } = await apiClient.get<FetchChatsResponse>("/chats", { params });

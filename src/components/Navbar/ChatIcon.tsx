@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import ChatApiService from "@/utils/chats.api.utils"; // adjust if your service path differs
+import { Chat } from "@/types";
 // import useSWR from "swr"; // optional — you can remove if not using SWR
 // no image import needed — using inline SVG for crispness
 
@@ -44,8 +45,10 @@ export default function ChatIcon({ className = "", currentUserId, onClickOpen }:
         // fallback: fetch recent chats and count unread messages (cheap heuristic)
         const chats = await ChatApiService.fetchChats();
         if (!mountedRef.current) return;
+        
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const unread = Array.isArray(chats)
-          ? chats.reduce((acc: number, c: any) => acc + (c.unreadCount || 0), 0)
+          ? chats.reduce((acc: number, c: Chat) => acc + (c.unreadCount || 0), 0)
           : 0;
         setUnreadCount(unread);
       } else {

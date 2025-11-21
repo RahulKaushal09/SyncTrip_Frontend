@@ -1,6 +1,6 @@
 // utils/firebaseClient.ts
 import { initializeApp, getApps } from "firebase/app";
-import { getMessaging, getToken, onMessage } from "firebase/messaging";
+import { getMessaging, getToken, onMessage , type MessagePayload} from "firebase/messaging";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_APIKEY!,
@@ -57,8 +57,10 @@ export async function requestFcmToken() {
   }
 }
 
-export function onForegroundNotification(callback: (payload: any) => void) {
+export function onForegroundNotification(
+  callback: (payload: MessagePayload) => void
+) {
   initFirebaseClient();
   if (!messaging) return () => {};
-  return onMessage(messaging as any, callback as any);
+  return onMessage(messaging, callback);
 }

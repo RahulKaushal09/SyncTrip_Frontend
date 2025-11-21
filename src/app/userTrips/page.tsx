@@ -101,7 +101,7 @@ export default function AllTripsPage() {
               <div style={styles.emptyCard}>
                 <h2 style={styles.emptyTitle}>No trips yet</h2>
                 <p style={styles.emptyText}>
-                  You haven't created any trips. Create your first trip to invite friends, build an itinerary and start matching with other travelers.
+                  You haven&apos;t created any trips. Create your first trip to invite friends, build an itinerary and start matching with other travelers.
                 </p>
                 <div style={styles.emptyActions}>
                   <button

@@ -15,39 +15,43 @@ firebase.initializeApp({
 // eslint-disable-next-line no-undef
 const messaging = firebase.messaging();
 
-messaging.onBackgroundMessage(function(payload) {
-  // payload.notification and payload.data
-  const notification = payload.notification || {};
-  const data = payload.data || {};
-  const title = notification.title || 'Notification';
+messaging.onBackgroundMessage((payload) => {
+  console.log("[SW] Background message received:", payload);
+
+  const title = payload.notification?.title || "New Notification";
   const options = {
-    body: notification.body || "",
-    icon: notification.icon || "/icons/icon-192.png",
-    data,
-    // optionally add vibrate, tag, renotify, actions
+    body: payload.notification?.body || "",
+    icon: payload.notification?.icon || "/icon-192.png",
+    data: payload.data || {},
   };
+
   self.registration.showNotification(title, options);
 });
 
-// handle notification click to deep link
-self.addEventListener('notificationclick', function(event) {
+self.addEventListener("notificationclick", (event) => {
   event.notification.close();
-  let clickAction = null;
-  try {
-    clickAction = event.notification.data?.clickAction ? JSON.parse(event.notification.data.clickAction) : null;
-  } catch (e) { clickAction = null; }
 
-  const urlToOpen = (clickAction && clickAction.type === 'OPEN_CHAT' && clickAction.payload?.conversationId)
-    ? `/chats?chatId=${clickAction.payload.conversationId}` : '/';
+  const clickData = event.notification.data || {};
+  let clickAction;
+
+  try {
+    clickAction = clickData.clickAction ? JSON.parse(clickData.clickAction) : null;
+  } catch {
+    clickAction = null;
+  }
+
+  let url = "/";
+
+  if (clickAction?.type === "OPEN_CHAT") {
+    url = `/chats?chatId=${clickAction.payload.conversationId}`;
+  }
 
   event.waitUntil(
-    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
-      for (const client of clientList) {
-        if (client.url.includes(urlToOpen) && 'focus' in client) {
-          return client.focus();
-        }
+    clients.matchAll({ type: "window", includeUncontrolled: true }).then((clientList) => {
+      for (const c of clientList) {
+        if ("focus" in c) return c.focus();
       }
-      if (clients.openWindow) return clients.openWindow(urlToOpen);
+      return clients.openWindow(url);
     })
   );
 });

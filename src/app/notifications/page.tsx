@@ -8,6 +8,7 @@ export default function NotificationsPage() {
   const [notifications, setNotifications] = useState([]);
 
   const fetchNotifications = async () => {
+    
     const res = await apiClient.get("/notifications");
     if (!res || res.status !== 200) {
       console.error("Failed to fetch notifications");
@@ -45,7 +46,7 @@ export default function NotificationsPage() {
             No notifications yet.
           </div>
         )}
-
+        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
         {notifications.map((notif: any) => (
           <NotificationCard key={notif.id} notif={notif} />
         ))}

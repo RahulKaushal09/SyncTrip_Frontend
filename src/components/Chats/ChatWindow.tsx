@@ -53,7 +53,7 @@ export default function ChatWindow({ chatId, currentUserId }: Props) {
       }
     });
 
-    socket.on("connect_error", (err: any) => {
+    socket.on("connect_error", (err: unknown) => {
       console.error("socket connect_error", err);
     });
 
@@ -63,7 +63,7 @@ export default function ChatWindow({ chatId, currentUserId }: Props) {
         if (!message || !message.id) return;
         // if message belongs to another chat (just in case), ignore
         // server normally emits only to the room, but sanity check:
-        if ((message as any).chat && chatId && (message as any).chat !== chatId) return;
+        if ((message as Message).chat && chatId && (message as Message).chat !== chatId) return;
 
         if (lastMessageIds.current.has(message.id)) return;
         lastMessageIds.current.add(message.id);
@@ -266,7 +266,7 @@ export default function ChatWindow({ chatId, currentUserId }: Props) {
         <div className="flex flex-col gap-3">
           {messages.map((m) => {
             const mine =
-              m.sender === currentUserId || (m.sender as any)?.id === currentUserId;
+              m.sender === currentUserId ;
             const bubbleCls = mine ? "myMessage" : "otherPersonMessage";
             const containerCls = mine ? "flex justify-end" : "flex justify-start";
             const maxW = "max-w-[80%] md:max-w-[60%] lg:max-w-[50%]";
@@ -314,7 +314,7 @@ export default function ChatWindow({ chatId, currentUserId }: Props) {
             rows={1}
             placeholder="Type a message"
             className="w-full resize-none overflow-auto text-sm leading-5 rounded-lg border px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-400"
-            style={{ maxHeight: 160 }}
+            style={{ maxHeight: 160,height:50, }}
             onKeyDown={(e) => {
               if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();

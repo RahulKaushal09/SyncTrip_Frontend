@@ -278,7 +278,9 @@ export interface Trip {
 }
 
 
-
+export type FetchChatsParams = {
+  tripId?: string;
+};
 export type FetchChatsResponse = Chat[];
 
 export interface FetchChatByIdResponse extends Chat {
@@ -289,7 +291,7 @@ export interface FetchChatByIdResponse extends Chat {
 
 export type FetchMessagesResponse = Message[];
 
-export interface SendMessageResponse extends Message {}
+export type SendMessageResponse = Message;
 
 
 export interface UnreadCountResponse {

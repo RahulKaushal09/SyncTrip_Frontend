@@ -181,6 +181,7 @@ export interface Chat {
   chatName: string;
   createdAt: string;
   updatedAt: string;
+  unreadCount?: number;
 }
 
 export interface Message {
