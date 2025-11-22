@@ -34,7 +34,8 @@ export async function requestFcmToken() {
 
   // register service worker (if not already)
   try {
-    await navigator.serviceWorker.register("/firebase-messaging-sw.js");
+    await navigator.serviceWorker.register("/firebase-messaging-sw-v2.js");
+    console.log("Service worker registered for FCM");
   } catch (err) {
     console.warn("Service worker registration failed", err);
   }

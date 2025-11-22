@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./AvatarUploader.module.css";
+import toast from "react-hot-toast";
 
 interface AvatarUploaderProps {
   value?: File | null;                    // current file (optional)
@@ -82,15 +83,37 @@ export default function AvatarUploader({
     inputRef.current?.click();
   };
 
+  // const handleFiles = (files: FileList | null) => {
+  //   if (!files || files.length === 0) return;
+  //   const file = files[0];
+  //   if (!file.type.startsWith("image/")) return;
+  //   // set immediate preview for best UX
+  //   createPreviewForFile(file);
+  //   // notify parent
+  //   onChange(file);
+  //   // Do not clear the input value here — leave it so user can change to a different file.
+  // };
   const handleFiles = (files: FileList | null) => {
     if (!files || files.length === 0) return;
     const file = files[0];
-    if (!file.type.startsWith("image/")) return;
-    // set immediate preview for best UX
+
+    // Block non-image files
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select an image file");
+      return;
+    }
+
+    // Check max size (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Image size should not exceed 5 MB");
+      return;
+    }
+
+    // set immediate preview
     createPreviewForFile(file);
+
     // notify parent
     onChange(file);
-    // Do not clear the input value here — leave it so user can change to a different file.
   };
 
   const onInputChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -168,8 +191,8 @@ export default function AvatarUploader({
           ) : (
             // placeholder SVG (person icon)
             <svg className={styles["avatar-icon"]} viewBox="0 0 24 24" aria-hidden focusable="false">
-              <circle cx="12" cy="8" r="3.2" fill="none" stroke="var(--icon-color,#09a8ff)" strokeWidth="1.2"/>
-              <path d="M4 20c0-4 4-6 8-6s8 2 8 6" fill="none" stroke="var(--icon-color,#09a8ff)" strokeWidth="1.2" strokeLinecap="round"/>
+              <circle cx="12" cy="8" r="3.2" fill="none" stroke="var(--icon-color,#09a8ff)" strokeWidth="1.2" />
+              <path d="M4 20c0-4 4-6 8-6s8 2 8 6" fill="none" stroke="var(--icon-color,#09a8ff)" strokeWidth="1.2" strokeLinecap="round" />
             </svg>
           )}
         </div>
@@ -186,7 +209,7 @@ export default function AvatarUploader({
           aria-label="Add or change profile picture"
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden>
-            <path d="M12 5v14M5 12h14" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M12 5v14M5 12h14" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </button>
 
@@ -196,7 +219,9 @@ export default function AvatarUploader({
           className={styles["hidden-input"]}
           type="file"
           accept="image/*"
-          capture="environment"
+          // capture="environment"
+          multiple={false}
+
           onChange={onInputChange}
           aria-hidden="true"
         />

@@ -83,6 +83,24 @@ export default function LoginPopup({ onClose, onLogin }: LoginPopupProps) {
         setError('Phone number must be exactly 10 digits');
         return false;
       }
+      if (!/^\d{10}$/.test(form.phone)) {
+        setError('Phone number must contain only digits');
+        return false;
+      }
+      if (!form.sex) {
+        setError('Please select your gender');
+        return false;
+      }
+      if (form.password.length < 6) {
+        setError('Password must be at least 6 characters long');
+        return false;
+      }
+      if (form.password.length > 20) {
+        setError('Password must not exceed 20 characters');
+        return false;
+      }
+    
+
     }
     return true;
   };
@@ -98,6 +116,11 @@ export default function LoginPopup({ onClose, onLogin }: LoginPopupProps) {
       let response;
 
       if (isRegistering) {
+        if (!form.sex) {
+          setError('Please select your gender');
+          setIsLoading(false);
+          return;
+        }
         const registrationData = {
           name: form.name,
           email: form.email,

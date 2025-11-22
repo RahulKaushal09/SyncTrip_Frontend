@@ -1,4 +1,4 @@
-/* public/firebase-messaging-sw.js */
+/* public/firebase-messaging-sw-v2.js */
 /* Use compat imports for the worker */
 importScripts('https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/9.22.1/firebase-messaging-compat.js');
@@ -22,10 +22,16 @@ messaging.onBackgroundMessage((payload) => {
   const options = {
     body: payload.notification?.body || "",
     icon: payload.notification?.icon || "/icon-192.png",
+    // icon: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSbk6HveqasEcE-BryhQALc-8nXRPziD42ZKdIWZXWEI5l5gurLnmRvCnVux3M_nJ2zvnNyq3eE8kNDwBclbqoMv5xAJXC0FjefUsH0sJ7&s=10",
     data: payload.data || {},
   };
+try{
+    self.registration.showNotification(title, options);
 
-  self.registration.showNotification(title, options);
+}
+catch(e){
+    console.error("Error showing notification:", e);
+}
 });
 
 self.addEventListener("notificationclick", (event) => {
@@ -52,6 +58,27 @@ self.addEventListener("notificationclick", (event) => {
         if ("focus" in c) return c.focus();
       }
       return clients.openWindow(url);
+    })
+  );
+});
+
+self.addEventListener("push", (event) => {
+  console.log("[SW] Push event from DevTools:", event);
+
+  let data = {};
+  try {
+    data = event.data.json();
+  } catch (e) {
+    console.log("Push had no JSON data");
+  }
+
+  const title = data.title || "Test Notification";
+  const body = data.body || "This is a fallback test notification.";
+
+  event.waitUntil(
+    self.registration.showNotification(title, {
+      body,
+      icon: "/icon-192.png"
     })
   );
 });
