@@ -12,6 +12,7 @@ const firebaseConfig = {
 
 let messaging: ReturnType<typeof getMessaging> | null = null;
 
+
 export function initFirebaseClient() {
   if (typeof window === "undefined") return null;
   if (!getApps().length) {
@@ -30,34 +31,39 @@ export function initFirebaseClient() {
  */
 export async function requestFcmToken() {
   if (typeof window === "undefined") return null;
-  if (!("serviceWorker" in navigator) || !("PushManager" in window)) return null;
+  if (!("serviceWorker" in navigator)) return null;
 
-  // register service worker (if not already)
+  // 1. Register SW first
+  let reg;
   try {
-    await navigator.serviceWorker.register("/firebase-messaging-sw-v2.js");
-    console.log("Service worker registered for FCM");
+    reg = await navigator.serviceWorker.register("/firebase-messaging-sw-v2.js");
+    // console.log("FCM SW registered:", reg.scope);
   } catch (err) {
-    console.warn("Service worker registration failed", err);
+    console.error("SW register failed", err);
+    return null;
   }
 
   initFirebaseClient();
   if (!messaging) return null;
 
-  try {
-    const permission = await Notification.requestPermission();
-    if (permission !== "granted") return null;
+  // 2. Ask permission
+  const permission = await Notification.requestPermission();
+  if (permission !== "granted") return null;
 
-    const currentToken = await getToken(messaging, {
+  // 3. Generate token WITH THE SW
+  try {
+    const token = await getToken(messaging, {
       vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPIDKEY!,
+      serviceWorkerRegistration: reg,    // ← THIS MUST BE HERE
     });
 
-    return currentToken || null;
+    // console.log("FCM Token:", token);
+    return token;
   } catch (err) {
-    console.error("getToken error", err);
+    console.error("getToken error:", err);
     return null;
   }
 }
-
 export function onForegroundNotification(
   callback: (payload: MessagePayload) => void
 ) {

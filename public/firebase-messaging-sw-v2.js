@@ -16,12 +16,12 @@ firebase.initializeApp({
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage((payload) => {
-  console.log("[SW] Background message received:", payload);
+  // console.log("[SW] Background message received:", payload);
 
   const title = payload.notification?.title || "New Notification";
   const options = {
     body: payload.notification?.body || "",
-    icon: payload.notification?.icon || "/icon-192.png",
+    icon:  "/LogoWB.png",
     // icon: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSbk6HveqasEcE-BryhQALc-8nXRPziD42ZKdIWZXWEI5l5gurLnmRvCnVux3M_nJ2zvnNyq3eE8kNDwBclbqoMv5xAJXC0FjefUsH0sJ7&s=10",
     data: payload.data || {},
   };
@@ -63,7 +63,7 @@ self.addEventListener("notificationclick", (event) => {
 });
 
 self.addEventListener("push", (event) => {
-  console.log("[SW] Push event from DevTools:", event);
+  // console.log("[SW] Push event from DevTools:", event);
 
   let data = {};
   try {
@@ -78,7 +78,7 @@ self.addEventListener("push", (event) => {
   event.waitUntil(
     self.registration.showNotification(title, {
       body,
-      icon: "/icon-192.png"
+      icon:  "/LogoWB.png",
     })
   );
 });
