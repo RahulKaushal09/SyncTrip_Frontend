@@ -108,7 +108,7 @@ const ExploreSection: React.FC<ExploreSectionProps> = ({
                 )}
             </div>
 
-            {/* Show More Button - Client Component */}
+            {/* Show More Button - Client Component x
             {handleShowMoreClick && (
                 <ShowMoreButton
                     hasMoreBtn={hasMoreBtn}
@@ -117,17 +117,17 @@ const ExploreSection: React.FC<ExploreSectionProps> = ({
                     isLoading={isLoading}
                     onShowMoreClick={handleShowMoreClick}
                 />
-            )}
+            )} */}
 
             {/* Loading indicator for pagination */}
-            {isLoading && locations.length > 0 && (
+            {/* {isLoading && locations.length > 0 && (
                 <div style={{ textAlign: 'center', margin: '20px 0' }}>
                     <span aria-live="polite">Loading more destinations...</span>
                 </div>
-            )}
+            )} */}
 
             {/* SEO-friendly hidden content for search engines */}
-            <div className="sr-only">
+            {/* <div className="sr-only">
                 <h2>Top Travel Destinations</h2>
                 <p>
                     Explore the world&apos;s most beautiful destinations with SyncTrip.
@@ -143,7 +143,7 @@ const ExploreSection: React.FC<ExploreSectionProps> = ({
                         </li>
                     ))}
                 </ul>
-            </div>
+            </div> */}
         </section>
     );
 };

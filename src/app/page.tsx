@@ -155,7 +155,7 @@ export default async function Home() {
       />
       <HomeHeroSection />
       <FeaturesSection />
-      <ExploreNearbySection />
+      {/* <ExploreNearbySection /> */}
       <HowItWorksSectionHome />
       <Testimonials />
       <BlogsHomePage posts={enriched} categories={categories} />

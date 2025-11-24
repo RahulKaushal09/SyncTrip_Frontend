@@ -141,7 +141,8 @@ const Testimonials: React.FC = () => {
             {[
               { num: 5000, color: "blue", label: "Active Travelers",Icon:UsersRound },
               { num: 1000, color: "red", label: "Trips Planned",Icon:MapPlus },
-              { num: 750, color: "green", label: "Locations",Icon:Globe },
+              // { num: 750, color: "green", label: "Locations",Icon:Globe },
+              { num: 2, color: "green", label: "Locations",Icon:Globe },
               { num: 95, color: "purple", label: "Trip Completion Rate",Icon:CheckCircle },
             ].map((stat, idx) => (
               <div key={idx} className="col-lg-3 col-md-6 col-sm-6">

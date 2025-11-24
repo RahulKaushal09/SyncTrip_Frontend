@@ -75,7 +75,7 @@ export default function LocationSelector({
                 <strong> Where are you going?</strong>
             </h2>
             <p style={{ color: "rgb(102, 102, 102)", marginBottom: "16px" }}>
-                Start by selecting your travel destination.
+                Start by selecting your travel destination. (Manali, Goa, Rishikesh)
             </p>
 
             {/* Search Input */}

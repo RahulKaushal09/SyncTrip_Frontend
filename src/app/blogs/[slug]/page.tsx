@@ -1,5 +1,6 @@
 // app/blogs/[slug]/page.tsx
 
+
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { ApiService, BlogsApiServices } from "@/utils";
@@ -52,6 +53,7 @@ interface BlogDetailProps {
 //     alternates: { canonical: blog.seo?.canonical_url || `https://synctrip.in/blogs/${blog.slug}` }
 //   };
 // }
+
 export async function generateMetadata({ params }: BlogDetailProps): Promise<Metadata> {
      const { slug } = await params;
   const blog: BlogPost = await BlogsApiServices.fetchBlogBySlug(slug);
@@ -111,6 +113,9 @@ const BlogDetailPage = async ({ params }: BlogDetailProps) => {
     );
   }
 
+  const openCreateTripPage = () => {
+    window.open('/create/trip', '_blank');
+  }
   const articleSchema = {
   "@context": "https://schema.org",
   "@type": "Article",
@@ -155,7 +160,7 @@ const BlogDetailPage = async ({ params }: BlogDetailProps) => {
 
         <BlogContent blog={blog} />
 
-        {relatedLocations.length > 0 && (
+        {/* {relatedLocations.length > 0 && (
           <section className="related-section">
             <div className="section-header">
               <h2>Explore Related Destinations</h2>
@@ -172,7 +177,7 @@ const BlogDetailPage = async ({ params }: BlogDetailProps) => {
               ))}
             </div>
           </section>
-        )}
+        )} */}
 
         <section className="cta-section">
           <div className="cta-box">
@@ -180,7 +185,11 @@ const BlogDetailPage = async ({ params }: BlogDetailProps) => {
             <p>
               Turn your travel dreams into reality. Create personalized itineraries and discover hidden gems with SyncTrip.
             </p>
-            <button className="cta-button">Plan Your Trip</button>
+            {/* <CTAButton /> */}
+            <a href="/create/trip" target="_blank" className="btn btn-primary">
+  Plan Your Trip
+</a>
+            {/* <button onClick={()=>openCreateTripPage()} className="cta-button">Plan Your Trip</button> */}
           </div>
         </section>
       </main>

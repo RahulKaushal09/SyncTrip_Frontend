@@ -212,11 +212,11 @@ export default function HomeContent({ initialLocations, initialHasMore }: HomeCo
 
     return (
         <main className="min-h-screen HomePage paddingSectionLeftRight">
-            <MainSearchBar
+            {/* <MainSearchBar
                 searchTerm={searchTerm}
                 setSearchTerm={handleSearchChange}
                 searchBarPlaceHolder="Search destinations, hotels"
-            />
+            /> */}
 
 
             <ExploreSection
@@ -227,9 +227,9 @@ export default function HomeContent({ initialLocations, initialHasMore }: HomeCo
                 hasMoreBtn={hasMore}
                 isLoading={isLoading}
             />
-            <PreMadeItinerary
+            {/* <PreMadeItinerary
                 locations={premadeItineariesLocations}
-            />
+            /> */}
 
 
 

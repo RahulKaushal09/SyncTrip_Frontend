@@ -18,8 +18,9 @@ const Footer = () => {
 
     const contactLinks = [
         { name: 'Help Center', url: 'https://www.instagram.com/synctrips/' },
-        { name: 'Press', url: '/home' },
-        { name: 'FAQs', url: 'https://www.instagram.com/synctrips/' },
+        {name: 'Feedback', url: 'https://www.instagram.com/synctrips/'},
+        // { name: 'Press', url: '/home' },
+        // { name: 'FAQs', url: 'https://www.instagram.com/synctrips/' },
     ];
 
     return (

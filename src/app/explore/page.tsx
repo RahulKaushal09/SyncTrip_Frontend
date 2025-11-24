@@ -166,18 +166,18 @@ export default async function Home() {
       {/* JSON-LD structured data */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(homeJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(locationsJsonLd(initialLocations.slice(0, 10))) }} />
-      <ExploreNearby/>
+      {/* <ExploreNearby/> */}
       <HomeContent
         initialLocations={initialLocations}
         initialHasMore={initialLocations.length >= 12}
       />
-      <div className="HomePage paddingSectionLeftRight">
+      {/* <div className="HomePage paddingSectionLeftRight"> */}
         {/* <FestivalsEvents
           initialEvents={initialEvents}
           initialLocation={initialLocation}
         /> */}
-        <HomeClientSection randomLocations={randomLocations} />
-      </div>
+        {/* <HomeClientSection randomLocations={randomLocations} /> */}
+      {/* </div> */}
     </>
   );
 }
