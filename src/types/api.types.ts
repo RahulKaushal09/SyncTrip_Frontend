@@ -122,6 +122,7 @@ export interface Location {
     updatedAt?: string;
     type?: string;
     filterTags?: string[];
+    featured:boolean;
 
 
 }
