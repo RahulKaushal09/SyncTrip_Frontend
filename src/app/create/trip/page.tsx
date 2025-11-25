@@ -14,6 +14,7 @@ import { Pencil, MapPin, Calendar, Star, CreditCard, Lock } from "lucide-react";
 import TripServices from '@/utils/trip.utils';
 import { useLoader } from '@/components/providers/LoaderContext';
 import { toast } from 'react-hot-toast';
+import ThreeLocationSelector from '@/components/createTrip/ThreeLocationSelector';
 
 const TOTAL_STEPS = 4;
 const MAX_TRIP_DAYS = 15;
@@ -48,7 +49,7 @@ const parseLocalDateOnly = (s: string | null | undefined) => {
 };
 export default function CreateTripScreen() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<div />}>
       <CreateTripContent />
     </Suspense>
   );
@@ -447,7 +448,11 @@ function CreateTripContent() {
   const renderStepContent = () => {
     switch (step) {
       case 1:
-        return <Step1Location initialSelectedLocation={selectedLocation} onSelect={handleLocationSelect} />;
+        return <ThreeLocationSelector selectedLocationId={selectedLocation?.id} onSelect={(loc) => {
+          setSelectedLocation(loc);
+          goNext();
+        }} />;
+        // return <Step1Location initialSelectedLocation={selectedLocation} onSelect={handleLocationSelect} />;
       case 2:
         return (
           <Step2SelectDates
