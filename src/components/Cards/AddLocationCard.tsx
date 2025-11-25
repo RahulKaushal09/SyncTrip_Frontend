@@ -8,6 +8,8 @@ import { PageTypeEnum } from '@/constants';
 import { TripTimeline } from '@/types';
 import { triggerLogin } from '@/utils';
 import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
+import { useLoader } from '../providers/LoaderContext';
 
 
 
@@ -32,6 +34,7 @@ interface AddLocationCardProps {
     btnReference?: React.RefObject<HTMLDivElement>;
     price?: number;
     timelines: TripTimeline[];
+    featuredLocation?: boolean;
 }
 
 const AddLocationCard: React.FC<AddLocationCardProps> = ({
@@ -54,10 +57,11 @@ const AddLocationCard: React.FC<AddLocationCardProps> = ({
     alreadyEnrolled,
     btnReference,
     price,
-    timelines
+    timelines,
+    featuredLocation=false
 }) => {
         const router = useRouter();
-    
+    const {showLoader,hideLoader}= useLoader();
     const [activeIcon, setActiveIcon] = useState(0);
     const [btn2Text, setBtn2Text] = useState('');
     const [btn2CTA, setBtn2CTA] = useState<() => void>(() => ctaAction);
@@ -71,12 +75,22 @@ const AddLocationCard: React.FC<AddLocationCardProps> = ({
         `<strong style='color:black'>${HotelsToStay}</strong>+ Hotels to stay at`,
         `<strong style='color:black'>${getRandomNumberReviews}</strong>+ Others planning`
     ];
-    const createTrip = (locationId: string) => {
+    const createTrip = (locationId: string, featured: boolean) => {
         // Logic to create a trip
-        router.push(`/create/trip?locationId=${locationId}`);
+        showLoader();
+        if(featured) {
+            router.push(`/create/trip?locationId=${locationId}`);
+            return;
+        }
+        else{
+            toast.error("We’re launching city by city to ensure you meet real travellers. For now, Manali, Goa & Rishikesh have active communities.")
+            router.push("/explore");
+            hideLoader();
+            return;
+        }
     };
     const loginThenNavigate = () => {
-        triggerLogin(createTrip.bind(null, locationId || ''));
+        triggerLogin(createTrip.bind(null, locationId || '',featuredLocation));
     }
     useEffect(() => {
         const random = Math.floor(Math.random() * (100 - 10 + 1)) + 10;
@@ -93,7 +107,7 @@ const AddLocationCard: React.FC<AddLocationCardProps> = ({
                 setBtn2CTA(() => onLoginClick);
             }
         }
-    }, [pageType, ctaAction, selectedSlotId]);
+    }, [pageType, ctaAction, selectedSlotId, featuredLocation]);
 
     useEffect(() => {
         const interval = setInterval(() => {

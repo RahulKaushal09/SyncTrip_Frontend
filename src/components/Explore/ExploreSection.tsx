@@ -1,5 +1,6 @@
 import React from 'react';
 import LocationCard from '../LocationCard/LocationCard';
+import MoreLocationsUnlocking from './MoreLocationsUnlocking';
 import ShowMoreButton from './ShowMoreButton';
 import { Location } from '@/types';
 import {
@@ -58,15 +59,21 @@ const ExploreSection: React.FC<ExploreSectionProps> = ({
     }
 
     return (
-        <section className="" aria-label="Explore destinations ">
+        <section className="" aria-label="Explore destinations " 
+        >
             {/* Main Grid */}
+            <div style={{textAlign:'center',marginTop:"40px"}}>
+            <h2 style={{color:"var(--secondary-1)"}}>Active Travel Zones (Early Access)</h2>
+            </div>
             <div
                 className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
                 style={{
                     display: 'flex',
                     justifyContent: 'space-around',
                     flexWrap: 'wrap',
-                    rowGap: "15px"
+                    rowGap: "15px",
+                    marginTop:"50px",
+                    marginBottom: "50px"
                 }}
             >
                 {locations.length > 0 ? (
@@ -107,6 +114,7 @@ const ExploreSection: React.FC<ExploreSectionProps> = ({
                     </div>
                 )}
             </div>
+            <MoreLocationsUnlocking/>
 
             {/* Show More Button - Client Component x
             {handleShowMoreClick && (

@@ -133,6 +133,7 @@ const LocationPageDetails = ({ uuid, locationData }: { uuid: string; locationDat
                     EnrollInTrip={() => { }}
                     alreadyEnrolled={false}
                     timelines={[]}
+                    featuredLocation={locationData?.featured || false}
                 />
             )}
 
@@ -189,6 +190,8 @@ const LocationPageDetails = ({ uuid, locationData }: { uuid: string; locationDat
                                 EnrollInTrip={() => { }}
                                 alreadyEnrolled={false}
                                 timelines={[]}
+                                featuredLocation={locationData?.featured || false}
+
                             />
                         </div>
                     </div>

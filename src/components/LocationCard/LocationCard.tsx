@@ -214,7 +214,7 @@ const LocationCard: React.FC<LocationCardProps> = ({
                     </p>
                 )}
 
-                {bestTime && bestTime !== 'N/A' && (
+                {/* {bestTime && bestTime !== 'N/A' && (
                     <p className="best-time">
                         <span>Best time: </span>
                         <time>{bestTime}</time>
@@ -225,7 +225,9 @@ const LocationCard: React.FC<LocationCardProps> = ({
                     <p className="highlights" itemProp="description">
                         {Highlights}
                     </p>
-                )}
+                )} */}
+                <p className="best-time">High traveller activity this month</p>
+ <p className="best-time">Create trips, meet travellers, plan together</p>
             </div>
             <noscript>
                 <img
