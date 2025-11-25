@@ -14,8 +14,8 @@ import { Pencil, MapPin, Calendar, Star, CreditCard, Lock } from "lucide-react";
 import TripServices from '@/utils/trip.utils';
 import { useLoader } from '@/components/providers/LoaderContext';
 import { toast } from 'react-hot-toast';
-import ThreeLocationSelector from '@/components/createTrip/ThreeLocationSelector';
 import { useLogin } from '@/components/providers/LoginProvider';
+import ThreeLocationSelector from '@/components/createTrip/ThreeLocationSelector';
 
 const TOTAL_STEPS = 4;
 const MAX_TRIP_DAYS = 15;
@@ -456,6 +456,7 @@ function CreateTripContent() {
           handleLocationSelect(loc);
           // console.log("Selected location:", selectedLocation);
           // console.log("Going to next step");
+
           goNext();
         }} />;
         // return <Step1Location initialSelectedLocation={selectedLocation} onSelect={handleLocationSelect} />;
