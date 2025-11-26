@@ -156,8 +156,7 @@ export default function ActiveDestinations({
                                 <div className="text-sm md:text-base font-semibold text-[#16324F]">{d.activePlaceValue}</div>
                             </div>
 
-                            <Link
-                                href="#"
+                            <button
                                 onClick={() => loginThenNavigate(d.id)}
 
                                 className="inline-flex items-center justify-center w-full bg-[#3ABEF5] hover:bg-[#16324F] text-white font-semibold rounded-lg py-3 px-4 shadow-md transition-transform duration-200 hover:-translate-y-1"
@@ -165,7 +164,7 @@ export default function ActiveDestinations({
                             >
                                 Create Trip in {d.name}
                                 <span className="ml-3 transform transition-transform">→</span>
-                            </Link>
+                            </button>
                         </div>
                     </article>
                 ))}
@@ -185,8 +184,7 @@ export default function ActiveDestinations({
                     <div className="px-4 py-2 bg-white rounded-lg font-semibold text-[#16324F] shadow-sm">Plan Together</div>
                 </div>
 
-                <Link
-                    href="#"
+                <button
                     onClick={() => loginThenNavigate('')}
                     className="btn btn-secondary"
                     style={{
@@ -199,7 +197,7 @@ export default function ActiveDestinations({
                 >
                     <span className="btn-secondary-text">Create Your First Trip</span>
 
-                </Link>
+                </button>
             </div>
         </section>
     );
