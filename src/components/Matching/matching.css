@@ -59,12 +59,22 @@
   color: white;
 }
 
+.MatchingCardBottom {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+}
 .MatchingCardTitle {
   font-size: 20px;
   font-weight: 700;
+  /* margin-bottom: 6px; */
+  /* position: absolute; */
+  /* bottom: 30px; */
+}
+.MatchingCardTripDates{
+  font-size: 14px;
+  opacity: 0.9;
   margin-bottom: 6px;
-  position: absolute;
-  bottom: 10px;
 }
 
 .MatchingCardActivities {

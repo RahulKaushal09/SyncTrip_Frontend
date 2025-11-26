@@ -89,6 +89,12 @@ const nextConfig: NextConfig = {
         hostname: 'synctrip-backend.vercel.app',
         pathname: '/**',
       },
+      // https://images.unsplash.com
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        pathname: '/**',
+      },
     ],
   },
 };

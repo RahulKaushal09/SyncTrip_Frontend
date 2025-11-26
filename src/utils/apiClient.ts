@@ -27,8 +27,13 @@ apiClient.interceptors.request.use(
 );
 
 apiClient.interceptors.response.use(
+// allow 409 status codes as valid responses
+
     (response: AxiosResponse) => response,
     (error) => {
+        if (error.response && error.response.status === 409) {
+            return Promise.resolve(error.response);
+        }
         // Handle errors globally
         return Promise.reject(error);
     }

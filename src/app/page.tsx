@@ -11,6 +11,7 @@ import { BlogsApiServices } from "@/utils/blogs.api.utils";
 import { BlogPost } from "@/types";
 import { Metadata } from "next";
 import Script from "next/script";
+import ActiveDestinations from "@/components/Home_new/ActiveDestinations";
 
 // export const metadata: Metadata = {
 //   title: 'SyncTrip — Group Travel & Travel Buddies in India',
@@ -155,8 +156,9 @@ export default async function Home() {
       />
       <HomeHeroSection />
       <FeaturesSection />
+      <ActiveDestinations />
       {/* <ExploreNearbySection /> */}
-      <HowItWorksSectionHome />
+      {/* <HowItWorksSectionHome /> */}
       <Testimonials />
       <BlogsHomePage posts={enriched} categories={categories} />
     </>

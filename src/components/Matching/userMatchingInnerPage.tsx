@@ -39,7 +39,7 @@ export type GetCandidatesResponse = {
     candidates: Candidate[]
     nextCursor: cursorType | null
 }
-    
+
 export type SwipeResponse =
     | {
         ok: true
@@ -486,21 +486,21 @@ export default function MatchingPage() {
                 {/* <div className="empty">No more travelers nearby.</div> */}
                 <div className="empty">
                     <div className='empty-innerBox'>
-                    <p>No more travelers nearby.</p>
+                        <p>No more travelers nearby.</p>
 
-                    <button
-                        className="btn btn-secondary"
-                        style={{ marginTop: "16px" }}
-                        onClick={loadPassedProfiles}
-                    >
-                        View Previously Skipped Travellers
-                    </button>
+                        <button
+                            className="btn btn-secondary"
+                            style={{ marginTop: "16px" }}
+                            onClick={loadPassedProfiles}
+                        >
+                            View Previously Skipped Travellers
+                        </button>
 
-                    {reviewMode && profiles.length === 0 && (
-                        <p style={{ marginTop: 10, color: "#777" }}>
-                            You haven’t skipped anyone yet.
-                        </p>
-                    )}
+                        {reviewMode && profiles.length === 0 && (
+                            <p style={{ marginTop: 10, color: "#777" }}>
+                                You haven’t skipped anyone yet.
+                            </p>
+                        )}
                     </div>
                 </div>
             </main>
@@ -554,16 +554,22 @@ export default function MatchingPage() {
                     >
                         <img src={current.userSnapshot.profile_picture[0]} alt={current.userSnapshot.name} />
                         <div className="MatchingCardMeta">
-                            <div className="MatchingCardTitle">
-                                <span>{current.userSnapshot.name}, {current.userSnapshot.age}</span>
-                            </div>
-                            <div className="MatchingCardActivities">
-                                {current.tripSnapshot.interests?.join(" • ")}
+                            <div className='MatchingCardBottom'>
+                                <div className="MatchingCardTitle">
+                                    <span>{current.userSnapshot.name}, {current.userSnapshot.age}</span>
+                                </div>
+                                <div className="MatchingCardActivities">
+                                    {current.tripSnapshot.interests?.join(" • ")}
+                                </div>
+                                <div className="MatchingCardTripDates">
+                                    <span>{CommonServices.formatDateShortHeaderTripSelection(current.tripSnapshot.startDate, current.tripSnapshot.endDate)}</span>
+                                </div>
                             </div>
                         </div>
                         {reviewMode && <div className="badge-previouslySkipped">Previously Skipped</div>}
 
                     </div>
+
                 </div>
             </section>
 

@@ -449,7 +449,9 @@ function CreateTripContent() {
     switch (step) {
       case 1:
         return <ThreeLocationSelector selectedLocationId={selectedLocation?.id} onSelect={(loc) => {
-          setSelectedLocation(loc);
+          handleLocationSelect(loc);
+          // console.log("Selected location:", selectedLocation);
+          // console.log("Going to next step");
           goNext();
         }} />;
         // return <Step1Location initialSelectedLocation={selectedLocation} onSelect={handleLocationSelect} />;

@@ -11,6 +11,7 @@ import { wishlistRequestSchema } from '@/classes/ApiRequest.classes';
 // import { indianCitiesPageData } from '@/data/indianCitiesPageData';
 import { Events } from '@/types';
 import apiClient from './apiClient';
+import toast from 'react-hot-toast';
 // import { cookies } from 'next/headers';
 
 export class ApiService {
@@ -390,6 +391,9 @@ const headers: Record<string, string> = {
   static async saveTripDetails(tripDetails: UserTrip) {
     try {
       const res = await apiClient.post(`/app/createUserTripWithDetails`, tripDetails);
+      if (res.status == 409){
+        toast.success("You Already have a trip planned for this location!");
+      }
       return res.data.trip;
     }
     catch (error) {

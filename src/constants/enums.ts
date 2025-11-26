@@ -72,6 +72,8 @@ export const LocationFields = Object.freeze({
     CULTURES: 'cultures',
     FESTIVALS: 'festivals',
     FILTER_TAGS: 'filterTags',
+        FEATURED: 'featured',
+    SEO: 'seo',
 });
 export const TripFields = Object.freeze({
     TRIP_ID: 'id',

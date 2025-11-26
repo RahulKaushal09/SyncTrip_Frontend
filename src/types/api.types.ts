@@ -75,6 +75,17 @@ export interface UserTrip {
     activities?: UserTripActivity[]; // List of activities planned for the trip
 };
 
+type FAQSchema = {
+    question: string;
+    answer: string;
+};
+
+type SEOSectionSchema = {
+    key: string;
+    title: string;
+    body: string;
+};
+
 
 export interface Location {
     id: string;
@@ -123,6 +134,74 @@ export interface Location {
     type?: string;
     filterTags?: string[];
     featured? : boolean;
+
+
+    seo?: {
+        title?: string;
+        metaDescription?: string;
+        h1?: string;
+        keywords?: string[];
+        semanticKeywords?: string[];
+
+        og?: {
+            title?: string;
+            description?: string;
+            image?: string;
+        };
+
+        twitter?: {
+            title?: string;
+            description?: string;
+            image?: string;
+        };
+
+        faq?: FAQSchema[];
+
+        schema?: {
+            jsonld?: Record<string, unknown>; // ONLY static parts
+            // url/image/geo added dynamically in SSR
+        };
+
+        sections?: SEOSectionSchema[];
+
+        createdBy?: string;
+        lastUpdatedBy?: string;
+        lastUpdatedAt?: Date;
+    };
+    // seo: {
+    //     title: { type: String, default: null },
+    //     metaDescription: { type: String, default: null },
+    //     h1: { type: String, default: null },
+    //     keywords: [String],
+    //     semanticKeywords: [String],
+
+    //     og: {
+    //         title: String,
+    //         description: String
+    //         // IMAGE + URL generated from frontend SSR
+    //     },
+
+    //     twitter: {
+    //         title: String,
+    //         description: String
+    //         // IMAGE generated from SSR
+    //     },
+
+    //     faq: [FAQSchema],
+
+    //     schema: {
+    //         jsonld: mongoose.Schema.Types.Mixed // ONLY static parts
+    //         // url/image/geo added dynamically in SSR
+    //     },
+
+    //     sections: [SEOSectionSchema],
+
+    //     createdBy: { type: String, default: null },
+    //     lastUpdatedBy: { type: String, default: null },
+    //     lastUpdatedAt: { type: Date }
+    // }
+
+
 }
 export interface PlacesToVisit {
     id: string;

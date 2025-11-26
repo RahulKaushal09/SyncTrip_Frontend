@@ -119,7 +119,7 @@ const LocationPageDetails = ({ uuid, locationData }: { uuid: string; locationDat
                     locationId={locationData?.id}
                     showBtns
                     pageType={pageType}
-                    btnsStyle={{ width: '45%' }}
+                    btnsStyle={{ width: '100%' }}
                     style={{ marginBottom: '50px', marginLeft: '0px' }}
                     ctaAction={ctaAction}
                     title={locationData?.title}
