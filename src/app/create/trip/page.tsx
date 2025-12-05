@@ -62,6 +62,8 @@ function CreateTripContent() {
 
   const {user,isLoggedIn} = useLogin();
   
+
+
   const locationIdParam = searchParams?.get('locationId');
   const startParam = searchParams?.get('start');
   const endParam = searchParams?.get('end');
