@@ -59,10 +59,7 @@ export default function CreateTripScreen() {
 function CreateTripContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-
   const {user,isLoggedIn} = useLogin();
-  
-
   const locationIdParam = searchParams?.get('locationId');
   const startParam = searchParams?.get('start');
   const endParam = searchParams?.get('end');
