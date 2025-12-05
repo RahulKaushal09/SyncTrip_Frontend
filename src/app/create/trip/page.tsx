@@ -14,6 +14,7 @@ import { Pencil, MapPin, Calendar, Star, CreditCard, Lock } from "lucide-react";
 import TripServices from '@/utils/trip.utils';
 import { useLoader } from '@/components/providers/LoaderContext';
 import { toast } from 'react-hot-toast';
+import { useLogin } from '@/components/providers/LoginProvider';
 
 const TOTAL_STEPS = 4;
 const MAX_TRIP_DAYS = 15;
@@ -57,7 +58,12 @@ export default function CreateTripScreen() {
 function CreateTripContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-
+  const {user,isLoggedIn} = useLogin();
+  if(!isLoggedIn || !user || !user.profileCompleted){
+    router.replace('/');
+    toast.error('Please login and complete your profile to create a trip.');
+    return null;
+  }
   const locationIdParam = searchParams?.get('locationId');
   const startParam = searchParams?.get('start');
   const endParam = searchParams?.get('end');
