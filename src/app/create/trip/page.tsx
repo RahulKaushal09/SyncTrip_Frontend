@@ -57,6 +57,7 @@ export default function CreateTripScreen() {
 
 function CreateTripContent() {
   const router = useRouter();
+  
   const searchParams = useSearchParams();
   const {user,isLoggedIn} = useLogin();
   if(!isLoggedIn || !user || !user.profileCompleted){
