@@ -175,6 +175,7 @@ export default function MatchingPage() {
     }, [locationId]);
     async function loadTrips() {
         try {
+            debugger;
             let trips: UserTrip[] = await TripServices.fetchUserTrips();
             // show only those trip which have end date in future
             const now = new Date();

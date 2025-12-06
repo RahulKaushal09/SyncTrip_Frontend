@@ -72,11 +72,19 @@ export default function MultipleTripSelectionHeader({
 }: Props) {
   const router = useRouter();
   const pathName = usePathname();
+  // get url 
+  const url = new URL(window.location.href);
   const [showSheet, setShowSheet] = useState(false);
   const [filteredTrips, setFilteredTrips] = useState<UserTrip[]>([]);
   const [headerType, setHeaderType] = useState<'matching' | 'chat'>(pathName.includes('/chats') ? 'chat' : 'matching');
   useEffect(() => {
-    setFilteredTrips(allTrips.filter(trip => trip.endDate >= new Date().toISOString()));
+    debugger;
+    // if(pathName.includes('/chats')){
+    //   setFilteredTrips(allTrips);
+    // }
+    // if(pathName.includes('/userTrip/matching')){
+      setFilteredTrips(allTrips.filter(trip => trip.endDate >= new Date().toISOString()));
+    // }
   }, [allTrips]);
   const handleTripClick = () => {
     setShowSheet(true);
