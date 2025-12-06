@@ -15,6 +15,7 @@ import TripServices from '@/utils/trip.utils';
 import { useLoader } from '@/components/providers/LoaderContext';
 import { toast } from 'react-hot-toast';
 import ThreeLocationSelector from '@/components/createTrip/ThreeLocationSelector';
+import { useLogin } from '@/components/providers/LoginProvider';
 
 const TOTAL_STEPS = 4;
 const MAX_TRIP_DAYS = 15;
@@ -59,6 +60,8 @@ function CreateTripContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
+  const {user,isLoggedIn} = useLogin();
+  
   const locationIdParam = searchParams?.get('locationId');
   const startParam = searchParams?.get('start');
   const endParam = searchParams?.get('end');
@@ -477,7 +480,11 @@ function CreateTripContent() {
         );
     }
   };
-
+if(!isLoggedIn || !user || !user.profileCompleted){
+    router.replace('/');
+    toast.error('Please login and complete your profile to create a trip.');
+    return null;
+  }
   return (
     <div className="" style={{ minHeight: '80vh', paddingBottom: 20 }}>
       <div className="mx-auto bg-white" style={{ maxWidth: '900px' }}>
