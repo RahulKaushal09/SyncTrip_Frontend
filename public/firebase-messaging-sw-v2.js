@@ -71,7 +71,7 @@ self.addEventListener("push", (event) => {
   } catch (e) {
     console.log("Push had no JSON data");
   }
-
+  console.log("Push data:", data);
   const title = data.title || "Test Notification";
   const body = data.body || "This is a fallback test notification.";
 
