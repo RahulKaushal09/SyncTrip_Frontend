@@ -14,8 +14,8 @@ import { Pencil, MapPin, Calendar, Star, CreditCard, Lock } from "lucide-react";
 import TripServices from '@/utils/trip.utils';
 import { useLoader } from '@/components/providers/LoaderContext';
 import { toast } from 'react-hot-toast';
-import { useLogin } from '@/components/providers/LoginProvider';
 import ThreeLocationSelector from '@/components/createTrip/ThreeLocationSelector';
+import { useLogin } from '@/components/providers/LoginProvider';
 
 const TOTAL_STEPS = 4;
 const MAX_TRIP_DAYS = 15;
