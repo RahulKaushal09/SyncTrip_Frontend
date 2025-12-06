@@ -64,7 +64,7 @@ const LocationCard: React.FC<LocationCardProps> = ({
     }
 
     const router = useRouter();
-  const { showLoader } = useLoader();
+    const { showLoader } = useLoader();
 
     // Clean name for better SEO
     const cleanName = name.replace(/[0-9.]/g, '').trim();
@@ -108,7 +108,7 @@ const LocationCard: React.FC<LocationCardProps> = ({
     const handleImageClick = (e: React.MouseEvent) => {
         e.stopPropagation(); // Prevent the click from bubbling to the parent location-card
         if (locationLink) {
-                    showLoader();
+            showLoader();
 
             router.push(locationLink);
         }
@@ -121,7 +121,7 @@ const LocationCard: React.FC<LocationCardProps> = ({
             style={inlineStyle}
             onClick={() => {
                 if (locationLink) {
-                            showLoader();
+                    showLoader();
 
                     router.push(locationLink);
                 }
@@ -176,9 +176,9 @@ const LocationCard: React.FC<LocationCardProps> = ({
                                 alt={`${cleanName} - Image coming soon`}
                                 style={{ objectFit: 'cover' }}
                                 loading="lazy"
-                                    fill
+                                fill
                                 decoding="async"
-                                    onClick={handleImageClick} // Add click handler for placeholder image
+                                onClick={handleImageClick} // Add click handler for placeholder image
                             />
                         </Carousel.Item>
                     )}
@@ -209,9 +209,13 @@ const LocationCard: React.FC<LocationCardProps> = ({
                 </div>
 
                 {places && (
-                    <p className="places-count" itemProp="description">
-                        {places} places to visit
-                    </p>
+                    <>
+                        <p className="places-count" itemProp="description">
+                            {places} places to visit
+                        </p>
+                        <p className="best-time">High traveller activity this month</p>
+                        <p className="best-time">Create trips, meet travellers, plan together</p>
+                    </>
                 )}
 
                 {/* {bestTime && bestTime !== 'N/A' && (
@@ -226,8 +230,7 @@ const LocationCard: React.FC<LocationCardProps> = ({
                         {Highlights}
                     </p>
                 )} */}
-                <p className="best-time">High traveller activity this month</p>
- <p className="best-time">Create trips, meet travellers, plan together</p>
+
             </div>
             <noscript>
                 <img
