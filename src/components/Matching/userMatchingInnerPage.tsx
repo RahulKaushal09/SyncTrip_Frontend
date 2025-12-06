@@ -9,6 +9,7 @@ import TripServices from '@/utils/trip.utils'
 import { userTripFields } from '@/constants'
 import { UserTrip } from '@/types'
 import { CommonServices } from '@/utils'
+import toast from 'react-hot-toast'
 
 export type Candidate = {
     id: string
@@ -174,7 +175,15 @@ export default function MatchingPage() {
     }, [locationId]);
     async function loadTrips() {
         try {
-            const trips: UserTrip[] = await TripServices.fetchUserTrips();
+            let trips: UserTrip[] = await TripServices.fetchUserTrips();
+            // show only those trip which have end date in future
+            const now = new Date();
+            trips = trips.filter(trip => new Date(trip.endDate) > now);
+            if( trips.length === 0 ) {
+                router.back();
+                toast.error("Your trips have ended. Please create a new trip to use Matching feature.");
+                return;
+            }
             setAllTrips(trips);
         } catch (err) {
             console.error('Failed to fetch trips', err);
