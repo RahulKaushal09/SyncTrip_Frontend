@@ -34,6 +34,11 @@ const nextConfig: NextConfig = {
         hostname: "synctrip.in",
         pathname: "/AllImages/**",
       },
+{
+        protocol: "https",
+        hostname: "synctrip-image-storage.s3.amazonaws.com",
+        pathname: "/**",
+      },
       {
         protocol: "https",
         hostname: "synctrip.in",

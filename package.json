@@ -30,6 +30,7 @@
     "react-froala-wysiwyg": "^4.6.0",
     "react-hot-toast": "^2.5.2",
     "react-leaflet": "^4.2.1",
+    "sharp": "^0.34.5",
     "socket.io-client": "^4.8.1"
   },
   "devDependencies": {
