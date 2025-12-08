@@ -16,7 +16,7 @@ firebase.initializeApp({
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage((payload) => {
-  // console.log("[SW] Background message received:", payload);
+  console.log("[SW] Background message received:", payload);
 
   const title = payload.notification?.title || "New Notification";
   const options = {
@@ -62,23 +62,23 @@ self.addEventListener("notificationclick", (event) => {
   );
 });
 
-self.addEventListener("push", (event) => {
-  // console.log("[SW] Push event from DevTools:", event);
+// self.addEventListener("push", (event) => {
+//   // console.log("[SW] Push event from DevTools:", event);
+//   debugger;
+//   let data = {};
+//   try {
+//     data = event.data.json();
+//   } catch (e) {
+//     console.log("Push had no JSON data");
+//   }
+//   console.log("Push data:", data);
+//   const title = data.title || "Test Notification";
+//   const body = data.body || "This is a fallback test notification.";
 
-  let data = {};
-  try {
-    data = event.data.json();
-  } catch (e) {
-    console.log("Push had no JSON data");
-  }
-  console.log("Push data:", data);
-  const title = data.title || "Test Notification";
-  const body = data.body || "This is a fallback test notification.";
-
-  event.waitUntil(
-    self.registration.showNotification(title, {
-      body,
-      icon:  "/LogoWB.png",
-    })
-  );
-});
+//   event.waitUntil(
+//     self.registration.showNotification(title, {
+//       body,
+//       icon:  "/LogoWB.png",
+//     })
+//   );
+// });

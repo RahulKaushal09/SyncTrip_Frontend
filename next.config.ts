@@ -4,8 +4,11 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 });
 
 const nextConfig: NextConfig = {
-  
   reactStrictMode: false,
+
+  // 🔥 THIS FIXES YOUR CPU PROBLEM (adds standalone output)
+  output: "standalone",
+
   async headers() {
     return [
       {
@@ -24,85 +27,23 @@ const nextConfig: NextConfig = {
 
   images: {
     remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "lh3.googleusercontent.com",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "synctrip.in",
-        pathname: "/AllImages/**",
-      },
-{
-        protocol: "https",
-        hostname: "synctrip-image-storage.s3.amazonaws.com",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "synctrip.in",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "static.vecteezy.com",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "assets-in.bmscdn.com",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "via.placeholder.com",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "muddietrails.com",
-        pathname: "/**",
-      },
-      {
-        protocol: 'https',
-        hostname: 'cdn-icons-png.flaticon.com',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'via.placeholder.com',
-        pathname: '/**',
-      },
-      {
-        protocol: 'http',
-        hostname: 'localhost',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'picsum.photos',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'wbksuxwcqnzuppviunfz.supabase.co',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'synctrip-backend.vercel.app',
-        pathname: '/**',
-      },
-      // https://images.unsplash.com
-      {
-        protocol: 'https',
-        hostname: 'images.unsplash.com',
-        pathname: '/**',
-      },
+      { protocol: "https", hostname: "lh3.googleusercontent.com", pathname: "/**" },
+      { protocol: "https", hostname: "synctrip.in", pathname: "/AllImages/**" },
+      { protocol: "https", hostname: "synctrip-image-storage.s3.amazonaws.com", pathname: "/**" },
+      { protocol: "https", hostname: "synctrip.in", pathname: "/**" },
+      { protocol: "https", hostname: "static.vecteezy.com", pathname: "/**" },
+      { protocol: "https", hostname: "assets-in.bmscdn.com", pathname: "/**" },
+      { protocol: "https", hostname: "via.placeholder.com", pathname: "/**" },
+      { protocol: "https", hostname: "muddietrails.com", pathname: "/**" },
+      { protocol: "https", hostname: "cdn-icons-png.flaticon.com", pathname: "/**" },
+      { protocol: "https", hostname: "via.placeholder.com", pathname: "/**" },
+      { protocol: "http", hostname: "localhost", pathname: "/**" },
+      { protocol: "https", hostname: "picsum.photos", pathname: "/**" },
+      { protocol: "https", hostname: "wbksuxwcqnzuppviunfz.supabase.co", pathname: "/**" },
+      { protocol: "https", hostname: "synctrip-backend.vercel.app", pathname: "/**" },
+      { protocol: 'https', hostname: 'images.unsplash.com', pathname: '/**' },
     ],
   },
 };
 
-// ⛳️ This line merges the config with bundle analyzer
 module.exports = withBundleAnalyzer(nextConfig);
