@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
   reactStrictMode: false,
 
   // 🔥 THIS FIXES YOUR CPU PROBLEM (adds standalone output)
-  output: "standalone",
+  // output: "standalone",
 
   async headers() {
     return [
@@ -26,7 +26,7 @@ const nextConfig: NextConfig = {
   },
 
   images: {
-    unoptimized: true,   // disables Next.js image optimization completely
+    // unoptimized: true,   // disables Next.js image optimization completely
     remotePatterns: [
       { protocol: "https", hostname: "lh3.googleusercontent.com", pathname: "/**" },
       { protocol: "https", hostname: "synctrip.in", pathname: "/AllImages/**" },
