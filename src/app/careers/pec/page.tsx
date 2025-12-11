@@ -251,7 +251,7 @@ export default function Page() {
                             <div>
                                 <h3 className="text-lg font-semibold mb-2">Application — PEC Software Dev Internship</h3>
                                 <p className="text-sm text-slate-600 mb-4">
-                                    Thanks for applying! We've generated a one-time Application Token for you. Please paste this token in the
+                                    Thanks for applying! We&apos;ve generated a one-time Application Token for you. Please paste this token in the
                                     Google Form (link provided) to complete the test/selection process.
                                 </p>
 
