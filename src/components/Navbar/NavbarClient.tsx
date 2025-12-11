@@ -340,15 +340,17 @@ const NavbarClient = ({ }) => {
           {isLoggedIn && <li className="nav-item" onClick={() => { redirectBtnClick(ROUTES.USER_TRIPS); closeDrawer(); }}>
             <span className="nav-link">My Trips</span>
           </li>}
-          {pageType == PageTypeEnum.TRIP ? (
+          {pageType == PageTypeEnum.TRIP && (
             <li className="nav-item" onClick={() => { openLogin(() => { redirectBtnClick(ROUTES.CREATE_TRIP) }); }}>
               <span className="nav-link">Create Trip</span>
             </li>
-          ) : (
-            <li className="nav-item" onClick={() => { redirectBtnClick(ROUTES.TRIPS); closeDrawer(); }}>
-              <span className="nav-link">Group Trips</span>
-            </li>
-          )}
+          ) 
+          // : (
+          //   <li className="nav-item" onClick={() => { redirectBtnClick(ROUTES.TRIPS); closeDrawer(); }}>
+          //     <span className="nav-link">Group Trips</span>
+          //   </li>
+          // )
+          }
           <li className="nav-item"
             onClick={() => { closeDrawer(); setFeedbackFormOpen(true) }}
             style={{ cursor: "pointer" }}>
