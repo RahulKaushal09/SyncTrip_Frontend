@@ -17,13 +17,26 @@ export default function NotificationBell() {
     }
   };
 
-  useEffect(() => {
-    fetchCount();
+  // useEffect(() => {
+  //   fetchCount();
 
-    // optional: refresh every 30 seconds
-    const interval = setInterval(fetchCount, 30000);
-    return () => clearInterval(interval);
-  }, []);
+  //   // optional: refresh every 30 seconds
+  //   const interval = setInterval(fetchCount, 30000);
+  //   return () => clearInterval(interval);
+  // }, []);
+  useEffect(() => {
+  fetchCount(); // run once
+
+  const onVisible = () => {
+    if (document.visibilityState === "visible") {
+      fetchCount(); // refresh only when user returns to tab
+    }
+  };
+
+  document.addEventListener("visibilitychange", onVisible);
+
+  return () => document.removeEventListener("visibilitychange", onVisible);
+}, []);
 
   return (
     <Link href="/notifications" className="relative cursor-pointer flex items-center">

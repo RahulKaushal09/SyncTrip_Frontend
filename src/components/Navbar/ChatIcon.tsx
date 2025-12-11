@@ -67,22 +67,31 @@ export default function ChatIcon({ className = "", currentUserId, onClickOpen }:
     }
   };
 
+  // useEffect(() => {
+  //   mountedRef.current = true;
+  //   // initial fetch
+  //   fetchUnread();
+
+  //   // poll every 20s for unread updates (adjust as needed) — optional
+  //   const interval = setInterval(() => {
+  //     fetchUnread();
+  //   }, 20000);
+
+  //   return () => {
+  //     mountedRef.current = false;
+  //     clearInterval(interval);
+  //   };
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [currentUserId]);
   useEffect(() => {
-    mountedRef.current = true;
-    // initial fetch
-    fetchUnread();
+  mountedRef.current = true;
 
-    // poll every 20s for unread updates (adjust as needed) — optional
-    const interval = setInterval(() => {
-      fetchUnread();
-    }, 20000);
+  fetchUnread(); // fetch once only
 
-    return () => {
-      mountedRef.current = false;
-      clearInterval(interval);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentUserId]);
+  return () => {
+    mountedRef.current = false;
+  };
+}, [currentUserId]);
 
   const openChats = () => {
     // optional callback (e.g., open drawer or custom navigation)
