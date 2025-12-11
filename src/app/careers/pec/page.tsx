@@ -13,7 +13,7 @@ import { triggerLogin } from './../../../utils/login.utils';
 // localStorage.setItem('user', JSON.stringify({ id: 'u123', name: 'Aman', email: 'a@b.com' }));
 // localStorage.setItem('profileCompleted', 'true');
 
-const FORM_LINK = "https://forms.gle/your-google-form-link"; // <-- replace with actual Google Form link
+const FORM_LINK = "https://docs.google.com/forms/d/e/1FAIpQLSeAtpZYCaI200vI_Ej0joqTGuLpcHu6yxxi5SvZf5FGt7OfqQ/viewform?usp=dialog"; // <-- replace with actual Google Form link
 
 function generateToken(length = 8) {
     const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
