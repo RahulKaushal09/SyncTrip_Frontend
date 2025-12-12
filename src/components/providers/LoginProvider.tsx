@@ -10,7 +10,7 @@ import { StorageUtils } from '../../utils';
 import { User } from '../../types';
 
 import { requestFcmToken, onForegroundNotification } from '../../utils/firebaseClient';
-import  apiClient  from '@/utils/apiClient';
+import apiClient from '@/utils/apiClient';
 
 interface LoginContextType {
     user: User | null;
@@ -43,21 +43,62 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
 
     useEffect(() => {
-         if (!user) {
-        const storedUser = StorageUtils.getUser();
-        if (storedUser) setUser(storedUser);
-         }
-     }, [user]);
+        if (!user) {
+            const storedUser = StorageUtils.getUser();
+            if (storedUser) setUser(storedUser);
+        }
+    }, [user]);
 
     const [showPhoneNumber, setShowPhoneNumber] = useState(false);
     const [showFullProfile, setShowFullProfile] = useState(false);
 
-    const openLogin = useCallback((callback?: (user: User, requiresPhone?: boolean) => void, options: LoginOptions = {}) => {
-        console.log("openLogin called with options:", options);
-        setOnLoginCallback(() => callback || (() => { }));
-        setLoginOptions(options);
-        setShowLogin(true);
-    }, []);
+    // const openLogin = useCallback((callback?: (user: User, requiresPhone?: boolean) => void, options: LoginOptions = {}) => {
+    //     console.log("openLogin called with options:", options);
+    //     setOnLoginCallback(() => callback || (() => { }));
+    //     setLoginOptions(options);
+    //     setShowLogin(true);
+    // }, []);
+    const openLogin = useCallback(
+        (callback?: (user: User, requiresPhone?: boolean) => void, options: LoginOptions = {}) => {
+            console.log("openLogin called with options:", options);
+
+            const existingUser = StorageUtils.getUser();
+
+            setOnLoginCallback(() => callback || (() => { }));
+            setLoginOptions(options);
+
+            // --- CASE 1: User already logged in ---
+            if (existingUser) {
+                setUser(existingUser);
+
+                // skipCompleteProfile -> force skip
+                if (options.skipCompleteProfile) {
+                    callback?.(existingUser, false);
+                    return;
+                }
+
+                // Stage 1: No phone
+                if (!existingUser.phone) {
+                    setShowPhoneNumber(true);
+                    return;
+                }
+
+                // Stage 2: Phone present but profile incomplete
+                if (!existingUser.profileCompleted) {
+                    setShowFullProfile(true);
+                    return;
+                }
+
+                // Stage 3: Everything complete
+                callback?.(existingUser, false);
+                return;
+            }
+
+            // --- CASE 2: User NOT logged in → Show login popup ---
+            setShowLogin(true);
+        },
+        []
+    );
 
     const closeLogin = useCallback(() => {
         setShowLogin(false);
@@ -69,7 +110,7 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
         window.location.reload();
     }, []);
 
-// -------------- FCM registration logic --------------
+    // -------------- FCM registration logic --------------
     // Register FCM token and save it to backend for the current user.
     const registerFcmTokenForUser = useCallback(async (u: User | null) => {
         if (typeof window === "undefined") return;
@@ -127,7 +168,7 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
         } else if (!(user as User).profileCompleted) {
             setShowFullProfile(true);
         }
-        else{
+        else {
 
             // User is fully logged in
             onLoginCallback(user, false);
@@ -136,7 +177,7 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
 
         // Always run the external callback
         // onLoginCallback(user, requiresPhone);
-    }, [onLoginCallback, loginOptions,registerFcmTokenForUser]);
+    }, [onLoginCallback, loginOptions, registerFcmTokenForUser]);
 
     // Register login popup globally
     useEffect(() => {
@@ -144,7 +185,7 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
     }, [openLogin]);
 
 
-const handleProfileComplete = useCallback((updatedUser: User) => {
+    const handleProfileComplete = useCallback((updatedUser: User) => {
         setUser(updatedUser);
         StorageUtils.setUser(updatedUser);
         setShowFullProfile(false);

@@ -237,7 +237,8 @@ export default function Page() {
                                         onClick={() => {
                                             // simulate marking profile complete in demo
                                             setShowModal(null);
-                                            handleApplyClick();
+                                            triggerLogin(handleApplyClick);
+                                            
                                         }}
                                         className="px-4 py-2 rounded-md bg-indigo-600 text-white"
                                     >
