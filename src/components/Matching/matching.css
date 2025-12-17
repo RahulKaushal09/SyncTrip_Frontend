@@ -141,7 +141,9 @@
   touch-action: none;
   -ms-touch-action: none;
 }
-
+.card * {
+  pointer-events: none;
+}
 .badge-previouslySkipped {
   position: absolute;
   top: 16px;
@@ -161,4 +163,94 @@
   align-items: center;
   gap: 12px;
   justify-content: center;
+}
+
+
+/* swipe changes */
+
+.swipe-guide-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.65);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+
+.swipe-guide-card {
+  background: white;
+  border-radius: 18px;
+  padding: 24px;
+  width: 90%;
+  max-width: 360px;
+  text-align: center;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+  animation: popIn 0.3s ease;
+}
+
+@keyframes popIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.swipe-guide-arrows {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.swipe-guide-arrows .arrow {
+  font-size: 36px;
+  font-weight: bold;
+  opacity: 0.7;
+}
+
+.swipe-guide-arrows .left {
+  animation: swipeLeft 1.2s infinite;
+}
+
+.swipe-guide-arrows .right {
+  animation: swipeRight 1.2s infinite;
+}
+
+@keyframes swipeLeft {
+  0% { transform: translateX(0); opacity: 0.3; }
+  50% { transform: translateX(-12px); opacity: 1; }
+  100% { transform: translateX(0); opacity: 0.3; }
+}
+
+@keyframes swipeRight {
+  0% { transform: translateX(0); opacity: 0.3; }
+  50% { transform: translateX(12px); opacity: 1; }
+  100% { transform: translateX(0); opacity: 0.3; }
+}
+
+.swipe-guide-card h3 {
+  margin: 8px 0;
+  font-size: 20px;
+}
+
+.swipe-guide-card p {
+  font-size: 14px;
+  color: #555;
+}
+
+.swipe-guide-card button {
+  margin-top: 16px;
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  background: var(--secondary-1);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
 }

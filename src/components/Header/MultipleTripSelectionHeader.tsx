@@ -73,7 +73,7 @@ export default function MultipleTripSelectionHeader({
   const router = useRouter();
   const pathName = usePathname();
   // get url 
-  const url = new URL(window.location.href);
+  // const url = new URL(window.location.href);
   const [showSheet, setShowSheet] = useState(false);
   const [filteredTrips, setFilteredTrips] = useState<UserTrip[]>([]);
   const [headerType, setHeaderType] = useState<'matching' | 'chat'>(pathName.includes('/chats') ? 'chat' : 'matching');

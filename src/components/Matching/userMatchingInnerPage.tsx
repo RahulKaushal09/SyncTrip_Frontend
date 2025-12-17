@@ -82,6 +82,8 @@ export default function MatchingPage() {
     const [isDragging, setIsDragging] = useState(false)
 
     // Refs for smoothness & bookkeeping
+    const [showSwipeGuide, setShowSwipeGuide] = useState(false)
+
     const startXRef = useRef<number | null>(null)
     const deltaRef = useRef(0) // current delta (px)
     const rafRef = useRef<number | null>(null)
@@ -125,6 +127,12 @@ export default function MatchingPage() {
     // FETCH CANDIDATES FROM BACKEND
     // -------------------------------------
     useEffect(() => {
+        const seen = localStorage.getItem("synctrip_swipe_guide_seen")
+        if (!seen) {
+            setShowSwipeGuide(true)
+        }
+    }, [])
+    useEffect(() => {
         let mounted = true;
         (async () => {
             await loadTrips();
@@ -152,6 +160,10 @@ export default function MatchingPage() {
             fetchTripDetails();
         }
     }, [tripId, allTrips]);
+    function closeSwipeGuide() {
+        localStorage.setItem("synctrip_swipe_guide_seen", "true")
+        setShowSwipeGuide(false)
+    }
     async function fetchCandidates() {
         try {
             let url = `/match/candidates?limit=10&locationId=${locationId}`
@@ -179,12 +191,12 @@ export default function MatchingPage() {
             let trips: UserTrip[] = await TripServices.fetchUserTrips();
             // show only those trip which have end date in future
             const now = new Date();
-            trips = trips.filter(trip => new Date(trip.endDate) > now);
-            if( trips.length === 0 ) {
-                router.back();
-                toast.error("Your trips have ended. Please create a new trip to use Matching feature.");
-                return;
-            }
+            // trips = trips.filter(trip => new Date(trip.endDate) > now);
+            // if( trips.length === 0 ) {
+            //     toast.error("Your trips have ended. Please create a new trip to use Matching feature.");
+            //     router.back();
+            //     return;
+            // }
             setAllTrips(trips);
         } catch (err) {
             console.error('Failed to fetch trips', err);
@@ -249,7 +261,9 @@ export default function MatchingPage() {
     // SWIPE HANDLING (pointer capture + RAF)
     // -------------------------------------
     function onPointerDown(e: React.PointerEvent<HTMLDivElement>) {
-        if (transitioning || swipeLockRef.current) return
+        if (transitioning) return
+        swipeLockRef.current = false
+        // if (transitioning || swipeLockRef.current) return
         try {
             (e.currentTarget as Element).setPointerCapture(e.pointerId)
             pointerIdRef.current = e.pointerId
@@ -289,6 +303,7 @@ export default function MatchingPage() {
     // }
     function advanceCardAfterAnimation() {
         setTimeout(() => {
+            stopRafLoop() // 🔥 IMPORTANT
             setTransitioning(false)
             setDx(0)
             setRotation(0)
@@ -368,23 +383,35 @@ export default function MatchingPage() {
             //     })
             try {
                 // await the result so we can decide what to do next
-                const data = await sendSwipe(current.id, direction)
+                // const data = await sendSwipe(current.id, direction).catch(console.error)
 
-                if (data?.match) {
-                    // show popup and DO NOT advance index.
-                    // Keep swipeLock true so user can't swipe again while popup is open
-                    setMatchPopupProfile(current)
-                    // keep the matched card state as-is; user will close popup manually
-                    // (if you want you can also move it to a "matched" stack, but not necessary)
-                    swipeLockRef.current = true
-                    setTransitioning(false)
-                    setDx(0)
-                    setRotation(0)
-                    return
-                } else {
-                    // not a match -> proceed to advance card
-                    advanceCardAfterAnimation()
-                }
+                // if (data?.match) {
+                //     // show popup and DO NOT advance index.
+                //     // Keep swipeLock true so user can't swipe again while popup is open
+                //     setMatchPopupProfile(current)
+                //     // keep the matched card state as-is; user will close popup manually
+                //     // (if you want you can also move it to a "matched" stack, but not necessary)
+                //     swipeLockRef.current = true
+                //     setTransitioning(false)
+                //     setDx(0)
+                //     setRotation(0)
+                //     return
+                // } else {
+                //     // not a match -> proceed to advance card
+                //     advanceCardAfterAnimation()
+                // }
+                advanceCardAfterAnimation()
+
+                // 🔹 send swipe in background
+                sendSwipe(current.id, direction)
+                    .then((data) => {
+                        if (data?.match) {
+                            setMatchPopupProfile(current)
+                            setMatchChatId(data.chatId)
+                            swipeLockRef.current = true // lock while popup open
+                        }
+                    })
+                    .catch(console.error)
             } catch (err) {
                 console.error('sendSwipe failed', err)
                 // attempt to recover by advancing card (or snap back). Here we advance.
@@ -492,6 +519,28 @@ export default function MatchingPage() {
                         fetchTripDetails();
                     }}
                 />
+                {/* GUIDELINES */}
+                {showSwipeGuide && (
+                    <div className="swipe-guide-overlay">
+                        <div className="swipe-guide-card">
+                            <div className="swipe-guide-arrows">
+                                <div className="arrow left">←</div>
+                                <div className="arrow right">→</div>
+                            </div>
+
+                            <h3>Swipe to connect</h3>
+
+                            <p>
+                                Swipe <strong>right</strong> to connect with a traveler<br />
+                                Swipe <strong>left</strong> to skip
+                            </p>
+
+                            <button onClick={closeSwipeGuide}>Got it</button>
+                        </div>
+                    </div>
+                )}
+
+
                 {/* <MultipleTripSelectionHeader tripName={tripName ? tripName : "SyncTrip Travel Match"} dates={dateString} setDates={setDateString} tripId={tripId as string} setSelectedTripId={setTripId} setSelectedTripName={setTripName} /> */}
                 {/* <div className="empty">No more travelers nearby.</div> */}
                 <div className="empty">
