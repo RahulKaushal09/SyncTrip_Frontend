@@ -78,7 +78,6 @@ export default function MultipleTripSelectionHeader({
   const [filteredTrips, setFilteredTrips] = useState<UserTrip[]>([]);
   const [headerType, setHeaderType] = useState<'matching' | 'chat'>(pathName.includes('/chats') ? 'chat' : 'matching');
   useEffect(() => {
-    debugger;
     // if(pathName.includes('/chats')){
     //   setFilteredTrips(allTrips);
     // }

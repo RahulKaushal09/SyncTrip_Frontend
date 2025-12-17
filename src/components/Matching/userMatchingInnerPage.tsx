@@ -20,6 +20,8 @@ export type Candidate = {
         languages?: string[]
         persona?: string[]
         bio?: string
+        rating?: number | string
+        sex?: string
     }
     tripSnapshot: {
         tripName: string
@@ -31,6 +33,7 @@ export type Candidate = {
     }
     locationId: string
     createdAt: string
+    locationName: string
 }
 export type cursorType = {
     createdAt: string
@@ -81,11 +84,17 @@ export default function MatchingPage() {
     const [transitioning, setTransitioning] = useState(false)
     const [isDragging, setIsDragging] = useState(false)
 
+    // Expansion states
+    const [isExpanded, setIsExpanded] = useState(false)
+    const [expandDy, setExpandDy] = useState(0)
+
     // Refs for smoothness & bookkeeping
     const [showSwipeGuide, setShowSwipeGuide] = useState(false)
 
     const startXRef = useRef<number | null>(null)
-    const deltaRef = useRef(0) // current delta (px)
+    const startYRef = useRef<number | null>(null)
+    const deltaRef = useRef(0) // current deltaX (px)
+    const deltaYRef = useRef(0) // current deltaY (px)
     const rafRef = useRef<number | null>(null)
     const pointerIdRef = useRef<number | null>(null)
     const swipeLockRef = useRef(false) // prevents double-swipes/inflight
@@ -100,6 +109,7 @@ export default function MatchingPage() {
     const [reviewMode, setReviewMode] = useState(false);
 
     const SWIPE_THRESHOLD = 100
+    const EXPAND_THRESHOLD = 120
     // const current = profiles[index]
     const current = index >= 0 && index < profiles.length ? profiles[index] : undefined
     async function loadPassedProfiles() {
@@ -113,6 +123,9 @@ export default function MatchingPage() {
                 setProfiles(data.candidates);
                 setIndex(0);
                 setReviewMode(true);
+                // Reset expansion on load
+                setIsExpanded(false);
+                setExpandDy(0);
             } else {
                 // no passes
                 setProfiles([]);
@@ -187,7 +200,6 @@ export default function MatchingPage() {
     }, [locationId]);
     async function loadTrips() {
         try {
-            debugger;
             let trips: UserTrip[] = await TripServices.fetchUserTrips();
             // show only those trip which have end date in future
             const now = new Date();
@@ -239,12 +251,23 @@ export default function MatchingPage() {
     function startRafLoop() {
         if (rafRef.current) return
         const loop = () => {
-            // read from ref
+            // read from refs
             const d = deltaRef.current
-            const rot = (d / window.innerWidth) * 18
-            // update React state only if changed (reduce updates)
-            setDx(prev => (prev === d ? prev : d))
-            setRotation(prev => (prev === rot ? prev : rot))
+            const dy_ = deltaYRef.current
+            const absD = Math.abs(d)
+            const absDy = Math.abs(dy_)
+            const rot = (absD / window.innerWidth) * 18 * (absD > absDy ? 1 : 0)
+            if (absD > absDy) {
+                // horizontal dominant
+                setDx(prev => (prev === d ? prev : d))
+                setRotation(prev => (prev === rot ? prev : rot))
+                setExpandDy(0)
+            } else {
+                // vertical dominant
+                setDx(0)
+                setRotation(0)
+                setExpandDy(dy_ < 0 ? dy_ : 0)
+            }
             rafRef.current = requestAnimationFrame(loop)
         }
         rafRef.current = requestAnimationFrame(loop)
@@ -261,9 +284,7 @@ export default function MatchingPage() {
     // SWIPE HANDLING (pointer capture + RAF)
     // -------------------------------------
     function onPointerDown(e: React.PointerEvent<HTMLDivElement>) {
-        if (transitioning) return
-        swipeLockRef.current = false
-        // if (transitioning || swipeLockRef.current) return
+        if (transitioning || swipeLockRef.current) return
         try {
             (e.currentTarget as Element).setPointerCapture(e.pointerId)
             pointerIdRef.current = e.pointerId
@@ -271,16 +292,19 @@ export default function MatchingPage() {
             // Some browsers / element combos may throw; ignore gracefully
         }
         startXRef.current = e.clientX
+        startYRef.current = e.clientY
         deltaRef.current = 0
+        deltaYRef.current = 0
         setIsDragging(true)
         setTransitioning(false)
         startRafLoop()
     }
 
     function onPointerMove(e: React.PointerEvent<HTMLDivElement>) {
-        if (!isDragging || startXRef.current === null) return
-        // update delta ref (don't set React state here)
+        if (!isDragging || startXRef.current === null || startYRef.current === null) return
+        // update delta refs (don't set React state here)
         deltaRef.current = e.clientX - startXRef.current
+        deltaYRef.current = e.clientY - startYRef.current
         // we let RAF loop push updates
     }
     // function advanceCardAfterAnimation() {
@@ -307,6 +331,8 @@ export default function MatchingPage() {
             setTransitioning(false)
             setDx(0)
             setRotation(0)
+            setIsExpanded(false)
+            setExpandDy(0)
             // advance index — allow it to become profiles.length (one past last)
             setIndex(prev => {
                 const next = prev + 1
@@ -334,10 +360,13 @@ export default function MatchingPage() {
         }
         pointerIdRef.current = null
 
-        const delta = deltaRef.current
-        // reset ref
+        const deltaX = deltaRef.current
+        const deltaY = deltaYRef.current
+        // reset refs
         deltaRef.current = 0
+        deltaYRef.current = 0
         startXRef.current = null
+        startYRef.current = null
 
         // if a swipe is already in-flight don't process another
         if (swipeLockRef.current) {
@@ -345,85 +374,63 @@ export default function MatchingPage() {
             setTransitioning(true)
             setDx(0)
             setRotation(0)
+            setExpandDy(0)
             setTimeout(() => setTransitioning(false), 200)
             return
         }
 
-        if (Math.abs(delta) > SWIPE_THRESHOLD && current) {
+        const absX = Math.abs(deltaX)
+        const absY = Math.abs(deltaY)
+        const isHorizontalSwipe = absX > SWIPE_THRESHOLD && absX >= absY
+        const isVerticalUp = !isExpanded && deltaY < -EXPAND_THRESHOLD && absY > absX
+        const isVerticalDown = isExpanded && deltaY > EXPAND_THRESHOLD && absY > absX
+
+        if (isHorizontalSwipe && current) {
             swipeLockRef.current = true // lock until animation + response handled
-            const direction = delta > 0 ? 'like' : 'pass'
+            const direction = deltaX > 0 ? 'like' : 'pass'
 
             // animate off-screen quickly
-            const offscreenX = delta > 0 ? window.innerWidth * 1.2 : -window.innerWidth * 1.2
+            const offscreenX = deltaX > 0 ? window.innerWidth * 1.2 : -window.innerWidth * 1.2
             setTransitioning(true)
             // set final transform immediately
             setDx(offscreenX)
             setRotation((offscreenX / window.innerWidth) * 18)
+            setExpandDy(0)
 
-            // send swipe to backend (don’t await to avoid blocking UI, but handle result)
-            // sendSwipe(current.id, direction)
-            //     .catch(err => {
-            //         console.error('sendSwipe failed', err)
-            //     })
-            //     .finally(() => {
-            //         // after server call (or even if it failed) advance card after animation
-            //         setTimeout(() => {
-            //             setTransitioning(false)
-            //             setDx(0)
-            //             setRotation(0)
-            //             setIndex(i => {
-            //                 const next = i + 1
-            //                 // ensure we never go past array length
-            //                 return Math.min(next, Math.max(profiles.length, next))
-            //             })
-            //             swipeLockRef.current = false
-            //             // prefetch if low
-            //             if (profiles.length - (index + 1) < 3) fetchCandidates()
-            //         }, 300)
-            //     })
-            try {
-                // await the result so we can decide what to do next
-                // const data = await sendSwipe(current.id, direction).catch(console.error)
+            advanceCardAfterAnimation()
 
-                // if (data?.match) {
-                //     // show popup and DO NOT advance index.
-                //     // Keep swipeLock true so user can't swipe again while popup is open
-                //     setMatchPopupProfile(current)
-                //     // keep the matched card state as-is; user will close popup manually
-                //     // (if you want you can also move it to a "matched" stack, but not necessary)
-                //     swipeLockRef.current = true
-                //     setTransitioning(false)
-                //     setDx(0)
-                //     setRotation(0)
-                //     return
-                // } else {
-                //     // not a match -> proceed to advance card
-                //     advanceCardAfterAnimation()
-                // }
-                advanceCardAfterAnimation()
-
-                // 🔹 send swipe in background
-                sendSwipe(current.id, direction)
-                    .then((data) => {
-                        if (data?.match) {
-                            setMatchPopupProfile(current)
-                            setMatchChatId(data.chatId)
-                            swipeLockRef.current = true // lock while popup open
-                        }
-                    })
-                    .catch(console.error)
-            } catch (err) {
-                console.error('sendSwipe failed', err)
-                // attempt to recover by advancing card (or snap back). Here we advance.
-                advanceCardAfterAnimation()
-            } finally {
-                // nothing here; advanceCardAfterAnimation / match branch handles unlock
-            }
+            // 🔹 send swipe in background
+            sendSwipe(current.id, direction)
+                .then((data) => {
+                    if (data?.match) {
+                        setMatchPopupProfile(current)
+                        setMatchChatId(data.chatId)
+                        swipeLockRef.current = true // lock while popup open
+                    }
+                })
+                .catch(console.error)
+        } else if (isVerticalUp && current) {
+            // expand
+            setIsExpanded(true)
+            setExpandDy(-EXPAND_THRESHOLD)
+            setTransitioning(true)
+            setTimeout(() => {
+                setTransitioning(false)
+            }, 280)
+        } else if (isVerticalDown && current) {
+            // collapse
+            setIsExpanded(false)
+            setExpandDy(0)
+            setTransitioning(true)
+            setTimeout(() => {
+                setTransitioning(false)
+            }, 280)
         } else {
             // not a big swipe → snap back
             setTransitioning(true)
             setDx(0)
             setRotation(0)
+            setExpandDy(0)
             setTimeout(() => setTransitioning(false), 200)
         }
     }
@@ -438,10 +445,13 @@ export default function MatchingPage() {
             } catch (err) { }
             pointerIdRef.current = null
             deltaRef.current = 0
+            deltaYRef.current = 0
             startXRef.current = null
+            startYRef.current = null
             setTransitioning(true)
             setDx(0)
             setRotation(0)
+            setExpandDy(0)
             setTimeout(() => setTransitioning(false), 200)
         }
     }
@@ -477,6 +487,8 @@ export default function MatchingPage() {
         setMatchChatId(null);
         // unlock swiping for next interactions and advance past matched card
         swipeLockRef.current = false;
+        setIsExpanded(false)
+        setExpandDy(0)
         // allow index to move one past last so UI shows "No more travelers"
         setIndex(prev => Math.min(prev + 1, profiles.length));
         // fetch more if needed
@@ -519,26 +531,7 @@ export default function MatchingPage() {
                         fetchTripDetails();
                     }}
                 />
-                {/* GUIDELINES */}
-                {showSwipeGuide && (
-                    <div className="swipe-guide-overlay">
-                        <div className="swipe-guide-card">
-                            <div className="swipe-guide-arrows">
-                                <div className="arrow left">←</div>
-                                <div className="arrow right">→</div>
-                            </div>
 
-                            <h3>Swipe to connect</h3>
-
-                            <p>
-                                Swipe <strong>right</strong> to connect with a traveler<br />
-                                Swipe <strong>left</strong> to skip
-                            </p>
-
-                            <button onClick={closeSwipeGuide}>Got it</button>
-                        </div>
-                    </div>
-                )}
 
 
                 {/* <MultipleTripSelectionHeader tripName={tripName ? tripName : "SyncTrip Travel Match"} dates={dateString} setDates={setDateString} tripId={tripId as string} setSelectedTripId={setTripId} setSelectedTripName={setTripName} /> */}
@@ -569,6 +562,7 @@ export default function MatchingPage() {
     // -------------------------------------
     // UI — SWIPE CARDS
     // -------------------------------------
+    const bottomRadius = (isExpanded || expandDy < -20) ? 0 : 18
     return (
         <main className="matchingpage">
             <MultipleTripSelectionHeader
@@ -584,6 +578,29 @@ export default function MatchingPage() {
                     fetchTripDetails();
                 }}
             />
+            {/* GUIDELINES */}
+            {showSwipeGuide && (
+                <div className="swipe-guide-overlay">
+                    <div className="swipe-guide-card">
+                        <div className="swipe-guide-arrows">
+                            <div className="arrow left">←</div>
+                            <div className="arrow up">↑</div>
+                            <div className="arrow right">→</div>
+                        </div>
+
+                        <h3>Swipe to connect</h3>
+
+                        <p>
+                            <strong>Swipe right</strong> to connect<br />
+                            <strong>Swipe left</strong> to skip<br />
+                            <strong>Swipe up</strong> to view full details
+                        </p>
+                        
+
+                        <button onClick={closeSwipeGuide}>Got it</button>
+                    </div>
+                </div>
+            )}
             {/* <MultipleTripSelectionHeader tripName={tripName} dates={dateString} setDates={setDateString} tripId={tripId as string} setSelectedTripId={setTripId} setSelectedTripName={setTripName} /> */}
 
             <section className="stage">
@@ -603,8 +620,9 @@ export default function MatchingPage() {
                         onPointerUp={onPointerUp}
                         onPointerCancel={onPointerCancel}
                         style={{
-                            transform: `translateX(${dx}px) rotate(${rotation}deg)`,
-                            transition: transitioning ? 'transform 0.28s ease' : isDragging ? 'none' : 'transform 0.18s ease',
+                            transform: `translate3d(${dx}px, ${expandDy}px, 0) rotate(${rotation}deg)`,
+                            borderRadius: `18px 18px ${bottomRadius}px ${bottomRadius}px`,
+                            transition: transitioning ? 'all 0.28s ease' : isDragging ? 'none' : 'all 0.18s ease',
                             touchAction: 'none' // ensure pointer capture works and prevents scrolling while swiping
                         }}
                         role="button"
@@ -628,6 +646,187 @@ export default function MatchingPage() {
                         {reviewMode && <div className="badge-previouslySkipped">Previously Skipped</div>}
 
                     </div>
+
+                    {/* DETAILS PANEL (revealed on swipe up) */}
+                    {/* DETAILS PANEL (revealed on swipe up) */}
+                    {(expandDy < 0 || isExpanded) && current && (
+                        <div
+                            className="card-details"
+                            style={{
+                                position: 'absolute',
+                                bottom: 0,
+                                left: 0,
+                                width: '100%',
+                                height: isExpanded ? '320px' : `${Math.max(0, -expandDy)}px`,
+                                backgroundColor: 'rgba(255, 255, 255, 0.96)',
+                                backdropFilter: 'blur(12px)',
+                                transition: transitioning ? 'height 0.28s ease-out' : 'none',
+                                overflow: 'hidden',
+                                zIndex: 1,
+                                borderRadius: '0 0 18px 18px', // optional: keep bottom rounded if you want
+                            }}
+                        >
+                            <div
+                                style={{
+                                    padding: '20px 20px 0',
+                                    height: '100%',
+                                    overflowY: 'auto',
+                                    paddingBottom: '20px',
+                                }}
+                            >
+                                {/* Close Button */}
+                                <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '16px' }}>
+                                    <button
+                                        onClick={() => {
+                                            setIsExpanded(false)
+                                            setExpandDy(0)
+                                            setTransitioning(true)
+                                            setTimeout(() => setTransitioning(false), 280)
+                                        }}
+                                        style={{
+                                            background: 'none',
+                                            border: 'none',
+                                            fontSize: '28px',
+                                            cursor: 'pointer',
+                                            color: '#444',
+                                            padding: '0',
+                                            width: '36px',
+                                            height: '36px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                        }}
+                                    >
+                                        ×
+                                    </button>
+                                </div>
+
+                                {/* Multiple Profile Pictures */}
+                                <div style={{ display: 'flex', gap: '10px', overflowX: 'auto', paddingBottom: '12px', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+                                    {current.userSnapshot.profile_picture
+                                        .filter((url: string) => url.includes('synctrip.in'))
+                                        .map((url: string, i: number) => (
+                                            <img
+                                                key={i}
+                                                src={url}
+                                                alt={`${current.userSnapshot.name}'s photo ${i + 1}`}
+                                                style={{
+                                                    width: '100px',
+                                                    height: '100px',
+                                                    borderRadius: '12px',
+                                                    objectFit: 'cover',
+                                                    flexShrink: 0,
+                                                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                                                }}
+                                            />
+                                        ))}
+                                    {current.userSnapshot.profile_picture.filter((url: string) => url.includes('synctrip.in')).length === 0 && (
+                                        <img
+                                            src={current.userSnapshot.profile_picture[0]}
+                                            alt={current.userSnapshot.name}
+                                            style={{
+                                                width: '100px',
+                                                height: '100px',
+                                                borderRadius: '12px',
+                                                objectFit: 'cover',
+                                                flexShrink: 0,
+                                            }}
+                                        />
+                                    )}
+                                </div>
+
+                                {/* User Info Section */}
+                                <div style={{ marginTop: '20px' }}>
+                                    <h3 style={{ fontSize: '18px', marginBottom: '12px', color: '#222' }}>
+                                        About {current.userSnapshot.name}
+                                    </h3>
+
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '15px', color: '#444' }}>
+                                        <div><strong>Age:</strong> {current.userSnapshot.age}  {current.userSnapshot.sex && <>• <strong>Sex:</strong> {current.userSnapshot.sex}</>}</div>
+                                        {current.userSnapshot.rating && (
+                                            <div><strong>Rating:</strong> ⭐ {current.userSnapshot.rating}/5</div>
+                                        )}
+                                        {current.userSnapshot.languages && current.userSnapshot.languages.length > 0 && (
+                                            <div><strong>Languages:</strong> {current.userSnapshot.languages.join(', ')}</div>
+                                        )}
+                                    </div>
+
+                                    {current.userSnapshot.persona && current.userSnapshot.persona.length > 0 && (
+                                        <div style={{ marginTop: '16px' }}>
+                                            <strong style={{ fontSize: '15px', color: '#333' }}>Travel Style</strong>
+                                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '8px' }}>
+                                                {current.userSnapshot.persona.map((trait: string, i: number) => (
+                                                    <span
+                                                        key={i}
+                                                        style={{
+                                                            background: '#f0f0f0',
+                                                            padding: '6px 12px',
+                                                            borderRadius: '20px',
+                                                            fontSize: '13px',
+                                                            color: '#333',
+                                                        }}
+                                                    >
+                                                        {trait}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {current.userSnapshot.bio && (
+                                        <div style={{ marginTop: '16px' }}>
+                                            <strong style={{ fontSize: '15px', color: '#333' }}>Bio</strong>
+                                            <p style={{ marginTop: '6px', lineHeight: '1.5', color: '#555' }}>
+                                                {current.userSnapshot.bio}
+                                            </p>
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Trip Details Section */}
+                                <div style={{ marginTop: '24px', paddingTop: '20px', borderTop: '1px solid #eee' }}>
+                                    <h3 style={{ fontSize: '18px', marginBottom: '12px', color: '#222' }}>
+                                        Trip to {current.tripSnapshot.tripName || current.locationName}
+                                    </h3>
+
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '15px', color: '#444' }}>
+                                        <div>
+                                            <strong>Dates:</strong>{' '}
+                                            {CommonServices.formatDateShortHeaderTripSelection(
+                                                current.tripSnapshot.startDate,
+                                                current.tripSnapshot.endDate
+                                            )}
+                                        </div>
+                                        {current.tripSnapshot.budget && (
+                                            <div><strong>Budget:</strong> {current.tripSnapshot.budget}</div>
+                                        )}
+                                        <div><strong>Privacy:</strong> {current.tripSnapshot.privacy === 'public trip' ? 'Public' : 'Invite Only'}</div>
+                                        {current.tripSnapshot.interests?.length > 0 && (
+                                            <div style={{ marginTop: '12px' }}>
+                                                <strong>Interests:</strong>
+                                                <div style={{ marginTop: '6px', display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                                                    {current.tripSnapshot.interests.map((interest: string, i: number) => (
+                                                        <span
+                                                            key={i}
+                                                            style={{
+                                                                background: '#e6f7ff',
+                                                                color: '#0066cc',
+                                                                padding: '4px 10px',
+                                                                borderRadius: '16px',
+                                                                fontSize: '13px',
+                                                            }}
+                                                        >
+                                                            {interest}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
 
                 </div>
             </section>
