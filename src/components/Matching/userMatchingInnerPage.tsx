@@ -203,12 +203,12 @@ export default function MatchingPage() {
             let trips: UserTrip[] = await TripServices.fetchUserTrips();
             // show only those trip which have end date in future
             const now = new Date();
-            // trips = trips.filter(trip => new Date(trip.endDate) > now);
-            // if( trips.length === 0 ) {
-            //     toast.error("Your trips have ended. Please create a new trip to use Matching feature.");
-            //     router.back();
-            //     return;
-            // }
+            trips = trips.filter(trip => new Date(trip.endDate) > now);
+            if( trips.length === 0 ) {
+                toast.error("Your trips have ended. Please create a new trip to match with others.");
+                router.replace('/');
+                return;
+            }
             setAllTrips(trips);
         } catch (err) {
             console.error('Failed to fetch trips', err);
