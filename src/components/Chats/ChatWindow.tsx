@@ -5,6 +5,7 @@ import { io, Socket } from "socket.io-client";
 import ChatApiService from "@/utils/chats.api.utils";
 import { Message } from "@/types";
 import { StorageUtils } from "@/utils";
+import { getSocket } from "@/utils/socket";
 
 import "../../../styles/chats/chats.css";
 
@@ -23,7 +24,7 @@ export default function ChatWindow({ chatId, currentUserId }: Props) {
   const composerRef = useRef<HTMLDivElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
-  const socketRef = useRef<Socket | null>(null);
+  // const socketRef = useRef<Socket | null>(null);
   const typingTimeoutRef = useRef<number | null>(null);
   const stopTypingTimerRef = useRef<number | null>(null);
   const lastMessageIds = useRef<Set<string>>(new Set());
@@ -33,106 +34,64 @@ export default function ChatWindow({ chatId, currentUserId }: Props) {
 
   /* ------------------ Socket: connect once ------------------ */
   useEffect(() => {
-    // only run on client
-    if (typeof window === "undefined") return;
+  const socket = getSocket();
 
-    const token = StorageUtils.getToken();
-    const socket = io(process.env.NEXT_PUBLIC_BACKEND_BASE_URL || "/", {
-      auth: { token },
-      autoConnect: true,
-      transports: ["websocket"],
-    });
+  const onReceiveMessage = (message: Message) => {
+    if (!message?.id) return;
+    if (message.chat !== chatId) return;
 
-    socketRef.current = socket;
+    if (lastMessageIds.current.has(message.id)) return;
+    lastMessageIds.current.add(message.id);
 
-    // on connect: if chatId already present, join it (avoids join-before-connect race)
-    socket.on("connect", () => {
-      console.log("socket connected", socket.id);
-      if (chatId) {
-        socket.emit("join_chat", chatId);
-      }
-    });
+    setMessages((prev) => [...prev, message]);
+    setTimeout(scrollToBottom, 40);
+  };
 
-    socket.on("connect_error", (err: unknown) => {
-      console.error("socket connect_error", err);
-    });
+  const onTyping = ({ chatId: cId, userId }) => {
+    if (cId === chatId && userId !== currentUserId) {
+      setRemoteTyping({ userId });
+    }
+  };
 
-    // receive messages broadcast from server
-    socket.on("receive_message", (message: Message) => {
-      try {
-        if (!message || !message.id) return;
-        // if message belongs to another chat (just in case), ignore
-        // server normally emits only to the room, but sanity check:
-        if ((message as Message).chat && chatId && (message as Message).chat !== chatId) return;
+  const onStopTyping = ({ chatId: cId }) => {
+    if (cId === chatId) setRemoteTyping(null);
+  };
 
-        if (lastMessageIds.current.has(message.id)) return;
-        lastMessageIds.current.add(message.id);
+  socket.on("receive_message", onReceiveMessage);
+  socket.on("typing", onTyping);
+  socket.on("stop_typing", onStopTyping);
 
-        setMessages((prev) => [...prev, message]);
-        setTimeout(scrollToBottom, 40);
-      } catch (e) {
-        console.error("receive_message handler error", e);
-      }
-    });
+  return () => {
+    socket.off("receive_message", onReceiveMessage);
+    socket.off("typing", onTyping);
+    socket.off("stop_typing", onStopTyping);
+  };
+}, [chatId, currentUserId]);
 
-    // typing indicators from other users
-    socket.on("typing", ({ chatId: cId, userId }: { chatId: string; userId: string }) => {
-      if (cId === chatId && userId !== currentUserId) {
-        setRemoteTyping({ userId });
-      }
-    });
-
-    socket.on("stop_typing", ({ chatId: cId, userId }: { chatId: string; userId: string }) => {
-      if (cId === chatId && userId !== currentUserId) {
-        setRemoteTyping(null);
-      }
-    });
-
-    return () => {
-      socket.disconnect();
-      socketRef.current = null;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // run once
 
   /* ------------------ Join/leave chat when chatId changes ------------------ */
   useEffect(() => {
-    const socket = socketRef.current;
+  const socket = getSocket();
 
-    // reset dedupe BEFORE we load messages to avoid mixing old/new
-    lastMessageIds.current = new Set();
+  lastMessageIds.current = new Set();
 
-    // leave previous handled by server when socket emits leave
-    // if socket already connected -> join now
-    if (socket) {
-      // leave all rooms first (optional, safe)
-      // join new chat
-      if (chatId) {
-        socket.emit("join_chat", chatId);
-      }
-    }
+  if (chatId) {
+    socket.emit("join_chat", chatId);
+    loadMessages();
 
-    // load messages for this chat AFTER resetting dedupe
-    if (chatId) {
-      loadMessages();
-    } else {
-      // no chat selected -> clear UI
-      setMessages([]);
-    }
+    // 🔥 mark messages read
+    // socket.emit("mark_read", { chatId });
+  }
 
-    return () => {
-      if (socket && chatId) {
-        socket.emit("leave_chat", chatId);
-      }
-      // clear typing state when switching/closing
-      setRemoteTyping(null);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chatId]);
+  return () => {
+    if (chatId) socket.emit("leave_chat", chatId);
+    setRemoteTyping(null);
+  };
+}, [chatId]);
 
   /* ------------------ Typing emitter (debounced stop) ------------------ */
   const emitTyping = () => {
-    const socket = socketRef.current;
+    const socket = getSocket();
     if (!socket || !chatId) return;
 
     socket.emit("typing", chatId);
@@ -150,6 +109,7 @@ export default function ChatWindow({ chatId, currentUserId }: Props) {
     setLoading(true);
     try {
       const msgs = await ChatApiService.fetchMessages(chatId);
+      getSocket().emit("mark_read", { chatId });
       const arr = Array.isArray(msgs) ? msgs : [];
       setMessages(arr);
 
@@ -207,19 +167,16 @@ export default function ChatWindow({ chatId, currentUserId }: Props) {
   //   }
   // };
   const handleSend = () => {
-    if (!input.trim() || !chatId) return;
+  if (!input.trim() || !chatId) return;
 
-    const socket = socketRef.current;
-    if (!socket) return;
+  getSocket().emit("send_message", {
+    chatId,
+    content: input.trim(),
+  });
 
-    socket.emit("send_message", {
-      chatId,
-      content: input.trim(),
-    });
-
-    setInput("");
-    textareaRef.current!.style.height = "auto";
-  };
+  setInput("");
+  textareaRef.current!.style.height = "auto";
+};
 
   /* ------------------ Scroll helpers ------------------ */
   const scrollToBottom = () => {
