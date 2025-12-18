@@ -26,7 +26,7 @@ export default function ChatList({ chats = [], selectedChatId, currentUserId, on
             <img src={(other as ChatUser)?.profile_picture?.[0] || "/user-placeholder.png"} className="w-12 h-12 rounded-full object-cover" />
             <div className="flex-1">
               <div className="font-semibold">{(other as ChatUser)?.name || c.chatName || "Group"}</div>
-              <div className="text-sm text-gray-500 truncate">{c.latestMessage?.content ?? c.chatName ?? ""}</div>
+              <div className={`text-sm text-gray-500 truncate ${isUnread ? "font-bold" : ""}`}>{c.latestMessage?.content ?? c.chatName ?? ""}</div>
             </div>
             {c.updatedAt && <div className="text-xs text-gray-400">{new Date(c.updatedAt).toLocaleTimeString()}</div>}
           </div>
