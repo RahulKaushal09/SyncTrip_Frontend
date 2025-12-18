@@ -7,6 +7,7 @@ import { Message } from "@/types";
 import { StorageUtils } from "@/utils";
 
 import "../../../styles/chats/chats.css";
+import { debug } from "console";
 
 type Props = {
   chatId: string;

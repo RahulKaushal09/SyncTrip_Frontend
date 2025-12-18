@@ -99,7 +99,10 @@ const NavbarClient = ({ }) => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-
+  const isActive = (route: string) => {
+    if (route === "/") return pathname === "/";
+    return pathname.startsWith(route);
+  };
   // useEffect(() => {
   //   const fetchUser = async () => {
   //     try {
@@ -155,23 +158,56 @@ const NavbarClient = ({ }) => {
         <div className="collapse navbar-collapse justify-content-end" id="navbarNav" >
           <ul className="navbar-nav" style={{ alignItems: "center", gap: "20px" }}>
             <li className="nav-item"
-              onClick={() => redirectBtnClick(ROUTES.EXPLORE)}
-              style={{ cursor: "pointer" }}>
+              onClick={() => {
+                if (!isActive(ROUTES.EXPLORE)) {
+                  redirectBtnClick(ROUTES.EXPLORE);
+                }
+              }}
+              style={{
+                cursor: isActive(ROUTES.EXPLORE) ? "default" : "pointer",
+                pointerEvents: isActive(ROUTES.EXPLORE) ? "none" : "auto",
+                borderBottom: isActive(ROUTES.EXPLORE) ? "2px solid var(--secondary-1)" : "",
+              }}
+            // onClick={() => redirectBtnClick(ROUTES.EXPLORE)}
+            // style={{ cursor: "pointer" }}
+            >
               <span className="nav-link">
                 Explore
               </span>
             </li>
             <li className="nav-item"
-              onClick={() => redirectBtnClick(ROUTES.BLOGS)}
-              style={{ cursor: "pointer" }}>
+              onClick={() => {
+                if (!isActive(ROUTES.BLOGS)) {
+                  redirectBtnClick(ROUTES.BLOGS);
+                }
+              }}
+              style={{
+                cursor: isActive(ROUTES.BLOGS) ? "default" : "pointer",
+                pointerEvents: isActive(ROUTES.BLOGS) ? "none" : "auto",
+                borderBottom: isActive(ROUTES.BLOGS) ? "2px solid var(--secondary-1)" : "",
+              } as React.CSSProperties}
+            // onClick={() => redirectBtnClick(ROUTES.BLOGS)}
+            // style={{ cursor: "pointer" }}
+            >
               <span className="nav-link">
                 Blogs
               </span>
             </li>
 
             {isLoggedIn && <li className="nav-item"
-              onClick={() => redirectBtnClick(ROUTES.USER_TRIPS)}
-              style={{ cursor: "pointer" }}>
+              onClick={() => {
+                if (!isActive(ROUTES.USER_TRIPS)) {
+                  redirectBtnClick(ROUTES.USER_TRIPS);
+                }
+              }}
+              style={{
+                cursor: isActive(ROUTES.USER_TRIPS) ? "default" : "pointer",
+                pointerEvents: isActive(ROUTES.USER_TRIPS) ? "none" : "auto",
+                borderBottom: isActive(ROUTES.USER_TRIPS) ? "2px solid var(--secondary-1)" : "",
+              }}
+            // onClick={() => redirectBtnClick(ROUTES.USER_TRIPS)}
+            // style={{ cursor: "pointer" }}
+            >
               <span className="nav-link">
                 My Trips
               </span>
@@ -331,25 +367,80 @@ const NavbarClient = ({ }) => {
           </div>
         </div>
         <ul className="navbar-nav" style={{ alignItems: "flex-start", padding: "1rem" }}>
-          <li className="nav-item" onClick={() => { redirectBtnClick(ROUTES.EXPLORE); closeDrawer(); }}>
+          <li className="nav-item"
+            onClick={() => {
+              if (!isActive(ROUTES.EXPLORE)) {
+                redirectBtnClick(ROUTES.EXPLORE);
+                closeDrawer();
+
+              }
+            }}
+            style={{
+              cursor: isActive(ROUTES.EXPLORE) ? "default" : "pointer",
+              pointerEvents: isActive(ROUTES.EXPLORE) ? "none" : "auto",
+              borderBottom: isActive(ROUTES.EXPLORE) ? "2px solid var(--secondary-1)" : "",
+            }}
+          // onClick={() => { redirectBtnClick(ROUTES.EXPLORE); closeDrawer(); }}
+          >
             <span className="nav-link">Explore</span>
           </li>
-          <li className="nav-item" onClick={() => { redirectBtnClick(ROUTES.BLOGS); closeDrawer(); }}>
+          <li className="nav-item"
+            onClick={() => {
+              if (!isActive(ROUTES.BLOGS)) {
+                redirectBtnClick(ROUTES.BLOGS);
+                closeDrawer();
+              }
+            }}
+            style={{
+              cursor: isActive(ROUTES.BLOGS) ? "default" : "pointer",
+              pointerEvents: isActive(ROUTES.BLOGS) ? "none" : "auto",
+              borderBottom: isActive(ROUTES.BLOGS) ? "2px solid var(--secondary-1)" : "",
+            }}
+          //  onClick={() => { redirectBtnClick(ROUTES.BLOGS); closeDrawer();
+
+          //   }}
+          >
             <span className="nav-link">Blogs</span>
           </li>
-          {isLoggedIn && <li className="nav-item" onClick={() => { redirectBtnClick(ROUTES.USER_TRIPS); closeDrawer(); }}>
+          {isLoggedIn && <li className="nav-item"
+            onClick={() => {
+              if (!isActive(ROUTES.USER_TRIPS)) {
+                redirectBtnClick(ROUTES.USER_TRIPS);
+                closeDrawer();
+              }
+            }}
+            style={{
+              cursor: isActive(ROUTES.USER_TRIPS) ? "default" : "pointer",
+              pointerEvents: isActive(ROUTES.USER_TRIPS) ? "none" : "auto",
+              borderBottom: isActive(ROUTES.USER_TRIPS) ? "2px solid var(--secondary-1)" : "",
+            }}
+          //  onClick={() => { redirectBtnClick(ROUTES.USER_TRIPS); closeDrawer(); }}
+          >
             <span className="nav-link">My Trips</span>
           </li>}
           {pageType == PageTypeEnum.TRIP && (
-            <li className="nav-item" onClick={() => { openLogin(() => { redirectBtnClick(ROUTES.CREATE_TRIP) }); }}>
+            <li className="nav-item"
+              onClick={() => {
+                if (!isActive(ROUTES.CREATE_TRIP)) {
+                  redirectBtnClick(ROUTES.CREATE_TRIP);
+                  closeDrawer();
+                }
+              }}
+              style={{
+                cursor: isActive(ROUTES.CREATE_TRIP) ? "default" : "pointer",
+                pointerEvents: isActive(ROUTES.CREATE_TRIP) ? "none" : "auto",
+                borderBottom: isActive(ROUTES.CREATE_TRIP) ? "2px solid var(--secondary-1)" : "",
+              }}
+            //  onClick={() => { openLogin(() => { redirectBtnClick(ROUTES.CREATE_TRIP) }); }}
+            >
               <span className="nav-link">Create Trip</span>
             </li>
-          ) 
-          // : (
-          //   <li className="nav-item" onClick={() => { redirectBtnClick(ROUTES.TRIPS); closeDrawer(); }}>
-          //     <span className="nav-link">Group Trips</span>
-          //   </li>
-          // )
+          )
+            // : (
+            //   <li className="nav-item" onClick={() => { redirectBtnClick(ROUTES.TRIPS); closeDrawer(); }}>
+            //     <span className="nav-link">Group Trips</span>
+            //   </li>
+            // )
           }
           <li className="nav-item"
             onClick={() => { closeDrawer(); setFeedbackFormOpen(true) }}
