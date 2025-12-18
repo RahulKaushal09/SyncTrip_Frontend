@@ -14,8 +14,6 @@ import { Chat, UserTrip } from "@/types";
 import { CommonServices } from "@/utils";
 import toast from "react-hot-toast";
 import { useLoader } from "@/components/providers/LoaderContext";
-import { getSocket } from "@/utils/socket";
-
 
 /**
  * ChatsPage
@@ -54,7 +52,7 @@ export default function ChatsPageInner() {
     const [unreadByTrip, setUnreadByTrip] = useState<Record<string, number>>({});
 
     const { user } = useLogin();
-    const { showLoader, hideLoader } = useLoader();
+    const {showLoader,hideLoader} = useLoader();
 
     useEffect(() => {
         mountedRef.current = true;
@@ -91,7 +89,7 @@ export default function ChatsPageInner() {
             setUnreadByTrip({});
         }
     };
-
+    
     /* ------------- Load trips and auto-pick first upcoming -------------- */
     const loadAllTrips = async () => {
         try {
@@ -105,7 +103,7 @@ export default function ChatsPageInner() {
                 return [];
             }
 
-            if (usable.length == 0) {
+            if(usable.length == 0 ) {
                 toast.error("No trips found. Please create a trip first.");
                 router.replace("/");
                 return [];
@@ -116,7 +114,7 @@ export default function ChatsPageInner() {
             console.error("getAllTrips error:", err);
             return [];
         }
-        finally {
+        finally{
             hideLoader();
         }
     };
@@ -234,27 +232,25 @@ export default function ChatsPageInner() {
             resolvingChatRef.current = false;
         }
     };
-    // useEffect(() => {
-    //     let cancelled = false;
+    useEffect(() => {
+  let cancelled = false;
 
-    //     const run = async () => {
-    //         await fetchUnreadByTrip();
-    //     };
-    //     run();
+  const run = async () => {
+    await fetchUnreadByTrip();
+  };
+  run();
 
-    //     const interval = setInterval(() => {
-    //         if (!cancelled) fetchUnreadByTrip();
-    //     }, 20000); // same 20s cadence
+  const interval = setInterval(() => {
+    if (!cancelled) fetchUnreadByTrip();
+  }, 20000); // same 20s cadence
 
-    //     return () => {
-    //         cancelled = true;
-    //         clearInterval(interval);
-    //     };
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, []);
-useEffect(() => {
-  fetchUnreadByTrip();
+  return () => {
+    cancelled = true;
+    clearInterval(interval);
+  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
 }, []);
+
     useEffect(() => {
         if (!chatId) return;
         setActiveChat((prev) => {
@@ -336,43 +332,6 @@ useEffect(() => {
         setActiveChat(null);
     };
 
-    useEffect(() => {
-        const socket = getSocket();
-
-        socket.on("chat_list_update", ({ chatId, latestMessage }) => {
-  setChats((prev) => {
-    const idx = prev.findIndex((c) => c.id === chatId);
-
-    if (idx === -1) {
-      // chat not in list yet → refetch once
-      loadChatsForTrip(tripId);
-      return prev;
-    }
-
-    const updated = [...prev];
-    updated[idx] = {
-      ...updated[idx],
-      latestMessage,
-      updatedAt: new Date().toISOString(),
-    };
-
-    // move chat to top
-    return [
-      updated[idx],
-      ...updated.filter((_, i) => i !== idx),
-    ];
-  });
-});
-
-        socket.on("unread_update", () => {
-            fetchUnreadByTrip();
-        });
-
-        return () => {
-            socket.off("chat_list_update");
-            socket.off("unread_update");
-        };
-    }, []);
     /* ------------- INITIALIZATION logic: runs once when page loads -------------- */
     useEffect(() => {
         // Ensure we run initialization only once on the client
