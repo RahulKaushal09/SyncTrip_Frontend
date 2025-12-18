@@ -171,40 +171,54 @@ export default function ChatWindow({ chatId, currentUserId }: Props) {
   };
 
   /* ------------------ Send message (REST) + dedupe update ------------------ */
-  const handleSend = async () => {
+  // const handleSend = async () => {
+  //   if (!input.trim() || !chatId) return;
+
+  //   const content = input.trim();
+  //   try {
+  //     // Option A (recommended): use REST endpoint (server will persist and emit via req.io)
+  //     const saved: Message = await ChatApiService.sendMessage({ chatId, content });
+
+  //     // add saved.id to dedupe set immediately so socket broadcast doesn't duplicate
+  //     // if (saved && saved.id) lastMessageIds.current.add(saved.id);
+  //     if (saved && saved.id) {
+  //     if (!lastMessageIds.current.has(saved.id)) {
+  //       lastMessageIds.current.add(saved.id);
+  //       setMessages((s) => [...s, saved]);
+  //     } else {
+  //       // socket already handled it — nothing to do (optional: update existing pending state)
+  //       // console.debug("message already received via socket, skipping append", saved.id);
+  //     }
+  //   }
+
+  //     // append saved message to UI
+  //     // setMessages((s) => [...s, saved]);
+
+  //     // clear composer
+  //     setInput("");
+  //     if (textareaRef.current) {
+  //       textareaRef.current.style.height = "auto";
+  //     }
+
+  //     setTimeout(() => scrollToBottom(), 40);
+  //   } catch (err) {
+  //     console.error("send failed", err);
+  //     // you could show a toast here
+  //   }
+  // };
+  const handleSend = () => {
     if (!input.trim() || !chatId) return;
 
-    const content = input.trim();
-    try {
-      // Option A (recommended): use REST endpoint (server will persist and emit via req.io)
-      const saved: Message = await ChatApiService.sendMessage({ chatId, content });
+    const socket = socketRef.current;
+    if (!socket) return;
 
-      // add saved.id to dedupe set immediately so socket broadcast doesn't duplicate
-      // if (saved && saved.id) lastMessageIds.current.add(saved.id);
-      if (saved && saved.id) {
-      if (!lastMessageIds.current.has(saved.id)) {
-        lastMessageIds.current.add(saved.id);
-        setMessages((s) => [...s, saved]);
-      } else {
-        // socket already handled it — nothing to do (optional: update existing pending state)
-        // console.debug("message already received via socket, skipping append", saved.id);
-      }
-    }
+    socket.emit("send_message", {
+      chatId,
+      content: input.trim(),
+    });
 
-      // append saved message to UI
-      // setMessages((s) => [...s, saved]);
-
-      // clear composer
-      setInput("");
-      if (textareaRef.current) {
-        textareaRef.current.style.height = "auto";
-      }
-
-      setTimeout(() => scrollToBottom(), 40);
-    } catch (err) {
-      console.error("send failed", err);
-      // you could show a toast here
-    }
+    setInput("");
+    textareaRef.current!.style.height = "auto";
   };
 
   /* ------------------ Scroll helpers ------------------ */
@@ -266,7 +280,7 @@ export default function ChatWindow({ chatId, currentUserId }: Props) {
         <div className="flex flex-col gap-3">
           {messages.map((m) => {
             const mine =
-              m.sender === currentUserId ;
+              m.sender === currentUserId;
             const bubbleCls = mine ? "myMessage" : "otherPersonMessage";
             const containerCls = mine ? "flex justify-end" : "flex justify-start";
             const maxW = "max-w-[80%] md:max-w-[60%] lg:max-w-[50%]";
@@ -314,7 +328,7 @@ export default function ChatWindow({ chatId, currentUserId }: Props) {
             rows={1}
             placeholder="Type a message"
             className="w-full resize-none overflow-auto text-sm leading-5 rounded-lg border px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-400"
-            style={{ maxHeight: 160,height:50, }}
+            style={{ maxHeight: 160, height: 50, }}
             onKeyDown={(e) => {
               if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();

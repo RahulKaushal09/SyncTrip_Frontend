@@ -161,6 +161,7 @@ export interface LatestMessage {
   id: string;
   content: string;
   sender: LatestMessageSender;
+  readBy?: string[];
   createdAt: string;
   updatedAt: string;
 }

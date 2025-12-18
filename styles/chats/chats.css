@@ -25,3 +25,7 @@
 .otherTimeInfoText{
     color: var(--neutral-3);
 }
+
+.unreadChatRow{
+    background-color: var(--primary-4);
+}
