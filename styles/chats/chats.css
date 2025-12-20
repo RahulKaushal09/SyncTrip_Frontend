@@ -29,3 +29,7 @@
 .unreadChatRow{
     background-color: var(--primary-4);
 }
+
+.textBoxForChat{
+    height: 100% !important;
+}

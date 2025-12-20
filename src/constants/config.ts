@@ -4,12 +4,13 @@
 
 export const API_CONFIG = {
     DOMAIN_BASE_URL: process.env.NEXT_PUBLIC_DOMAIN_BASE_URL || 'http://localhost:3000',
+    SOCKET_URL: process.env.NEXT_PUBLIC_DOMAIN_BASE_URL || 'http://localhost:5001',
     BACKEND_BASE_URL: process.env.NEXT_PUBLIC_BACKEND_BASE_URL || 'http://localhost:3001',
     ICON_BASE_URL: (process.env.NODE_ENV == "development" ? "http://localhost:3000" : process.env.NEXT_PUBLIC_BACKEND_BASE_URL) + '/icons',
     TIMEOUT: 10000,
     RETRY_ATTEMPTS: 3,
 } as const;
-
+    
 export const GOOGLE_CONFIG = {
     CLIENT_ID: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || '',
 } as const;

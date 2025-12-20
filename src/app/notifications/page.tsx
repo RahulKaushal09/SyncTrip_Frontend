@@ -33,7 +33,7 @@ export default function NotificationsPage() {
         <h1 className="text-xl font-semibold">Notifications</h1>
 
         <button
-          className="text-blue-500 underline"
+          className="secondary-1 underline"
           onClick={markAllRead}
         >
           Mark all read

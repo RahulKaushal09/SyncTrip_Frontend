@@ -19,6 +19,7 @@ import { set } from "lodash";
 import FeedbackModal from "../common/FeedbackModal";
 import NotificationBell from "./NotificationBell";
 import ChatIcon from "./ChatIcon";
+import path from "path";
 
 const NavbarClient = ({ }) => {
   const [LoadingUser, setLoadingUser] = useState(true);
@@ -100,6 +101,21 @@ const NavbarClient = ({ }) => {
   }, []);
 
   const isActive = (route: string) => {
+    if(route === ROUTES.BLOGS){
+      if(pathname.includes(ROUTES.BLOGS+"/")) return false;
+      else if(pathname===ROUTES.BLOGS) return true;
+      return false;
+    }
+    if(route === ROUTES.EXPLORE){
+      if(pathname.includes(ROUTES.EXPLORE+"/")) return false;
+      else if(pathname===ROUTES.EXPLORE) return true;
+      return false;
+    }
+     if(route === ROUTES.USER_TRIPS){
+      if(pathname.includes(ROUTES.USER_TRIPS+"/")) return false;
+      else if(pathname===ROUTES.USER_TRIPS) return true;
+      return false;
+    }
     if (route === "/") return pathname === "/";
     return pathname.startsWith(route);
   };

@@ -1,5 +1,4 @@
-.blog-page {
-}
+.blog-page {}
 
 .blog-section {
     padding-top: 40px;
@@ -46,6 +45,17 @@
     .blog-grid {
         grid-template-columns: repeat(3, 1fr);
     }
+}
+
+@media (max-width:768px) {
+    .blog-container {
+        padding: 0 0px;
+    }
+
+    /* .blogContent-article {
+        padding: 0px !important;
+    } */
+
 }
 
 .pagination {

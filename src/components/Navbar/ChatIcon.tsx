@@ -2,10 +2,11 @@
 
 import React, { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { io, Socket } from "socket.io-client";  // NEW: Import socket.io-client
 import ChatApiService from "@/utils/chats.api.utils"; // adjust if your service path differs
 import { Chat } from "@/types";
-// import useSWR from "swr"; // optional — you can remove if not using SWR
-// no image import needed — using inline SVG for crispness
+import { API_CONFIG } from "@/constants";  // Assuming you have this for SOCKET_URL
+import { getSocket } from "@/utils/socket";
 
 type Props = {
   className?: string;
@@ -18,18 +19,13 @@ export default function ChatIcon({ className = "", currentUserId, onClickOpen }:
   const mountedRef = useRef(true);
   const [unreadCount, setUnreadCount] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
+  const socketRef = useRef<Socket | null>(null);  // NEW: Socket ref
 
   // utility: fetch unread count from your API/service.
-  // If you have ChatApiService.fetchUnreadCount or similar, use that.
   const fetchUnread = async () => {
     try {
       setLoading(true);
-      // Preferred: use a dedicated endpoint
-      // if (ChatApiService && typeof ChatApiService.fetchUnreadCount === "function") {
-      //   const res = await ChatApiService.fetchUnreadCount(); // expect number
-      //   if (!mountedRef.current) return;
-      //   setUnreadCount(typeof res === "number" ? res : 0);
-      // }
+      console.log("🔄 Fetching initial chat unread count");  // Debug
       if (ChatApiService && typeof ChatApiService.fetchUnreadCount === "function") {
         const res = await ChatApiService.fetchUnreadCount(); // now { count, byTrip } or number
         if (!mountedRef.current) return;
@@ -37,7 +33,7 @@ export default function ChatIcon({ className = "", currentUserId, onClickOpen }:
         if (typeof res === "number") {
           setUnreadCount(res);
         } else if (res && typeof res.count === "number") {
-          setUnreadCount(res.count);              // 👈 use total unread chats
+          setUnreadCount(res.count);  // 👈 use total unread chats
         } else {
           setUnreadCount(0);
         }
@@ -58,6 +54,7 @@ export default function ChatIcon({ className = "", currentUserId, onClickOpen }:
         if (!mountedRef.current) return;
         setUnreadCount(data?.count || 0);
       }
+      console.log("📊 Initial unread count set to:", unreadCount);  // Debug
     } catch (err) {
       console.error("ChatIcon: failed to fetch unread count", err);
       if (!mountedRef.current) return;
@@ -67,31 +64,54 @@ export default function ChatIcon({ className = "", currentUserId, onClickOpen }:
     }
   };
 
-  // useEffect(() => {
-  //   mountedRef.current = true;
-  //   // initial fetch
-  //   fetchUnread();
-
-  //   // poll every 20s for unread updates (adjust as needed) — optional
-  //   const interval = setInterval(() => {
-  //     fetchUnread();
-  //   }, 20000);
-
-  //   return () => {
-  //     mountedRef.current = false;
-  //     clearInterval(interval);
-  //   };
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [currentUserId]);
   useEffect(() => {
-  mountedRef.current = true;
+    mountedRef.current = true;
+    fetchUnread(); // fetch once only
 
-  fetchUnread(); // fetch once only
+    // NEW: Socket connection for real-time updates
+   
+    const socket = getSocket();
 
-  return () => {
-    mountedRef.current = false;
-  };
-}, [currentUserId]);
+    socketRef.current = socket;
+
+    
+
+    // NEW: Listen for chat unread events
+    socket.on("chat_unread_increment", ({ delta = 1 }) => {
+      // console.log("💬 Received increment event:", delta);  // Debug
+      setUnreadCount((prev) => {
+        const newCount = prev + delta;
+        // console.log("➕ Chat unread incremented to:", newCount);
+        return newCount;
+      });
+    });
+
+    socket.on("chat_unread_decrement", ({ delta = 1 }) => {
+      // console.log("💬 Received decrement event:", delta);  // Debug
+      setUnreadCount((prev) => {
+        const newCount = Math.max(0, prev - delta);
+        // console.log("➖ Chat unread decremented to:", newCount);
+        return newCount;
+      });
+    });
+
+    // Optional: Visibility sync (refetch if tab hidden during updates)
+    const onVisible = () => {
+      if (document.visibilityState === "visible") {
+        // console.log("👁️ Tab visible — syncing chat count");
+        fetchUnread();
+      }
+    };
+    document.addEventListener("visibilitychange", onVisible);
+
+    return () => {
+      mountedRef.current = false;
+      document.removeEventListener("visibilitychange", onVisible);
+      socket.disconnect();
+      // console.log("🧹 Chat socket cleanup");
+      socketRef.current = null;
+    };
+  }, [currentUserId]);
 
   const openChats = () => {
     // optional callback (e.g., open drawer or custom navigation)

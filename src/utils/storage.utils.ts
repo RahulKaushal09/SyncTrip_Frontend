@@ -77,7 +77,7 @@ export class StorageUtils {
     static getToken(): string | null {
         const token = localStorage.getItem(STORAGE_KEYS.TOKEN);
         if (!token) {
-            // console.warn("No token found in localStorage");
+            console.warn("No token found in localStorage");
         }
 
         return token;

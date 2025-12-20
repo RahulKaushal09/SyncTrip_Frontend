@@ -8,6 +8,7 @@ import { StorageUtils } from "@/utils";
 
 import "../../../styles/chats/chats.css";
 import { debug } from "console";
+import { getSocket } from "@/utils/socket";
 
 type Props = {
   chatId: string;
@@ -37,12 +38,8 @@ export default function ChatWindow({ chatId, currentUserId }: Props) {
     // only run on client
     if (typeof window === "undefined") return;
 
-    const token = StorageUtils.getToken();
-    const socket = io(process.env.NEXT_PUBLIC_BACKEND_BASE_URL || "/", {
-      auth: { token },
-      autoConnect: true,
-      transports: ["websocket"],
-    });
+    // const token = StorageUtils.getToken();
+    const socket = getSocket();
 
     socketRef.current = socket;
 
@@ -90,11 +87,12 @@ export default function ChatWindow({ chatId, currentUserId }: Props) {
     });
 
     return () => {
-      socket.disconnect();
-      socketRef.current = null;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // run once
+    if (chatId) {
+      socket.emit("leave_chat", chatId);
+    }
+    setRemoteTyping(null);
+  };
+}, [chatId, currentUserId]);  //
 
   /* ------------------ Join/leave chat when chatId changes ------------------ */
   useEffect(() => {
@@ -302,7 +300,7 @@ export default function ChatWindow({ chatId, currentUserId }: Props) {
         className="sticky bottom-0 bg-white border-t px-3 py-2 flex items-end gap-2"
         style={{ paddingBottom: "env(safe-area-inset-bottom)", zIndex: 10 }}
       >
-        <div className="flex align-items-center flex-1">
+        <div className="flex align-items-center flex-1" style={{height:'100%'}}>
           <textarea
             ref={textareaRef}
             value={input}
@@ -314,8 +312,8 @@ export default function ChatWindow({ chatId, currentUserId }: Props) {
             onFocus={onFocusInput}
             rows={1}
             placeholder="Type a message"
-            className="w-full resize-none overflow-auto text-sm leading-5 rounded-lg border px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-400"
-            style={{ maxHeight: 160,height:50, }}
+            className="w-full resize-none overflow-auto text-sm leading-5 rounded-lg border px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-400 textBoxForChat"
+            // style={{ height: 100 }}
             onKeyDown={(e) => {
               if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();
