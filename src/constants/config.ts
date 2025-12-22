@@ -10,7 +10,7 @@ export const API_CONFIG = {
     TIMEOUT: 10000,
     RETRY_ATTEMPTS: 3,
 } as const;
-    
+
 export const GOOGLE_CONFIG = {
     CLIENT_ID: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || '',
 } as const;
@@ -30,6 +30,7 @@ export const ROUTES = {
     // LOGIN: '/login',
     // REGISTER: '/register',
     TRIPS: '/trips',
+    GROUP_TRIPS: '/groupTrips',
     USER_TRIPS: '/userTrips',
     USER_TRIP_PLANNER: '/userTrip/planner',
     USER_TRIP_DETAILS: '/userTrip/details',

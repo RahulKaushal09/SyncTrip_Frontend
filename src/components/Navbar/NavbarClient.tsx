@@ -85,9 +85,9 @@ const NavbarClient = ({ }) => {
     if (pageType === PageTypeEnum.TRIP) {
       openLogin(() => { redirectBtnClick(ROUTES.CREATE_TRIP) });
     }
-    // else {
-    //   redirectBtnClick(ROUTES.TRIPS);
-    // }
+    else {
+      redirectBtnClick(ROUTES.GROUP_TRIPS);
+    }
   };
   useEffect(() => {
     const handleResize = () => {
@@ -101,20 +101,26 @@ const NavbarClient = ({ }) => {
   }, []);
 
   const isActive = (route: string) => {
-    if(route === ROUTES.BLOGS){
-      if(pathname.includes(ROUTES.BLOGS+"/")) return false;
-      else if(pathname===ROUTES.BLOGS) return true;
+    if (route === ROUTES.BLOGS) {
+      if (pathname.includes(ROUTES.BLOGS + "/")) return false;
+      else if (pathname === ROUTES.BLOGS) return true;
       return false;
     }
-    if(route === ROUTES.EXPLORE){
-      if(pathname.includes(ROUTES.EXPLORE+"/")) return false;
-      else if(pathname===ROUTES.EXPLORE) return true;
+    if (route === ROUTES.EXPLORE) {
+      if (pathname.includes(ROUTES.EXPLORE + "/")) return false;
+      else if (pathname === ROUTES.EXPLORE) return true;
       return false;
     }
-     if(route === ROUTES.USER_TRIPS){
-      if(pathname.includes(ROUTES.USER_TRIPS+"/")) return false;
-      else if(pathname===ROUTES.USER_TRIPS) return true;
+    if (route === ROUTES.USER_TRIPS) {
+      if (pathname.includes(ROUTES.USER_TRIPS + "/")) return false;
+      else if (pathname === ROUTES.USER_TRIPS) return true;
       return false;
+    }
+    if (route === ROUTES.CREATE_TRIP) {
+      return pathname === ROUTES.CREATE_TRIP;
+    }
+    if (route === ROUTES.GROUP_TRIPS) {
+      return pathname === ROUTES.GROUP_TRIPS;
     }
     if (route === "/") return pathname === "/";
     return pathname.startsWith(route);
@@ -173,6 +179,27 @@ const NavbarClient = ({ }) => {
 
         <div className="collapse navbar-collapse justify-content-end" id="navbarNav" >
           <ul className="navbar-nav" style={{ alignItems: "center", gap: "20px" }}>
+            {isLoggedIn &&
+              <li className="nav-item"
+                onClick={() => {
+                  if (!isActive(ROUTES.USER_TRIPS)) {
+                    redirectBtnClick(ROUTES.USER_TRIPS);
+                  }
+                }}
+                style={{
+                  cursor: isActive(ROUTES.USER_TRIPS) ? "default" : "pointer",
+                  pointerEvents: isActive(ROUTES.USER_TRIPS) ? "none" : "auto",
+                  borderBottom: isActive(ROUTES.USER_TRIPS) ? "2px solid var(--secondary-1)" : "",
+                }}
+              // onClick={() => redirectBtnClick(ROUTES.USER_TRIPS)}
+              // style={{ cursor: "pointer" }}
+              >
+                <span className="nav-link">
+                  My Trips
+                </span>
+              </li>
+
+            }
             <li className="nav-item"
               onClick={() => {
                 if (!isActive(ROUTES.EXPLORE)) {
@@ -210,31 +237,41 @@ const NavbarClient = ({ }) => {
               </span>
             </li>
 
-            {isLoggedIn && <li className="nav-item"
-              onClick={() => {
-                if (!isActive(ROUTES.USER_TRIPS)) {
-                  redirectBtnClick(ROUTES.USER_TRIPS);
-                }
-              }}
-              style={{
-                cursor: isActive(ROUTES.USER_TRIPS) ? "default" : "pointer",
-                pointerEvents: isActive(ROUTES.USER_TRIPS) ? "none" : "auto",
-                borderBottom: isActive(ROUTES.USER_TRIPS) ? "2px solid var(--secondary-1)" : "",
-              }}
-            // onClick={() => redirectBtnClick(ROUTES.USER_TRIPS)}
-            // style={{ cursor: "pointer" }}
-            >
-              <span className="nav-link">
-                My Trips
-              </span>
-            </li>}
+            {isLoggedIn &&
 
-            {/* {pageType === PageTypeEnum.TRIP ? (
-              <li className="nav-item" onClick={createTripOrGroupTripBtn} style={{ cursor: "pointer" }}>
+              <li className="nav-item"
+                onClick={() => {
+                  if (!isActive(ROUTES.CREATE_TRIP)) {
+                    redirectBtnClick(ROUTES.CREATE_TRIP);
+                  }
+                }}
+                style={{
+                  cursor: isActive(ROUTES.CREATE_TRIP) ? "default" : "pointer",
+                  pointerEvents: isActive(ROUTES.CREATE_TRIP) ? "none" : "auto",
+                  borderBottom: isActive(ROUTES.CREATE_TRIP) ? "2px solid var(--secondary-1)" : "",
+                }}
+              // onClick={() => redirectBtnClick(ROUTES.CREATE_TRIP)} style={{ cursor: "pointer" }}
+              >
                 <span className="nav-link">
-                  {pageType === PageTypeEnum.TRIP ? "Create Trip" : "Group Trips"}
+                  Create Trip
                 </span>
-              </li>) : null} */}
+              </li>
+            }
+
+            <li className="nav-item" onClick={() => {
+              if (!isActive(ROUTES.GROUP_TRIPS)) {
+                redirectBtnClick(ROUTES.GROUP_TRIPS);
+              }
+            }}
+              style={{
+                cursor: isActive(ROUTES.GROUP_TRIPS) ? "default" : "pointer",
+                pointerEvents: isActive(ROUTES.GROUP_TRIPS) ? "none" : "auto",
+                borderBottom: isActive(ROUTES.GROUP_TRIPS) ? "2px solid var(--secondary-1)" : "",
+              }}>
+              <span className="nav-link">
+                Group Trips
+              </span>
+            </li>
             <li className="nav-item"
               onClick={() => setFeedbackFormOpen(true)}
               style={{ cursor: "pointer" }}>
@@ -383,6 +420,25 @@ const NavbarClient = ({ }) => {
           </div>
         </div>
         <ul className="navbar-nav" style={{ alignItems: "flex-start", padding: "1rem" }}>
+          {isLoggedIn &&
+
+            <li className="nav-item"
+              onClick={() => {
+                if (!isActive(ROUTES.USER_TRIPS)) {
+                  redirectBtnClick(ROUTES.USER_TRIPS);
+                  closeDrawer();
+                }
+              }}
+              style={{
+                cursor: isActive(ROUTES.USER_TRIPS) ? "default" : "pointer",
+                pointerEvents: isActive(ROUTES.USER_TRIPS) ? "none" : "auto",
+                borderBottom: isActive(ROUTES.USER_TRIPS) ? "2px solid var(--secondary-1)" : "",
+              }}
+            //  onClick={() => { redirectBtnClick(ROUTES.USER_TRIPS); closeDrawer(); }}
+            >
+              <span className="nav-link">My Trips</span>
+            </li>
+          }
           <li className="nav-item"
             onClick={() => {
               if (!isActive(ROUTES.EXPLORE)) {
@@ -418,23 +474,26 @@ const NavbarClient = ({ }) => {
           >
             <span className="nav-link">Blogs</span>
           </li>
-          {isLoggedIn && <li className="nav-item"
-            onClick={() => {
-              if (!isActive(ROUTES.USER_TRIPS)) {
-                redirectBtnClick(ROUTES.USER_TRIPS);
-                closeDrawer();
-              }
-            }}
-            style={{
-              cursor: isActive(ROUTES.USER_TRIPS) ? "default" : "pointer",
-              pointerEvents: isActive(ROUTES.USER_TRIPS) ? "none" : "auto",
-              borderBottom: isActive(ROUTES.USER_TRIPS) ? "2px solid var(--secondary-1)" : "",
-            }}
-          //  onClick={() => { redirectBtnClick(ROUTES.USER_TRIPS); closeDrawer(); }}
-          >
-            <span className="nav-link">My Trips</span>
-          </li>}
-          {pageType == PageTypeEnum.TRIP && (
+          {isLoggedIn &&
+
+            <li className="nav-item"
+              onClick={() => {
+                if (!isActive(ROUTES.CREATE_TRIP)) {
+                  redirectBtnClick(ROUTES.CREATE_TRIP);
+                  closeDrawer();
+                }
+              }}
+              style={{
+                cursor: isActive(ROUTES.CREATE_TRIP) ? "default" : "pointer",
+                pointerEvents: isActive(ROUTES.CREATE_TRIP) ? "none" : "auto",
+                borderBottom: isActive(ROUTES.CREATE_TRIP) ? "2px solid var(--secondary-1)" : "",
+              }}
+            //  onClick={() => { openLogin(() => { redirectBtnClick(ROUTES.CREATE_TRIP) }); }}
+            >
+              <span className="nav-link">Create Trip</span>
+            </li>
+          }
+          {/* {pageType == PageTypeEnum.TRIP ? (
             <li className="nav-item"
               onClick={() => {
                 if (!isActive(ROUTES.CREATE_TRIP)) {
@@ -452,12 +511,25 @@ const NavbarClient = ({ }) => {
               <span className="nav-link">Create Trip</span>
             </li>
           )
-            // : (
-            //   <li className="nav-item" onClick={() => { redirectBtnClick(ROUTES.TRIPS); closeDrawer(); }}>
-            //     <span className="nav-link">Group Trips</span>
-            //   </li>
-            // )
-          }
+            : ( */}
+          <li className="nav-item"
+            onClick={() => {
+              if (!isActive(ROUTES.GROUP_TRIPS)) {
+                redirectBtnClick(ROUTES.GROUP_TRIPS);
+                closeDrawer();
+              }
+            }}
+            style={{
+              cursor: isActive(ROUTES.GROUP_TRIPS) ? "default" : "pointer",
+              pointerEvents: isActive(ROUTES.GROUP_TRIPS) ? "none" : "auto",
+              borderBottom: isActive(ROUTES.GROUP_TRIPS) ? "2px solid var(--secondary-1)" : "",
+            }}
+          // onClick={() => { redirectBtnClick(ROUTES.GROUP_TRIPS); closeDrawer(); }}
+          >
+            <span className="nav-link">Group Trips</span>
+          </li>
+          {/* )
+          } */}
           <li className="nav-item"
             onClick={() => { closeDrawer(); setFeedbackFormOpen(true) }}
             style={{ cursor: "pointer" }}>
