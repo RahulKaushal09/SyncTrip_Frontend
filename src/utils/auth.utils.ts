@@ -1,8 +1,23 @@
 import { cookies } from "next/headers";
 import { User } from "@/types";
 import { UserField } from "@/constants";
+import apiClient from "./apiClient";
 
 export class AuthServices {
+    static async verifyPhone(firebaseToken: string, phone: string): Promise<User | null> {
+
+        try {
+            const res = apiClient.post("/auth/verifyAndAddPhone", {
+                firebaseToken,
+                phone,
+            });
+            const user: User = (await res).data.user;
+            return user;
+        } catch (err) {
+            console.error("Auth verifyOtp error:", err);
+            return null;
+        }
+    }
     // static async getServerUser(fields: UserField[]): Promise<User | null> {
     //     const cookiesList = await cookies(); // no need for await
     //     const token = cookiesList.get("userToken")?.value;

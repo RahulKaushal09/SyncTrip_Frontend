@@ -85,7 +85,7 @@
 .login-popup-submit-btn {
     width: 100%;
     padding: 0.75rem;
-    background-color: #000000 !important;
+    background-color: var(--primary-1) !important;
     color: #ffffff !important;
     border: none;
     border-radius: 0.375rem;
@@ -193,3 +193,24 @@
         padding: 0.2rem 0.6rem;
     }
 }
+
+
+
+.phone-input-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: end;
+}
+.phone-input {
+  flex: 1;
+  min-width: 100%; /* Stack on mobile */
+}
+@media (min-width: 768px) {
+  .phone-input { min-width: auto; }
+  .phone-verify-btn { min-width: 120px; flex: none; }
+}
+.otp-input-group { position: relative; }
+.otp-verify-btn { width: 100%; }
+.phone-verify-btn.resend-btn { background: none; border: 1px solid #007bff; color: #007bff; }
+.phone-verify-btn:disabled { opacity: 0.6; cursor: not-allowed; }

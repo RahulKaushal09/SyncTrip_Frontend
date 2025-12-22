@@ -1,25 +1,26 @@
 // utils/firebaseClient.ts
 import { initializeApp, getApps } from "firebase/app";
 import { getMessaging, getToken, onMessage , type MessagePayload} from "firebase/messaging";
+import { firebaseApp } from "./firebaseApp";
 
-const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_APIKEY!,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTHDOMAIN!,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECTID!,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID!,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APPID!,
-};
+// const firebaseConfig = {
+//   apiKey: process.env.NEXT_PUBLIC_FIREBASE_APIKEY!,
+//   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTHDOMAIN!,
+//   projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECTID!,
+//   messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID!,
+//   appId: process.env.NEXT_PUBLIC_FIREBASE_APPID!,
+// };
 
 let messaging: ReturnType<typeof getMessaging> | null = null;
 
 
 export function initFirebaseClient() {
   if (typeof window === "undefined") return null;
-  if (!getApps().length) {
-    initializeApp(firebaseConfig);
-  }
+  // if (!getApps().length) {
+  //   initializeApp(firebaseConfig);
+  // }
   try {
-    messaging = getMessaging();
+    messaging = getMessaging(firebaseApp);
   } catch (e) {
     messaging = null;
   }

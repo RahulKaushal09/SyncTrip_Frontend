@@ -57,6 +57,7 @@
 }
 
 .phone-number-input {
+    margin-bottom: 20px;
     width: 100%;
     padding: 0.75rem;
     border: 1px solid #ddd;
@@ -114,4 +115,22 @@
         padding: 0.65rem;
         font-size: 0.9375rem;
     }
+}
+
+
+
+.resend-container {
+  text-align: right;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.resend-text {
+  font-size: 0.95rem;
+  transition: color 0.2s;
+}
+
+.resend-text:hover:not(:disabled) {
+  text-decoration: underline;
+  color: #0056b3;
 }

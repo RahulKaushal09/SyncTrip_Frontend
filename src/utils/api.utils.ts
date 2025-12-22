@@ -388,6 +388,13 @@ const headers: Record<string, string> = {
     });
     return this.handleResponse(response);
   }
+  static async verifyAndAddPhoneNumber( firebaseToken: string,phone: string): Promise<CompleteProfileApiResponse> {
+    const response = await apiClient.post(`${API_CONFIG.BACKEND_BASE_URL}/api/auth/verifyAndAddPhone`, {
+      firebaseToken,
+      phone
+    });
+    return response.data;
+  }
   static async saveTripDetails(tripDetails: UserTrip) {
     try {
       const res = await apiClient.post(`/app/createUserTripWithDetails`, tripDetails);
