@@ -258,7 +258,7 @@ const NavbarClient = ({ }) => {
               </li>
             }
 
-            <li className="nav-item" onClick={() => {
+            {/* <li className="nav-item" onClick={() => {
               if (!isActive(ROUTES.GROUP_TRIPS)) {
                 redirectBtnClick(ROUTES.GROUP_TRIPS);
               }
@@ -271,7 +271,7 @@ const NavbarClient = ({ }) => {
               <span className="nav-link">
                 Group Trips
               </span>
-            </li>
+            </li> */}
             <li className="nav-item"
               onClick={() => setFeedbackFormOpen(true)}
               style={{ cursor: "pointer" }}>
@@ -512,7 +512,7 @@ const NavbarClient = ({ }) => {
             </li>
           )
             : ( */}
-          <li className="nav-item"
+          {/* <li className="nav-item"
             onClick={() => {
               if (!isActive(ROUTES.GROUP_TRIPS)) {
                 redirectBtnClick(ROUTES.GROUP_TRIPS);
@@ -527,7 +527,7 @@ const NavbarClient = ({ }) => {
           // onClick={() => { redirectBtnClick(ROUTES.GROUP_TRIPS); closeDrawer(); }}
           >
             <span className="nav-link">Group Trips</span>
-          </li>
+          </li> */}
           {/* )
           } */}
           <li className="nav-item"
