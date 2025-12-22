@@ -256,7 +256,7 @@ function UserTripDetailsPageContent() {
                     LocationServices.fetchLocationDetails(locationId as string, locationFields),
                     TripServices.fetchTripDetails(tripId as string, tripFields),
                 ]);
-                if( tripData?.privacy  && tripData?.privacy.toLocaleLowerCase().includes('public') && tripData?.endDate && new Date(tripData.endDate) >= new Date()){
+                if( tripData?.privacy  && tripData?.privacy.toLocaleLowerCase().includes('public') && tripData?.endDate && tripData.endDate.split('T')[0] >= new Date().toISOString().split('T')[0]){
                     setTripPrivacy('public');
                     setBottomButtons([{ text: "Start Matching", onClick: navigateToStartMatching, styleClass: "btn btn-matching-color" }]);
                 }else{

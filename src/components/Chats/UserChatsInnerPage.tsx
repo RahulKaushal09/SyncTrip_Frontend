@@ -95,16 +95,24 @@ export default function ChatsPageInner() {
         try {
             showLoader();
             const trips = await TripServices.fetchUserTrips();
-            const now = new Date();
-            const futureTrips = trips.filter((t: UserTrip) => new Date(t.endDate) >= now);
-            const usable = futureTrips.length > 0 ? futureTrips : trips;
+            const now = new Date().toISOString().split('T')[0];
+            const futureTrips = trips.filter((t: UserTrip) => t.endDate.split('T')[0] >= now);
+            // console.log("fu",futureTrips);
+            // const usable = futureTrips.length > 0 ? futureTrips : trips;
+            const usable = futureTrips.length > 0 ? futureTrips : [];
+            console.log(usable);
             if (!Array.isArray(usable)) {
                 router.replace("/");
                 return [];
             }
-
-            if(usable.length == 0 ) {
-                toast.error("No trips found. Please create a trip first.");
+            if(trips.length == 0){
+                toast.error("No trips found. Please create a trip to access chats.");
+                router.replace("/");
+                return [];
+            }
+            
+            if(usable.length == 0 && trips.length > 0){ 
+                toast.error("Your trips have already ended. Please create a new trip to access chats.");
                 router.replace("/");
                 return [];
             }
@@ -130,9 +138,10 @@ export default function ChatsPageInner() {
             if (!Array.isArray(trips)) return;
 
             // Keep only upcoming (endDate >= today). If none, keep all.
-            const now = new Date();
-            const futureTrips = trips.filter((t: UserTrip) => new Date(t.endDate) >= now);
-            const usable = futureTrips.length > 0 ? futureTrips : trips;
+            const now = new Date().toISOString().split('T')[0];
+            const futureTrips = trips.filter((t: UserTrip) => t.endDate.split('T')[0] >= now);
+            // const usable = futureTrips.length > 0 ? futureTrips : trips;
+            const usable = futureTrips.length > 0 ? futureTrips : [];
 
             if (!mountedRef.current) return;
             setAllTrips(usable);

@@ -200,10 +200,11 @@ export default function MatchingPage() {
     }, [locationId]);
     async function loadTrips() {
         try {
+            debugger;
             let trips: UserTrip[] = await TripServices.fetchUserTrips();
             // show only those trip which have end date in future
-            const now = new Date();
-            trips = trips.filter(trip => new Date(trip.endDate) > now);
+            const now = new Date().toISOString().split('T')[0];
+            trips = trips.filter(trip => trip.endDate.split('T')[0] >= now);
             if( trips.length === 0 ) {
                 toast.error("Your trips have ended. Please create a new trip to match with others.");
                 router.replace('/');

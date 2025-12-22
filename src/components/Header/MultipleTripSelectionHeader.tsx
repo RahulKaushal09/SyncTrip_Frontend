@@ -82,7 +82,8 @@ export default function MultipleTripSelectionHeader({
     //   setFilteredTrips(allTrips);
     // }
     // if(pathName.includes('/userTrip/matching')){
-      setFilteredTrips(allTrips.filter(trip => trip.endDate >= new Date().toISOString()));
+    
+      setFilteredTrips(allTrips.filter(trip => trip.endDate.split('T')[0] >= new Date().toISOString().split('T')[0]));
     // }
   }, [allTrips]);
   const handleTripClick = () => {
