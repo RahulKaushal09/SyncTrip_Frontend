@@ -20,9 +20,9 @@ const TripSection: React.FC<TripSectionProps> = ({ trips }) => {
     const [isMobile, setIsMobile] = useState<boolean>(false);
     const [ClientIsLoaded, setClientIsLoaded] = useState<boolean>(false);
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-    const [enrolledTrips, setEnrolledTrips] = useState<Trip[]>([]);
-    const [activeTab, setActiveTab] = useState<'upcoming' | 'enrolled' | 'history'>('upcoming');
-    const updateActiveTab = (activeTabSelection: 'upcoming' | 'enrolled' | 'history') => {
+    // const [enrolledTrips, setEnrolledTrips] = useState<Trip[]>([]);
+    const [activeTab, setActiveTab] = useState<'upcoming'  | 'history'>('upcoming');
+    const updateActiveTab = (activeTabSelection: 'upcoming' | 'history') => {
         setActiveTab(activeTabSelection);
     }
     // const cookie = Cookies.get('userToken');
@@ -66,8 +66,8 @@ const TripSection: React.FC<TripSectionProps> = ({ trips }) => {
                     setActiveTab('history');
                 }
                 return upcomingTrips;
-            case 'enrolled':
-                return enrolledTrips;
+            // case 'enrolled':
+            //     return enrolledTrips;
             case 'history':
 
                 return trips.filter((trip) => {
@@ -91,16 +91,16 @@ const TripSection: React.FC<TripSectionProps> = ({ trips }) => {
         setClientIsLoaded(true);
     }, [trips, activeTab]);
 
-    const fetchEnrolledTrips = async () => {
-        if (isLoggedIn) {
-            const token = Cookies.get('userToken');
-            const enrolled = await TripsApiService.fetchEnrolledTrips(token);
-            setEnrolledTrips(enrolled);
-        }
-    }
-    useEffect(() => {
-        fetchEnrolledTrips();
-    }, [isLoggedIn]);
+    // const fetchEnrolledTrips = async () => {
+    //     if (isLoggedIn) {
+    //         const token = Cookies.get('userToken');
+    //         const enrolled = await TripsApiService.fetchEnrolledTrips(token);
+    //         setEnrolledTrips(enrolled);
+    //     }
+    // }
+    // useEffect(() => {
+    //     fetchEnrolledTrips();
+    // }, [isLoggedIn]);
 
     return (
         <>
@@ -111,14 +111,14 @@ const TripSection: React.FC<TripSectionProps> = ({ trips }) => {
                 >
                     Upcoming {!isMobile ? 'Trips' : ''}
                 </button>
-                {isLoggedIn && (
+                {/* {isLoggedIn && (
                     <button
                         className={`tab-button ${activeTab === 'enrolled' ? 'active' : ''}`}
                         onClick={() => updateActiveTab('enrolled')}
                     >
                         Enrolled {!isMobile ? 'Trips' : ''}
                     </button>
-                )}
+                )} */}
                 <button
                     className={`tab-button ${activeTab === 'history' ? 'active' : ''}`}
                     onClick={() => updateActiveTab('history')}
@@ -133,7 +133,7 @@ const TripSection: React.FC<TripSectionProps> = ({ trips }) => {
                         Ready for your next adventure? Explore upcoming trips, sign up, and connect with fellow travelers before the journey begins!
                     </p>
                 </div>
-                <MainSearchBar searchTerm={searchTerm} setSearchTerm={handleSearchChange} searchBarPlaceHolder="Search Trips" />
+                {/* <MainSearchBar searchTerm={searchTerm} setSearchTerm={handleSearchChange} searchBarPlaceHolder="Search Trips" /> */}
                 {/* {error ? (
                 <p className={styles.statusMessageError}>{error}</p>
             ) : (

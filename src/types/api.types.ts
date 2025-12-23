@@ -44,15 +44,15 @@ export interface LoginResponse {
 //     confirmPassword: string;
 // }
 export interface UserTripActivity {
-  dayId: string;
-  dayLabel: string;
-  dayDate: string; // or Date if you parse it
-  placeId: string;
-  placeDetails?:PlacesToVisit;
-  order: number;
-  distanceKm?: number;
-  routeSignature?: string;
-  polyline?: string;
+    dayId: string;
+    dayLabel: string;
+    dayDate: string; // or Date if you parse it
+    placeId: string;
+    placeDetails?: PlacesToVisit;
+    order: number;
+    distanceKm?: number;
+    routeSignature?: string;
+    polyline?: string;
 }
 export interface UserTrip {
     id?: string;     // Unique identifier for the trip
@@ -60,14 +60,16 @@ export interface UserTrip {
     locationId: string; // ID of the trip destination (e.g., location ID)
     locationName?: string; // Name of the destination (for display purposes)
     tripName?: string; // Name or title of the trip
-    
-//   destination: string; // Location or destination of the trip
-  startDate: string;   // Start date of the trip
-  endDate: string;     // End date of the trip
-  budget: string;      // Budget preference ("Cheap", "Economic", "Luxury", etc.)
-  interests?: string[];   // Interests (e.g., "Cultural Exploration", "Beach", etc.)
-//   interests?: string;   // Interests (e.g., "Cultural Exploration", "Beach", etc.)
-  privacy?: string;    // Privacy setting ("Public", "Friends", "Only Me", etc.)
+    source?: {
+        type: 'manual' | 'hosted'
+    }
+    //   destination: string; // Location or destination of the trip
+    startDate: string;   // Start date of the trip
+    endDate: string;     // End date of the trip
+    budget: string;      // Budget preference ("Cheap", "Economic", "Luxury", etc.)
+    interests?: string[];   // Interests (e.g., "Cultural Exploration", "Beach", etc.)
+    //   interests?: string;   // Interests (e.g., "Cultural Exploration", "Beach", etc.)
+    privacy?: string;    // Privacy setting ("Public", "Friends", "Only Me", etc.)
     // activities?: TripActivity[]; // List of activities planned for the trip
     image?: string;    // URL of the main image for the trip
     rating?: number;   // Average rating (e.g., 4.5)
@@ -133,7 +135,7 @@ export interface Location {
     updatedAt?: string;
     type?: string;
     filterTags?: string[];
-    featured? : boolean;
+    featured?: boolean;
 
 
     seo?: {
@@ -230,6 +232,21 @@ export interface PlacesToVisit {
     filterTags?: string[];
     tag?: string; // Adventure, Cultural, Historical, Nature, Religious, etc.
 }
+
+export type HostedTrip = {
+    id: string
+    title: string
+    slug: string
+    mainImageUrl: string
+    locationName: string
+    startDate: string
+    endDate: string
+    price: number
+    availableSeats: number
+    status: 'published' | 'completed'
+}
+
+
 
 
 
@@ -357,14 +374,14 @@ export interface Trip {
 
 
 export type FetchChatsParams = {
-  tripId?: string;
+    tripId?: string;
 };
 export type FetchChatsResponse = Chat[];
 
 export interface FetchChatByIdResponse extends Chat {
     tripId: string; // only in GET /api/chats/:chatId
-    Chat:Chat,
-  messages: Message[]; // only in GET /api/chats/:chatId
+    Chat: Chat,
+    messages: Message[]; // only in GET /api/chats/:chatId
 }
 
 export type FetchMessagesResponse = Message[];
@@ -373,7 +390,7 @@ export type SendMessageResponse = Message;
 
 
 export interface UnreadCountResponse {
-  count: number;                                // total unread chats across ALL trips
-  byTrip: Record<string, number>;               // tripId -> unread chats count
+    count: number;                                // total unread chats across ALL trips
+    byTrip: Record<string, number>;               // tripId -> unread chats count
 }
 export type UnreadByTrip = Record<string, number>;
