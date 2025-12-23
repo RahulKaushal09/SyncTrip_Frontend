@@ -7,50 +7,6 @@ import { TripsApiService } from '../../utils/trips.api.utils';
 import { getAllTripsResponseSchema } from '@/classes/ApiResponse.classes';
 import { Metadata } from 'next';
 
-// export async function generateMetadata(): Promise<Metadata> {
-//   try {
-//     const tripsResponse = await TripsApiService.fetchAllTrips();
-//     const trips = tripsResponse.trips || [];
-//     const totalTrips = trips.length;
-//     const samplePrice = trips.length ? Math.min(...trips.map(t => t.essentials.price)) : null;
-//     const title = totalTrips > 0
-//       ? `${totalTrips} Handpicked Group Trips & Tour Packages — SyncTrip`
-//       : 'Handpicked Group Trips & Tour Packages — SyncTrip';
-//     const description = totalTrips > 0
-//       ? `Discover ${totalTrips} curated group trips starting from ${samplePrice ? `₹${samplePrice}` : 'affordable prices'}. Book immersive group adventures with verified companions.`
-//       : 'Discover curated group trips, itineraries and affordable tour packages on SyncTrip.';
-
-//     return {
-//       title,
-//       description,
-//       keywords: 'group trips, tour packages India, SyncTrip tours, travel packages, group adventures',
-//       openGraph: {
-//         title,
-//         description,
-//         url: 'https://synctrip.in/trips',
-//         type: 'website',
-//         siteName: 'SyncTrip',
-//         locale: 'en_IN',
-//         images: [
-//           {
-//             url: trips.length ? trips[0].MainImageUrl : 'https://synctrip.in/logo_1200.png',
-//             width: 1200,
-//             height: 630,
-//             alt: 'SyncTrip - Group Trips'
-//           }
-//         ],
-//       },
-//       twitter: { card: 'summary_large_image', title, description, images: [trips.length ? trips[0].MainImageUrl : 'https://synctrip.in/logo_1200.png'] },
-//       alternates: { canonical: 'https://synctrip.in/trips' },
-//       robots: { index: true, follow: true, 'max-snippet': -1, 'max-image-preview': 'large' }
-//     };
-//   } catch {
-//     return {
-//       title: 'Handpicked Group Trips & Tour Packages — SyncTrip',
-//       description: 'Discover curated group trips, itineraries and affordable tour packages on SyncTrip.'
-//     };
-//   }
-// }
 export async function generateMetadata(): Promise<Metadata> {
     try {
         const tripsResponse: getAllTripsResponseSchema = await TripsApiService.fetchAllTrips();

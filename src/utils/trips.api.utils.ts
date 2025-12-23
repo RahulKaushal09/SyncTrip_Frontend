@@ -1,6 +1,7 @@
 import { API_CONFIG } from '../constants';
 import { getAllTripsResponseSchema, TripDetailsResponse } from '@/classes/ApiResponse.classes';
 import { Trip } from '@/types';
+import apiClient from './apiClient';
 // import { cookies } from 'next/headers';
 
 export class TripsApiService {
@@ -18,6 +19,22 @@ export class TripsApiService {
             };
         }
         const allTripsData: getAllTripsResponseSchema = await allTripsResponse.json();
+        return allTripsData;
+    }
+    static async fetchAllHostedTrips(token: string = ""): Promise<getAllTripsResponseSchema> {
+        const allTripsResponse = await apiClient.post(`${API_CONFIG.BACKEND_BASE_URL}/api/trips/getAllHostedTripsDynamicFields`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ limit: 100 }),
+        });
+        if (allTripsResponse.status === 404) {
+            throw new Error('No trips found. Please check back later.');
+            return {
+                trips: [],
+                totalTrips: 0,
+            };
+        }
+        const allTripsData: getAllTripsResponseSchema = await allTripsResponse.data;
         return allTripsData;
     }
     static async fetchTripById(tripId: string, token: string = ""): Promise<TripDetailsResponse> {

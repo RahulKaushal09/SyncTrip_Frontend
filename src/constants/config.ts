@@ -31,6 +31,7 @@ export const ROUTES = {
     // REGISTER: '/register',
     TRIPS: '/trips',
     GROUP_TRIPS: '/groupTrips',
+    HOSTED_TRIPS: '/hostedTrips',
     USER_TRIPS: '/userTrips',
     USER_TRIP_PLANNER: '/userTrip/planner',
     USER_TRIP_DETAILS: '/userTrip/details',

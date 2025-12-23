@@ -94,6 +94,8 @@ const Footer = () => {
                             {/* <FaInstagram /> */}
                         </a>
                     </div>
+        <div id="recaptcha-container" />
+
 
                     {/* <h3 className="footerTextColorNormal" style={{ fontSize: "1.55rem" }}>
                         Discover our app

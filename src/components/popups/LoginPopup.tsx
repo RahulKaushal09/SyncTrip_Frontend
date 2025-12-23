@@ -553,7 +553,7 @@ export default function LoginPopup({ onClose, onLogin }: LoginPopupProps) {
       setFirebaseToken(token);
       setPhoneVerified(true);
       setOtp(''); // Clear OTP field after success
-      setError('Phone verified successfully!'); // Optional success message
+      // setError('Phone verified successfully!'); // Optional success message
     } catch (e: any) {
       setError(e.message || "Invalid OTP. Please try again.");
     } finally {
@@ -775,7 +775,7 @@ export default function LoginPopup({ onClose, onLogin }: LoginPopupProps) {
 
               {/* OTP input - shown after OTP sent */}
               {otpSent && !phoneVerified && (
-                <div className="otp-input-group" style={{ marginTop: "1rem" }}>
+                <div className="otp-input-group" >
                   <input
                     ref={otpInputRef}
                     type="text"
@@ -788,7 +788,7 @@ export default function LoginPopup({ onClose, onLogin }: LoginPopupProps) {
                   />
                   <button
                     type="button"
-                    className="login-popup-submit-btn otp-verify-btn"
+                    className="btn btn-secondary otp-verify-btn"
                     onClick={handleVerifyOtp}
                     disabled={isLoading || otp.length !== 6}
                     style={{ marginTop: "0.5rem", padding: "0.75rem" }}

@@ -204,7 +204,7 @@
 }
 .phone-input {
   flex: 1;
-  min-width: 100%; /* Stack on mobile */
+  min-width: 55%; /* Stack on mobile */
 }
 @media (min-width: 768px) {
   .phone-input { min-width: auto; }
@@ -212,5 +212,5 @@
 }
 .otp-input-group { position: relative; }
 .otp-verify-btn { width: 100%; }
-.phone-verify-btn.resend-btn { background: none; border: 1px solid #007bff; color: #007bff; }
+.phone-verify-btn.resend-btn { background: none;  }
 .phone-verify-btn:disabled { opacity: 0.6; cursor: not-allowed; }

@@ -86,7 +86,7 @@ const NavbarClient = ({ }) => {
       openLogin(() => { redirectBtnClick(ROUTES.CREATE_TRIP) });
     }
     else {
-      redirectBtnClick(ROUTES.GROUP_TRIPS);
+      redirectBtnClick(ROUTES.HOSTED_TRIPS);
     }
   };
   useEffect(() => {
@@ -121,6 +121,9 @@ const NavbarClient = ({ }) => {
     }
     if (route === ROUTES.GROUP_TRIPS) {
       return pathname === ROUTES.GROUP_TRIPS;
+    }
+    if( route === ROUTES.HOSTED_TRIPS) {
+      return pathname === ROUTES.HOSTED_TRIPS;
     }
     if (route === "/") return pathname === "/";
     return pathname.startsWith(route);
@@ -258,20 +261,20 @@ const NavbarClient = ({ }) => {
               </li>
             }
 
-            {/* <li className="nav-item" onClick={() => {
-              if (!isActive(ROUTES.GROUP_TRIPS)) {
-                redirectBtnClick(ROUTES.GROUP_TRIPS);
+            <li className="nav-item" onClick={() => {
+              if (!isActive(ROUTES.HOSTED_TRIPS)) {
+                redirectBtnClick(ROUTES.HOSTED_TRIPS);
               }
             }}
               style={{
-                cursor: isActive(ROUTES.GROUP_TRIPS) ? "default" : "pointer",
-                pointerEvents: isActive(ROUTES.GROUP_TRIPS) ? "none" : "auto",
-                borderBottom: isActive(ROUTES.GROUP_TRIPS) ? "2px solid var(--secondary-1)" : "",
+                cursor: isActive(ROUTES.HOSTED_TRIPS) ? "default" : "pointer",
+                pointerEvents: isActive(ROUTES.HOSTED_TRIPS) ? "none" : "auto",
+                borderBottom: isActive(ROUTES.HOSTED_TRIPS) ? "2px solid var(--secondary-1)" : "",
               }}>
               <span className="nav-link">
-                Group Trips
+                Hosted Trips (Pilot)
               </span>
-            </li> */}
+            </li>
             <li className="nav-item"
               onClick={() => setFeedbackFormOpen(true)}
               style={{ cursor: "pointer" }}>
@@ -512,22 +515,22 @@ const NavbarClient = ({ }) => {
             </li>
           )
             : ( */}
-          {/* <li className="nav-item"
+          <li className="nav-item"
             onClick={() => {
-              if (!isActive(ROUTES.GROUP_TRIPS)) {
-                redirectBtnClick(ROUTES.GROUP_TRIPS);
+              if (!isActive(ROUTES.HOSTED_TRIPS)) {
+                redirectBtnClick(ROUTES.HOSTED_TRIPS);
                 closeDrawer();
               }
             }}
             style={{
-              cursor: isActive(ROUTES.GROUP_TRIPS) ? "default" : "pointer",
-              pointerEvents: isActive(ROUTES.GROUP_TRIPS) ? "none" : "auto",
-              borderBottom: isActive(ROUTES.GROUP_TRIPS) ? "2px solid var(--secondary-1)" : "",
+              cursor: isActive(ROUTES.HOSTED_TRIPS) ? "default" : "pointer",
+              pointerEvents: isActive(ROUTES.HOSTED_TRIPS) ? "none" : "auto",
+              borderBottom: isActive(ROUTES.HOSTED_TRIPS) ? "2px solid var(--secondary-1)" : "",
             }}
           // onClick={() => { redirectBtnClick(ROUTES.GROUP_TRIPS); closeDrawer(); }}
           >
-            <span className="nav-link">Group Trips</span>
-          </li> */}
+            <span className="nav-link">Hosted Trips (Pilot)</span>
+          </li>
           {/* )
           } */}
           <li className="nav-item"

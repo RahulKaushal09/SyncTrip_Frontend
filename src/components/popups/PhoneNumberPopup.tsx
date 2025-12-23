@@ -193,7 +193,6 @@ export default function PhoneNumberPopup({
           </>
         )}
 
-        <div id="recaptcha-container" />
 
         {error && (
           <div
