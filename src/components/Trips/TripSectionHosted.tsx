@@ -6,6 +6,7 @@ import Cookies from 'js-cookie';
 import TripCard from './TripCard';
 import { HostedTrip } from '@/types';
 import { WishlistTypeEnum } from '@/constants';
+import HostedTripCard from './HostedTripCard';
 
 interface Props {
   trips: HostedTrip[];
@@ -81,8 +82,8 @@ const HostedTripSection: React.FC<Props> = ({ trips }) => {
         {/* Cards */}
         <div className="paddingSectionLeftRight">
           <div className="tripSection-cards">
-            {/* {filteredTrips.map(trip => (
-              <TripCard
+            {filteredTrips.map(trip => (
+              <HostedTripCard
                 key={trip.id}
                 trip={trip}
                 activeTab={activeTab}
@@ -90,9 +91,9 @@ const HostedTripSection: React.FC<Props> = ({ trips }) => {
                 parentType=""
                 typeOfWhishlistCardEnum={WishlistTypeEnum.trip}
                 cardId={trip.id}
-                isHosted
+                
               />
-            ))} */}
+            ))} 
           </div>
 
           {filteredTrips.length === 0 && (
