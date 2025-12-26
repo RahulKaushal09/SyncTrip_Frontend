@@ -3,7 +3,8 @@ import { is } from './../../.next/static/chunks/main';
  * API-related type definitions
  */
 
-import { Chat, Culture, Festival, Itinerary, Message, TripTimeline } from "@/types";
+import { Chat, Culture, Festival, HostedTripItinerary, Itinerary, Message, TripTimeline } from "@/types";
+import { includes } from "lodash";
 
 export interface ApiResponse<T = unknown> {
     success: boolean;
@@ -234,16 +235,27 @@ export interface PlacesToVisit {
 }
 
 export type HostedTrip = {
-    id: string
-    title: string
-    slug: string
-    mainImageUrl: string
-    locationName: string
-    startDate: string
-    endDate: string
-    price: number
-    availableSeats: number
-    status: 'published' | 'completed'
+    id: string;
+    title: string;
+    slug: string;
+    mainImageUrl: string;
+    locationName: string;
+    locationId: string;
+    dates: [{
+        startDate: string;
+        endDate: string;
+        availableSeats: number;
+    }],
+    itineraryTemplate: HostedTripItinerary;
+    price: number;
+    status: 'published' | 'completed';
+    inclusions: {
+        travel: boolean;
+        food: boolean;
+        hotel: boolean;
+    };
+    createdAt: string;
+    updatedAt: string;
 }
 
 

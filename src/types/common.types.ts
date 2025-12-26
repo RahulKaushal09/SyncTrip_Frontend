@@ -59,6 +59,12 @@ export interface TripTimeline {
     fromDate: string;
     tillDate: string;
 }
+export interface TripDate {
+    startDate: string;
+    endDate: string;
+    availableSeats: number;
+    // slotId: string;
+}
 export interface TripDayItinerary {
     dayTitle: string;
     date?: string;
@@ -69,4 +75,11 @@ export interface Itinerary {
     topSectionHtml?: string;
     bottomSectionHtml?: string;
     days: TripDayItinerary[];
+}
+export interface HostedTripItinerary {
+    days: [{
+        title: string;
+        descriptionHtml: string;
+        date?: string;
+    }];
 }

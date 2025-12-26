@@ -5,8 +5,8 @@ import { Leaf, Menu, Plane } from "lucide-react";
 
 import '../../../styles/AddLocationCard.css';
 import { PageTypeEnum } from '@/constants';
-import { TripTimeline } from '@/types';
-import { triggerLogin } from '@/utils';
+import { TripDate, TripTimeline } from '@/types';
+import { triggerLogin, TripsApiService } from '@/utils';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { useLoader } from '../providers/LoaderContext';
@@ -18,7 +18,7 @@ interface AddLocationCardProps {
     showBtns: boolean;
     pageType: string | null;
     onLoginClick: () => void;
-    EnrollInTrip: (slotId: string) => void;
+    EnrollInTrip: () => void;
     btnsStyle?: React.CSSProperties;
     style?: React.CSSProperties;
     ctaAction: () => void;
@@ -33,7 +33,7 @@ interface AddLocationCardProps {
     alreadyEnrolled: boolean;
     btnReference?: React.RefObject<HTMLDivElement>;
     price?: number;
-    timelines: TripTimeline[];
+    timelines: TripTimeline[] | TripDate[];
     featuredLocation?: boolean;
 }
 
@@ -65,7 +65,7 @@ const AddLocationCard: React.FC<AddLocationCardProps> = ({
     const [activeIcon, setActiveIcon] = useState(0);
     const [btn2Text, setBtn2Text] = useState('');
     const [btn2CTA, setBtn2CTA] = useState<() => void>(() => ctaAction);
-    const [selectedSlotId, setSelectedSlotId] = useState('');
+    // const [selectedSlotId, setSelectedSlotId] = useState('');
     const [currentText, setCurrentText] = useState(0);
     const [customReviews, setCustomReviews] = useState<number | null>(null);
 
@@ -99,15 +99,16 @@ const AddLocationCard: React.FC<AddLocationCardProps> = ({
     useEffect(() => {
         if (pageType === PageTypeEnum.LOCATION) {
             setBtn2CTA(() => loginThenNavigate);
-        } else if (pageType === PageTypeEnum.TRIP) {
+        } else if (pageType === PageTypeEnum.HOSTED_TRIPS || pageType === PageTypeEnum.TRIP) {
+            debugger;
             const user = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('user') || 'null') : null;
             if (user?.profileCompleted) {
-                setBtn2CTA(() => selectedSlotId ? () => EnrollInTrip(selectedSlotId) : () => { });
+                setBtn2CTA(() => EnrollInTrip);
             } else {
                 setBtn2CTA(() => onLoginClick);
             }
         }
-    }, [pageType, ctaAction, selectedSlotId, featuredLocation]);
+    }, [pageType, ctaAction, featuredLocation]);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -116,10 +117,10 @@ const AddLocationCard: React.FC<AddLocationCardProps> = ({
         }, 2000);
         return () => clearInterval(interval);
     }, []);
-
+ 
     useEffect(() => {
         if (pageType === PageTypeEnum.TRIP && timelines.length === 1) {
-            setSelectedSlotId(timelines[0].slotId);
+            // setSelectedSlotId(timelines[0].slotId);
         }
     }, [timelines]);
 
@@ -154,23 +155,24 @@ const AddLocationCard: React.FC<AddLocationCardProps> = ({
                         {pageType === PageTypeEnum.LOCATION ? (
                             <p className="trip-info">{bestTime}</p>
                         ) : timelines.length > 1 ? (
-                            <select
-                                className="form-select trip-info"
-                                value={selectedSlotId}
-                                onChange={(e) => setSelectedSlotId(e.target.value)}
-                                style={{ marginTop: '10px' }}
-                                disabled={!timelines || timelines.length === 0}
-                            >
-                                <option value="" disabled>Select trip date</option>
-                                {timelines.map(({ slotId, fromDate, tillDate }) => (
-                                    <option key={slotId} value={slotId}>
-                                        {formatDateRange(fromDate, tillDate)}
-                                    </option>
-                                ))}
-                            </select>
+                            // <select
+                            //     className="form-select trip-info"
+                            //     value={selectedSlotId}
+                            //     onChange={(e) => setSelectedSlotId(e.target.value)}
+                            //     style={{ marginTop: '10px' }}
+                            //     disabled={!timelines || timelines.length === 0}
+                            // >
+                            //     <option value="" disabled>Select trip date</option>
+                            //     {timelines.map(({ slotId, fromDate, tillDate }) => (
+                            //         <option key={slotId} value={slotId}>
+                            //             {formatDateRange(fromDate, tillDate)}
+                            //         </option>
+                            //     ))}
+                            // </select>
+                            <></>
                         ) : timelines.length === 1 ? (
                             <p className="trip-info">
-                                {formatDateRange(timelines[0].fromDate, timelines[0].tillDate)}
+                                {formatDateRange((timelines[0] as TripDate).startDate, (timelines[0] as TripDate).endDate)}
                             </p>
                         ) : (
                             <p className="trip-info">No available trip dates</p>

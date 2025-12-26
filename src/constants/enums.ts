@@ -7,6 +7,7 @@ import { rest } from "lodash";
 export const PageTypeEnum = Object.freeze({
     LOCATION: "location",
     TRIP: "trips",
+    HOSTED_TRIPS: "hostedTrips",
     HOME: "home",
     PROFILE: "profile",
     USER_TRIP: "userTrip",

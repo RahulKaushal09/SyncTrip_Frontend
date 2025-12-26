@@ -38,18 +38,16 @@ const HostedTripSection: React.FC<Props> = ({ trips }) => {
     if (activeTab === 'upcoming') {
       return trips.filter(
         t =>
-          new Date(t.startDate) >= today &&
-          t.status === 'published'
+          new Date(t.dates[0]?.startDate) >= today 
       );
     }
 
     return trips.filter(
       t =>
-        new Date(t.startDate) < today ||
-        t.status === 'completed'
+        new Date(t.dates[0]?.startDate) < today 
     );
   }, [activeTab, trips, today]);
-
+  console.log('Filtered Trips:', filteredTrips);
   return (
     <>
       {/* Tabs */}
@@ -91,7 +89,6 @@ const HostedTripSection: React.FC<Props> = ({ trips }) => {
                 parentType=""
                 typeOfWhishlistCardEnum={WishlistTypeEnum.trip}
                 cardId={trip.id}
-                
               />
             ))} 
           </div>

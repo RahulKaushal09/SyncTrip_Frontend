@@ -3,31 +3,30 @@
 import { useState } from 'react';
 import '../../../styles/trips/Itinerary.css';
 
-import { Itinerary } from '@/types';
+import { HostedTripItinerary, Itinerary } from '@/types';
 
 interface ItineraryComponentProps {
-    itinerary: Itinerary;
+    itinerary: HostedTripItinerary;
 }
 
 const TripItinerary: React.FC<ItineraryComponentProps> = ({ itinerary }) => {
-    const [selectedDay, setSelectedDay] = useState<string>(itinerary.days[0]?.dayTitle || '');
-
+    const [selectedDay, setSelectedDay] = useState<string>(itinerary.days[0]?.title || '');
     const handleDayClick = (dayTitle: string) => {
         setSelectedDay(dayTitle);
     };
 
-    const selectedDayData = itinerary.days.find(day => day.dayTitle === selectedDay);
+    const selectedDayData = itinerary.days.find(day => day.title === selectedDay);
 
     return (
         <div className="itinerary-container">
             {/* Top Section */}
-            {itinerary.topSectionHtml && (
+            {/* {itinerary.topSectionHtml && (
                 <div
                     className="top-section"
                     dangerouslySetInnerHTML={{ __html: itinerary.topSectionHtml }}
                 />
-            )}
-            <hr />
+            )} */}
+            {/* <hr /> */}
 
             <h2>Day-Wise Itinerary</h2>
 
@@ -37,10 +36,10 @@ const TripItinerary: React.FC<ItineraryComponentProps> = ({ itinerary }) => {
                     {itinerary.days.map((day, index) => (
                         <button
                             key={index}
-                            className={`day-button ${selectedDay === day.dayTitle ? 'active' : ''}`}
-                            onClick={() => handleDayClick(day.dayTitle)}
+                            className={`day-button ${selectedDay === day.title ? 'active' : ''}`}
+                            onClick={() => handleDayClick(day.title)}
                         >
-                            {day.dayTitle}
+                            {day.title}
                         </button>
                     ))}
                 </div>
@@ -50,19 +49,19 @@ const TripItinerary: React.FC<ItineraryComponentProps> = ({ itinerary }) => {
             <div
                 className="day-content"
                 dangerouslySetInnerHTML={{
-                    __html: selectedDayData ? selectedDayData.htmlDescription : '<p>No data available for this day.</p>',
+                    __html: selectedDayData ? selectedDayData.descriptionHtml : '<p>No data available for this day.</p>',
                 }}
             />
-            <hr />
+            {/* <hr /> */}
 
             {/* Bottom Section */}
-            {itinerary.bottomSectionHtml && (
+            {/* {itinerary.bottomSectionHtml && (
                 <div
                     className="bottom-section"
                     dangerouslySetInnerHTML={{ __html: itinerary.bottomSectionHtml }}
                 />
-            )}
-            <hr />
+            )} */}
+            {/* <hr /> */}
         </div>
     );
 };

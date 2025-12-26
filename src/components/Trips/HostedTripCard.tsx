@@ -29,20 +29,29 @@ const HostedTripCard: React.FC<HostedTripCardProps> = ({
     title,
     mainImageUrl,
     locationName,
-    startDate,
-    endDate,
+    
+    
     price,
-    availableSeats,
     status,
   } = trip;
+  const { startDate, endDate, availableSeats } = trip.dates[0];
 
   const slug = CommonServices.generateTripSlug(id, title);
   const urlToTrip =
     activeTab === 'admin'
       ? `/admin/hosted-trips/${id}`
-      : `/trips/${slug}`;
+      : `/hostedTrips/${slug}`;
 
-  const formatDate = (date: string) => {
+  const formatDate = (date: string | Date) => {
+    // if (!date) return '';
+    console.log('Formatting date:', date);
+    console.log('Date type:', typeof date);
+    if (date instanceof Date) return date.toLocaleDateString('en-IN', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+    });
+
     const d = new Date(date);
     return d.toLocaleDateString('en-IN', {
       day: 'numeric',

@@ -1,5 +1,5 @@
 import { API_CONFIG } from '../constants';
-import { getAllTripsResponseSchema, TripDetailsResponse } from '@/classes/ApiResponse.classes';
+import { getAllTripsResponseSchema, HostedTripDetailsResponse, TripDetailsResponse } from '@/classes/ApiResponse.classes';
 import { HostedTrip, Trip } from '@/types';
 import apiClient from './apiClient';
 // import { cookies } from 'next/headers';
@@ -46,6 +46,29 @@ export class TripsApiService {
         }
         const tripDetailsResponse: TripDetailsResponse = await tripResponse.json();
         return tripDetailsResponse;
+    }
+    static async fetchHostedTripById(tripId: string, token: string = ""): Promise<HostedTrip> {
+        const tripResponse = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/hostedTrips/${tripId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        if (!tripResponse.ok) {
+            throw new Error('Failed to fetch trip details');
+        }
+        const tripDetailsResponse: HostedTrip = await tripResponse.json();
+        return tripDetailsResponse;
+    }
+    static async joinHostedTrip(tripId: string): Promise<{ success: boolean; message: string }> {
+        // const cookieStore = cookies();
+        const tripResponse = await apiClient.post(`${API_CONFIG.BACKEND_BASE_URL}/api/hostedTrips/${tripId}/join`);
+        if (!tripResponse) {
+            throw new Error('Failed to join the hosted trip');
+        }
+        const responseData: { success: boolean; message: string } = ( tripResponse).data;
+        return responseData;
     }
     static async fetchEnrolledTrips(token: string = ""): Promise<Trip[]> {
         if (!token) return [];

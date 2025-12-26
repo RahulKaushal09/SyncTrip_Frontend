@@ -1,4 +1,4 @@
-import { BlogPost, Events, Location, PlacesToVisit, Restaurants, Trip } from "@/types";
+import { BlogPost, Events, HostedTrip, Location, PlacesToVisit, Restaurants, Trip } from "@/types";
 import { User, UserWishList } from "@/types/user.types";
 export interface GoogleLoginResponse {
     token: string;
@@ -23,6 +23,10 @@ export interface appliedUsers {
 }
 export interface TripDetailsResponse {
     trip: Trip;
+    appliedUsers: appliedUsers[];
+}
+export interface HostedTripDetailsResponse {
+    trip: HostedTrip;
     appliedUsers: appliedUsers[];
 }
 export interface getAllBlogsResponseSchema {

@@ -24,6 +24,7 @@ export default function NotificationBell() {
   };
 
   useEffect(() => {
+    
     fetchCount(); // Initial load
 
    

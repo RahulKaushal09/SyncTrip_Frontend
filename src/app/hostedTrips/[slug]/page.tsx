@@ -1,60 +1,22 @@
 // pages/trips/[tripId].tsx
 
-import { Location } from '@/types';
+import { HostedTrip, Location } from '@/types';
 import { ApiService, CommonServices, TripsApiService } from '@/utils';
-import { TripDetailsResponse } from '@/classes/ApiResponse.classes';
+import { HostedTripDetailsResponse, TripDetailsResponse } from '@/classes/ApiResponse.classes';
 // import { cookies } from 'next/headers';
 import { notFound, redirect } from 'next/navigation';
 import TripDetailsContentClient from '@/components/Trips/TripDetailsClient';
 import { Metadata } from 'next';
-// import { PageTypeEnum } from '@/constants';
-// export async function generateMetadata({ params }: Props): Promise<Metadata> {
-//   const { slug } = await params;
-//   const [uuid] = slug.split('_');
-//   const tripData = await TripsApiService.fetchTripById(uuid);
-//   if (!tripData) {
-//     return {
-//       title: 'Trip Not Found | SyncTrip',
-//       description: 'This trip is no longer available.',
-//       robots: { index: false, follow: false }
-//     };
-//   }
+import { LocationFields } from '@/constants';
 
-//   const trip = tripData.trip;
-//   const { title: tripTitle, MainImageUrl, essentials: { price, duration, region, typeOfTrip, bestTime }, tripRating } = trip;
-//   const metaTitle = `${tripTitle} — ${duration}d | From ₹${price} | SyncTrip`;
-//   const metaDescription = `Book "${tripTitle}", a ${duration}-day ${typeOfTrip ?? 'trip'} in ${region || 'India'}. Starts at ₹${price}. Includes accommodation and meals (if listed). Limited seats — reserve now.`;
-
-//   const canonicalSlug = CommonServices.generateTripSlug(uuid, tripTitle || 'trip');
-//   const canonicalURL = `https://synctrip.in/trips/${canonicalSlug}`;
-//   const imageUrl = MainImageUrl ?? 'https://synctrip.in/logo_1200.png';
-
-//   return {
-//     title: metaTitle,
-//     description: metaDescription,
-//     keywords: [tripTitle, `${region} trips`, `${duration} day trip`, 'group tours', 'SyncTrip'].filter(Boolean).join(', '),
-//     openGraph: {
-//       title: metaTitle,
-//       description: metaDescription,
-//       url: canonicalURL,
-//       type: 'website',
-//       siteName: 'SyncTrip',
-//       images: [{ url: imageUrl, width: 1200, height: 630, alt: `${tripTitle} — SyncTrip` }],
-//       locale: 'en_IN',
-//     },
-//     twitter: { card: 'summary_large_image', title: metaTitle, description: metaDescription, images: [imageUrl] },
-//     alternates: { canonical: canonicalURL },
-//     robots: { index: true, follow: true, 'max-snippet': -1, 'max-image-preview': 'large' }
-//   };
-// }
 
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { slug } = await params; // Await params
 
     const [uuid] = slug.split('_');
-
-    const tripData = await TripsApiService.fetchTripById(uuid);
+    console.log('Generating metadata for trip UUID:', uuid);
+    const tripData = await TripsApiService.fetchHostedTripById(uuid);
     if (!tripData) {
         return {
             title: 'Trip Not Found | YourTravelBrand',
@@ -62,42 +24,36 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
             robots: { index: false, follow: false },
         };
     }
-    const trip = tripData.trip;
+    const trip = tripData;
     // Core fields
     const {
         title,
-        MainImageUrl,
-        essentials: {
-            price,
-            duration,
-            region,
-            season,
-            bestTime,
-            typeOfTrip,
-            availableSeats,
-        },
-        requirements,
-        tripRating,
-        include: { food, hotel, travel },
+        mainImageUrl: MainImageUrl,
+        dates,
+        locationId,
+        locationName,
+        price,
+        id,
+        inclusions: { food, hotel, travel },
     } = trip;
-
+    const {startDate, endDate,availableSeats} = dates[0] || {};
+    const duration = endDate && startDate ? Math.ceil((new Date(endDate).getTime() - new Date(startDate).getTime()) / (1000 * 60 * 60 * 24)) + 1 : 'N/A';
     // Title
-    const metaTitle = `${title} – ${typeOfTrip ? typeOfTrip + ' | ' : ''}${region ? region + ' | ' : ''}${duration} Days ₹${price}+ | SyncTrip`;
+    const metaTitle = `${title} – ${locationName ? locationName + ' | ' : ''}${duration} Days ₹${price}+ | SyncTrip`;
 
     // Description (make it benefit-driven & keyword-rich)
-    const metaDescription = `Book the "${title}" group trip${typeOfTrip ? ' (' + typeOfTrip + ')' : ''} to ${region ? region + ', ' : ''}India. Experience ${duration} days${bestTime ? ' (' + bestTime + ')' : ''} for only ₹${price}. Includes${hotel ? ' hotel,' : ''}${food ? ' meals,' : ''}${travel ? ' travel' : ''}. Rated ${tripRating ?? 'highly'}. Limited seats – reserve now!`;
+    const metaDescription = `Book the "${title}" group trip to ${locationName ? locationName + ', ' : ''}India. Experience ${duration} days for only ₹${price}. Includes${hotel ? ' hotel,' : ''}${food ? ' meals,' : ''}${travel ? ' travel' : ''}. Limited seats – reserve now!`;
 
     // Keywords (long-tail targeting)
     const metaKeywords = [
         `${title}`,
-        typeOfTrip,
-        region,
+        locationName ? `${locationName} trips` : '',
         'group tours',
         'adventure trips',
         'all inclusive trips',
         `${title} itinerary`,
-        `${region} travel packages`,
-        `best time to visit ${region}`,
+        `${locationName} travel packages`,
+        `best time to visit ${locationName || 'India'}`,
         'India tours',
         'travel deals',
     ]
@@ -106,8 +62,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
     // OG/Twitter images
     const imageUrl = MainImageUrl || '/images/default-og.jpg';
-    const expectedSlug = CommonServices.generateTripSlug(uuid, title || 'Best Trip');
-    const canonicalURL = `https://synctrip.in/trips/${expectedSlug}`;
+    const expectedSlug = uuid +"_" + trip.slug;
+    const canonicalURL = `https://synctrip.in/hostedTrips/${expectedSlug}`;
     return {
         title: metaTitle,
         description: metaDescription,
@@ -116,7 +72,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
             title: metaTitle,
             description: metaDescription,
             type: 'website',
-            url: `https://synctrip.in/trips/${expectedSlug}`,
+            url: `https://synctrip.in/hostedTrips/${expectedSlug}`,
             siteName: 'SyncTrip',
             images: [
                 {
@@ -157,35 +113,36 @@ const TripsDetailsPage = async ({ params }: Props) => {
     const [uuid] = slug.split('_');
     // const cookieStore = await cookies();
     // const tokenCookie = cookieStore.get('userToken');
-    const tripsData: TripDetailsResponse = await TripsApiService.fetchTripById(uuid);
+    const tripsData: HostedTrip = await TripsApiService.fetchHostedTripById(uuid);
     if (!tripsData) return notFound();
-    const expectedSlug = CommonServices.generateTripSlug(uuid, tripsData.trip.title || 'Best Trip');
+    
+    const expectedSlug = uuid +"_" + tripsData.slug;
     if (slug !== expectedSlug) {
-        redirect(`/trips/${expectedSlug}`);
+        redirect(`/hostedTrips/${expectedSlug}`);
     }
 
     
 
 
-    const LocationIdConnectedWith = tripsData.trip.locationId;
-    const locationData: Location | null = await ApiService.fetchLocationByIdServer(LocationIdConnectedWith);
+    const LocationIdConnectedWith = tripsData.locationId;
+    const locationData: Location | null = await ApiService.fetchLocationByIdServerWithSpecificFields(LocationIdConnectedWith,[LocationFields.BEST_TIME,LocationFields.TITLE,LocationFields.PLACES_TO_VISIT,LocationFields.DESCRIPTION,LocationFields.RATING,LocationFields.PLACES_NUMBER_TO_VISIT,LocationFields.IMAGES,LocationFields.PHOTOS,LocationFields.ID]);
     if (!locationData) return notFound();
-    const otherGoing = tripsData.appliedUsers || [];
+    // const otherGoing = tripsData.appliedUsers || [];
 
-    const canonicalURL = `https://synctrip.in/trips/${expectedSlug}`;
+    const canonicalURL = `https://synctrip.in/hostedTrips/${expectedSlug}`;
     const offerSchema = {
         "@context": "https://schema.org",
         "@type": "Product",
-        "name": tripsData.trip.title,
-        "image": [tripsData.trip.MainImageUrl],
-        "description": locationData?.description || tripsData.trip.title,
+        "name": tripsData.title,
+        "image": [tripsData.mainImageUrl],
+        "description": locationData?.description || tripsData.title,
         "aggregateRating": locationData?.rating ? { "@type": "AggregateRating", "ratingValue": locationData.rating, "reviewCount": 150 } : undefined,
         "offers": {
             "@type": "Offer",
             "url": canonicalURL,
             "priceCurrency": "INR",
-            "price": String(tripsData.trip.essentials.price),
-            "availability": tripsData.trip.essentials.availableSeats > 0 ? "https://schema.org/InStock" : "https://schema.org/SoldOut"
+            "price": String(tripsData.price),
+            "availability": tripsData.dates[0].availableSeats > 0 ? "https://schema.org/InStock" : "https://schema.org/SoldOut"
         }
     };
 
@@ -193,9 +150,10 @@ const TripsDetailsPage = async ({ params }: Props) => {
         <>
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(offerSchema) }} />
         <TripDetailsContentClient
-            tripData={tripsData.trip}
+            tripData={tripsData}
             locationData={locationData}
-            otherGoing={otherGoing}
+            // otherGoing={otherGoing}
+            otherGoing={[]}
         />
         </>
     );

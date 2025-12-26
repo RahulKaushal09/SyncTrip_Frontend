@@ -474,6 +474,22 @@ const headers: Record<string, string> = {
       return null;
     }
   }
+  static async fetchLocationByIdServerWithSpecificFields(id: string, fields: string[], token: string = ""): Promise<Location | null> {
+    try {
+
+      const response = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/locations/specificFields/${id}`, {
+        method: 'POST',
+        headers: await this.getAuthHeadersServer(token),
+        body: JSON.stringify({ fields }),
+      });
+      const data: Location = await response.json();
+      console.log('Fetched location data:', data);
+      return data;
+    } catch (error) {
+      console.error('Failed to fetch location by ID:', error);
+      return null;
+    }
+  }
   static async getPlacesByIds(ids: string[], token: string = ""): Promise<PlacesToVisit[]> {
     if (!ids || ids.length === 0) return [];
     try {
@@ -492,6 +508,7 @@ const headers: Record<string, string> = {
       return [];
     }
   }
+  
 
   static async fetchNearbyEntities(latitude: number, longitude: number, radius: number): Promise<exploreNearByApiResponse> {
     const userToken = localStorage.getItem('userToken');

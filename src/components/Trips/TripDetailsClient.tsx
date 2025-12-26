@@ -2,14 +2,14 @@
 'use client';
 
 import React, { use, useEffect, useState } from 'react';
-import { Itinerary, Location, PlacesToVisit, Trip } from '@/types';
+import { HostedTrip, HostedTripItinerary, Itinerary, Location, PlacesToVisit, Trip } from '@/types';
 import LocationHeader from '../PageDetails/LocationHeader';
 import LocationImageGallery from '../PageDetails/locationImages';
 import { PageTypeEnum, ProfileCardEnum } from '@/constants';
 import AddLocationCard from '../Cards/AddLocationCard';
 import TripItinerary from './TripItinerary';
 import PlacesToVisitSection from '../PageDetails/PlacesToVisitSection';
-import { ApiService } from '@/utils';
+import { ApiService, triggerLogin, TripsApiService } from '@/utils';
 import Cookies from 'js-cookie';
 import HotelsAndStaysSection from '../PageDetails/HotelsAndStaysSection';
 import { appliedUsers } from '@/classes/ApiResponse.classes';
@@ -23,7 +23,7 @@ import "../../../styles/trips/TripDetailsPage.css"
 // });
 
 interface TripDetailsContentClientProps {
-    tripData: Trip;
+    tripData: HostedTrip;
     locationData: Location;
     otherGoing: appliedUsers[];
 }
@@ -52,26 +52,26 @@ export default function TripDetailsContentClient({
         today.setHours(0, 0, 0, 0);
         let fromDate;
         let endDate;
-        for (let i = 0; i < tripData.essentials.timelines.length; i++) {
-            const timeline = tripData.essentials.timelines[i];
+        for (let i = 0; i < tripData.dates.length; i++) {
+            const timeline = tripData.dates[i];
 
-            const from = timeline.fromDate ? new Date(timeline.fromDate) : new Date();
-            const till = timeline.tillDate ? new Date(timeline.tillDate) : new Date();
+            const from = timeline.startDate ? new Date(timeline.startDate) : new Date();
+            const till = timeline.endDate ? new Date(timeline.endDate) : new Date();
             if (fromDate === undefined) fromDate = from;
             if (endDate === undefined) endDate = till;
             if (from > fromDate) fromDate = from;
             if (till > endDate) endDate = till;
         }
         if (fromDate === null || fromDate === undefined) {
-            fromDate = new Date(tripData.essentials.timeline?.fromDate as string);
+            fromDate = new Date(tripData.dates?.[0]?.startDate as string);
         }
         // }
         // const fromDate = Trip.essentials.timelines?.[0]?.fromDate ? new Date(Trip.essentials.timelines[0].fromDate) : new Date();
         // Set trip status
 
-        setTripStatus(fromDate < today || tripData.requirements?.status === 'completed'
+        setTripStatus(fromDate < today || tripData?.status === 'completed'
             ? 'completed'
-            : tripData.requirements?.status as string
+            : tripData?.status as string
         );
     }, [tripData]);
 
@@ -82,11 +82,14 @@ export default function TripDetailsContentClient({
                 setIsLoadingPlaces(true);
                 setErrorPlaces(null);
                 const token = Cookies.get('userToken') || '';
-                const placeIds = locationData.placesToVisit as string[];
+                let placeIds = locationData.placesToVisit as string[];
                 if (!placeIds || placeIds.length === 0) {
                     setPlacesToVisit([]);
                     return;
                 }
+                // else{
+                //     placeIds = placeIds.slice(0,8);
+                // }
                 const fetchedPlaces = await ApiService.getPlacesByIds(placeIds, token);
                 const mappedPlaces = fetchedPlaces.map(place => ({
                     ...place,
@@ -109,10 +112,13 @@ export default function TripDetailsContentClient({
 
     const onLoginClick = () => {
         // Handle login click
+        triggerLogin(enrollInTrip);
     };
-
+    
     const enrollInTrip = () => {
         // Handle trip enrollment
+        console.log('Join Trip clicked for trip ID:', tripData.id);
+        triggerLogin(() => TripsApiService.joinHostedTrip(tripData.id))
     };
 
     const getRandomNumberReviews = () => Math.floor(Math.random() * 100) + 10;
@@ -152,18 +158,18 @@ export default function TripDetailsContentClient({
                     title={tripData.title}
                     rating={updatedLocationData.rating}
                     reviews={getRandomNumberReviews()}
-                    timelines={tripData.essentials.timelines}
+                    timelines={tripData.dates}
                     placesToVisit={updatedLocationData.placesNumberToVisit || '10'}
                     HotelsToStay={updatedLocationData.hotels?.length.toString() || '10'}
                     MainImage={updatedLocationData.images?.[0]}
                     alreadyEnrolled={alreadyEnrolled}
-                    price={tripData.essentials.price}
+                    price={tripData.price}
                     ctaAction={() => { }}
                 />
             )}
             <div className="row" style={{ position: 'relative' }}>
                 <div className={!isMobile ? 'col-lg-8' : 'col-lg-12'}>
-                    <TripItinerary itinerary={tripData.itinerary as Itinerary} />
+                    <TripItinerary itinerary={tripData.itineraryTemplate as HostedTripItinerary} />
                     {isLoadingPlaces ? (
                         <div className="text-center my-4">
                             <div className="loader" />
@@ -172,8 +178,8 @@ export default function TripDetailsContentClient({
                     ) : errorPlaces ? (
                         <div className="text-center my-4 text-danger">{errorPlaces}</div>
                     ) : placesToVisit.length > 0 ? (
-                                <PlacesToVisitSection
-                                    title={tripData.title}
+                        <PlacesToVisitSection
+                            title={tripData.title}
                             places={updatedLocationData.placesToVisit as PlacesToVisit[]}
                             parentId={updatedLocationData.id}
                             parentType="location"
@@ -181,15 +187,15 @@ export default function TripDetailsContentClient({
                     ) : (
                         <div className="text-center my-4">No places to visit available.</div>
                     )}
-                    {(tripData.selectedHotelId.length > 0 || hotelIds.length > 0) && (
+                    {/* {(tripData.selectedHotelId.length > 0 || hotelIds.length > 0) && (
                         <HotelsAndStaysSection
                             hotelIds={tripData.selectedHotelId.length > 0 ? tripData.selectedHotelId : hotelIds as string[]}
                             locationName={tripData.title}
                             parentId={updatedLocationData.id}
                             parentType="location"
                         />
-                    )}
-                    {otherGoing.length > 0 && (
+                    )} */}
+                    {/* {otherGoing.length > 0 && (
                         <div>
                             <h2 className="section-title">All Other Going</h2>
                             <div className="user-list-detailsContainer">
@@ -205,7 +211,7 @@ export default function TripDetailsContentClient({
                                 ))}
                             </div>
                         </div>
-                    )}
+                    )} */}
                     {/* <LocationMapSection
                         latitude={updatedLocationData?.fullDetails?.coordinates?.lat ?? 0}
                         longitude={updatedLocationData?.fullDetails?.coordinates?.long ?? 0}
@@ -215,7 +221,7 @@ export default function TripDetailsContentClient({
                     <div className="col-lg-4" style={{ marginBottom: '17px' }}>
                         <div style={{ position: 'sticky', top: '80px', zIndex: 50 }}>
                             <AddLocationCard
-                    locationId={locationData?.id}
+                                locationId={locationData?.id}
 
                                 btnReference={undefined}
                                 showBtns={tripStatus !== 'completed'}
@@ -227,19 +233,19 @@ export default function TripDetailsContentClient({
                                 title={tripData.title}
                                 rating={updatedLocationData.rating}
                                 reviews={getRandomNumberReviews()}
-                                timelines={tripData.essentials.timelines}
+                                timelines={tripData.dates}
                                 placesToVisit={updatedLocationData.placesNumberToVisit || '10'}
                                 HotelsToStay={updatedLocationData.hotels?.length.toString() || '10'}
                                 MainImage={updatedLocationData.images?.[0]}
                                 alreadyEnrolled={alreadyEnrolled}
-                                price={tripData.essentials.price}
+                                price={tripData.price}
                                 ctaAction={() => { }}
                             />
                         </div>
                     </div>
                 )}
             </div>
-            <SyncTripAppPushingSection />
+            {/* <SyncTripAppPushingSection /> */}
         </div>
     );
 }

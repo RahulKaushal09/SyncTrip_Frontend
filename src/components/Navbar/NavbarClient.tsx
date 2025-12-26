@@ -168,8 +168,8 @@ const NavbarClient = ({ }) => {
         </Link>
         {ismobile ? (
           <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
-            <NotificationBell />
-            <ChatIcon />
+            {isLoggedIn && <NotificationBell />}
+            {isLoggedIn && <ChatIcon />}
             <button className="navbar-toggler" onClick={() => setMobileNavOpen(!mobileNavOpen)}>
               <span className="navbar-toggler-icon"></span>
             </button>
@@ -261,7 +261,7 @@ const NavbarClient = ({ }) => {
               </li>
             }
 
-            <li className="nav-item" onClick={() => {
+            {/* <li className="nav-item" onClick={() => {
               if (!isActive(ROUTES.HOSTED_TRIPS)) {
                 redirectBtnClick(ROUTES.HOSTED_TRIPS);
               }
@@ -274,7 +274,7 @@ const NavbarClient = ({ }) => {
               <span className="nav-link">
                 Hosted Trips (Pilot)
               </span>
-            </li>
+            </li> */}
             <li className="nav-item"
               onClick={() => setFeedbackFormOpen(true)}
               style={{ cursor: "pointer" }}>
@@ -315,9 +315,9 @@ const NavbarClient = ({ }) => {
                 !LoadingUser && user ? (
                   <div className="flex items-center gap-4">
                     {/* Notification Icon */}
-                    <NotificationBell />
+                      {isLoggedIn && <NotificationBell />}
 
-                    <ChatIcon />
+                    {isLoggedIn && <ChatIcon />}
                     <Dropdown show={showDropdown} onToggle={setShowDropdown}>
                       <div style={{ display: "flex", alignItems: "center" }}>
 
@@ -515,7 +515,7 @@ const NavbarClient = ({ }) => {
             </li>
           )
             : ( */}
-          <li className="nav-item"
+          {/* <li className="nav-item"
             onClick={() => {
               if (!isActive(ROUTES.HOSTED_TRIPS)) {
                 redirectBtnClick(ROUTES.HOSTED_TRIPS);
@@ -530,7 +530,7 @@ const NavbarClient = ({ }) => {
           // onClick={() => { redirectBtnClick(ROUTES.GROUP_TRIPS); closeDrawer(); }}
           >
             <span className="nav-link">Hosted Trips (Pilot)</span>
-          </li>
+          </li> */}
           {/* )
           } */}
           <li className="nav-item"
