@@ -30,6 +30,7 @@
     "react-froala-wysiwyg": "^4.6.0",
     "react-hot-toast": "^2.5.2",
     "react-leaflet": "^4.2.1",
+    "react-window": "^1.8.9",
     "sharp": "^0.34.5",
     "socket.io-client": "^4.8.1"
   },
@@ -45,6 +46,7 @@
     "@types/react": "^19",
     "@types/react-beautiful-dnd": "^13.1.8",
     "@types/react-dom": "^19",
+    "@types/react-window": "^1.8.8",
     "autoprefixer": "^10.4.21",
     "eslint": "^9",
     "eslint-config-next": "15.4.2",

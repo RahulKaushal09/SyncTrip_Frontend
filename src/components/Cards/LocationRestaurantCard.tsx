@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState,useEffect } from 'react';
 import Image from 'next/image';
 import { Restaurants } from '@/types';
 import { useRouter } from 'next/navigation';
@@ -36,10 +36,30 @@ export default function LocationRestaurantCard({
   const [activeIndex, setActiveIndex] = useState(0);
   const [liked, setLiked] = useState(isWishlisted);
   const router = useRouter();
+const [imageReady, setImageReady] = useState(false);
+  const [imageFailed, setImageFailed] = useState(false);
+  const imgs = useMemo(
+    () => (r.photos?.length ? r.photos.map((p) => p.url) : []),
+    [r.photos]
+  );
 
-  const imgs =
-    r.photos && r.photos.length ? r.photos.map((p) => p.url) : ['https://picsum.photos/800/500?random=31'];
 
+  /** Preload FIRST image only */
+  useEffect(() => {
+    if (!imgs.length) {
+      setImageFailed(true);
+      return;
+    }
+
+    const img = new window.Image();
+    img.src = imgs[0];
+
+    img.onload = () => setImageReady(true);
+    img.onerror = () => setImageFailed(true);
+  }, [imgs]);
+
+  /** ⛔ FIRST IMAGE NOT READY → DO NOT RENDER CARD */
+ 
   const openingMap = useMemo(() => {
     const map: Record<string, { open: string; close: string }[]> = {};
     (r.openingHours || []).forEach((h) => {
@@ -91,7 +111,8 @@ export default function LocationRestaurantCard({
     setLiked((prev) => !prev);
     // Optionally trigger wishlist API here
   };
-
+const shouldRender = imgs.length && imageReady && !imageFailed;
+  if (!shouldRender) return null;
   const primaryType =
     r.types && r.types.length ? capitalizeFirst(r.types[0]) : r.cuisineType || 'Cafe';
 
