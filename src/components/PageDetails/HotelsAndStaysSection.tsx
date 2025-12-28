@@ -15,51 +15,74 @@ interface HotelImageCarouselProps {
     locationName: string;
 }
 
-export const HotelImageCarousel: React.FC<HotelImageCarouselProps> = ({ images, locationName }) => {
-    const [currentIndex, setCurrentIndex] = useState(0);
-    const [validImages, setValidImages] = useState<string[]>([]);
+export const HotelImageCarousel: React.FC<HotelImageCarouselProps> = ({
+  images,
+  locationName,
+}) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [failedImages, setFailedImages] = useState<Set<string>>(new Set());
 
-    useEffect(() => {
-        setValidImages(images || []);
-        setCurrentIndex(0);
-    }, [images]);
+  // Filter images that have NOT failed
+  const validImages = (images || []).filter(
+    (img) => img && !failedImages.has(img)
+  );
 
-    const handleImageError = (brokenUrl: string) => {
-        setValidImages((prev) => {
-            const filtered = prev.filter((img) => img !== brokenUrl);
-            if (currentIndex >= filtered.length) setCurrentIndex(0);
-            return filtered.length > 0
-                ? filtered
-                : [''];
-        });
-    };
+  const handleImageError = () => {
+    const failedUrl = validImages[currentIndex];
+    if (!failedUrl) return;
 
-    const nextImage = (event: React.MouseEvent) => {
-        event.stopPropagation();
-        setCurrentIndex((prevIndex) => (prevIndex === validImages.length - 1 ? 0 : prevIndex + 1));
-    };
+    setFailedImages((prev) => {
+      const next = new Set(prev);
+      next.add(failedUrl);
+      return next;
+    });
 
-    const prevImage = (event: React.MouseEvent) => {
-        event.stopPropagation();
-        setCurrentIndex((prevIndex) => (prevIndex === 0 ? validImages.length - 1 : prevIndex - 1));
-    };
+    // Move to next image safely
+    setCurrentIndex((prev) => {
+      if (prev + 1 < validImages.length) return prev + 1;
+      return 0;
+    });
+  };
 
-    if (validImages.length === 0) {
-        validImages.push('');
-    }
+  const nextImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentIndex((prev) =>
+      prev + 1 < validImages.length ? prev + 1 : 0
+    );
+  };
+
+  const prevImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentIndex((prev) =>
+      prev === 0 ? validImages.length - 1 : prev - 1
+    );
+  };
+
+  // ✅ No images left
+  if (validImages.length === 0) {
+    return (
+      <div className="carousel no-image" style={{     display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center' }}>
+        <div className="no-image-placeholder">
+          No image found
+        </div>
+      </div>
+    );
+  }
 
     return (
         <div className="carousel" style={{ position: 'relative', width: '100%',height:"auto" }}>
             <Image
-                src={validImages[currentIndex]}
-                alt={`${locationName}`}
-                className="hotel-image"
-                width={400}
-                height={300}
-                quality={75}
-                loading="lazy"
-                onError={() => handleImageError(validImages[currentIndex])}
-            />
+        key={validImages[currentIndex]} // 🔥 forces clean re-render
+        src={validImages[currentIndex]}
+        alt={locationName}
+        width={400}
+        height={300}
+        className="hotel-image"
+        loading="lazy"
+        onError={handleImageError}
+      />
             {validImages.length > 1 && (
                 <>
                     <button
@@ -184,7 +207,7 @@ const HotelCard: React.FC<HotelCardProps> = ({
                 type={typeOfWhishlistCardEnum}
             />
             <HotelImageCarousel images={hotel.hotel_images} locationName={locationName} />
-            <div className="card-content-hotel">
+            <div className="card-content-hotel" style={{position:hotel.hotel_images.length==0?"absolute":"relative",bottom:hotel.hotel_images.length==0?"0":""}}>
                 <div className="rating-hotel">
                     <span className="stars">★</span> <strong>{hotel.hotel_location.rating.score}</strong>{' '}
                     {hotel.hotel_location.rating.review_count

@@ -130,8 +130,10 @@ export default function CreateHostedTripPage() {
             await apiClient.post('/hostedTrips', fd);
 
             toast.success('Hosted trip created successfully');
-        } catch (err: any) {
-            toast.error(err?.response?.data?.message || 'Something went wrong');
+        } 
+        catch (err: Error | unknown) {
+            console.error('Error creating hosted trip:', err);
+            toast.error( 'Something went wrong');
         } finally {
             setLoading(false);
         }

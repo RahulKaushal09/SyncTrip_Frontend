@@ -5,6 +5,7 @@ import { User } from "../../types";
 import "../../../styles/popups/phoneNumberPopup.css";
 import { sendOtp, verifyOtp } from "@/utils/firebaseAuthClient";
 import { AuthServices } from "@/utils/auth.utils";
+import { ApiService } from "@/utils";
 
 interface PhoneNumberPopupProps {
   user: User;
@@ -18,6 +19,7 @@ export default function PhoneNumberPopup({
   onPhoneSubmit,
 }: PhoneNumberPopupProps) {
   const [phone, setPhone] = useState("");
+  const [fullName, setFullName] = useState(user.name );
   const [otp, setOtp] = useState("");
   const [otpSent, setOtpSent] = useState(false);
   const [error, setError] = useState("");
@@ -50,16 +52,22 @@ export default function PhoneNumberPopup({
     try {
       setLoading(true);
       setError("");
+            const userExists = await ApiService.checkUserExistsWithPhoneNumber(phone);
+      if(userExists) {
+        setError('An account with this phone number already exists. Please use another number or login.');
+        setLoading(false);
+        return;
+      }
       await sendOtp("+91" + phone);
       setOtpSent(true);
       setResendTimer(60); // 60s cooldown
       setOtp(""); // clear OTP field
-    } catch (e: any) {
-      if (e.code === "auth/too-many-requests") {
-        setError("Too many attempts. Please wait a few minutes and try again.");
-      } else {
-        setError(e.message || "Failed to send OTP. Please try again.");
-      }
+
+    } 
+    // eslint-disable-next-line 
+    catch (e:any) {
+      console.error("Error sending OTP:", e);
+      setError( "Failed to send OTP. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -76,7 +84,7 @@ export default function PhoneNumberPopup({
       setError("");
 
       const firebaseToken = await verifyOtp(otp);
-      const updatedUser = await AuthServices.verifyPhone(firebaseToken, phone);
+      const updatedUser = await AuthServices.verifyPhoneAndUpdateName(firebaseToken, phone, fullName);
 
       if (!updatedUser) {
         throw new Error("Verification failed");
@@ -84,8 +92,12 @@ export default function PhoneNumberPopup({
 
       onPhoneSubmit(updatedUser);
       onClose();
-    } catch (e: any) {
-      setError(e.message || "Invalid OTP or verification failed");
+
+    } 
+    //  eslint-disable-next-line 
+    catch (e:any) {
+      console.error("Error verifying OTP:", e);
+      setError("Invalid OTP or verification failed");
     } finally {
       setLoading(false);
     }
@@ -104,6 +116,22 @@ export default function PhoneNumberPopup({
 
         <h2 className="phone-number-title">Verify your phone number</h2>
 
+<div className="input-group">
+          <label htmlFor="name">Full Name</label>
+          <input
+            id="name"
+            type="text"
+            placeholder="Enter your full name"
+            className="login-popup-input margin1RemBottom"
+            value={fullName || user.name || ""}
+            onChange={(e) => {
+              setFullName(e.target.value);
+              setError("");
+            }}
+            maxLength={30}
+            disabled={loading || otpSent}
+          />
+        </div>
         {/* Phone number input */}
         <div className="input-group">
           <label htmlFor="phone">Phone Number</label>
@@ -197,7 +225,7 @@ export default function PhoneNumberPopup({
         {error && (
           <div
             className="phone-number-error"
-            style={{ color: "red", marginTop: "1rem", fontSize: "0.9rem" }}
+            style={{ color: "red", marginTop: "1rem", fontSize: "12px" }}
           >
             {error}
           </div>

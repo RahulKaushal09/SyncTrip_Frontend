@@ -153,7 +153,6 @@ const TripsDetailsPage = async ({ params }: Props) => {
             tripData={tripsData}
             locationData={locationData}
             // otherGoing={otherGoing}
-            otherGoing={[]}
         />
         </>
     );

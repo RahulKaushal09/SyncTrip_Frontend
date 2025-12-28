@@ -38,7 +38,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en">
       <body>
-      <Script
+        <Script
           id="clarity-script"
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
@@ -49,21 +49,39 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     })(window, document, "clarity", "script", "ss9aac6yj2");`,
           }}
         />
+
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=AW-17836239160"
+          strategy="afterInteractive"
+        />
+
+        <Script
+          id="gtag-init"
+          strategy="afterInteractive"
+        >
+          {`  
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'AW-17836239160');
+          `}
+        </Script>
+
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/manifest.json" />
         <div className="App">
           <LoaderProvider>
-          <LoginProvider>
-            {/* You can add a global navbar or context providers here */}
-            {/* <NavbarWrapper /> */}
+            <LoginProvider>
+              {/* You can add a global navbar or context providers here */}
+              {/* <NavbarWrapper /> */}
               {/* <RouteChangeHandler /> */}
-            <NavbarClient />
-            {/* <ExploreNearby /> */}
-            {children}
-            <Toaster position='top-right' />
-          </LoginProvider>
+              <NavbarClient />
+              {/* <ExploreNearby /> */}
+              {children}
+              <Toaster position='top-right' />
+            </LoginProvider>
           </LoaderProvider>
         </div>
         <Footer />

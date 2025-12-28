@@ -192,11 +192,10 @@ const TripsDetailsPage = async ({ params }: Props) => {
     return (
         <>
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(offerSchema) }} />
-        <TripDetailsContentClient
+        {/* <TripDetailsContentClient
             tripData={tripsData.trip}
             locationData={locationData}
-            otherGoing={otherGoing}
-        />
+        /> */}
         </>
     );
 };

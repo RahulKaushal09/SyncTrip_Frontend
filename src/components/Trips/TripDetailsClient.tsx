@@ -25,13 +25,11 @@ import "../../../styles/trips/TripDetailsPage.css"
 interface TripDetailsContentClientProps {
     tripData: HostedTrip;
     locationData: Location;
-    otherGoing: appliedUsers[];
 }
 
 export default function TripDetailsContentClient({
     tripData,
     locationData,
-    otherGoing,
 }: TripDetailsContentClientProps) {
     const [isMobile, setIsMobile] = useState(false);
     const [tripStatus, setTripStatus] = useState<string | null>(null);
@@ -82,7 +80,7 @@ export default function TripDetailsContentClient({
                 setIsLoadingPlaces(true);
                 setErrorPlaces(null);
                 const token = Cookies.get('userToken') || '';
-                let placeIds = locationData.placesToVisit as string[];
+                const placeIds = locationData.placesToVisit as string[];
                 if (!placeIds || placeIds.length === 0) {
                     setPlacesToVisit([]);
                     return;

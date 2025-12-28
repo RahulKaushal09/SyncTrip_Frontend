@@ -62,6 +62,23 @@ export class ApiService {
       return null;
     }
   }
+  static async checkUserExistsWithPhoneNumber(phone: string): Promise<boolean> {
+    try {
+      const response = await apiClient.post(`${API_CONFIG.BACKEND_BASE_URL}/api/users/checkUserExists`, {
+         phone,
+      });
+
+      if (!response) {
+        throw new Error('Failed to check user existence');
+      }
+
+      const data = await response.data;
+      return data.exists || false;
+    } catch (error) {
+      console.error('Error checking user existence:', error);
+      return false;
+    }
+  }
 
   /**
    * Send user feedback to backend.
@@ -344,6 +361,14 @@ const headers: Record<string, string> = {
     });
     return this.handleResponse(response);
   }
+  static async LoginWithPhoneNumber(firebaseToken: string,phone: string): Promise<CompleteProfileApiResponse> {
+    const response = await apiClient.post(`${API_CONFIG.BACKEND_BASE_URL}/api/auth/loginWithPhone`, {
+      firebaseToken,
+      phone
+    });
+    return response.data;
+  }
+
 
   static async register(userData: {
     name: string;
@@ -351,6 +376,7 @@ const headers: Record<string, string> = {
     phone: string;
     password: string;
     sex: string;
+    firebaseToken: string;
   }): Promise<CompleteProfileApiResponse> {
     const response = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/users/basicRegistration`, {
       method: 'POST',

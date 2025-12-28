@@ -18,6 +18,21 @@ export class AuthServices {
             return null;
         }
     }
+    static async verifyPhoneAndUpdateName(firebaseToken: string, phone: string, name: string): Promise<User | null> {
+
+        try {
+            const res = apiClient.post("/auth/verifyAndAddPhone", {
+                firebaseToken,
+                phone,
+                name,
+            });
+            const user: User = (await res).data.user;
+            return user;
+        } catch (err) {
+            console.error("Auth verifyOtp error:", err);
+            return null;
+        }
+    }
     // static async getServerUser(fields: UserField[]): Promise<User | null> {
     //     const cookiesList = await cookies(); // no need for await
     //     const token = cookiesList.get("userToken")?.value;

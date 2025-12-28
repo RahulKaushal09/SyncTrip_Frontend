@@ -20,6 +20,7 @@
     /* background: rgba(0, 0, 0, 0.3); */
     /* Dark overlay */
     z-index: 1;
+    pointer-events: none;
 }
 
 /* Ensure content is above the overlay */

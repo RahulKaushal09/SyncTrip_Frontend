@@ -62,7 +62,9 @@ export async function sendOtp(phone: string) {
     confirmationResult = null;
     confirmationResult = await signInWithPhoneNumber(auth, phone, verifier);
     return confirmationResult;
-  } catch (error: any) {
+  }
+  //  eslint-disable-next-line 
+  catch (error: any) {
     console.error('Send OTP error:', error);
     // Re-throw for component handling
     throw new Error(error.code === 'auth/invalid-app-credential' 
