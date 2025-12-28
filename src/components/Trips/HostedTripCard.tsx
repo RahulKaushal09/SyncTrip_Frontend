@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { useMemo } from 'react';
-import '../../../styles/trips/HostedTripCard.css';
+import '../../../styles/trips/hostedTripCard.css';
 import { HostedTrip } from '@/types';
 import HeartIcon from '../smallComponents/HeartIcon';
 import { CommonServices } from '@/utils/services.utils';
