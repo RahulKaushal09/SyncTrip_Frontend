@@ -168,6 +168,14 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
             const response = await ApiService.completeProfile(formData);
 
             if (response.success) {
+                if (typeof window !== 'undefined' && window.gtag) {
+                    window.gtag('event', 'conversion', {
+                        'send_to': 'AW-17836239160/ziUVCP3Zw9kbELjS_bhC',
+                        'value': 1.0,        // Optional – keep if you set a value in Google Ads; remove if not
+                        'currency': 'INR'    // Optional – keep if using value; remove if not
+                        // No event_callback needed since there's no redirect URL
+                    });
+                }
                 onProfileComplete(response.user);
                 onClose();
                 hideLoader();
@@ -441,22 +449,22 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
                     {/* Profile Picture */}
 
                     <div className="full-profile-section">
-  <label>
-    Upload a profile picture *{' '}
-    {/* <span className="full-profile-optional">
+                        <label>
+                            Upload a profile picture *{' '}
+                            {/* <span className="full-profile-optional">
         
       {user.profile_picture && user.profile_picture.length > 0 ? '(Optional)' : '(Required)'}
     </span> */}
-  </label>
+                        </label>
 
-  <AvatarUploader
-    value={form.profilePicture}
-    existingImageUrl={ null}
-    onChange={(file) => setForm((prev) => ({ ...prev, profilePicture: file }))}
-    required={!user.profile_picture || user.profile_picture.length === 0}
-    size={110} // adjust if you want bigger/smaller avatar
-  />
-</div>
+                        <AvatarUploader
+                            value={form.profilePicture}
+                            existingImageUrl={null}
+                            onChange={(file) => setForm((prev) => ({ ...prev, profilePicture: file }))}
+                            required={!user.profile_picture || user.profile_picture.length === 0}
+                            size={110} // adjust if you want bigger/smaller avatar
+                        />
+                    </div>
 
 
                     {/* <div className="full-profile-section">

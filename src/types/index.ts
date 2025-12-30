@@ -3,6 +3,18 @@
  * Export all types for easy importing
  */
 
+declare global {
+  interface Window {
+    gtag?: (
+      command: 'config' | 'event' | 'set' | 'js',
+      targetId?: string,
+      config?: Record<string, unknown>
+    ) => void;
+
+    dataLayer?: Array<Record<string, unknown>>;
+  }
+}
+
 // User types
 export * from './user.types';
 
@@ -14,3 +26,4 @@ export * from './api.types';
 
 // Common types
 export * from './common.types';
+

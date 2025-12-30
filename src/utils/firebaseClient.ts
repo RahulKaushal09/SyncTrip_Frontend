@@ -72,3 +72,12 @@ export function onForegroundNotification(
   if (!messaging) return () => {};
   return onMessage(messaging, callback);
 }
+
+
+export async function requestNotificationPermissionOnly() {
+  if (typeof window === "undefined") return false;
+  if (!("Notification" in window)) return false;
+
+  const permission = await Notification.requestPermission();
+  return permission === "granted";
+}

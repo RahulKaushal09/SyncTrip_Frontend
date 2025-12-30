@@ -10,6 +10,7 @@ import { userTripFields } from '@/constants'
 import { UserTrip } from '@/types'
 import { CommonServices } from '@/utils'
 import toast from 'react-hot-toast'
+import NotificationPermissionPrompt from "@/components/popups/NotificationPermissionPrompt"
 
 export type Candidate = {
     id: string
@@ -200,7 +201,6 @@ export default function MatchingPage() {
     }, [locationId]);
     async function loadTrips() {
         try {
-            debugger;
             let trips: UserTrip[] = await TripServices.fetchUserTrips();
             // show only those trip which have end date in future
             const now = new Date().toISOString().split('T')[0];
@@ -566,6 +566,8 @@ export default function MatchingPage() {
     const bottomRadius = (isExpanded || expandDy < -20) ? 0 : 18
     return (
         <main className="matchingpage">
+                <NotificationPermissionPrompt/>
+
             <MultipleTripSelectionHeader
                 tripName={tripName}
                 dates={dateString}

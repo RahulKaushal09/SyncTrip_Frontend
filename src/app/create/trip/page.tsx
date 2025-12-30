@@ -59,7 +59,7 @@ export default function CreateTripScreen() {
 function CreateTripContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const {user,isLoggedIn} = useLogin();
+  const { user, isLoggedIn } = useLogin();
   const locationIdParam = searchParams?.get('locationId');
   const startParam = searchParams?.get('start');
   const endParam = searchParams?.get('end');
@@ -223,6 +223,13 @@ function CreateTripContent() {
         const res = await ApiService.saveTripDetails(payload);
         if (res && res.id) {
           const createdTripId = res.id;
+          if (typeof window !== 'undefined' && window.gtag) {
+            window.gtag('event', 'conversion', {
+              'send_to': 'AW-17836239160/h8M1COuN0tkbELjS_bhC',
+              'value': 1.0,      // Keep if you assigned a value of ₹1 in Google Ads; remove if no value set
+              'currency': 'INR'  // Keep if using value; remove otherwise
+            });
+          }
           if (manual) {
             // route to manual planner page
             toast.success('Trip created! Add your activities now.');
@@ -456,7 +463,7 @@ function CreateTripContent() {
 
           goNext();
         }} />;
-        // return <Step1Location initialSelectedLocation={selectedLocation} onSelect={handleLocationSelect} />;
+      // return <Step1Location initialSelectedLocation={selectedLocation} onSelect={handleLocationSelect} />;
       case 2:
         return (
           <Step2SelectDates
@@ -479,7 +486,7 @@ function CreateTripContent() {
         );
     }
   };
-if(!isLoggedIn || !user || !user.profileCompleted){
+  if (!isLoggedIn || !user || !user.profileCompleted) {
     router.replace('/');
     toast.error('Please login and complete your profile to create a trip.');
     return null;

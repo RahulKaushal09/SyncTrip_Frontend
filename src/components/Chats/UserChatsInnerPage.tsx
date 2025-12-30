@@ -14,6 +14,7 @@ import { Chat, UserTrip } from "@/types";
 import { CommonServices } from "@/utils";
 import toast from "react-hot-toast";
 import { useLoader } from "@/components/providers/LoaderContext";
+import NotificationPermissionPrompt from "@/components/popups/NotificationPermissionPrompt"
 
 /**
  * ChatsPage
@@ -395,6 +396,8 @@ export default function ChatsPageInner() {
     /* ---------- Render ---------- */
     return (
         <div className="chatsPage">
+                <NotificationPermissionPrompt/>
+
             <div className="min-h-screen bg-white">
                 {/* Header: if chat window open -> show small ChatHeader (with back); else show trip selector */}
                 {chatId ? (
