@@ -77,6 +77,8 @@ export interface Itinerary {
     days: TripDayItinerary[];
 }
 export interface HostedTripItinerary {
+    topSectionHtml?: string;
+    bottomSectionHtml?: string;
     days: [{
         title: string;
         descriptionHtml: string;

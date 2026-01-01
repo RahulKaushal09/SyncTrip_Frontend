@@ -11,11 +11,11 @@ import TripItinerary from './TripItinerary';
 import PlacesToVisitSection from '../PageDetails/PlacesToVisitSection';
 import { ApiService, triggerLogin, TripsApiService } from '@/utils';
 import Cookies from 'js-cookie';
-import HotelsAndStaysSection from '../PageDetails/HotelsAndStaysSection';
-import { appliedUsers } from '@/classes/ApiResponse.classes';
-import TripsProfileCardUi from '../User/ProfileTripCards';
-import dynamic from 'next/dynamic';
-import SyncTripAppPushingSection from '../AppPushingComponents/AppPushingSection';
+// import HotelsAndStaysSection from '../PageDetails/HotelsAndStaysSection';
+// import { appliedUsers } from '@/classes/ApiResponse.classes';
+// import TripsProfileCardUi from '../User/ProfileTripCards';
+// import dynamic from 'next/dynamic';
+// import SyncTripAppPushingSection from '../AppPushingComponents/AppPushingSection';
 import "../../../styles/trips/TripDetailsPage.css"
 // Dynamically import LocationMapSection to avoid SSR issues
 // const LocationMapSection = dynamic(() => import('../PageDetails/LocationMapSection'), {

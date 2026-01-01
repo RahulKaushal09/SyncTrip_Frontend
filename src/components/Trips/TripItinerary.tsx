@@ -20,13 +20,13 @@ const TripItinerary: React.FC<ItineraryComponentProps> = ({ itinerary }) => {
     return (
         <div className="itinerary-container">
             {/* Top Section */}
-            {/* {itinerary.topSectionHtml && (
+            {itinerary.topSectionHtml && (
                 <div
                     className="top-section"
                     dangerouslySetInnerHTML={{ __html: itinerary.topSectionHtml }}
                 />
-            )} */}
-            {/* <hr /> */}
+            )}
+            <hr />
 
             <h2>Day-Wise Itinerary</h2>
 
@@ -52,15 +52,15 @@ const TripItinerary: React.FC<ItineraryComponentProps> = ({ itinerary }) => {
                     __html: selectedDayData ? selectedDayData.descriptionHtml : '<p>No data available for this day.</p>',
                 }}
             />
-            {/* <hr /> */}
+            <hr />
 
             {/* Bottom Section */}
-            {/* {itinerary.bottomSectionHtml && (
+            {itinerary.bottomSectionHtml && (
                 <div
                     className="bottom-section"
                     dangerouslySetInnerHTML={{ __html: itinerary.bottomSectionHtml }}
                 />
-            )} */}
+            )}
             {/* <hr /> */}
         </div>
     );

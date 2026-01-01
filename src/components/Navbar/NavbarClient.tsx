@@ -122,7 +122,7 @@ const NavbarClient = ({ }) => {
     if (route === ROUTES.GROUP_TRIPS) {
       return pathname === ROUTES.GROUP_TRIPS;
     }
-    if( route === ROUTES.HOSTED_TRIPS) {
+    if (route === ROUTES.HOSTED_TRIPS) {
       return pathname === ROUTES.HOSTED_TRIPS;
     }
     if (route === "/") return pathname === "/";
@@ -153,7 +153,11 @@ const NavbarClient = ({ }) => {
       setPageType(PageTypeEnum.TRIP);
     } else if (pathname === `/${PageTypeEnum.LOCATION}`) {
       setPageType(PageTypeEnum.LOCATION);
-    } else {
+    } 
+    if (pathname === `/${PageTypeEnum.HOSTED_TRIPS}`) {
+      setPageType(PageTypeEnum.HOSTED_TRIPS);
+    }
+    else {
       setPageType(PageTypeEnum.HOME);
     }
   }, [pathname]);
@@ -181,7 +185,7 @@ const NavbarClient = ({ }) => {
         {/* <div className={`collapse navbar-collapse justify-content-end ${mobileNavOpen ? 'show' : ''}`} id="navbarNav"> */}
 
         <div className="collapse navbar-collapse justify-content-end" id="navbarNav" >
-          <ul className="navbar-nav" style={{ alignItems: "center", gap: "20px" }}>
+          <ul className="navbar-nav ul-withNoListStyle" style={{ alignItems: "center", gap: "20px" }}>
             {isLoggedIn &&
               <li className="nav-item"
                 onClick={() => {
@@ -239,42 +243,44 @@ const NavbarClient = ({ }) => {
                 Blogs
               </span>
             </li>
+            {pageType == PageTypeEnum.HOSTED_TRIPS ? (
+              (isLoggedIn &&
 
-            {isLoggedIn &&
+                <li className="nav-item"
+                  onClick={() => {
+                    if (!isActive(ROUTES.CREATE_TRIP)) {
+                      redirectBtnClick(ROUTES.CREATE_TRIP);
+                    }
+                  }}
+                  style={{
+                    cursor: isActive(ROUTES.CREATE_TRIP) ? "default" : "pointer",
+                    pointerEvents: isActive(ROUTES.CREATE_TRIP) ? "none" : "auto",
+                    borderBottom: isActive(ROUTES.CREATE_TRIP) ? "2px solid var(--secondary-1)" : "",
+                  }}
+                // onClick={() => redirectBtnClick(ROUTES.CREATE_TRIP)} style={{ cursor: "pointer" }}
+                >
+                  <span className="nav-link">
+                    Create Trip
+                  </span>
+                </li>
+              )) : (
 
-              <li className="nav-item"
-                onClick={() => {
-                  if (!isActive(ROUTES.CREATE_TRIP)) {
-                    redirectBtnClick(ROUTES.CREATE_TRIP);
-                  }
-                }}
+              <li className="nav-item" onClick={() => {
+                if (!isActive(ROUTES.HOSTED_TRIPS)) {
+                  redirectBtnClick(ROUTES.HOSTED_TRIPS);
+                }
+              }}
                 style={{
-                  cursor: isActive(ROUTES.CREATE_TRIP) ? "default" : "pointer",
-                  pointerEvents: isActive(ROUTES.CREATE_TRIP) ? "none" : "auto",
-                  borderBottom: isActive(ROUTES.CREATE_TRIP) ? "2px solid var(--secondary-1)" : "",
-                }}
-              // onClick={() => redirectBtnClick(ROUTES.CREATE_TRIP)} style={{ cursor: "pointer" }}
-              >
+                  cursor: isActive(ROUTES.HOSTED_TRIPS) ? "default" : "pointer",
+                  pointerEvents: isActive(ROUTES.HOSTED_TRIPS) ? "none" : "auto",
+                  borderBottom: isActive(ROUTES.HOSTED_TRIPS) ? "2px solid var(--secondary-1)" : "",
+                }}>
                 <span className="nav-link">
-                  Create Trip
+                  Hosted Trips
                 </span>
               </li>
+            )
             }
-
-            {/* <li className="nav-item" onClick={() => {
-              if (!isActive(ROUTES.HOSTED_TRIPS)) {
-                redirectBtnClick(ROUTES.HOSTED_TRIPS);
-              }
-            }}
-              style={{
-                cursor: isActive(ROUTES.HOSTED_TRIPS) ? "default" : "pointer",
-                pointerEvents: isActive(ROUTES.HOSTED_TRIPS) ? "none" : "auto",
-                borderBottom: isActive(ROUTES.HOSTED_TRIPS) ? "2px solid var(--secondary-1)" : "",
-              }}>
-              <span className="nav-link">
-                Hosted Trips (Pilot)
-              </span>
-            </li> */}
             <li className="nav-item"
               onClick={() => setFeedbackFormOpen(true)}
               style={{ cursor: "pointer" }}>
@@ -315,7 +321,7 @@ const NavbarClient = ({ }) => {
                 !LoadingUser && user ? (
                   <div className="flex items-center gap-4">
                     {/* Notification Icon */}
-                      {isLoggedIn && <NotificationBell />}
+                    {isLoggedIn && <NotificationBell />}
 
                     {isLoggedIn && <ChatIcon />}
                     <Dropdown show={showDropdown} onToggle={setShowDropdown}>
@@ -422,7 +428,7 @@ const NavbarClient = ({ }) => {
             <span className="drawer-close" onClick={closeDrawer}>&times;</span>
           </div>
         </div>
-        <ul className="navbar-nav" style={{ alignItems: "flex-start", padding: "1rem" }}>
+        <ul className="navbar-nav ul-withNoListStyle" style={{ alignItems: "flex-start", padding: "1rem" }}>
           {isLoggedIn &&
 
             <li className="nav-item"
@@ -515,7 +521,7 @@ const NavbarClient = ({ }) => {
             </li>
           )
             : ( */}
-          {/* <li className="nav-item"
+          <li className="nav-item"
             onClick={() => {
               if (!isActive(ROUTES.HOSTED_TRIPS)) {
                 redirectBtnClick(ROUTES.HOSTED_TRIPS);
@@ -529,8 +535,8 @@ const NavbarClient = ({ }) => {
             }}
           // onClick={() => { redirectBtnClick(ROUTES.GROUP_TRIPS); closeDrawer(); }}
           >
-            <span className="nav-link">Hosted Trips (Pilot)</span>
-          </li> */}
+            <span className="nav-link">Hosted Trips</span>
+          </li>
           {/* )
           } */}
           <li className="nav-item"

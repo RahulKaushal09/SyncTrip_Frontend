@@ -6,25 +6,44 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_BASE_URL+"/api" || 'http://
 const apiClient = axios.create({
     baseURL: API_BASE_URL,
     timeout: 10000,
-    headers: {
-        'Content-Type': 'application/json',
-    },
+    
 });
 
-// Optional: Add interceptors for auth or error handling
 apiClient.interceptors.request.use(
     (config) => {
-        // Example: Add token if available
         const token = StorageUtils.getToken();
+
         if (token) {
-            if (config.headers) {
-                (config.headers as Record<string, string>)['Authorization'] = `Bearer ${token}`;
-            }
+            config.headers = config.headers || {};
+            config.headers['Authorization'] = `Bearer ${token}`;
         }
+
+        // 🔥 KEY FIX
+        if (config.data instanceof FormData) {
+            delete config.headers?.['Content-Type'];
+        } else {
+            config.headers = config.headers || {};
+            config.headers['Content-Type'] = 'application/json';
+        }
+
         return config;
     },
     (error) => Promise.reject(error)
 );
+// // Optional: Add interceptors for auth or error handling
+// apiClient.interceptors.request.use(
+//     (config) => {
+//         // Example: Add token if available
+//         const token = StorageUtils.getToken();
+//         if (token) {
+//             if (config.headers) {
+//                 (config.headers as Record<string, string>)['Authorization'] = `Bearer ${token}`;
+//             }
+//         }
+//         return config;
+//     },
+//     (error) => Promise.reject(error)
+// );
 
 apiClient.interceptors.response.use(
 // allow 409 status codes as valid responses

@@ -44,7 +44,7 @@ const LocationHeader: React.FC<LocationHeaderProps> = ({ type, location, rating,
         <div className="locationEventsDetails">
             <div style={{ display: "flex", justifyContent: "space-between", flexWrap: 'wrap' }}>
                 <div>
-                    <h2 className="locationEventHeadings">{title}</h2>
+                    <h1 className="locationEventHeadings">{title}</h1>
                     {address && <p className="text-muted">{address}</p>}
                 </div>
                 <div className="d-flex m-gap-2 justify-content-between align-items-center">
