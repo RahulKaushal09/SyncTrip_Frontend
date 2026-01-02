@@ -22,10 +22,13 @@ export class TripsApiService {
         return allTripsData;
     }
     static async fetchAllHostedTrips(): Promise<HostedTrip[]> {
+        console.log('Fetching all hosted trips from API...');
         const allTripsResponse = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/hostedTrips`,{
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
         });
+        console.log('Response status:', allTripsResponse.status);
+        console.log('Response :', allTripsResponse);
         if (allTripsResponse.status === 404) {
             throw new Error('No trips found. Please check back later.');
             return [];
