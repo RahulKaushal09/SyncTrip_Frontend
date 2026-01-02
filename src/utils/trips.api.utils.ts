@@ -24,6 +24,8 @@ export class TripsApiService {
     static async fetchAllHostedTrips(): Promise<HostedTrip[]> {
         console.log('Fetching all hosted trips from API...');
         const allTripsResponse = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/hostedTrips`,{
+            cache: 'no-store',
+  next: { revalidate: 0 },
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
         });
