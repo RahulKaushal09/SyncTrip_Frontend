@@ -104,7 +104,7 @@ const HomeHeroSection: React.FC = () => {
                         <p className="text-[var(--neutral-1)]" style={{ position: "relative", zIndex: "5px", width: "100%" }}>
   SyncTrip helps <strong>solo travelers, friends, couples, and groups </strong> 
   plan trips, discover destinations, and connect with people traveling to the same place.
-  Whether you're traveling alone or with friends, SyncTrip makes trip planning social,
+  Whether you&apos;re traveling alone or with friends, SyncTrip makes trip planning social,
   simple, and safe across India.
 </p>
                         {/* <p className="text-[var(--neutral-1)]" style={{ position: "relative", zIndex: "5px", width: "100%" }}>Connect with like-minded Indian travelers, explore incredible India together, and create unforgettable memories. Your next adventure across India is just a match away! 🇮🇳</p> */}
