@@ -67,7 +67,7 @@ const HomeHeroSection: React.FC = () => {
                 <div className="row rowHeroSection ">
                     <div className="heroVectorBottom"></div>
 
-                    <div className="col-lg-7 col-md-8 col-sm-12 heroText">
+                    <div className="col-lg-7 col-md-7 col-sm-12 heroText">
                         <div
                             className="inline-flex items-center gap-2 bg-white/60 backdrop-blur-sm rounded-full px-4 py-2 border border-[#b8e8ff] hideInMobile" style={{ marginBottom: "10px", position: "relative", zIndex: "5px" }}>
                             <Plane className="w-4 h-4 text-[#3abef5]" />
@@ -78,21 +78,36 @@ const HomeHeroSection: React.FC = () => {
 
                         {/* <h1 className="text-white" style={{ fontSize: "60px", fontWeight: "bold",position:"relative",zIndex:"5px" }}><span className="text-custom-secondary">Find Your Perfect</span><br></br><span className="text-custom-primary">Travel Companion</span></h1> */}
 
-                        <h1
-                            className="text-white font-bold relative z-[5] text-[40px] md:text-[50px] leading-tight"
-                        >
+                        {/* <h1 className="text-white font-bold relative z-[5] text-[40px] md:text-[50px] leading-tight">
                             <span className="text-custom-secondary">Find Your Perfect</span>
 
-                            {/* Only shows on desktop */}
                             <span className="hidden md:inline"><br /></span>
 
-                            {/* Only shows on mobile */}
                             <span className="inline md:hidden"> </span>
 
                             <span className="text-custom-primary">Travel Companion</span>
+                        </h1> */}
+                        <h1 className=" font-bold relative z-[5] text-[40px] md:text-[45px] leading-tight">
+                            <span className="text-custom-secondary">
+                                Plan Trips. Meet Travelers.
+                            </span>
+
+                            <span className="hidden md:inline"><br /></span>
+                            <span className="inline md:hidden"> </span>
+
+                            <span className="text-custom-primary">
+                                Travel Solo, With Friends, or Together
+                            </span>
                         </h1>
+
                         {/* <h3 className="text-white">Connect, Plan & Explore Together</h3> */}
-                        <p className="text-[var(--neutral-1)]" style={{ position: "relative", zIndex: "5px", width: "100%" }}>Connect with like-minded Indian travelers, explore incredible India together, and create unforgettable memories. Your next adventure across India is just a match away! 🇮🇳</p>
+                        <p className="text-[var(--neutral-1)]" style={{ position: "relative", zIndex: "5px", width: "100%" }}>
+  SyncTrip helps <strong>solo travelers, friends, couples, and groups </strong> 
+  plan trips, discover destinations, and connect with people traveling to the same place.
+  Whether you're traveling alone or with friends, SyncTrip makes trip planning social,
+  simple, and safe across India.
+</p>
+                        {/* <p className="text-[var(--neutral-1)]" style={{ position: "relative", zIndex: "5px", width: "100%" }}>Connect with like-minded Indian travelers, explore incredible India together, and create unforgettable memories. Your next adventure across India is just a match away! 🇮🇳</p> */}
 
                         <div className="row heroBtnsSection">
                             <div className="col-lg-5 col-md-5 col-sm-6">

@@ -111,9 +111,9 @@
   
 
 }@media screen and (max-width: 1000px) and (min-width: 768px) {
-  .heroText h1{
+  /* .heroText h1{
     width:50%;
-  }
+  } */
   .heroText h3{
     font-size:24px;
   }
@@ -124,12 +124,16 @@
   .heroText{
     padding-left: 20px;
   }
-  .heroText h1{
+  /* .heroText h1{
     font-size:50px !important;
-  }
+  } */
   .heroText .homebtnprimary{
     margin-bottom:20px;
   }
+  
+}
+
+@media screen and (max-width:800px) {
   .heroBtnsSection{
     flex-direction: column;
   }

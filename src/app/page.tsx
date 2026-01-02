@@ -4,8 +4,10 @@ import HomeHeroSection from "@/components/Home_new/HomeHeroSection";
 import Testimonials from "@/components/Home_new/testimonialSection";
 import BlogsHomePage from "../components/Home_new/homeBlogsSection";
 import { FeaturesSection } from "@/components/Home_new/whyChooseSyncTrip";
-import ExploreNearbySection from "@/components/Home_new/exploreNearyBySection";
-import { HowItWorksSectionHome } from "@/components/Home_new/howItWorksHomeSection";
+// import ExploreNearbySection from "@/components/Home_new/exploreNearyBySection";
+// import { HowItWorksSectionHome } from "@/components/Home_new/howItWorksHomeSection";
+import SoftLoginTrigger from "@/components/Auth/SoftLoginTrigger";
+
 import { getThemeClass } from "@/utils/getThemeClassForBlogs";
 import { BlogsApiServices } from "@/utils/blogs.api.utils";
 import { BlogPost } from "@/types";
@@ -46,18 +48,18 @@ import ActiveDestinations from "@/components/Home_new/ActiveDestinations";
 //   alternates: { canonical: 'https://synctrip.in' },
 // };
 export const metadata: Metadata = {
-  title: 'SyncTrip: Group Travel, Destinations & Itineraries in India',
-  description: 'SyncTrip helps you plan the perfect trip. Explore curated destinations, join group adventures, discover itineraries, book hotels, and connect with fellow travelers in India.',
-  keywords: 'group travel India, travel planning, curated itineraries, SyncTrip, travel with friends, solo trips, book trips online, travel communities',
+  title: 'SyncTrip – Travel Planning & Solo Travel Groups in India',
+  description: 'SyncTrip helps solo travelers, friends, and groups plan trips, find travel groups, and explore India together. Create trips, connect with travelers, and travel your way.',
+  keywords: 'solo travel groups, travel for solo travelers, solo trips India, solo trips for women, travel groups for solo travelers, group travel India, travel planning, travel communities, SyncTrip',
   authors: [{ name: 'SyncTrip' }],
   robots: 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1',
   openGraph: {
-    title: 'SyncTrip - Plan Your Perfect Adventure',
+    title: 'SyncTrip – Travel Planning & Solo Travel Groups in India',
     description: 'Discover destinations, plan trips, and connect with fellow travelers. Start your journey with SyncTrip today!',
     type: 'website',
     url: 'https://synctrip.in',
     siteName: 'SyncTrip',
-    locale: 'en_US',
+    locale: 'en_IN',
     images: [
       {
         url: 'https://synctrip.in/logo_main_withoutBG.png',
@@ -71,7 +73,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     site: '@synctrip',
     creator: '@synctrip',
-    title: 'SyncTrip - Group Travel & Destinations',
+    title: 'SyncTrip – Travel Planning & Solo Travel Groups in India',
     description: 'Find trips, destinations, itineraries, and fellow travelers with SyncTrip.',
     images: ['https://synctrip.in/logo_main_withoutBG.png'],
   },
@@ -159,7 +161,9 @@ export default async function Home() {
       <ActiveDestinations />
       {/* <ExploreNearbySection /> */}
       {/* <HowItWorksSectionHome /> */}
+      <SoftLoginTrigger>
       <Testimonials />
+        </SoftLoginTrigger>
       <BlogsHomePage posts={enriched} categories={categories} />
     </>
   );

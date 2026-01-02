@@ -60,7 +60,6 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
     // }, []);
     const openLogin = useCallback(
         (callback?: (user: User, requiresPhone?: boolean) => void, options: LoginOptions = {}) => {
-            console.log("openLogin called with options:", options);
 
             const existingUser = StorageUtils.getUser();
 
@@ -211,6 +210,7 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
                     <LoginPopup
                         onClose={closeLogin}
                         onLogin={handleLogin}
+                        headingText={loginOptions.headingText}
                     />
                 )}
 

@@ -12,9 +12,10 @@ import { sendOtp, verifyOtp } from "@/utils/firebaseAuthClient";
 interface LoginPopupProps {
   onClose: () => void;
   onLogin: (user: User, requiresPhone?: boolean) => void;
+  headingText?: string;
 }
 
-export default function LoginPopup({ onClose, onLogin }: LoginPopupProps) {
+export default function LoginPopup({ onClose, onLogin, headingText }: LoginPopupProps) {
   const [isRegistering, setIsRegistering] = useState(false);
   const [form, setForm] = useState({
     name: '',
@@ -606,7 +607,7 @@ export default function LoginPopup({ onClose, onLogin }: LoginPopupProps) {
         </button>
 
         <h2 className="login-popup-title">
-          {isRegistering ? 'Create an Account' : 'Welcome Back'}
+          {headingText ? headingText : (isRegistering ? 'Create an Account' : 'Welcome Back')}
         </h2>
         {!isRegistering && (
           <div className="login-popup-google-container">

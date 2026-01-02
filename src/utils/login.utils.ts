@@ -9,6 +9,7 @@ type LoginHandler = (callback: LoginCallback, options?: LoginOptions) => void;
 
 export interface LoginOptions {
     skipCompleteProfile?: boolean;
+    headingText?: string;
 }
 
 let openLoginPopup: LoginHandler | null = null;
