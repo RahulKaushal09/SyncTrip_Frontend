@@ -89,9 +89,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 const HostedTripsPage = async () => {
   const res = await TripsApiService.fetchAllHostedTrips();
-  console.log('Fetched hosted trips:', res);
   const trips = res;
-  console.log('Hosted Trips:', trips);
 
   return (
     <div className="trips-container">
