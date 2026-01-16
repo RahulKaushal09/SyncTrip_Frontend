@@ -35,7 +35,7 @@ const Footer = () => {
                         style={{ width: "30%", marginBottom: "50px" }}
                     />
                     <p className='footerTextColorNormal'>
-                        Plan together, travel smarter—sync your perfect trip in minutes.
+                        Plan together, travel smarter-sync your perfect trip in minutes.
                     </p>
                 </div>
 
