@@ -100,7 +100,6 @@ const AddLocationCard: React.FC<AddLocationCardProps> = ({
         if (pageType === PageTypeEnum.LOCATION) {
             setBtn2CTA(() => loginThenNavigate);
         } else if (pageType === PageTypeEnum.HOSTED_TRIPS || pageType === PageTypeEnum.TRIP) {
-            debugger;
             const user = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('user') || 'null') : null;
             if (user?.profileCompleted) {
                 setBtn2CTA(() => EnrollInTrip);

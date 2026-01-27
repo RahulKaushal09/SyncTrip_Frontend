@@ -44,8 +44,6 @@ const HostedTripCard: React.FC<HostedTripCardProps> = ({
 
   const formatDate = (date: string | Date) => {
     // if (!date) return '';
-    console.log('Formatting date:', date);
-    console.log('Date type:', typeof date);
     if (date instanceof Date) return date.toLocaleDateString('en-IN', {
       day: 'numeric',
       month: 'short',

@@ -461,7 +461,6 @@ export default function LoginPopup({ onClose, onLogin, headingText }: LoginPopup
       return;
     }
     try {
-      debugger;
       setIsLoading(true);
       setError('');
       const token = await verifyOtp(otp);

@@ -110,7 +110,6 @@ export default function CreateHostedTripPage() {
 
             fd.append('status', 'published');
             fd.append('isJoinable', 'true');
-debugger;
             if (imageMode === 'file') {
     if (!imageFile) {
         toast.error('Please select an image file');

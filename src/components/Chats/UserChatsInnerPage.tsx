@@ -202,7 +202,6 @@ export default function ChatsPageInner() {
         try {
             const chatObj = await ChatApiService.getChatById(incomingChatId);
             if (!mountedRef.current) return;
-            debugger;
             if (!chatObj) {
                 setChatId(null);
                 router.replace(`/chats${tripId ? `?tripId=${tripId}` : ""}`);
@@ -277,7 +276,6 @@ export default function ChatsPageInner() {
         tripId_arg?: string
     ) => {
         setChatId(cId);
-        debugger;
         // Always load chats for the correct trip so we can populate users
         const correctTrip = tripId_arg || tripId;
         if (correctTrip) {

@@ -25,7 +25,7 @@ export default function ChatIcon({ className = "", currentUserId, onClickOpen }:
   const fetchUnread = async () => {
     try {
       setLoading(true);
-      console.log("🔄 Fetching initial chat unread count");  // Debug
+      // console.log("🔄 Fetching initial chat unread count");  // Debug
       if (ChatApiService && typeof ChatApiService.fetchUnreadCount === "function") {
         const res = await ChatApiService.fetchUnreadCount(); // now { count, byTrip } or number
         if (!mountedRef.current) return;
@@ -54,7 +54,7 @@ export default function ChatIcon({ className = "", currentUserId, onClickOpen }:
         if (!mountedRef.current) return;
         setUnreadCount(data?.count || 0);
       }
-      console.log("📊 Initial unread count set to:", unreadCount);  // Debug
+      // console.log("📊 Initial unread count set to:", unreadCount);  // Debug
     } catch (err) {
       console.error("ChatIcon: failed to fetch unread count", err);
       if (!mountedRef.current) return;

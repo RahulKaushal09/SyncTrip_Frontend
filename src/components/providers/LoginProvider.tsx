@@ -148,7 +148,6 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
     }, []);
 
     const handleLogin = useCallback((user: User, requiresPhone = false) => {
-        debugger;
         setUser(user);
         StorageUtils.setUser(user);
 

@@ -56,7 +56,6 @@ const HostedTripSection: React.FC<Props> = ({ trips }) => {
         new Date(t.dates[0]?.startDate) < today
     );
   }, [activeTab, trips, today]);
-  console.log('Filtered Trips:', filteredTrips);
   return (
     <>
       {/* Tabs */}

@@ -58,7 +58,6 @@ export default function ChatWindow({ chatId, currentUserId }: Props) {
     // receive messages broadcast from server
     socket.on("receive_message", (message: Message) => {
       try {
-        debugger;
         if (!message || !message.id) return;
         // if message belongs to another chat (just in case), ignore
         // server normally emits only to the room, but sanity check:
