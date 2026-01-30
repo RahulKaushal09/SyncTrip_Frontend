@@ -19,7 +19,7 @@ export default function PhoneNumberPopup({
   onPhoneSubmit,
 }: PhoneNumberPopupProps) {
   const [phone, setPhone] = useState("");
-  const [fullName, setFullName] = useState(user.name );
+  const [fullName, setFullName] = useState(user.name);
   const [otp, setOtp] = useState("");
   const [otpSent, setOtpSent] = useState(false);
   const [error, setError] = useState("");
@@ -52,8 +52,8 @@ export default function PhoneNumberPopup({
     try {
       setLoading(true);
       setError("");
-            const userExists = await ApiService.checkUserExistsWithPhoneNumber(phone);
-      if(userExists) {
+      const userExists = await ApiService.checkUserExistsWithPhoneNumber(phone);
+      if (userExists) {
         setError('An account with this phone number already exists. Please use another number or login.');
         setLoading(false);
         return;
@@ -63,11 +63,11 @@ export default function PhoneNumberPopup({
       setResendTimer(60); // 60s cooldown
       setOtp(""); // clear OTP field
 
-    } 
+    }
     // eslint-disable-next-line 
-    catch (e:any) {
+    catch (e: any) {
       console.error("Error sending OTP:", e);
-      setError( "Failed to send OTP. Please try again.");
+      setError("Failed to send OTP. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -93,9 +93,9 @@ export default function PhoneNumberPopup({
       onPhoneSubmit(updatedUser);
       onClose();
 
-    } 
+    }
     //  eslint-disable-next-line 
-    catch (e:any) {
+    catch (e: any) {
       console.error("Error verifying OTP:", e);
       setError("Invalid OTP or verification failed");
     } finally {
@@ -116,7 +116,7 @@ export default function PhoneNumberPopup({
 
         <h2 className="phone-number-title">Verify your phone number</h2>
 
-<div className="input-group">
+        <div className="input-group">
           <label htmlFor="name">Full Name</label>
           <input
             id="name"

@@ -4,9 +4,9 @@ import HomeContent from '@/components/Home/HomeContent';
 import { ApiService } from '@/utils/api.utils';
 import { Events, Location } from '@/types';
 import { LocationFields, locationsJsonLd, homeJsonLd } from '@/constants';
-import FestivalsEvents from '@/components/EventsForBooking/FestivalsEvents';
-import HomeClientSection from '@/components/Home/HomeClientSection';
-import ExploreNearby from '@/components/Explore/ExploreNearby';
+// import FestivalsEvents from '@/components/EventsForBooking/FestivalsEvents';
+// import HomeClientSection from '@/components/Home/HomeClientSection';
+// import ExploreNearby from '@/components/Explore/ExploreNearby';
 // import { cookies } from 'next/headers';
 export const viewport = {
   width: 'device-width',

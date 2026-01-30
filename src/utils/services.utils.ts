@@ -102,5 +102,15 @@ export class CommonServices {
         }
 
         return combined;
-    }
+    };
+    static computeAge = (isoDate: string | null) => {
+        if (!isoDate) return null;
+        const dob = new Date(isoDate);
+        const today = new Date();
+        if (Number.isNaN(dob.getTime())) return null;
+        let age = today.getFullYear() - dob.getFullYear();
+        const m = today.getMonth() - dob.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) age--;
+        return age;
+    };
 }

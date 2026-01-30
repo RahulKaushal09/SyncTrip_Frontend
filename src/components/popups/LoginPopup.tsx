@@ -306,7 +306,7 @@ export default function LoginPopup({ onClose, onLogin, headingText }: LoginPopup
       await sendOtp("+91" + form.phone);
       setResendTimer(60);
       setOtp("");
-    } 
+    }
     // eslint-disable-next-line 
     catch (e: any) {
       console.error("Error resending OTP:", e);
@@ -364,7 +364,7 @@ export default function LoginPopup({ onClose, onLogin, headingText }: LoginPopup
       setLoginOtpSent(true);
       setLoginResendTimer(60);
       setLoginOtp("");
-    } 
+    }
     // eslint-disable-next-line 
     catch (e: any) {
       console.error("Error sending login OTP:", e);
@@ -390,7 +390,7 @@ export default function LoginPopup({ onClose, onLogin, headingText }: LoginPopup
       await sendOtp("+91" + form.phone);
       setLoginResendTimer(60);
       setLoginOtp("");
-    } 
+    }
     // eslint-disable-next-line 
     catch (e: any) {
       console.error("Error resending login OTP:", e);
@@ -418,15 +418,34 @@ export default function LoginPopup({ onClose, onLogin, headingText }: LoginPopup
       setLoginFirebaseToken(token);
       setLoginPhoneVerified(true);
       setLoginOtp('');
-    } 
-    // eslint-disable-next-line 
-    catch (e: any) {
-      console.error("Error verifying login OTP:", e);
-      setError("Invalid OTP. Please try again.");
+
+      // AUTO-LOGIN: Trigger the login process immediately once verified
+      const response = await ApiService.LoginWithPhoneNumber(token, form.phone);
+
+      if (response?.token?.trim()) {
+        const { user, token: userToken } = response;
+        localStorage.setItem('userToken', userToken);
+        document.cookie = `userToken=${userToken}; path=/; max-age=604800; SameSite=Strict; Secure`;
+        const safeUser = { id: user.id, name: user.name, profile_picture: user.profile_picture };
+        document.cookie = `userInfo=${encodeURIComponent(JSON.stringify(safeUser))}; path=/; max-age=604800; SameSite=Lax`;
+        onLogin(user);
+        onClose();
+      } else {
+        throw new Error(response?.message || 'Login failed after verification');
+      }
+    } catch (e: unknown) {
+      console.error("Error during verify & login:", e);
+
+      if (e instanceof Error) {
+        setError(e.message);
+      } else {
+        setError("Invalid OTP or login failed.");
+      }
     } finally {
       setIsLoading(false);
     }
   };
+
   const handleSendRegistrationOtp = async () => {
     if (!/^\d{10}$/.test(form.phone)) {
       setError('Please enter a valid 10-digit phone number');
@@ -436,7 +455,7 @@ export default function LoginPopup({ onClose, onLogin, headingText }: LoginPopup
       setIsLoading(true);
       setError('');
       const userExists = await ApiService.checkUserExistsWithPhoneNumber(form.phone);
-      if(userExists) {
+      if (userExists) {
         setError('An account with this phone number already exists. Please log in instead.');
         setIsLoading(false);
         return;
@@ -445,7 +464,7 @@ export default function LoginPopup({ onClose, onLogin, headingText }: LoginPopup
       setOtpSent(true);
       setResendTimer(60);
       setOtp('');
-    } 
+    }
     // eslint-disable-next-line 
     catch (e: any) {
       console.error('Error sending registration OTP:', e);
@@ -471,7 +490,7 @@ export default function LoginPopup({ onClose, onLogin, headingText }: LoginPopup
       setFirebaseToken(token);
       setPhoneVerified(true);
       setOtp('');
-    } 
+    }
     // eslint-disable-next-line 
     catch (e: any) {
       console.error('Error verifying registration OTP:', e);
@@ -493,6 +512,7 @@ export default function LoginPopup({ onClose, onLogin, headingText }: LoginPopup
       if (isRegistering) {
         if (!phoneVerified || !firebaseToken) {
           setError('Phone verification required');
+          setIsLoading(false); // Make sure to stop loading
           return;
         }
 
@@ -508,6 +528,7 @@ export default function LoginPopup({ onClose, onLogin, headingText }: LoginPopup
         if (loginType === 'phone') {
           if (!loginPhoneVerified || !loginFirebaseToken) {
             setError('Phone verification required');
+            setIsLoading(false);
             return;
           }
           response = await ApiService.LoginWithPhoneNumber(loginFirebaseToken, form.phone);
@@ -519,8 +540,9 @@ export default function LoginPopup({ onClose, onLogin, headingText }: LoginPopup
         }
       }
 
-      const { user, token } = response ?? {};
-      if (token?.trim()) {
+      // Check if the response contains a token (Success)
+      if (response?.token?.trim()) {
+        const { user, token } = response;
         localStorage.setItem('userToken', token);
         document.cookie = `userToken=${token}; path=/; max-age=604800; SameSite=Strict; Secure`;
         const safeUser = { id: user.id, name: user.name, profile_picture: user.profile_picture };
@@ -529,13 +551,22 @@ export default function LoginPopup({ onClose, onLogin, headingText }: LoginPopup
         onLogin(user);
         onClose();
       } else {
-        throw new Error(response?.error || 'Login failed');
+        // ERROR HANDLING LOGIC
+        // 1. Check for 'message' (used by your backend for existing users)
+        // 2. Check for 'error' (generic)
+        // 3. Fallback
+        const errorMsg = response?.message || response?.error || 'Login/Registration failed';
+        throw new Error(errorMsg);
       }
     }
-    //  eslint-disable-next-line 
-    catch (err: any) {
-      console.error('Login/Register error:', err);
-      setError('An error occurred. Please try again.');
+    catch (e: unknown) {
+      console.error("Error during reg/login:", e);
+
+      if (e instanceof Error) {
+        setError(e.message);
+      } else {
+        setError("An error occurred, please try again later.");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -644,7 +675,7 @@ export default function LoginPopup({ onClose, onLogin, headingText }: LoginPopup
                 <option value="Female">Female</option>
                 <option value="Other">Other</option>
               </select>
-                <p style={{ fontSize: "11px", color: "#ccc", padding: "0px 2px" }}>Please make sure you enter a valid phone number for verification.</p>
+              <p style={{ fontSize: "11px", color: "#ccc", padding: "0px 2px" }}>Please make sure you enter a valid phone number for verification.</p>
 
               <div className="phone-input-row margin1RemBottom">
                 <input
@@ -726,10 +757,11 @@ export default function LoginPopup({ onClose, onLogin, headingText }: LoginPopup
                 OR
                 <div style={{ width: '46%' }}><hr /></div>
               </div>
-                <p style={{ fontSize: "11px", color: "#ccc", padding: "0px 2px" }}>Please make sure you enter a valid phone number for verification.</p>
+              <p style={{ fontSize: "11px", color: "#ccc", padding: "0px 2px" }}>
+                Enter your phone number to receive a secure login code.
+              </p>
 
               <div className="phone-input-row margin1RemBottom">
-
                 <input
                   type="tel"
                   name="phone"
@@ -740,19 +772,22 @@ export default function LoginPopup({ onClose, onLogin, headingText }: LoginPopup
                   disabled={isLoading || loginPhoneVerified}
                   maxLength={10}
                 />
-                <button
-                  type="button"
-                  className={`phone-verify-btn ${loginOtpSent ? 'resend-btn' : ''} btn btn-primary`}
-                  onClick={loginPhoneVerified ? undefined : loginOtpSent ? handleResendLoginOtp : handleSendLoginOtp}
-                  disabled={isLoading || (loginOtpSent && loginResendTimer > 0) || !form.phone || loginPhoneVerified}
-                >
-                  {loginPhoneVerified ? 'Verified ✓' : loginOtpSent ? (loginResendTimer > 0 ? `Resend in ${loginResendTimer}s` : 'Resend OTP') : 'Verify Phone'}
-                </button>
+                {/* Small resend link/button that only appears after OTP is sent */}
+                {loginOtpSent && !loginPhoneVerified && (
+                  <button
+                    type="button"
+                    className="resend-link-btn"
+                    onClick={handleResendLoginOtp}
+                    disabled={isLoading || loginResendTimer > 0}
+                    style={{ fontSize: '10px', marginLeft: '10px', background: 'none', border: 'none', color: 'var(--primary-1)', cursor: 'pointer' }}
+                  >
+                    {loginResendTimer > 0 ? `Resend in ${loginResendTimer}s` : 'Resend OTP'}
+                  </button>
+                )}
               </div>
 
-
               {loginOtpSent && !loginPhoneVerified && (
-                <div className="otp-input-group margin1RemBottom">
+                <div className="otp-input-group margin1RemBottom animate-fade-in">
                   <input
                     ref={otpInputRef}
                     type="text"
@@ -763,30 +798,39 @@ export default function LoginPopup({ onClose, onLogin, headingText }: LoginPopup
                     maxLength={6}
                     disabled={isLoading}
                   />
-                  <button
-                    type="button"
-                    className="btn btn-secondary otp-verify-btn"
-                    onClick={handleVerifyLoginOtp}
-                    disabled={isLoading || loginOtp.length !== 6}
-                    style={{ marginTop: '20px' }}
-                  >
-                    {isLoading ? 'Verifying...' : 'Verify OTP'}
-                  </button>
                 </div>
               )}
-
             </div>
           )}
 
-          {error && <div className="login-popup-error" style={{ color: 'red',fontSize:"12px" }}>{error}</div>}
+          {error && <div className="login-popup-error" style={{ color: 'red', fontSize: "12px" }}>{error}</div>}
 
+          {/* MODIFIED PRIMARY BUTTON */}
           <button
-            type="submit"
+            type={loginType === 'phone' && !loginOtpSent ? "button" : "submit"}
             className="btn btn-primary"
             style={{ marginTop: '20px' }}
             disabled={isLoading}
+            onClick={(e) => {
+              if (loginType === 'phone') {
+                if (!loginOtpSent) {
+                  e.preventDefault();
+                  handleSendLoginOtp();
+                } else if (!loginPhoneVerified) {
+                  e.preventDefault();
+                  handleVerifyLoginOtp().then(() => {
+                    // Once verified, the login is handled by the useEffect or 
+                    // you can trigger handleSubmit manually here if preferred.
+                    // For a single-click experience, handleVerifyLoginOtp should 
+                    // call the login API directly upon success.
+                  });
+                }
+              }
+            }}
           >
-            {isLoading ? 'Processing...' : isRegistering ? 'Create Account' : 'Sign In'}
+            {isLoading ? 'Processing...' :
+              isRegistering ? 'Create Account' :
+                (loginType === 'phone' ? (loginOtpSent ? 'Verify & Sign In' : 'Send OTP') : 'Sign In')}
           </button>
         </form>
 

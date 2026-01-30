@@ -57,6 +57,26 @@ export type SwipeResponse =
         chatId: string
     }
 
+const MatchPopUpBox = ({ matchPopupProfile, closePopup, startChat }) => (
+    <div className="match-overlay" role="dialog" aria-modal="true">
+        <div className="match-card">
+            <h2>It&apos;s a Match!</h2>
+
+            <img className="matchingImg" src={matchPopupProfile.userSnapshot.profile_picture[0]} alt={matchPopupProfile.userSnapshot.name} />
+
+            <p className="match-name">
+                {matchPopupProfile.userSnapshot.name}, {matchPopupProfile.userSnapshot.age}
+            </p>
+            <p className="match-activities">
+                {matchPopupProfile.tripSnapshot.interests.join(" • ")}
+            </p>
+
+            <button onClick={closePopup}>Close</button>
+            <button onClick={startChat}>Start Chat</button>
+        </div>
+    </div>
+)
+
 export default function MatchingPage() {
     // get trip id from query 
     const router = useRouter();
@@ -205,7 +225,7 @@ export default function MatchingPage() {
             // show only those trip which have end date in future
             const now = new Date().toISOString().split('T')[0];
             trips = trips.filter(trip => trip.endDate.split('T')[0] >= now);
-            if( trips.length === 0 ) {
+            if (trips.length === 0) {
                 toast.error("Your trips have ended. Please create a new trip to match with others.");
                 router.replace('/');
                 return;
@@ -403,6 +423,7 @@ export default function MatchingPage() {
             // 🔹 send swipe in background
             sendSwipe(current.id, direction)
                 .then((data) => {
+                    debugger;
                     if (data?.match) {
                         setMatchPopupProfile(current)
                         setMatchChatId(data.chatId)
@@ -491,7 +512,7 @@ export default function MatchingPage() {
         setIsExpanded(false)
         setExpandDy(0)
         // allow index to move one past last so UI shows "No more travelers"
-        setIndex(prev => Math.min(prev + 1, profiles.length));
+        // setIndex(prev => Math.min(prev + 1, profiles.length));
         // fetch more if needed
         if (profiles.length - (index + 1) < 3) fetchCandidates();
     }
@@ -519,6 +540,9 @@ export default function MatchingPage() {
     if (!current || locationId === null) {
         return (
             <main className="matchingpage">
+                {/* Ensure notification prompt is here for consistency */}
+                <NotificationPermissionPrompt />
+
                 <MultipleTripSelectionHeader
                     tripName={tripName}
                     dates={dateString}
@@ -528,15 +552,10 @@ export default function MatchingPage() {
                         setTripId(id);
                         setTripName(name);
                         setDateString(dates);
-                        // re-fetch trip details + candidates
                         fetchTripDetails();
                     }}
                 />
 
-
-
-                {/* <MultipleTripSelectionHeader tripName={tripName ? tripName : "SyncTrip Travel Match"} dates={dateString} setDates={setDateString} tripId={tripId as string} setSelectedTripId={setTripId} setSelectedTripName={setTripName} /> */}
-                {/* <div className="empty">No more travelers nearby.</div> */}
                 <div className="empty">
                     <div className='empty-innerBox'>
                         <p>No more travelers nearby.</p>
@@ -556,6 +575,10 @@ export default function MatchingPage() {
                         )}
                     </div>
                 </div>
+
+                {/* --- FIX: ADDED MATCH POPUP HERE --- */}
+                {matchPopupProfile && <MatchPopUpBox startChat={startChat} matchPopupProfile={matchPopupProfile} closePopup={closePopup} />}
+                {/* ----------------------------------- */}
             </main>
         )
     }
@@ -566,7 +589,7 @@ export default function MatchingPage() {
     const bottomRadius = (isExpanded || expandDy < -20) ? 0 : 18
     return (
         <main className="matchingpage">
-                <NotificationPermissionPrompt/>
+            <NotificationPermissionPrompt />
 
             <MultipleTripSelectionHeader
                 tripName={tripName}
@@ -598,7 +621,7 @@ export default function MatchingPage() {
                             <strong>Swipe left</strong> to skip<br />
                             <strong>Swipe up</strong> to view full details
                         </p>
-                        
+
 
                         <button onClick={closeSwipeGuide}>Got it</button>
                     </div>
@@ -803,7 +826,7 @@ export default function MatchingPage() {
                                         {current.tripSnapshot.budget && (
                                             <div><strong>Budget:</strong> {current.tripSnapshot.budget}</div>
                                         )}
-                                        <div><strong>Privacy:</strong> {current.tripSnapshot.privacy === 'public trip' ? 'Public' : 'Invite Only'}</div>
+                                        <div><strong>Privacy:</strong> {current.tripSnapshot.privacy === "public trip" ? "Public" : "Invite Only"}</div>
                                         {current.tripSnapshot.interests?.length > 0 && (
                                             <div style={{ marginTop: '12px' }}>
                                                 <strong>Interests:</strong>
@@ -835,25 +858,7 @@ export default function MatchingPage() {
             </section>
 
             {/* MATCH POPUP */}
-            {matchPopupProfile && (
-                <div className="match-overlay" role="dialog" aria-modal="true">
-                    <div className="match-card">
-                        <h2>It&apos;s a Match!</h2>
-
-                        <img className="matchingImg" src={matchPopupProfile.userSnapshot.profile_picture[0]} alt={matchPopupProfile.userSnapshot.name} />
-
-                        <p className="match-name">
-                            {matchPopupProfile.userSnapshot.name}, {matchPopupProfile.userSnapshot.age}
-                        </p>
-                        <p className="match-activities">
-                            {matchPopupProfile.tripSnapshot.interests.join(" • ")}
-                        </p>
-
-                        <button onClick={closePopup}>Close</button>
-                        <button onClick={startChat}>Start Chat</button>
-                    </div>
-                </div>
-            )}
+            {matchPopupProfile && (<MatchPopUpBox startChat={startChat} matchPopupProfile={matchPopupProfile} closePopup={closePopup} />)}
         </main>
     )
 }

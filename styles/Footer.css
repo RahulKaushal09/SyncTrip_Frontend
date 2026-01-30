@@ -1,87 +1,172 @@
 /* Footer.css */
+
+/* --- Main Container --- */
 .footer {
-    /* position: absolute;
-    bottom: 0;
-    width: 100%; */
     position: relative;
     background-color: #000;
-    /* Black background */
+    /* Gradient: Black top-left to Dark Slate bottom-right */
+    background: linear-gradient(135deg, #000000 40%, #051b1f 100%);
+    
     color: #fff;
-    /* White text */
-    padding: 20px 0;
-    /* Vertical padding */
-    text-align: center;
-    /* font-family: Arial, sans-serif; */
-    /* Adjust font as needed */
+    padding: 60px 20px 20px 20px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
+/* --- Content Layout (Mobile First) --- */
 .footer-content {
     max-width: 1200px;
-    /* Max width for content */
+    user-select: none;
     margin: 0 auto;
-    /* Center the content */
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 40px; /* Space between sections on mobile */
+    text-align: center; /* Center align on mobile */
+    margin-bottom: 40px;
 }
 
-.footer-section {
-    margin: 10px 0;
+/* --- Brand Section --- */
+.footer-logo {
+    display: flex;
+    align-items: center;  
+    width: 100%; 
+    margin-bottom: 20px; 
 }
 
+.footer-logo-icon {
+    width: 80px; 
+    height: auto;
+    object-fit: contain; 
+    display: block; 
+}
+
+.footer-logo-text {
+    width: 140px;
+    height: auto;
+    object-fit: contain;
+    display: block;
+}
+
+.footer-tagline {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    opacity: 0.8;
+    max-width: 300px;
+    margin: 0 auto; /* Center on mobile */
+}
+
+/* --- Typography --- */
 .footer-title {
-    color: #00bcd4;
-    /* Cyan color for titles (like "Synctrip") */
-    font-size: 1.5rem;
-    margin-bottom: 10px;
+    color: #fff; /* Changed to white for modern look */
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
 }
 
+/* --- Navigation Links --- */
 .footer-nav-list {
     list-style: none;
     padding: 0;
-}
-
-.footer-nav-item {
-    margin: 10px 0;
-    font-size: 0.9rem;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
 .footer-nav-item a {
-    color: #fff;
+    color: #B3B3B3; /* Normal color */
     text-decoration: none;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    display: inline-block;
 }
 
+/* Hover Effect: Text turns Cyan and moves slightly right */
 .footer-nav-item a:hover {
-    color: #00bcd4;
-    /* Cyan on hover */
+    color: #00bcd4 !important;
+    transform: translateY(-5px); 
 }
 
+/* --- Social Icons --- */
 .social-icons {
     display: flex;
     justify-content: center;
     gap: 15px;
-    margin: 10px 0;
-
+    margin-top: 10px;
 }
 
 .social-icon {
-    color: #00bcd4 !important;
-    /* Cyan for social icons */
-    font-size: 1.5rem;
-    text-decoration: none;
-    width: 40px;
-    height: 40px;
-    /* border: 2px solid; */
-        /* border-radius: 50%; */
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%; /* Circle shape */
+    background-color: #1a1a1a; /* Dark gray circle background */
+    color: #B3B3B3;
+    transition: all 0.3s ease;
+    text-decoration: none;
 }
 
+/* Hover Effect: Background becomes Cyan, icon white, lifts up */
+.social-icon:hover {
+    background-color: #00bcd4;
+    color: #fff;
+    transform: translateY(-3px);
+}
+
+/* --- Copyright Bar --- */
+.footer-bottom {
+    border-top: 1px solid #1a1a1a; /* Subtle divider */
+    padding-top: 20px;
+    margin-top: 20px;
+}
+
+.copyright {
+    font-size: 0.85rem;
+    color: #666;
+    text-align: center;
+    margin: 0;
+}
+
+/* --- Helper Classes --- */
 .footerTextColorNormal {
     color: #B3B3B3 !important;
 }
 
+/* --- Desktop Layout (Responsive) --- */
+@media (max-width: 768px) {
+    .footer-logo {
+        justify-content: center;
+    }
+}
+
+@media (min-width: 768px) {
+    .footer {
+        padding: 80px 40px 30px 40px;
+    }
+
+    .footer-content {
+        display: grid;
+        /* Grid Layout: Brand takes 2 fractions, others take 1 fraction each */
+        grid-template-columns: 2fr 1fr 1fr 1.5fr; 
+        gap: 40px;
+        text-align: left; /* Align left on desktop */
+        align-items: start;
+    }
+
+    .footer-tagline {
+        margin: 0; /* Reset margin for left alignment */
+    }
+
+    .social-icons {
+        justify-content: flex-start; /* Align start on desktop */
+    }
+}
+
+
+/* --- Original Commented Code Support (Do Not Edit) --- */
 .app-buttons {
     display: flex;
     flex-direction: column;
@@ -89,32 +174,6 @@
     margin: 10px 0;
 }
 
-.app-button {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #fff;
-    /* White background for buttons */
-    color: #000;
-    /* Black text for buttons */
-    border-radius: 5px;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.app-button:hover {
-    background-color: #f0f0f0;
-    /* Light gray on hover */
-}
-
-.copyright {
-    font-size: 0.8rem;
-    margin-top: 20px;
-    color: #888;
-    text-align: center;
-    /* Light gray for copyright */
-}
-
-/* display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", backgroundColor: "#65CAD3", padding: "10px", borderRadius: "5px"  */
 .buttonGetApp {
     display: flex;
     flex-direction: row;
@@ -124,7 +183,6 @@
     padding: 10px;
     border-radius: 5px;
     cursor: pointer;
-
 }
 
 @media (max-width: 768px) {
@@ -132,43 +190,11 @@
         width: 80%;
         margin: auto;
     }
-        .footer-logo {
-            margin: 0 auto;
-        }
 }
 
-/* Media Queries for Responsiveness */
 @media (min-width: 768px) {
-    .footer {
-        padding: 30px 0;
-        /* More padding on larger screens */
-        text-align: left;
-        /* Align left on larger screens */
-    }
-
-    .footer-content {
-        flex-direction: row;
-        /* Horizontal layout on larger screens */
-        justify-content: space-around;
-        /* Evenly distribute sections */
-        align-items: flex-start;
-        /* Align items at the top */
-    }
-
-    .footer-section {
-        margin: 0 20px;
-        /* Spacing between sections on larger screens */
-    }
-
-    .social-icons {
-        justify-content: flex-start;
-        /* Align left on larger screens */
-    }
-
     .app-buttons {
         flex-direction: row;
-        /* Horizontal layout on larger screens */
         justify-content: center;
-        /* Center on larger screens */
     }
 }

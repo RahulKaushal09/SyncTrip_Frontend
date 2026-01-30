@@ -1,10 +1,10 @@
 'use client';
 import React from 'react';
 import "../../../styles/Footer.css";
-import SyncTripLogo from "../../assets/images/logoWeb.png";
+import SyncTripLogoText from "../../assets/images/logoWeb.png";
+import SyncTripLogo from "../../assets/images/logo_main_withoutBG.png"
 import { usePathname } from 'next/navigation';
-// import { FaFacebook, FaGooglePlay, FaInstagram, FaApple } from 'react-icons/fa';
-
+import { Facebook, Instagram } from 'lucide-react';
 
 const Footer = () => {
     const pathname = usePathname();
@@ -18,31 +18,36 @@ const Footer = () => {
 
     const contactLinks = [
         { name: 'Help Center', url: 'https://www.instagram.com/synctrips/' },
-        {name: 'Feedback', url: 'https://www.instagram.com/synctrips/'},
-        // { name: 'Press', url: '/home' },
-        // { name: 'FAQs', url: 'https://www.instagram.com/synctrips/' },
+        { name: 'Feedback', url: 'https://www.instagram.com/synctrips/' },
     ];
 
     return (
         <footer className="footer" style={{ display: shouldHideFooter ? 'none' : 'block' }}>
+            <div id="recaptcha-container" />
             <div className="footer-content">
-                {/* Logo & Tagline */}
-                <div className="footer-section">
-                    <img
-                        src={SyncTripLogo.src}
-                        alt="SyncTrip Logo"
-                        className="footer-logo"
-                        style={{ width: "30%", marginBottom: "50px" }}
-                    />
-                    <p className='footerTextColorNormal'>
-                        Plan together, travel smarter-sync your perfect trip in minutes.
+                {/* Brand Section */}
+                <div className="footer-section brand-section">
+                    <div className='footer-logo'>
+                        <img
+                            src={SyncTripLogo.src}
+                            alt="SyncTrip Icon"
+                            className="footer-logo-icon"
+                        />
+                        <img
+                            src={SyncTripLogoText.src}
+                            alt="SyncTrip Text"
+                            className="footer-logo-text"
+                        />
+                    </div>
+                    <p className='footerTextColorNormal footer-tagline'>
+                        Plan together, travel smarter — sync your perfect trip in minutes.
                     </p>
                 </div>
 
                 {/* Company Links */}
                 <div className="footer-section">
                     <h3 className="footer-title">Company</h3>
-                    <ul className="footer-nav-list">
+                    <ul className="footer-nav-list ul-withNoListStyle">
                         {companyLinks.map((link, index) => (
                             <li key={index} className="footer-nav-item">
                                 <a className='footerTextColorNormal' href={link.url}>
@@ -56,7 +61,7 @@ const Footer = () => {
                 {/* Contact Links */}
                 <div className="footer-section">
                     <h3 className="footer-title">Contact</h3>
-                    <ul className="footer-nav-list">
+                    <ul className="footer-nav-list ul-withNoListStyle">
                         {contactLinks.map((link, index) => (
                             <li key={index} className="footer-nav-item">
                                 <a
@@ -74,6 +79,7 @@ const Footer = () => {
 
                 {/* Social & App Links */}
                 <div className="footer-section">
+                    <h3 className="footer-title">Follow Us</h3>
                     <div className="social-icons">
                         <a
                             href="https://www.facebook.com/profile.php?id=61575952974556"
@@ -82,7 +88,7 @@ const Footer = () => {
                             rel="noopener noreferrer"
                             aria-label="Facebook"
                         >
-                            {/* <FaFacebook /> */}
+                            <Facebook size={20} strokeWidth={1.5} />
                         </a>
                         <a
                             href="https://www.instagram.com/synctrips/"
@@ -91,11 +97,9 @@ const Footer = () => {
                             rel="noopener noreferrer"
                             aria-label="Instagram"
                         >
-                            {/* <FaInstagram /> */}
+                            <Instagram size={20} strokeWidth={1.5} />
                         </a>
                     </div>
-        <div id="recaptcha-container" />
-
 
                     {/* <h3 className="footerTextColorNormal" style={{ fontSize: "1.55rem" }}>
                         Discover our app
@@ -122,13 +126,16 @@ const Footer = () => {
                             <FaApple style={{ marginRight: "10px", width: "40px", height: "40px" }} />
                             <p style={{ marginBottom: 0 }}>Available on the App Store</p>
                         </a>
-                    </div> */}
+                    </div> 
+                    */}
                 </div>
             </div>
 
-            <p className="copyright">
-                © 2025 Synctrip. All rights reserved.
-            </p>
+            <div className="footer-bottom">
+                <p className="copyright">
+                    © 2025 Synctrip. All rights reserved.
+                </p>
+            </div>
         </footer>
     );
 };

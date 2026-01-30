@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import Logo from '@/assets/images/logo_main_withoutBG.png'
+import Image from "next/image";
 
 interface FullScreenLoaderProps {
     isVisible: boolean;
@@ -39,7 +41,7 @@ const FullScreenLoader: React.FC<FullScreenLoaderProps> = ({ isVisible }) => {
     return (
         <div style={styles.overlay}>
             {/* Logo */}
-            <div style={styles.logo}>ST</div>
+            <Image alt="SyncTrip" src={Logo} style={styles.logo} />
 
             {/* Spinner */}
             <div style={styles.spinner} />
@@ -77,18 +79,11 @@ const styles: { [key: string]: React.CSSProperties } = {
         fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
     },
     logo: {
-        width: "60px",
-        height: "60px",
-        borderRadius: "16px",
-        background: "linear-gradient(135deg,rgb(15, 209, 234) 0%, #00bcd4 100%)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        fontSize: "24px",
-        fontWeight: "bold",
-        color: "white",
+        width: "80px",
+        height: "80px",
+        borderRadius: "20px",
+        // animation: "float 3s ease-in-out infinite",
         marginBottom: "32px",
-        boxShadow: "0 8px 32px rgba(102, 126, 234, 0.3)",
     },
     spinner: {
         width: "40px",

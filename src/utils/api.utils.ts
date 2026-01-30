@@ -22,22 +22,20 @@ export class ApiService {
       'Authorization': token ? `Bearer ${token}` : '',
 
     };
-  }
+  } // being used - 27/01/2026
   private static async getAuthHeadersServer(token: string = ""): Promise<HeadersInit> {
     return {
       'Content-Type': 'application/json',
       'Authorization': token ? `Bearer ${token}` : '',
     };
-  }
-
+  } // being used - 27/01/2026
   private static async handleResponse<T>(response: Response): Promise<T> {
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
       throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
     }
     return response.json();
-  }
-
+  } // being used - 27/01/2026
   static async getClientUser(fields: UserField[]): Promise<User | null> {
     const token = localStorage.getItem("userToken") || document.cookie.split('; ').find(row => row.startsWith('userToken='))?.split('=')[1];
 
@@ -61,11 +59,11 @@ export class ApiService {
       console.error("Auth fetch error:", err);
       return null;
     }
-  }
+  } // check
   static async checkUserExistsWithPhoneNumber(phone: string): Promise<boolean> {
     try {
       const response = await apiClient.post(`${API_CONFIG.BACKEND_BASE_URL}/api/users/checkUserExists`, {
-         phone,
+        phone,
       });
 
       if (!response) {
@@ -78,7 +76,7 @@ export class ApiService {
       console.error('Error checking user existence:', error);
       return false;
     }
-  }
+  } // check
 
   /**
    * Send user feedback to backend.
@@ -110,16 +108,16 @@ export class ApiService {
     const url = `${API_CONFIG.BACKEND_BASE_URL}${endpoint}`;
 
     try {
-     
-const headers: Record<string, string> = {
-      "Content-Type": "application/json",
-    };
-      const response = await apiClient.post(url, payload,{headers});
+
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+      };
+      const response = await apiClient.post(url, payload, { headers });
 
       const data = await response.data;
 
       if (response && (response.status < 200 || response.status >= 300)) {
-        const errMsg = data ;
+        const errMsg = data;
         throw new Error(errMsg);
       }
 
@@ -128,9 +126,7 @@ const headers: Record<string, string> = {
       console.error("ApiService.sendUserFeedback error:", error);
       throw error;
     }
-  }
-
-
+  } // being used - 27/01/2026
   static async getServerSidePropsForEvents() {
     const defaultCityName = 'Delhi-NCR';
     let events: Events[] = [];
@@ -171,8 +167,7 @@ const headers: Record<string, string> = {
       // indianCities,
       initialLocation: defaultCityName,
     };
-  }
-
+  } // check
   static async getAllLocationsForEventsFromBackend(serverSide: boolean = true): Promise<IndianCity[]> {
     const CACHE_KEY = 'event_locations';
     const CACHE_TTL_MS = 1000 * 60 * 60 * 24; // 24 hours
@@ -214,8 +209,7 @@ const headers: Record<string, string> = {
       console.error('Error fetching locations for events:', error);
       return [];
     }
-  }
-
+  } // being used - 27/01/2026
   static async fetchEvents(city: IndianCity): Promise<Events[]> {
     if (city) {
       try {
@@ -238,9 +232,7 @@ const headers: Record<string, string> = {
       }
     }
     return [];
-  }
-
-
+  } // being used - 27/01/2026
 
   // For server-side rendering and SEO - no auth required
   static async fetchLocations(skip: number = 0, limit: number = 1000, fields: LocationField[], token: string = ""): Promise<{ locations: Location[] }> {
@@ -258,7 +250,7 @@ const headers: Record<string, string> = {
       console.error('Failed to fetch locations:', error);
       return { locations: [] };
     }
-  }
+  } // being used - 27/01/2026
 
   // For client-side - fetches locations with wishlist status
   static async fetchLocationsWithWishlist(skip: number = 0, limit: number = 1000, fields: LocationField[]): Promise<getLocationResponseSchema> {
@@ -283,7 +275,7 @@ const headers: Record<string, string> = {
       // return { locations: [] };
       return result;
     }
-  }
+  } // being used - 27/01/2026
   static async fetchLocationsUnified(
     skip: number = 0,
     limit: number = 1000,
@@ -310,7 +302,7 @@ const headers: Record<string, string> = {
       console.error('Failed to fetch locations:', error);
       return {} as getLocationResponseSchema;
     }
-  }
+  } // being used - 27/01/2026
   static async fetchLocationsByIds(
     ids: string[],
     fields: LocationField[],
@@ -332,7 +324,7 @@ const headers: Record<string, string> = {
       console.error('Failed to fetch locations by IDs:', error);
       return [];
     }
-  }
+  } // check
   // Utility to merge server locations with client wishlist data
   static mergeLocationsWithWishlist(serverLocations: Location[], clientLocations: Location[]): Location[] {
     const wishlistMap = new Map();
@@ -360,16 +352,14 @@ const headers: Record<string, string> = {
       body: JSON.stringify(credentials),
     });
     return this.handleResponse(response);
-  }
-  static async LoginWithPhoneNumber(firebaseToken: string,phone: string): Promise<CompleteProfileApiResponse> {
+  } // being used - 27/01/2026
+  static async LoginWithPhoneNumber(firebaseToken: string, phone: string): Promise<CompleteProfileApiResponse> {
     const response = await apiClient.post(`${API_CONFIG.BACKEND_BASE_URL}/api/auth/loginWithPhone`, {
       firebaseToken,
       phone
     });
     return response.data;
-  }
-
-
+  } // check
   static async register(userData: {
     name: string;
     email: string;
@@ -384,8 +374,7 @@ const headers: Record<string, string> = {
       body: JSON.stringify(userData),
     });
     return this.handleResponse(response);
-  }
-
+  } // being used - 27/01/2026
   static async googleLogin(token: string): Promise<GoogleLoginResponse> {
     const response = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/auth/google-login`, {
       method: 'POST',
@@ -393,8 +382,7 @@ const headers: Record<string, string> = {
       body: JSON.stringify({ token }),
     });
     return this.handleResponse(response);
-  }
-
+  } // being used - 27/01/2026
   static async completeProfile(formData: FormData): Promise<CompleteProfileApiResponse> {
     const response = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/auth/complete-profile`, {
       method: 'POST',
@@ -404,8 +392,7 @@ const headers: Record<string, string> = {
       },
     });
     return this.handleResponse(response);
-  }
-
+  } // being used - 27/01/2026
   static async addPhoneNumber(userId: string, phone: string): Promise<CompleteProfileApiResponse> {
     const response = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/auth/google-complete`, {
       method: 'POST',
@@ -413,8 +400,8 @@ const headers: Record<string, string> = {
       body: JSON.stringify({ userId, phone }),
     });
     return this.handleResponse(response);
-  }
-  static async verifyAndAddPhoneNumber( firebaseToken: string,phone: string): Promise<CompleteProfileApiResponse> {
+  } // being used - 27/01/2026
+  static async verifyAndAddPhoneNumber(firebaseToken: string, phone: string): Promise<CompleteProfileApiResponse> {
     const response = await apiClient.post(`${API_CONFIG.BACKEND_BASE_URL}/api/auth/verifyAndAddPhone`, {
       firebaseToken,
       phone
@@ -424,7 +411,7 @@ const headers: Record<string, string> = {
   static async saveTripDetails(tripDetails: UserTrip) {
     try {
       const res = await apiClient.post(`/app/createUserTripWithDetails`, tripDetails);
-      if (res.status == 409){
+      if (res.status == 409) {
         toast.success("You Already have a trip planned for this location!");
       }
       return res.data.trip;
@@ -433,7 +420,7 @@ const headers: Record<string, string> = {
       console.error("Error saving trip details:", error);
       throw error;
     }
-  }
+  } // being used - 27/01/2026
   static async toggleWishlist(data: { type: string; refId: string; parentType?: string; parentId?: string; name?: string }): Promise<ApiResponse | void> {
     const body: wishlistRequestSchema = {
       type: data.type,
@@ -467,7 +454,7 @@ const headers: Record<string, string> = {
       console.error('Failed to toggle wishlist:', error);
       return;
     }
-  }
+  } // being used - 27/01/2026
   static async fetchLocationById(id: string): Promise<Location | null> {
     try {
       const response = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/locations/${id}`, {
@@ -485,10 +472,9 @@ const headers: Record<string, string> = {
       console.error('Failed to fetch location by ID:', error);
       return null;
     }
-  }
+  } // being used - 27/01/2026
   static async fetchLocationByIdServer(id: string, token: string = ""): Promise<Location | null> {
     try {
-
       const response = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/locations/${id}`, {
         method: 'GET',
         headers: await this.getAuthHeadersServer(token),
@@ -533,9 +519,7 @@ const headers: Record<string, string> = {
       console.error('Failed to fetch places by IDs:', error);
       return [];
     }
-  }
-  
-
+  } // being used - 27/01/2026
   static async fetchNearbyEntities(latitude: number, longitude: number, radius: number): Promise<exploreNearByApiResponse> {
     const userToken = localStorage.getItem('userToken');
     const res = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/nearby/getNearbyEntities`,
@@ -560,7 +544,6 @@ const headers: Record<string, string> = {
 
     return response;
   };
-
   static async fetchNearbyLocations(latitude: number, longitude: number, radius: number): Promise<exploreNearByApiResponse> {
     const userToken = localStorage.getItem('userToken');
     const res = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/nearby/getNearbyLocations`,

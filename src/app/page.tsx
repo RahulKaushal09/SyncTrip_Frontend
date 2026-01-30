@@ -81,7 +81,7 @@ export const metadata: Metadata = {
     canonical: 'https://synctrip.in',
   },
 };
-export default async function Home() {
+export default async function Home({searchParams}) {
   const data = await BlogsApiServices.fetchAllBlogs();
 
   const limitedData = data.slice(0, 8);
@@ -129,10 +129,10 @@ export default async function Home() {
         }}
       />
       <Script
-          id="google-maps"
-          strategy="beforeInteractive"
-          src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=maps,marker`}
-        />
+        id="google-maps"
+        strategy="beforeInteractive"
+        src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=maps,marker`}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -162,8 +162,8 @@ export default async function Home() {
       {/* <ExploreNearbySection /> */}
       {/* <HowItWorksSectionHome /> */}
       <SoftLoginTrigger>
-      <Testimonials />
-        </SoftLoginTrigger>
+        <Testimonials />
+      </SoftLoginTrigger>
       <BlogsHomePage posts={enriched} categories={categories} />
     </>
   );

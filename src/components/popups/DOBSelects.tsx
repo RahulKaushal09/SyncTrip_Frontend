@@ -2,6 +2,7 @@
 
 import React, { useEffect, useMemo, useState } from "react";
 import styles from "./DOBSelects.module.css";
+import { CommonServices } from "@/utils";
 
 interface DOBSelectProps {
   value: string | null;        // ISO string: "2000-05-12" or "" or null
@@ -77,17 +78,7 @@ export const DOBSelects: React.FC<DOBSelectProps> = ({
   const totalDays =
     localYear && localMonth ? daysInMonth(Number(localYear), Number(localMonth)) : 31;
 
-  const computeAge = (isoDate: string | null) => {
-    if (!isoDate) return null;
-    const dob = new Date(isoDate);
-    if (Number.isNaN(dob.getTime())) return null;
-    let age = today.getFullYear() - dob.getFullYear();
-    const m = today.getMonth() - dob.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) age--;
-    return age;
-  };
-
-  const age = computeAge(value);
+  const age = CommonServices.computeAge(value);
 
   // format to en-CA "YYYY-MM-DD" (keeps local date for IST)
   const formatIsoFromParts = (y: number, m: number, d: number) => {

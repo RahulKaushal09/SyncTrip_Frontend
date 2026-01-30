@@ -4,7 +4,7 @@ import apiClient from "./apiClient";
 
 class TripServices {
 
-    static async fetchTripDetails(tripId: string,fields: string[] = []): Promise<UserTrip> {
+    static async fetchTripDetails(tripId: string, fields: string[] = []): Promise<UserTrip> {
         try {
             const res = await apiClient.get(`/app/getUserTripDetails/${tripId}`, {
                 params: {
@@ -45,7 +45,7 @@ class TripServices {
     }
     static async updateTripPartial(tripId: string, updateFields: Partial<UserTrip>) {
         const response = await apiClient.patch(`/app/updateUserTripDetails/${tripId}`, updateFields);
-        if(response.status < 200 || response.status >= 300) {
+        if (response.status < 200 || response.status >= 300) {
             const errorMessage = response.data?.message || `HTTP error! status: ${response.status}`;
             throw new Error(errorMessage);
         }
@@ -55,6 +55,21 @@ class TripServices {
     static async fetchUserTrips(fields: string[] = []): Promise<UserTrip[]> {
         try {
             const res = await apiClient.get(`/app/getUserTrips`, {
+                params: {
+                    fields: fields.join(","),
+                },
+            });
+            return res.data.trips as UserTrip[];
+        }
+        catch (error) {
+            console.error("Error fetching user trips:", error);
+            throw error;
+        }
+    }
+
+    static async getTripsOfUserOnRequest(profileId: string, fields: string[] = []): Promise<UserTrip[]> {
+        try {
+            const res = await apiClient.get(`/app/getUserPublicTrips/${profileId}`, {
                 params: {
                     fields: fields.join(","),
                 },

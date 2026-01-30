@@ -76,6 +76,7 @@ export interface UserTrip {
     rating?: number;   // Average rating (e.g., 4.5)
     avatars?: string[]; // URLs of user avatars who joined the trip
     activities?: UserTripActivity[]; // List of activities planned for the trip
+    activitiesCount?: number;
 };
 
 type FAQSchema = {

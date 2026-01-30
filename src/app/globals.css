@@ -749,6 +749,12 @@ input {
   stroke: #6ECAD5 !important;
 }
 
+/* Capcha Hidden */
+
+.grecaptcha-badge {
+  visibility: hidden;
+}
+
 /* Responsive Page Layout */
 @media screen and (max-width: 1300px) {
   .DestinationPage {

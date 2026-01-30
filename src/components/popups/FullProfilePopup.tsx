@@ -12,6 +12,7 @@ import { DOBSelects } from './DOBSelects';
 import { useLoader } from '../providers/LoaderContext';
 import toast from 'react-hot-toast';
 import AvatarUploader from './AvatarUploader';
+import { LocationServices } from '@/utils/location.utils';
 
 interface FullProfilePopupProps {
     user: User;
@@ -39,7 +40,7 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
 
     const [searchTerm, setSearchTerm] = useState('');
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const [selectedLocationIds, setSelectedLocationIds] = useState<string[]>([]);
+    const [selectedLocations, setSelectedLocations] = useState<Location[]>([]);
     const [locations, setLocations] = useState<Location[]>([]);
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -52,9 +53,9 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
         const getLocations = async () => {
             try {
                 // For profile popup, we want locations without wishlist data (simpler)
-                const response = await ApiService.fetchLocations(0, 1000, LocationFieldsToFetch);
-                if (response && response.locations) {
-                    setLocations(response.locations);
+                const response = await LocationServices.fetchLocationsBySearch(searchTerm);
+                if (response) {
+                    setLocations(response);
                 } else {
                     setLocations([]);
                 }
@@ -64,7 +65,7 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
             }
         };
         getLocations();
-    }, []);
+    }, [searchTerm]);
     useEffect(() => {
         // Disable background scroll
         document.body.style.overflow = "hidden";
@@ -103,11 +104,12 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
     };
 
     const handleDestinationSelect = (dest: Location) => {
-        setSelectedLocationIds((prev) => {
-            if (prev.includes(dest.id)) {
-                return prev.filter((id) => id !== dest.id);
+        setSelectedLocations((prev) => {
+            const isAlreadySelected = prev.some(loc => loc.id === dest.id);
+            if (isAlreadySelected) {
+                return prev.filter((loc) => loc.id !== dest.id);
             } else {
-                return [...prev, dest.id];
+                return [...prev, dest];
             }
         });
     };
@@ -161,7 +163,8 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
             }
         });
 
-        formData.append('preferredDestinations', JSON.stringify(selectedLocationIds));
+        const idsToSend = selectedLocations.map(loc => loc.id);
+        formData.append('preferredDestinations', JSON.stringify(idsToSend));
 
         try {
             showLoader();
@@ -203,9 +206,7 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
         dest.title?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    const selectedTitles = locations
-        .filter((loc) => selectedLocationIds.includes(loc.id))
-        .map((loc) => loc.title);
+    const selectedTitles = selectedLocations.map((loc) => loc.title);
 
     return (
         <div className="full-profile-overlay">
@@ -328,10 +329,7 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
                                             type="button"
                                             className="full-profile-remove-tag"
                                             onClick={() => {
-                                                const destId = locations.find((loc) => loc.title === title)?.id;
-                                                if (destId) {
-                                                    setSelectedLocationIds((prev) => prev.filter((id) => id !== destId));
-                                                }
+                                                setSelectedLocations((prev) => prev.filter((loc) => loc.title !== title));
                                             }}
                                         >
                                             ×
@@ -352,17 +350,17 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
                             />
                             {isDropdownOpen && (
                                 <div className="full-profile-dropdown">
-                                    {filteredLocations.filter(dest => !selectedLocationIds.includes(dest.id)).length > 0 ? (
+                                    {/* Filter out locations based on the IDs of objects in selectedLocations */}
+                                    {filteredLocations.filter(dest => !selectedLocations.some(sel => sel.id === dest.id)).length > 0 ? (
                                         filteredLocations.map((dest) =>
-                                            !selectedLocationIds.includes(dest.id) && (
+                                            !selectedLocations.some(sel => sel.id === dest.id) && (
                                                 <div
                                                     key={dest.id}
                                                     className="full-profile-dropdown-item"
                                                     onMouseDown={() => {
-                                                        handleDestinationSelect(dest)
+                                                        handleDestinationSelect(dest);
                                                         setSearchTerm("");
-                                                    }
-                                                    }
+                                                    }}
                                                 >
                                                     {dest.title?.replace(/[0-9.]/g, "") || dest.title}
                                                 </div>
@@ -373,7 +371,6 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
                                     )}
                                 </div>
                             )}
-
                         </div>
                     </div>
 

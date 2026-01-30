@@ -153,7 +153,7 @@ const NavbarClient = ({ }) => {
       setPageType(PageTypeEnum.TRIP);
     } else if (pathname === `/${PageTypeEnum.LOCATION}`) {
       setPageType(PageTypeEnum.LOCATION);
-    } 
+    }
     if (pathname === `/${PageTypeEnum.HOSTED_TRIPS}`) {
       setPageType(PageTypeEnum.HOSTED_TRIPS);
     }
@@ -337,13 +337,45 @@ const NavbarClient = ({ }) => {
                           color: "black",
                           gap: "10px"
                         }}>
-                          <Image
-                            src={user.profile_picture?.[0] || "https://via.placeholder.com/40"}
-                            alt="Profile"
-                            width={40}
-                            height={40}
-                            style={{ borderRadius: "50%", objectFit: "cover", width: "40px", height: "40px" }}
-                          />
+                          {user.profile_picture?.[0] ? (
+                            <Image
+                              src={user.profile_picture[0]}
+                              alt="Profile"
+                              width={40}
+                              height={40}
+                              style={{
+                                borderRadius: "50%",
+                                objectFit: "cover",
+                                width: "40px",
+                                height: "40px"
+                              }}
+                            />
+                          ) : (
+                            <div
+                              style={{
+                                width: "40px",
+                                height: "40px",
+                                borderRadius: "50%",
+                                backgroundColor: "var(--secondary-1)",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                color: "white",
+                                fontSize: "14px",
+                                fontWeight: "bold"
+                              }}
+                            >
+                              {user?.name ?
+                                user.name
+                                  .split(' ')
+                                  .map(word => word[0])
+                                  .join('')
+                                  .toUpperCase()
+                                  .slice(0, 2)
+                                : "U"
+                              }
+                            </div>
+                          )}
                           <span>{user.name}</span>
                         </Dropdown.Toggle>
                         <Dropdown.Menu align="end">
@@ -402,13 +434,45 @@ const NavbarClient = ({ }) => {
                     objectFit: "cover",
                   }}
                 /> */}
-                <Image
-                  src={user.profile_picture?.[0] || "https://via.placeholder.com/40"}
-                  alt="Profile"
-                  width={40}
-                  height={40}
-                  style={{ borderRadius: "50%", objectFit: "cover", width: "40px", height: "40px" }}
-                />
+                {user.profile_picture?.[0] ? (
+                  <Image
+                    src={user.profile_picture[0]}
+                    alt="Profile"
+                    width={40}
+                    height={40}
+                    style={{
+                      borderRadius: "50%",
+                      objectFit: "cover",
+                      width: "40px",
+                      height: "40px"
+                    }}
+                  />
+                ) : (
+                  <div
+                    style={{
+                      width: "40px",
+                      height: "40px",
+                      borderRadius: "50%",
+                      backgroundColor: 'var(--secondary-1)',
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: "white",
+                      fontSize: "14px",
+                      fontWeight: "bold"
+                    }}
+                  >
+                    {user?.name ?
+                      user.name
+                        .split(' ')
+                        .map(word => word[0])
+                        .join('')
+                        .toUpperCase()
+                        .slice(0, 2)
+                      : "U"
+                    }
+                  </div>
+                )}
                 <span className="ms-2 mt-2">{user?.name || "User"}</span>
 
               </div>

@@ -59,7 +59,7 @@ export class BlogsApiServices {
             return [];
         }
         return allBlogsData.blogs;
-    }
+    } // being used - 27/01/2026
     static async fetchBlogBySlug(blogSlug: string): Promise<BlogPost> {
         const blogResponse = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/blogs/${blogSlug}`, {
             method: 'GET',
@@ -76,7 +76,7 @@ export class BlogsApiServices {
             throw new Error('Blog not found');
         }
         return response.data;
-    }
+    } // being used - 27/01/2026
     static async createNewBlog(blogData: addBlogRequestSchema): Promise<BlogPost> {
         try {
             const createBlogResponse = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/blogs/create`, {
@@ -96,7 +96,7 @@ export class BlogsApiServices {
             console.error('Error creating blog:', error);
             throw error;
         }
-    }
+    } // being used - 27/01/2026
 
 
 }

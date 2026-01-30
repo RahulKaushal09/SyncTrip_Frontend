@@ -1,8 +1,9 @@
 import { userWishlistResponse } from '@/classes/ApiResponse.classes';
 import { API_CONFIG } from '../constants';
 import { getUserWishlistRequestSchema } from '@/classes/ApiRequest.classes';
-import { UserWishList } from '@/types';
+import { User, UserWishList } from '@/types';
 import Cookies from 'js-cookie';
+import apiClient from './apiClient';
 // import { cookies } from 'next/headers';
 
 export class UserApiService {
@@ -30,6 +31,29 @@ export class UserApiService {
         return userWishlistRes?.wishlist;
     }
 
+    static async fetchUserWithId(profileId: string): Promise<User | null> {
+        try {
+            const userRes = await apiClient.get(`/users/${profileId}`);
+            return userRes.data?.user || null;
+        } catch (error) {
+            console.error("Error fetching user:", error);
+            throw error;
+        }
+    }
 
+    static async fetchUserWithIdForAnyone(profileId: string): Promise<User | null> {
+        try {
+            const userRes = await apiClient.get(`/users/profile/${profileId}`, {
+                params: {
+                    updateViewCount: true
+                }
+            });
+
+            return userRes.data?.user || null;
+        } catch (error) {
+            console.error("Error fetching user:", error);
+            throw error;
+        }
+    }
 }
 
