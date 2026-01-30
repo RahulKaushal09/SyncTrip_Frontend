@@ -8,7 +8,9 @@ import {
   Draggable,
   DropResult,
 } from '@hello-pangea/dnd';
-import { GoogleMap, DirectionsService, DirectionsRenderer, Marker, Polyline } from '@react-google-maps/api';
+import { GoogleMap, Marker, Polyline } from '@react-google-maps/api';
+
+// import { GoogleMap, DirectionsService, DirectionsRenderer, Marker, Polyline } from '@react-google-maps/api';
 import { Plus, Star } from "lucide-react";
 
 import Image from 'next/image';
@@ -23,7 +25,7 @@ import '../../../styles/tripPlanner.css';
 import { IsUserProfileComplete } from '@/utils';
 import toast from 'react-hot-toast';
 import { useLoader } from '@/components/providers/LoaderContext';
-
+import { DirectionComputeUtils, ComputeRouteRequest } from '@/utils/directionCompute.utils';
 // ---------------------------------------------
 // TYPES
 // ---------------------------------------------
@@ -265,11 +267,11 @@ export default function TripPlannerPage() {
 
 const TripPlannerPageContent: React.FC = () => {
   const router = useRouter();
-  
+
 
   const searchParams = useSearchParams();
   const tripId = searchParams?.get('tripId');
-  
+
   const showHotelsAfter = searchParams?.get('showHotelsAfter') === 'true';
 
   const [showPanel, setShowPanel] = useState(false);
@@ -279,7 +281,7 @@ const TripPlannerPageContent: React.FC = () => {
   const [isOverview, setIsOverview] = useState(false);
   const [openOverviewIdx, setOpenOverviewIdx] = useState(0);
   const [optimizeByDay, setOptimizeByDay] = useState<Record<string, boolean>>({});
-  const [directions, setDirections] = useState<google.maps.DirectionsResult | null>(null);
+  // const [directions, setDirections] = useState<google.maps.DirectionsResult | null>(null);
   const [routeCoords, setRouteCoords] = useState<LatLng[]>([]);
   const [totalDistanceKm, setTotalDistanceKm] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -296,7 +298,7 @@ const TripPlannerPageContent: React.FC = () => {
   const activeDayIdRef = useRef<string | null>(null);
 
   const [selectedPlace, setSelectedPlace] = useState<PlacesToVisit | null>(null);
-    const { showLoader, hideLoader } = useLoader();
+  const { showLoader, hideLoader } = useLoader();
 
   const activeDay = days[isOverview ? openOverviewIdx : selectedDayIdx];
   const activeOptimize = optimizeByDay[activeDay?.id ?? ''] ?? false;
@@ -317,8 +319,78 @@ const TripPlannerPageContent: React.FC = () => {
     window.addEventListener('resize', compute);
     return () => window.removeEventListener('resize', compute);
   }, []);
+  useEffect(() => {
+    if (!activeDay || isOverview || activeDay.activities.length < 2) {
+      setRouteCoords([]);
+      setTotalDistanceKm(null);
+      return;
+    }
 
-  
+    const sig = routeSignature(activeDay.activities, activeOptimize);
+
+    // ✅ Use cached route if same signature
+    if (activeDay.route.signature === sig && activeDay.route.coords?.length) {
+      setRouteCoords(activeDay.route.coords);
+      setTotalDistanceKm(activeDay.route.distanceKm ?? null);
+      fitMapTo(activeDay.route.coords);
+      return;
+    }
+
+    const places = activeDay.activities.map(a => a.place);
+
+    const payload: ComputeRouteRequest = {
+      origin: {
+        lat: places[0].coordinates.lat,
+        lng: places[0].coordinates.long
+      },
+      destination: {
+        lat: places[places.length - 1].coordinates.lat,
+        lng: places[places.length - 1].coordinates.long
+      },
+      waypoints: places.slice(1, -1).map(p => ({
+        lat: p.coordinates.lat,
+        lng: p.coordinates.long
+      })),
+      optimize: activeOptimize
+    };
+
+    const timer = setTimeout(async () => {
+      try {
+        const res = await DirectionComputeUtils.computeRoute(payload);
+        const coords = decodePolyline(res.polyline);
+
+        setRouteCoords(coords);
+        setTotalDistanceKm(res.totalKm);
+
+        setDays(prev =>
+          prev.map(d =>
+            d.id !== activeDay.id
+              ? d
+              : {
+                ...d,
+                route: {
+                  signature: sig,
+                  coords,
+                  polyline: res.polyline,
+                  distanceKm: res.totalKm,
+                  waypointOrder: res.waypointOrder,
+                  legDistancesKm: res.legDistancesKm
+                }
+              }
+          )
+        );
+
+        fitMapTo(coords);
+      } catch (err) {
+        console.error("Route compute failed:", err);
+      }
+    }, 700); // debounce = prevents spam
+
+    return () => clearTimeout(timer);
+
+  }, [activeDay?.activities, activeOptimize, isOverview]);
+
+
   // Loaders
   const loadActivities = (activities: UserTripActivity[]) => {
     try {
@@ -445,13 +517,13 @@ const TripPlannerPageContent: React.FC = () => {
           top: 80,
           bottom: 40,
           left: 40,
-          right: isMobile ? 150 :440
+          right: isMobile ? 150 : 440
         } as google.maps.Padding);
       } catch (e) {
         // map might not be ready
       }
     }, 0);
-    
+
   }, [placesToVisit, center]);
 
   const saveTrip = async () => {
@@ -511,86 +583,6 @@ const TripPlannerPageContent: React.FC = () => {
     } catch (e) { /* ignore */ }
   }, []);
 
-  // Directions callback (keeps days state consistent)
-  const directionsCallback = useCallback((response: google.maps.DirectionsResult | null, status: google.maps.DirectionsStatus) => {
-    if (response !== null && status === 'OK') {
-      const dayId = activeDayIdRef.current;
-      if (!dayId) return;
-      const route = response.routes[0];
-      const totalKm = route.legs.reduce((sum, leg) => sum + (leg.distance?.value ?? 0) / 1000, 0);
-      const legDistancesKm = route.legs.map(leg => (leg.distance?.value ?? 0) / 1000);
-      const overviewCoords = route.overview_path.map(p => ({ latitude: p.lat(), longitude: p.lng() }));
-      console.log('Directions fetched:', { dayId, totalKm, legDistancesKm, overviewCoords });
-      setDays(prev => {
-
-        const next = prev.map(d => {
-          console.log('Checking day for update:', d, dayId);
-          if (d.id !== dayId) return d;
-          console.log('Updating day with new route:', dayId);
-          console.log('Previous activities:', d);
-          let orderedPlaces = d.activities.map(a => a.place);
-          if ((optimizeByDay[dayId] ?? false) && route.waypoint_order) {
-            const optimizedOrder = buildOptimizedOrder(orderedPlaces.length, route.waypoint_order);
-            orderedPlaces = optimizedOrder.map(i => orderedPlaces[i]);
-          }
-          const activitiesWithDistances = attachDistancesToActivities(orderedPlaces, legDistancesKm);
-          return {
-            ...d,
-            activities: activitiesWithDistances,
-            route: {
-              signature: routeSignature(activitiesWithDistances, (optimizeByDay[dayId] ?? false)),
-              coords: overviewCoords,
-              polyline: route.overview_polyline,
-              distanceKm: totalKm,
-              waypointOrder: (optimizeByDay[dayId] ?? false) ? route.waypoint_order ?? null : null,
-              legDistancesKm: legDistancesKm.length ? legDistancesKm : null,
-            }
-          };
-        });
-        return next;
-      });
-
-      setDirections(response);
-      setTotalDistanceKm(totalKm);
-      fitMapTo(overviewCoords);
-    } else {
-      if (response === null) {
-        setDirections(null);
-        setTotalDistanceKm(null);
-      }
-      console.error('Directions request result:', status);
-    }
-  }, [fitMapTo, optimizeByDay]);
-
-  // Convert lat/lng -> pixel position on page relative to map container
-  // const getPixelPositionFromLatLng = useCallback((lat: number, lng: number) => {
-  //   if (!mapRef.current) return null;
-  //   const map = mapRef.current;
-  //   const projection = map.getProjection?.();
-  //   if (!projection) return null;
-  //   const bounds = map.getBounds?.();
-  //   if (!bounds) return null;
-
-  //   try {
-  //     const ne = projection.fromLatLngToPoint(bounds.getNorthEast());
-  //     const sw = projection.fromLatLngToPoint(bounds.getSouthWest());
-  //     const worldPoint = projection.fromLatLngToPoint(new google.maps.LatLng(lat, lng));
-  //     const scale = Math.pow(2, map.getZoom() ?? 0);
-  //     if (!ne || !sw || !worldPoint || !scale) return null;
-  //     const x = (worldPoint.x - sw.x) * scale;
-  //     const y = (worldPoint.y - ne.y) * scale;
-
-  //     const mapDiv = map.getDiv();
-  //     const rect = mapDiv.getBoundingClientRect();
-  //     // Return pixel coordinates relative to page (so we can absolutely position an overlay)
-  //     return {
-  //       x: rect.left + x,
-  //       y: rect.top + y
-  //     };
-  //   } catch (e) {
-  //     return null;
-  //   }
-  // }, []);
   const getPixelPositionFromLatLng = useCallback((lat: number, lng: number) => {
     if (!mapRef.current || !lat || !lng) return null;  // Add this safety
     const map = mapRef.current;
@@ -652,39 +644,37 @@ const TripPlannerPageContent: React.FC = () => {
   }, [selectedPlace, getPixelPositionFromLatLng]);
 
   // Directions options computed
-  const directionsOptions = useMemo(() => {
-    if (!activeDay || isOverview || activeDay.activities.length < 2) return null;
-    const places = activeDay.activities.map(a => a.place);
-    const waypoints = places.slice(1, -1).map(place => ({
-      location: { lat: place.coordinates.lat, lng: place.coordinates.long },
-      stopover: true,
-    }));
-    console.log('Requesting directions for', { places, waypoints, optimize: activeOptimize });
-    return {
-      origin: { lat: places[0].coordinates.lat, lng: places[0].coordinates.long },
-      destination: { lat: places[places.length - 1].coordinates.lat, lng: places[places.length - 1].coordinates.long },
-      waypoints,
-      optimizeWaypoints: activeOptimize,
-      travelMode: google.maps.TravelMode.DRIVING,
-      // provideRouteAlternatives: false,
-      // avoidFerries: false,
-      // avoidHighways: false,
-      // avoidTolls: false,
-    } as google.maps.DirectionsRequest;
-  }, [activeDay, isOverview, activeOptimize]);
+  // const directionsOptions = useMemo(() => {
+  //   if (!activeDay || isOverview || activeDay.activities.length < 2) return null;
+  //   const places = activeDay.activities.map(a => a.place);
+  //   const waypoints = places.slice(1, -1).map(place => ({
+  //     location: { lat: place.coordinates.lat, lng: place.coordinates.long },
+  //     stopover: true,
+  //   }));
+  //   console.log('Requesting directions for', { places, waypoints, optimize: activeOptimize });
+  //   return {
+  //     origin: { lat: places[0].coordinates.lat, lng: places[0].coordinates.long },
+  //     destination: { lat: places[places.length - 1].coordinates.lat, lng: places[places.length - 1].coordinates.long },
+  //     waypoints,
+  //     optimizeWaypoints: activeOptimize,
+  //     travelMode: google.maps.TravelMode.DRIVING,
+  //     // provideRouteAlternatives: false,
+  //     // avoidFerries: false,
+  //     // avoidHighways: false,
+  //     // avoidTolls: false,
+  //   } as google.maps.DirectionsRequest;
+  // }, [activeDay, isOverview, activeOptimize]);
 
 
   // Use cached route if signatures match (avoid new Directions requests)
   useEffect(() => {
     if (!activeDay || isOverview) {
-      setDirections(null);
       setRouteCoords([]);
       setTotalDistanceKm(null);
       return;
     }
     const sig = routeSignature(activeDay.activities, activeOptimize);
     if (activeDay.route.signature === sig && activeDay.route.coords && activeDay.route.coords.length > 1) {
-      setDirections(null);
       setRouteCoords(activeDay.route.coords);
       setTotalDistanceKm(activeDay.route.distanceKm ?? null);
       fitMapTo(activeDay.route.coords);
@@ -768,83 +758,83 @@ const TripPlannerPageContent: React.FC = () => {
   //     if (listener) google.maps.event.removeListener(listener);
   //   };
   // }, []);
-  
-useEffect(() => {
-  if (!mapRef.current) return;
 
-  const map = mapRef.current;
-  let mouseDownPos: { x: number; y: number } | null = null;
-  let touchStartPos: { x: number; y: number } | null = null;
-  const dragThreshold = 5; // Pixels; small threshold to detect intentional drags
+  useEffect(() => {
+    if (!mapRef.current) return;
 
-  // Mouse: Track mousedown position
-  const mouseDownListener = map.addListener('mousedown', (e: google.maps.MapMouseEvent) => {
-    // Use the DOM event's clientX/clientY instead of the non-existent e.pixel
-    const dom = e.domEvent as MouseEvent | undefined;
-    if (dom) {
-      mouseDownPos = { x: dom.clientX, y: dom.clientY };
-    }
-  });
+    const map = mapRef.current;
+    let mouseDownPos: { x: number; y: number } | null = null;
+    let touchStartPos: { x: number; y: number } | null = null;
+    const dragThreshold = 5; // Pixels; small threshold to detect intentional drags
 
-  // Touch: Track touchstart position
-  const touchStartListener = google.maps.event.addDomListener(map.getDiv(), 'touchstart', (e: TouchEvent) => {
-    if (e.touches.length === 1) {
-      touchStartPos = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-    }
-  });
-
-  // Mouse: Detect drag movement
-  const dragListener = map.addListener('drag', () => {
-    setIsDragging(true);
-  });
-
-  // Touch: Detect touchmove (drag)
-  const touchMoveListener = google.maps.event.addDomListener(map.getDiv(), 'touchmove', (e: TouchEvent) => {
-    if (e.touches.length === 1) {
-      setIsDragging(true);
-    }
-  });
-
-  // Click handler: Close popup only if not dragging
-  const clickListener = map.addListener('click', (e: google.maps.MapMouseEvent) => {
-    if (!isDragging && selectedPlace) {
-      // Optional: For mouse, check if movement was minimal (click, not drag)
+    // Mouse: Track mousedown position
+    const mouseDownListener = map.addListener('mousedown', (e: google.maps.MapMouseEvent) => {
+      // Use the DOM event's clientX/clientY instead of the non-existent e.pixel
       const dom = e.domEvent as MouseEvent | undefined;
-      if (mouseDownPos && dom) {
-        const dx = Math.abs(dom.clientX - mouseDownPos.x);
-        const dy = Math.abs(dom.clientY - mouseDownPos.y);
-        if (dx <= dragThreshold && dy <= dragThreshold) {
+      if (dom) {
+        mouseDownPos = { x: dom.clientX, y: dom.clientY };
+      }
+    });
+
+    // Touch: Track touchstart position
+    const touchStartListener = google.maps.event.addDomListener(map.getDiv(), 'touchstart', (e: TouchEvent) => {
+      if (e.touches.length === 1) {
+        touchStartPos = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      }
+    });
+
+    // Mouse: Detect drag movement
+    const dragListener = map.addListener('drag', () => {
+      setIsDragging(true);
+    });
+
+    // Touch: Detect touchmove (drag)
+    const touchMoveListener = google.maps.event.addDomListener(map.getDiv(), 'touchmove', (e: TouchEvent) => {
+      if (e.touches.length === 1) {
+        setIsDragging(true);
+      }
+    });
+
+    // Click handler: Close popup only if not dragging
+    const clickListener = map.addListener('click', (e: google.maps.MapMouseEvent) => {
+      if (!isDragging && selectedPlace) {
+        // Optional: For mouse, check if movement was minimal (click, not drag)
+        const dom = e.domEvent as MouseEvent | undefined;
+        if (mouseDownPos && dom) {
+          const dx = Math.abs(dom.clientX - mouseDownPos.x);
+          const dy = Math.abs(dom.clientY - mouseDownPos.y);
+          if (dx <= dragThreshold && dy <= dragThreshold) {
+            setSelectedPlace(null);
+          }
+        } else {
+          // No mouseDownPos (e.g., touch or programmatic click) — close if not dragging
           setSelectedPlace(null);
         }
-      } else {
-        // No mouseDownPos (e.g., touch or programmatic click) — close if not dragging
-        setSelectedPlace(null);
       }
-    }
-  });
+    });
 
-  // Reset dragging state after drag ends
-  const dragEndListener = map.addListener('dragend', () => {
-    setIsDragging(false);
-    mouseDownPos = null;
-  });
+    // Reset dragging state after drag ends
+    const dragEndListener = map.addListener('dragend', () => {
+      setIsDragging(false);
+      mouseDownPos = null;
+    });
 
-  // Touch: Reset after touch ends
-  const touchEndListener = google.maps.event.addDomListener(map.getDiv(), 'touchend', () => {
-    setIsDragging(false);
-    touchStartPos = null;
-  });
+    // Touch: Reset after touch ends
+    const touchEndListener = google.maps.event.addDomListener(map.getDiv(), 'touchend', () => {
+      setIsDragging(false);
+      touchStartPos = null;
+    });
 
-  return () => {
-    google.maps.event.removeListener(mouseDownListener);
-    google.maps.event.removeListener(dragListener);
-    google.maps.event.removeListener(clickListener);
-    google.maps.event.removeListener(dragEndListener);
-    google.maps.event.removeListener(touchMoveListener);
-    google.maps.event.removeListener(touchEndListener);
-    google.maps.event.removeListener(touchStartListener);
-  };
-}, [selectedPlace]);
+    return () => {
+      google.maps.event.removeListener(mouseDownListener);
+      google.maps.event.removeListener(dragListener);
+      google.maps.event.removeListener(clickListener);
+      google.maps.event.removeListener(dragEndListener);
+      google.maps.event.removeListener(touchMoveListener);
+      google.maps.event.removeListener(touchEndListener);
+      google.maps.event.removeListener(touchStartListener);
+    };
+  }, [selectedPlace]);
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
     const checkMobile = () => {
@@ -946,20 +936,20 @@ useEffect(() => {
             {/* {directionsOptions && activeDay && (activeDay.route.signature !== expectedSig) && (
               <DirectionsService options={directionsOptions} callback={directionsCallback} />
             )} */}
-            {directionsOptions && activeDay && (activeDay.route.signature !== routeSignature(activeDay.activities, activeOptimize)) && (
+            {/* {directionsOptions && activeDay && (activeDay.route.signature !== routeSignature(activeDay.activities, activeOptimize)) && (
               <DirectionsService options={directionsOptions} callback={directionsCallback} />
-            )}
+            )} */}
 
-            {directions && (
+            {/* {directions && (
               <DirectionsRenderer
                 options={{
                   directions,
                   polylineOptions: { strokeColor: '#C2185B', strokeWeight: 5 },
                 }}
               />
-            )}
+            )} */}
 
-            {routeCoords.length > 1 && !directions && (
+            {routeCoords.length > 1 && (
               <Polyline
                 path={routeCoords.map(c => ({ lat: c.latitude, lng: c.longitude }))}
                 options={{ strokeColor: '#C2185B', strokeWeight: 5 }}
@@ -998,19 +988,19 @@ useEffect(() => {
           >
             <div className="p-2 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                
+
               </div>
               <button
-                  onClick={() => setShowPanel(false)}
-                  className="text-gray-600 hover:text-gray-900 p-1"
-                  aria-label="Close itinerary"
-                >
-                  Close
-                </button>
+                onClick={() => setShowPanel(false)}
+                className="text-gray-600 hover:text-gray-900 p-1"
+                aria-label="Close itinerary"
+              >
+                Close
+              </button>
             </div>
 
             <div className="flex-1 p-4 overflow-y-auto">
-              
+
               {isOverview ? (
                 <>
                   {days.map((day, i) => (
