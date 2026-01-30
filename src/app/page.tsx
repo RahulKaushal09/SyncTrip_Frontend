@@ -81,7 +81,7 @@ export const metadata: Metadata = {
     canonical: 'https://synctrip.in',
   },
 };
-export default async function Home({searchParams}) {
+export default async function Home() {
   const data = await BlogsApiServices.fetchAllBlogs();
 
   const limitedData = data.slice(0, 8);
