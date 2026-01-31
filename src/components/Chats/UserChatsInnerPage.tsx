@@ -43,7 +43,7 @@ export default function ChatsPageInner() {
     const [allTrips, setAllTrips] = useState<UserTrip[]>([]);
     const [tripName, setTripName] = useState<string>("Select Trip");
     const [tripDates, setTripDates] = useState<string | undefined>(undefined);
-
+    const [tripImage, setTripImage] = useState<string | undefined>(undefined);
     const [chats, setChats] = useState<Chat[]>([]);
     const [activeChat, setActiveChat] = useState<Chat | null>(null);
 
@@ -152,6 +152,7 @@ export default function ChatsPageInner() {
                 setTripId(rawTripId);
                 usable.forEach((t) => {
                     if (t.id === rawTripId) {
+                        setTripImage(t.image);
                         setTripName(t.locationName || "Trip");
                         setTripDates(CommonServices.formatDateShortHeaderTripSelection(t.startDate, t.endDate));
                     }
@@ -162,6 +163,7 @@ export default function ChatsPageInner() {
             // If no tripId in state and we have trips -> pick first
             if (!tripId && usable.length > 0) {
                 const first = usable[0];
+                setTripImage(first.image);
                 // const formattedDates = `${formatDate(first.startDate)} - ${formatDate(first.endDate)}`;
                 setTripId(first.id as string);
                 setTripName(first.locationName || "Trip");

@@ -33,8 +33,8 @@ export const ROUTES = {
     GROUP_TRIPS: '/groupTrips',
     HOSTED_TRIPS: '/hostedTrips',
     USER_TRIPS: '/userTrips',
-    USER_TRIP_PLANNER: '/userTrip/planner',
-    USER_TRIP_DETAILS: '/userTrip/details',
+    // USER_TRIP_PLANNER: '/userTrip/planner',
+    // USER_TRIP_DETAILS: '/userTrip/details',
     CREATE_TRIP:'/create/trip',
     BLOGS:'/blogs',
     EXPLORE:'/explore',
@@ -66,3 +66,11 @@ export const FILE_UPLOAD = {
     ALLOWED_TYPES: ['image/jpeg', 'image/png', 'image/webp'],
     MAX_FILES: 10,
 } as const;
+
+export const GROUP_LIMITS = {
+  NAME_MIN: 3,
+  NAME_MAX: 50,
+  MAX_MEMBERS_MIN: 5,
+  MAX_MEMBERS_MAX: 9,
+  TAGS_MAX: 3
+};

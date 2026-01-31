@@ -5,7 +5,7 @@ import { useMemo } from 'react';
 import '../../../styles/trips/hostedTripCard.css';
 import { HostedTrip } from '@/types';
 import HeartIcon from '../smallComponents/HeartIcon';
-import { CommonServices } from '@/utils/services.utils';
+import { CommonServices } from '@/utils/CommonServices.utils';
 
 interface HostedTripCardProps {
   trip: HostedTrip;

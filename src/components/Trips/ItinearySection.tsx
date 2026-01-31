@@ -328,7 +328,7 @@ const ItinerarySection: React.FC<{ tripId: string, tripDetails: UserTrip, loadin
   }
 
   const openEditItineraryScreen = () => {
-    router.push('/userTrip/planner?tripId=' + tripDetails.id);
+    router.push('/userTrip/'+tripDetails.id+'/planner');
     // navigate("TripPlannerManually", { tripId: tripId, showHotelsAfter: false });
   };
 

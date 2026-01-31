@@ -81,7 +81,7 @@ const HostedTripSection: React.FC<Props> = ({ trips }) => {
           <h1>Hosted Group Trips</h1>
           <p>
             Fixed dates. Limited seats. Real people.
-            Join a trip and start matching instantly.
+            Join a trip and find Travel Companions instantly.
           </p>
         </div>
 
@@ -110,7 +110,7 @@ const HostedTripSection: React.FC<Props> = ({ trips }) => {
                     <h2 style={styles.emptyTitle}>No upcoming hosted trips</h2>
                     <p style={styles.emptyText}>
                       There are no upcoming hosted trips yet. Create your first trip, build an itinerary,
-                      and start matching with travelers heading to the same destination.
+                      and find Travel Companions heading to the same destination.
                     </p>
 
                     <div style={styles.emptyActions}>

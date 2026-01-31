@@ -19,7 +19,7 @@ export default function MatchingUsersIcon({
   count = 0,
   loading = false,
   onClickOpen,
-  tooltipText = "It's about matching",
+  tooltipText = "It's about finding travel companions for your trip!",
   ariaLabel = "Open matching",
 }: Props) {
   const router = useRouter();

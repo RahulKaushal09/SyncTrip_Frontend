@@ -85,3 +85,9 @@ export interface HostedTripItinerary {
         date?: string;
     }];
 }
+
+export type UUID = string;
+
+export type GenderPreference = "male" | "female" | "mixed";
+
+export type GroupStatus = "open" | "closed";

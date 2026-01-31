@@ -1,6 +1,9 @@
 
 import { UserTrip, UserTripActivity } from "@/types";
 import apiClient from "./apiClient";
+import {  responseUserTripWithGroupContext } from "@/classes/ApiResponse.classes";
+
+
 
 class TripServices {
 
@@ -12,6 +15,21 @@ class TripServices {
                 },
             });
             return res.data.trip as UserTrip;
+        }
+        catch (error) {
+            console.error("Error fetching trip details:", error);
+            throw error;
+        }
+    }
+    
+    static async fetchTripWithGroupDetails(tripId: string, fields: string[] = []): Promise<responseUserTripWithGroupContext> {
+        try {
+            const res = await apiClient.get(`/app/getUserTripDetails/${tripId}`, {
+                params: {
+                    fields: fields.join(","),
+                },
+            });
+            return res.data as responseUserTripWithGroupContext;
         }
         catch (error) {
             console.error("Error fetching trip details:", error);
@@ -66,6 +84,7 @@ class TripServices {
             throw error;
         }
     }
+
 
     static async getTripsOfUserOnRequest(profileId: string, fields: string[] = []): Promise<UserTrip[]> {
         try {

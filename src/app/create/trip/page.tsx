@@ -92,7 +92,7 @@ function CreateTripContent() {
   const [selectedBudget, setSelectedBudget] = useState<string>('');
   const [selectedPrivacy, setSelectedPrivacy] = useState<string>('');
   const [showPrivacyConfirm, setShowPrivacyConfirm] = useState(false);
-  const [pendingStartMatching, setPendingStartMatching] = useState(false);
+  // const [pendingStartMatching, setPendingStartMatching] = useState(false);
 
   const { showLoader, hideLoader } = useLoader();
   useEffect(() => {
@@ -118,7 +118,7 @@ function CreateTripContent() {
 
   const closePrivacyConfirm = useCallback(() => {
     setShowPrivacyConfirm(false);
-    setPendingStartMatching(false);
+    // setPendingStartMatching(false);
   }, []);
 
   const updateUrlParams = useCallback(
@@ -191,83 +191,147 @@ function CreateTripContent() {
 
 
   const [isPublishing, setIsPublishing] = useState(false);
+  const publishTripAndContinue = useCallback(async () => {
+    if (isPublishing) return;
 
-  const publishTripAndNavigate = useCallback(
-    async (manual: boolean) => {
+    setIsPublishing(true);
+    showLoader();
 
-      if (isPublishing) return;
-      setIsPublishing(true);
-      showLoader();
-      try {
-        if (!startDate || !endDate) {
-          toast.error('Please select trip start and end dates.');
-          hideLoader();
-          setIsPublishing(false);
-          return;
-        }
-        if (!isRangeWithinLimit(startDate, endDate)) {
-          toast.error(`Trip cannot be longer than ${MAX_TRIP_DAYS} days.`);
-          hideLoader();
-          setIsPublishing(false);
-          return;
-        }
-        const payload: UserTrip = {
-          locationId: selectedLocation?.id ?? '',
-          locationName: selectedLocation?.title ?? '',
-          startDate: startDate ? formatLocalDateOnly(startDate) : '',
-          endDate: endDate ? formatLocalDateOnly(endDate) : '',
-          budget: selectedBudget,
-          interests: selectedPreferences,
-          privacy: selectedPrivacy,
-        };
-        const res = await ApiService.saveTripDetails(payload);
-        if (res && res.id) {
-          const createdTripId = res.id;
-          if (typeof window !== 'undefined' && window.gtag) {
-            window.gtag('event', 'conversion', {
-              'send_to': 'AW-17836239160/h8M1COuN0tkbELjS_bhC',
-              'value': 1.0,      // Keep if you assigned a value of ₹1 in Google Ads; remove if no value set
-              'currency': 'INR'  // Keep if using value; remove otherwise
-            });
-          }
-          if (manual) {
-            // route to manual planner page
-            toast.success('Trip created! Add your activities now.');
-            router.replace(`/userTrip/planner?tripId=${createdTripId}`);
-            // hideLoader();
-
-          } else {
-            toast.success('Trip created! Start matching now...');
-            router.replace(`/userTrip/matching?tripId=${createdTripId}`);
-            // hideLoader();
-
-          }
-        } else {
-          console.error('Failed to create trip:', res);
-          hideLoader();
-
-        }
-      } catch (err) {
-        console.error('Error creating trip:', err);
-        hideLoader();
-
+    try {
+      if (!startDate || !endDate) {
+        toast.error('Please select trip dates');
+        return;
       }
-      finally {
-        setIsPublishing(false);
+
+      if (!isRangeWithinLimit(startDate, endDate)) {
+        toast.error(`Trip cannot exceed ${MAX_TRIP_DAYS} days`);
+        return;
       }
-    },
-    [selectedLocation, startDate, endDate, selectedBudget, selectedPreferences, selectedPrivacy, router, isPublishing]
-  );
-  const makeTripPublic = useCallback(async () => {
-    // change privacy to public, then proceed with start-matching publish flow
-    setSelectedPrivacy((prev) => {
-      // preserve same casing if you need; store 'public' for safety
-      return 'Public Trip';
-    });
+
+      const payload: UserTrip = {
+        locationId: selectedLocation?.id ?? '',
+        locationName: selectedLocation?.title ?? '',
+        startDate: formatLocalDateOnly(startDate),
+        endDate: formatLocalDateOnly(endDate),
+        budget: selectedBudget,
+        interests: selectedPreferences,
+        privacy: selectedPrivacy,
+      };
+
+      const res = await ApiService.saveTripDetails(payload);
+
+      if (!res?.id) {
+        toast.error('Failed to create trip');
+        return;
+      }
+
+      const tripId = res.id;
+
+      toast.success('Trip created!');
+      router.replace(`/userTrip/${tripId}/travel-mode`);
+
+    } catch (err) {
+      console.error(err);
+      toast.error('Something went wrong');
+    } finally {
+      hideLoader();
+      setIsPublishing(false);
+    }
+  }, [
+    selectedLocation,
+    startDate,
+    endDate,
+    selectedBudget,
+    selectedPreferences,
+    selectedPrivacy,
+    isPublishing
+  ]);
+  // const publishTripAndNavigate = useCallback(
+  //   async (manual: boolean) => {
+
+  //     if (isPublishing) return;
+  //     setIsPublishing(true);
+  //     showLoader();
+  //     try {
+  //       if (!startDate || !endDate) {
+  //         toast.error('Please select trip start and end dates.');
+  //         hideLoader();
+  //         setIsPublishing(false);
+  //         return;
+  //       }
+  //       if (!isRangeWithinLimit(startDate, endDate)) {
+  //         toast.error(`Trip cannot be longer than ${MAX_TRIP_DAYS} days.`);
+  //         hideLoader();
+  //         setIsPublishing(false);
+  //         return;
+  //       }
+  //       const payload: UserTrip = {
+  //         locationId: selectedLocation?.id ?? '',
+  //         locationName: selectedLocation?.title ?? '',
+  //         startDate: startDate ? formatLocalDateOnly(startDate) : '',
+  //         endDate: endDate ? formatLocalDateOnly(endDate) : '',
+  //         budget: selectedBudget,
+  //         interests: selectedPreferences,
+  //         privacy: selectedPrivacy,
+  //       };
+  //       const res = await ApiService.saveTripDetails(payload);
+  //       if (res && res.id) {
+  //         const createdTripId = res.id;
+  //         if (typeof window !== 'undefined' && window.gtag) {
+  //           window.gtag('event', 'conversion', {
+  //             'send_to': 'AW-17836239160/h8M1COuN0tkbELjS_bhC',
+  //             'value': 1.0,      // Keep if you assigned a value of ₹1 in Google Ads; remove if no value set
+  //             'currency': 'INR'  // Keep if using value; remove otherwise
+  //           });
+  //         }
+  //         if (manual) {
+  //           // route to manual planner page
+  //           toast.success('Trip created! Add your activities now.');
+  //           router.replace(`/userTrip/${createdTripId}/planner`);
+  //           // hideLoader();
+
+  //         } else {
+  //           toast.success('Trip created! Find Travel Companions now...');
+  //           router.replace(`/userTrip/${createdTripId}/matching`);
+  //           // hideLoader();
+
+  //         }
+  //       } else {
+  //         console.error('Failed to create trip:', res);
+  //         hideLoader();
+
+  //       }
+  //     } catch (err) {
+  //       console.error('Error creating trip:', err);
+  //       hideLoader();
+
+  //     }
+  //     finally {
+  //       setIsPublishing(false);
+  //     }
+  //   },
+  //   [selectedLocation, startDate, endDate, selectedBudget, selectedPreferences, selectedPrivacy, router, isPublishing]
+  // );
+  // const makeTripPublic = useCallback(async () => {
+  //   // change privacy to public, then proceed with start-matching publish flow
+  //   setSelectedPrivacy((prev) => {
+  //     // preserve same casing if you need; store 'public' for safety
+  //     return 'Public Trip';
+  //   });
+  //   setShowPrivacyConfirm(false);
+  //   setPendingStartMatching(false);
+  //   // call publish flow with manual = false (start matching)
+  // }, []);
+  const makeTripPublic = useCallback(() => {
+    setSelectedPrivacy('Public Trip');
     setShowPrivacyConfirm(false);
-    setPendingStartMatching(false);
-    // call publish flow with manual = false (start matching)
-  }, []);
+    // setPendingStartMatching(false);
+
+    // allow next tick so state updates
+    setTimeout(() => {
+      publishTripAndContinue();
+    }, 0);
+  }, [publishTripAndContinue]);
   // const confirmChangeToPublicAndStartMatching = useCallback(async () => {
   //   // change privacy to public, then proceed with start-matching publish flow
   //   setSelectedPrivacy((prev) => {
@@ -416,20 +480,14 @@ function CreateTripContent() {
 
         <div className="mt-6">
           <div className="flex flex-col gap-3">
-            <button
-              onClick={() => publishTripAndNavigate(true)}
+            {/* <button
+              onClick={() => publishTripAndContinue()}
               className="w-full btn btn-primary-border"
             >
-              Make Your Plan Manually
+              Make Your Plan Solo
             </button>
 
-            {/* Optional second CTA */}
-            {/* <button
-              onClick={() => publishTripAndNavigate(false)}
-              className="w-full btn btn-matching-color"
-            >
-              Start Matching
-            </button> */}
+           
             <button
               onClick={() => {
                 // if trip is currently invite only, show the popup
@@ -439,12 +497,26 @@ function CreateTripContent() {
                   return;
                 }
                 // otherwise go ahead
-                publishTripAndNavigate(false);
+                publishTripAndContinue();
               }}
               className="w-full btn btn-matching-color"
             >
-              Start Matching
+              Find Travel Companions
+            </button> */}
+            <button
+              onClick={() => {
+                if ((selectedPrivacy || '').toLowerCase().includes('invite')) {
+                  // setPendingStartMatching(true);
+                  setShowPrivacyConfirm(true);
+                  return;
+                }
+                publishTripAndContinue();
+              }}
+              className="w-full btn btn-primary"
+            >
+              Continue
             </button>
+
           </div>
         </div>
       </div>

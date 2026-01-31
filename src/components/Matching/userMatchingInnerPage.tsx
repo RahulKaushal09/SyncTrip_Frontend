@@ -4,7 +4,7 @@ import React, { useEffect, useEffectEvent, useRef, useState } from 'react'
 import MultipleTripSelectionHeader from '@/components/Header/MultipleTripSelectionHeader'
 import './matching.css'
 import apiClient from '@/utils/apiClient'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import TripServices from '@/utils/trip.utils'
 import { userTripFields } from '@/constants'
 import { UserTrip } from '@/types'
@@ -79,17 +79,20 @@ const MatchPopUpBox = ({ matchPopupProfile, closePopup, startChat }) => (
 
 export default function MatchingPage() {
     // get trip id from query 
-    const router = useRouter();
-    const searchParams = useSearchParams();
+    const params = useParams();
     const [tripId, setTripId] = useState<string | null>(null);
+
+    // const tripId_Params = params.tripId as string;
+    const router = useRouter();
+    // const searchParams = useSearchParams();
     useEffect(() => {
-        const id = searchParams?.get('tripId');
+        const id = params.tripId;
         if (id) {
-            setTripId(id);
+            setTripId(id as string);
         } else {
             router.replace('');
         }
-    }, [searchParams, router]);
+    }, [params]);
     // const tripId = searchParams?.get('tripId');
     // if (!tripId) {
     //     router.replace('');

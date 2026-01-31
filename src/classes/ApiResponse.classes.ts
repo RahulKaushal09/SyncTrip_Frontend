@@ -1,4 +1,4 @@
-import { BlogPost, Events, HostedTrip, Location, PlacesToVisit, Restaurants, Trip } from "@/types";
+import { BlogPost, Events, groupContextTrip, HostedTrip, Location, PlacesToVisit, Restaurants, Trip, UserTrip } from "@/types";
 import { User, UserWishList } from "@/types/user.types";
 export interface GoogleLoginResponse {
     token: string;
@@ -58,4 +58,12 @@ export interface exploreNearByApiResponse {
     locations: Location[];
     placesToVisit: PlacesToVisit[];
     restaurants: Restaurants[];
+}
+// export interface responseUserTripsWithGroupContext {
+//     trip: UserTrip,
+//     groupContext: groupContextTrip
+// }
+export interface responseUserTripWithGroupContext {
+    trip: UserTrip,
+    groupContext: groupContextTrip
 }

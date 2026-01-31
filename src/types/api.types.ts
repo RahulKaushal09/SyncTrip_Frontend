@@ -77,7 +77,19 @@ export interface UserTrip {
     avatars?: string[]; // URLs of user avatars who joined the trip
     activities?: UserTripActivity[]; // List of activities planned for the trip
     activitiesCount?: number;
+    groupContext?: groupContextTrip;
+    
 };
+export type groupContextTrip = {
+    isInGroup: boolean,
+    groupTripId?: string,
+    role?: string,
+    groupStatus?: string,
+    chatId?: string | null
+    maxMembers?: number,
+    membersCount?: number
+}
+
 
 type FAQSchema = {
     question: string;

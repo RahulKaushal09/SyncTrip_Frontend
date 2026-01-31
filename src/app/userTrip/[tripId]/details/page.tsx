@@ -1,9 +1,9 @@
 'use client';
 
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { Suspense, useEffect, useState } from 'react';
 import TripServices from '@/utils/trip.utils';
-import { Culture, DayWeather, Festival, Hotel, Location, PlacesToVisit, Restaurants, UserTrip } from '@/types';
+import { Culture, DayWeather, Festival, groupContextTrip, Hotel, Location, PlacesToVisit, Restaurants, UserTrip } from '@/types';
 import LocationHeader from '@/components/PageDetails/LocationHeader';
 import LocationImageGallery from '@/components/PageDetails/locationImages';
 
@@ -180,17 +180,19 @@ export default function UserTripDetailsPage() {
 }
 function UserTripDetailsPageContent() {
     const router = useRouter();
-    const searchParams = useSearchParams();
-    const tripId = searchParams?.get('tripId');
-    const locationId = searchParams?.get('locationId');
-    if (tripId === null) {
-        toast.error("Trip ID  is missing");
-        router.back();
-    }
-    if (locationId === null) {
-        toast.error("Location ID is missing");
-        router.back();
-    }
+    // const searchParams = useSearchParams();
+    const params = useParams();
+    const tripId = params.tripId as string;
+    // const tripId = searchParams?.get('tripId');
+    // const locationId = searchParams?.get('locationId');
+    // if (tripId === null) {
+    //     toast.error("Trip ID  is missing");
+    //     router.back();
+    // }
+    // if (locationId === null) {
+    //     toast.error("Location ID is missing");
+    //     router.back();
+    // }
     const locationFields = [
         LocationFields.ID,
         LocationFields.TITLE,
@@ -217,6 +219,7 @@ function UserTripDetailsPageContent() {
     const [hotelIds, setHotelIds] = useState<string[]>([]);
     const [restaurantIds, setRestaurantIds] = useState<string[]>([]);
     const [location, setLocation] = useState<Location>();
+    const [groupContext, setGroupContext] = useState<groupContextTrip>();
     const [isWishlisted, setWishlisted] = useState(false);
     const [tripDetails, setTripDetails] = useState<UserTrip>({} as UserTrip);
     const [weatherDays, setWeatherDays] = useState<DayWeather[]>([]);
@@ -231,7 +234,7 @@ function UserTripDetailsPageContent() {
 
 
     const navigateToStartMatching = () => {
-        router.push(`/userTrip/matching?tripId=${tripId}`);
+        router.push(`/userTrip/${tripId}/matching`);
     };
 
     useEffect(() => {
@@ -247,34 +250,65 @@ function UserTripDetailsPageContent() {
     useEffect(() => {
         const load = async () => {
             try {
-                const tripFields = [userTripFields.ID, userTripFields.START_DATE, userTripFields.END_DATE,userTripFields.PRIVACY];
+                const tripFields = [userTripFields.ID, userTripFields.LOCATION_ID, userTripFields.START_DATE, userTripFields.END_DATE, userTripFields.PRIVACY];
                 // fetch location details and trip details in parallel
-                console.log('Fetching location and trip details for', locationId, tripId);
+                // console.log('Fetching location and trip details for', locationId, tripId);
 
                 console.log(locationFields);
-                const [locationDetails, tripData] = await Promise.all([
-                    LocationServices.fetchLocationDetails(locationId as string, locationFields),
-                    TripServices.fetchTripDetails(tripId as string, tripFields),
-                ]);
-                if( tripData?.privacy  && tripData?.privacy.toLocaleLowerCase().includes('public') && tripData?.endDate && tripData.endDate.split('T')[0] >= new Date().toISOString().split('T')[0]){
-                    setTripPrivacy('public');
-                    setBottomButtons([{ text: "Start Matching", onClick: navigateToStartMatching, styleClass: "btn btn-matching-color" }]);
-                }else{
-                    setTripPrivacy('private');
-
+                const tripData = await TripServices.fetchTripWithGroupDetails(tripId as string, tripFields);
+                const groupContext: groupContextTrip = tripData.groupContext;
+                setGroupContext(groupContext);
+                if (!tripData.trip) {
+                    toast.error("Trip not found");
+                    router.back();
+                    return;
                 }
+                const locationId = tripData.trip.locationId;
+                const locationDetails = await LocationServices.fetchLocationDetails(locationId as string, locationFields);
+                if (!locationDetails) {
+                    toast.error("Location not found");
+                    router.back();
+                    return;
+                }
+                // const [locationDetails, tripData] = await Promise.all([
+                //     LocationServices.fetchLocationDetails(locationId as string, locationFields),
+                //     TripServices.fetchTripDetails(tripId as string, tripFields),
+                // ]);
+                if (groupContext?.isInGroup) {
+                    setBottomButtons([{
+                        text: "Go to Group Chat", onClick: () => {
+                            // router.push(`/groupTrip/${groupContext.groupTripId}/chat`);
+                        }, styleClass: "btn btn-primary"
+                    },
+                    {
+                        text: "View Group Details", onClick: () => {
+                            router.push(`/userTrip/${tripId}/groups/${groupContext.groupTripId}`);
+                        }, styleClass: "btn btn-secondary"
+                    },
+                    ]);
+                }
+                else {
+                    if (tripData?.trip?.privacy && tripData?.trip?.privacy.toLocaleLowerCase().includes('public') && tripData?.trip?.endDate && tripData.trip.endDate.split('T')[0] >= new Date().toISOString().split('T')[0]) {
+                        setTripPrivacy('public');
+                        setBottomButtons([{ text: "Find Travel Companions", onClick: navigateToStartMatching, styleClass: "btn btn-matching-color" }]);
+                    } else {
+                        setTripPrivacy('private');
+
+                    }
+                }
+
                 console.log(locationDetails);
                 setLocation(locationDetails);
                 setHotelIds(locationDetails?.hotels as string[] || []);
                 setRestaurantIds(locationDetails?.restaurantsandfoods as string[] || []);
                 setWishlisted(locationDetails?.isWishlisted || false);
 
-                setTripDetails({ startDate: tripData.startDate, endDate: tripData.endDate } as UserTrip);
+                setTripDetails({ startDate: tripData.trip.startDate, endDate: tripData.trip.endDate } as UserTrip);
 
                 // fetch weather from your backend
-                if (locationDetails?.fullDetails?.coordinates?.lat && locationDetails?.fullDetails?.coordinates?.long && tripData?.startDate && tripData?.endDate) {
+                if (locationDetails?.fullDetails?.coordinates?.lat && locationDetails?.fullDetails?.coordinates?.long && tripData?.trip?.startDate && tripData?.trip?.endDate) {
                     setWeatherLoading(true);
-                    const resp = await WeatherServices.getTripWeather(locationDetails.fullDetails.coordinates.lat, locationDetails.fullDetails.coordinates.long, tripData.startDate, tripData.endDate);
+                    const resp = await WeatherServices.getTripWeather(locationDetails.fullDetails.coordinates.lat, locationDetails.fullDetails.coordinates.long, tripData.trip.startDate, tripData.trip.endDate);
                     // expect { days: DayWeather[], forecastAvailableUntil: 'YYYY-MM-DD' }
                     setWeatherDays(resp.days || []);
                     setForecastAvailableUntil(resp.forecastAvailableUntil || null);
@@ -288,7 +322,7 @@ function UserTripDetailsPageContent() {
             }
         };
         load();
-    }, [locationId, tripId]);
+    }, [tripId]);
     // Top tab (About / Places / Stay / Restaurant)
     const [selectedKey, setSelectedKey] = useState<string>('about');
     const [isLoadingItinerary, setIsLoadingItinerary] = useState(false);
@@ -357,7 +391,7 @@ function UserTripDetailsPageContent() {
             return;
         }
         if (key === "restaurants" && restaurants.length === 0) {
-            
+
             setIsLoadingRestaurants(true);
 
             const Restaurants = await LocationServices.getRestaurantsByIds(restaurantIds);
@@ -384,10 +418,10 @@ function UserTripDetailsPageContent() {
         router.back();
     };
     const handleShare = () => console.log('Share', location.title);
-    const EditTripButton = () => {
-        // (navigation as any).navigate('EditTrip', { id: tripId });
-        router.push(`/userTrip/edit?tripId=${tripId}&locationId=${locationId}`);
-    }
+    // const EditTripButton = () => {
+    //     // (navigation as any).navigate('EditTrip', { id: tripId });
+    //     router.push(`/userTrip/edit?tripId=${tripId}`);
+    // }
     const formatTripDate = (start: string, end: string) => {
         const options: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric' };
         const startDate = new Date(start);
@@ -396,7 +430,7 @@ function UserTripDetailsPageContent() {
     };
 
 
-    
+
 
 
 

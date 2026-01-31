@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback, useRef, useMemo, Suspense } from 'react';
+import React, { useState, useEffect, useCallback, useRef, Suspense } from 'react';
 // import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 import {
   DragDropContext,
@@ -16,7 +16,7 @@ import { Plus, Star } from "lucide-react";
 import Image from 'next/image';
 
 import { MapProvider } from '@/components/createTrip/MapProvider';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { LocationFields } from '@/constants';
 import { LocationServices } from '@/utils/location.utils';
 import TripServices from '@/utils/trip.utils';
@@ -267,11 +267,10 @@ export default function TripPlannerPage() {
 
 const TripPlannerPageContent: React.FC = () => {
   const router = useRouter();
-
+  const params = useParams();
+  const tripId = params.tripId as string;
 
   const searchParams = useSearchParams();
-  const tripId = searchParams?.get('tripId');
-
   const showHotelsAfter = searchParams?.get('showHotelsAfter') === 'true';
 
   const [showPanel, setShowPanel] = useState(false);
@@ -553,10 +552,11 @@ const TripPlannerPageContent: React.FC = () => {
         throw new Error('Save failed');
       }
       if (showHotelsAfter) {
-        router.replace(`/userTrip/hotelSelection?tripId=${tripId}&locationId=${tripDetails?.locationId}`);
+        // router.replace(`/userTrip/${tripId}hotelSelection?tripId=${tripId}&locationId=${tripDetails?.locationId}`);
+        router.replace(`/userTrip/${tripId}/details?locationId=${tripDetails?.locationId}`);
 
       } else {
-        router.replace(`/userTrip/details?tripId=${tripId}&locationId=${tripDetails?.locationId}`);
+        router.replace(`/userTrip/${tripId}/details?locationId=${tripDetails?.locationId}`);
 
       }
     } catch (err: unknown) {

@@ -9,5 +9,5 @@ export * from './date.utils';
 export * from './api.utils';
 export * from './login.utils';
 export * from './trips.api.utils';
-export * from './services.utils';
+export * from './CommonServices.utils';
 export * from './blogs.api.utils';

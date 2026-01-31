@@ -6,7 +6,7 @@ import '../../../styles/trips/tripCard.css';
 
 import { Trip } from '@/types';
 import HeartIcon from './../smallComponents/HeartIcon';
-import { CommonServices } from '@/utils/services.utils';
+import { CommonServices } from '@/utils/CommonServices.utils';
 
 interface TripCardProps {
     trip: Trip;

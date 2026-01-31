@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import TripCard from "@/components/Cards/TripCard";
 import TripServices from "@/utils/trip.utils";
 import { useLogin } from "@/components/providers/LoginProvider";
-import { UserTrip } from "@/types";
+import { groupContextTrip, UserTrip } from "@/types";
 
 type FilterKey = "all" | "active" | "upcoming" | "completed";
 
@@ -36,7 +36,6 @@ export default function AllTripsPage() {
 
   const [trips, setTrips] = useState<UserTrip[]>([]);
   const [filter, setFilter] = useState<FilterKey>("all");
-
   useEffect(() => {
     let mounted = true;
     const fetchTrips = async () => {
@@ -65,7 +64,7 @@ export default function AllTripsPage() {
   const openTripDetailsScreen = (tripId: string, locationId?: string) => {
     // push to trip details page; adjust route as you use in your app
     const query = locationId ? `?locationId=${encodeURIComponent(locationId)}` : "";
-    router.push(`/userTrip/details?tripId=${encodeURIComponent(tripId)}&locationId=${encodeURIComponent(locationId || "")}`);
+    router.push(`/userTrip/${encodeURIComponent(tripId)}/details${query}`);
   };
 
   const onCreateTrip = () => {
@@ -101,7 +100,7 @@ export default function AllTripsPage() {
               <div style={styles.emptyCard}>
                 <h2 style={styles.emptyTitle}>No trips yet</h2>
                 <p style={styles.emptyText}>
-                  You haven&apos;t created any trips. Create your first trip to invite friends, build an itinerary and start matching with other travelers.
+                  You haven&apos;t created any trips. Create your first trip to invite friends, build an itinerary and find Travel Companions.
                 </p>
                 <div style={styles.emptyActions}>
                   <button

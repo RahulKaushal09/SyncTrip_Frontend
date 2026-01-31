@@ -18,7 +18,7 @@ export default function NotificationCard({ notif }) {
   //   href = `/profile/${clickAction.payload.profileId}`;
   // }
   if (clickAction?.type === "OPEN_TRIP") {
-    href = `/userTrip/details?tripId=${clickAction.payload.tripId}`;
+    href = `/userTrip/${clickAction.payload.tripId}/details`;
   }
 
   return (

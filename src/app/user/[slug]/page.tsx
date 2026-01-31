@@ -885,7 +885,7 @@ export default function UserProfilePage() {
                 </div>
               )}
               {displayTrips.length > 0 ? displayTrips.map((trip) => (
-                <TripCard key={trip.id} trip={trip} isOwner={isOwner} onClick={() => router.push(`/userTrip/details?tripId=${encodeURIComponent(trip.id || '')}&locationId=${encodeURIComponent(trip.locationId || '')}`)} />
+                <TripCard key={trip.id} trip={trip} isOwner={isOwner} onClick={() => router.push(`/userTrip/${encodeURIComponent(trip.id || '')}/details?locationId=${encodeURIComponent(trip.locationId || '')}`)} />
               )) : (
                 <div className="col-span-full flex flex-col items-center justify-center py-16 bg-white rounded-3xl border border-dashed border-[var(--neutral-3)]">
                   <div className="w-16 h-16 bg-[var(--primary-5)] rounded-full flex items-center justify-center mb-4 text-[var(--primary-1)]"><MapPin size={24} /></div>

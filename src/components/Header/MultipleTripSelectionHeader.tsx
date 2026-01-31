@@ -101,7 +101,7 @@ export default function MultipleTripSelectionHeader({
     router.push("/chats?tripId=" + tripId);
   };
   const onMatchingOpen = () => {
-    router.push("/userTrip/matching?tripId=" + tripId);
+    router.push("/userTrip/"+tripId+"/matching");
   };
 
   return (
