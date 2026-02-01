@@ -18,6 +18,8 @@ interface LoginContextType {
     openLogin: (callback?: (user: User, requiresPhone?: boolean) => void, options?: LoginOptions) => void;
     closeLogin: () => void;
     logout: () => void;
+    updateUserProfilePicture: (newUrl: string) => void;
+    updateUserFields: (fields: Partial<User>) => void;
 }
 
 const LoginContext = createContext<LoginContextType | undefined>(undefined);
@@ -191,6 +193,37 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
         onLoginCallback(updatedUser, false);
         registerFcmTokenForUser(updatedUser);
     }, [onLoginCallback, registerFcmTokenForUser]);
+    const updateUserFields = useCallback((fields: Partial<User>) => {
+        setUser((prev) => {
+            if (!prev) return prev;
+
+            const updatedUser = {
+                ...prev,
+                ...fields,
+            };
+
+            StorageUtils.setUser(updatedUser);
+            return updatedUser;
+        });
+    }, []);
+    const updateUserProfilePicture = useCallback((newUrl: string) => {
+        setUser((prev) => {
+            if (!prev) return prev;
+
+            const updatedUser: User = {
+                ...prev,
+                profile_picture: [
+                    newUrl,                       // ✅ newest first
+                    ...(prev.profile_picture || [])
+                ],
+            };
+
+            // ✅ keep localStorage in sync
+            StorageUtils.setUser(updatedUser);
+
+            return updatedUser;
+        });
+    }, []);
 
     const contextValue: LoginContextType = {
         user,
@@ -198,6 +231,8 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
         openLogin,
         closeLogin,
         logout,
+        updateUserProfilePicture,
+        updateUserFields
     };
 
     return (
