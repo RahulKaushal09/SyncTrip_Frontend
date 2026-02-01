@@ -10,6 +10,7 @@ export interface GroupCard {
   membersCount: number;
   maxMembers: number;
   tags: string[];
+  createdBy: UUID;
 }
 
 export interface GroupPermissions {
