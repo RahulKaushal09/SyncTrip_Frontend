@@ -112,8 +112,8 @@ export default function GroupDetailsPage() {
       {!group.isMember ? (
         <button
           onClick={async () => {
-            const res = await GroupApiServices.joinGroupTrip(group.id);
-            router.push(`/chat/${res.chatId}`);
+            const res = await GroupApiServices.joinGroupTrip(group.id,tripId);
+            router.push(`/chats?tripId=${tripId}&chatId=${res.chatId}`);
           }}
           className="btn btn-primary w-full"
         >

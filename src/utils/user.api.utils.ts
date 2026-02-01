@@ -55,5 +55,13 @@ export class UserApiService {
             throw error;
         }
     }
+    static async logoutUser(): Promise<void> {
+        try {
+            await apiClient.post('/users/logout');
+        } catch (error) {
+            console.error("Error logging out user:", error);
+            throw error;
+        }
+    }
 }
 
