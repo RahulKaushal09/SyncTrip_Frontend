@@ -3,12 +3,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./AvatarUploader.module.css";
 import toast from "react-hot-toast";
+import { Pencil, Camera, Check, X as CloseIcon } from "lucide-react";
+import { ImageCropper } from "../Profile/ImageCropper";
 
 interface AvatarUploaderProps {
-  value?: File | null;                    // current file (optional)
-  existingImageUrl?: string | null;       // e.g. user.profile_picture?.[0]
-  onChange: (file: File | null) => void;  // called when user selects/clears
-  size?: number;                          // diameter in px
+  value?: File | null;
+  existingImageUrl?: string | null;
+  onChange: (file: File | null) => void;
+  size?: number;
   required?: boolean;
   id?: string;
 }
@@ -22,195 +24,148 @@ export default function AvatarUploader({
   id = "avatar-uploader",
 }: AvatarUploaderProps) {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const inputRef = useRef<HTMLInputElement | null>(null);
   const [isDragging, setIsDragging] = useState(false);
 
-  // Keep track of the last object URL so we can revoke it reliably
+  // Cropping States
+  const [isCropping, setIsCropping] = useState(false);
+  
+  // This always holds the high-res, original source
+  const [originalFileSource, setOriginalFileSource] = useState<string | null>(null);
+  
+  const [zoomLevel, setZoomLevel] = useState<number>(1);
+  const [rotateLevel, setRotateLevel] = useState<number>(0);
+
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const lastObjectUrlRef = useRef<string | null>(null);
 
-  // Helper: revoke last object URL if any
   const revokeLastObjectUrl = () => {
     if (lastObjectUrlRef.current) {
       try {
         URL.revokeObjectURL(lastObjectUrlRef.current);
-      } catch (err) {
-        /* ignore revoke errors */
-      }
+      } catch (err) { }
       lastObjectUrlRef.current = null;
     }
   };
 
-  // If parent provides a File `value`, create preview for it.
-  // Also if parent clears (value === null) and no local preview, remove preview.
   useEffect(() => {
-    // If we have an explicitly provided File from parent, create a preview
     if (value instanceof File) {
-      // revoke previous
       revokeLastObjectUrl();
       const url = URL.createObjectURL(value);
       lastObjectUrlRef.current = url;
       setPreviewUrl(url);
-      return () => {
-        // cleanup when value changes/unmount
-        revokeLastObjectUrl();
-      };
+      return () => revokeLastObjectUrl();
     }
-
-    // If parent sent null and we are not holding any local preview, clear preview
     if (!value && !existingImageUrl) {
       revokeLastObjectUrl();
       setPreviewUrl(null);
+      setOriginalFileSource(null);
     }
-
-    // If parent cleared value but provided an existingImageUrl (string), use that
     if (!value && existingImageUrl) {
       revokeLastObjectUrl();
       setPreviewUrl(existingImageUrl);
+      // Also treat the existing image as the "original" source for editing
+      setOriginalFileSource(existingImageUrl);
     }
-
-    // Note: intentionally not returning a cleanup that revokes existingImageUrl since that is external URL.
   }, [value, existingImageUrl]);
 
-  // Immediately create preview when user picks a file (don't wait for parent update)
-  const createPreviewForFile = (file: File) => {
-    revokeLastObjectUrl();
-    const url = URL.createObjectURL(file);
-    lastObjectUrlRef.current = url;
-    setPreviewUrl(url);
-  };
+  const openFilePicker = () => inputRef.current?.click();
 
-  const openFilePicker = () => {
-    inputRef.current?.click();
-  };
-
-  // const handleFiles = (files: FileList | null) => {
-  //   if (!files || files.length === 0) return;
-  //   const file = files[0];
-  //   if (!file.type.startsWith("image/")) return;
-  //   // set immediate preview for best UX
-  //   createPreviewForFile(file);
-  //   // notify parent
-  //   onChange(file);
-  //   // Do not clear the input value here — leave it so user can change to a different file.
-  // };
   const handleFiles = (files: FileList | null) => {
     if (!files || files.length === 0) return;
     const file = files[0];
 
-    // Block non-image files
     if (!file.type.startsWith("image/")) {
       toast.error("Please select an image file");
       return;
     }
 
-    // Check max size (5MB)
     if (file.size > 5 * 1024 * 1024) {
       toast.error("Image size should not exceed 5 MB");
       return;
     }
 
-    // set immediate preview
-    createPreviewForFile(file);
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result as string;
+      // Store the RAW file here
+      setOriginalFileSource(result);
+      // Reset zoom/rotate for a new file
+      setZoomLevel(1);
+      setRotateLevel(0);
+      setIsCropping(true);
+    };
+    reader.readAsDataURL(file);
+  };
 
-    // notify parent
+  const onCropFinished = async (blob: Blob, zoom: number, rotate: number) => {
+    const file = new File([blob], "profile_photo.jpg", { type: "image/jpeg" });
+
+    revokeLastObjectUrl();
+    const url = URL.createObjectURL(file);
+    lastObjectUrlRef.current = url;
+
+    setPreviewUrl(url);
+    setZoomLevel(zoom);
+    setRotateLevel(rotate);
+    setIsCropping(false);
+
     onChange(file);
   };
 
-  const onInputChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    handleFiles(e.target.files);
-  };
-
-  const onDrop: React.DragEventHandler<HTMLDivElement> = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(false);
-    handleFiles(e.dataTransfer.files);
-  };
-
-  const onDragOver: React.DragEventHandler<HTMLDivElement> = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    e.dataTransfer.dropEffect = "copy";
-    setIsDragging(true);
-  };
-
-  const onDragLeave: React.DragEventHandler<HTMLDivElement> = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(false);
-  };
-
-  // Clear handler: revoke preview, clear input value, notify parent
   const clear = (e?: React.MouseEvent) => {
     e?.stopPropagation();
     revokeLastObjectUrl();
     setPreviewUrl(null);
-
-    // clear native file input so selecting the same file again triggers change event
-    if (inputRef.current) {
-      try {
-        inputRef.current.value = "";
-      } catch (err) {
-        // some browsers restrict this, ignore
-      }
-    }
-
+    setOriginalFileSource(null);
+    if (inputRef.current) inputRef.current.value = "";
     onChange(null);
   };
 
-  // cleanup when unmounting
-  useEffect(() => {
-    return () => {
-      revokeLastObjectUrl();
-    };
-  }, []);
-
   return (
     <div className={styles["uploader-root"]}>
+      {isCropping && originalFileSource && (
+        <div className="fixed inset-0 z-[1050] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden relative">
+            <ImageCropper
+              presetRotation={rotateLevel}
+              presetZoom={zoomLevel}
+              image={originalFileSource} // Pass the RAW original, not the preview
+              onCancel={() => setIsCropping(false)}
+              onCropComplete={onCropFinished}
+            />
+          </div>
+        </div>
+      )}
+
       <div
         className={`${styles["avatar-wrap"]} ${isDragging ? styles["dragging"] : ""}`}
         style={{ width: size, height: size }}
         onClick={openFilePicker}
-        onDrop={onDrop}
-        onDragOver={onDragOver}
-        onDragLeave={onDragLeave}
+        onDrop={(e) => {
+          e.preventDefault();
+          setIsDragging(false);
+          handleFiles(e.dataTransfer.files);
+        }}
+        onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+        onDragLeave={() => setIsDragging(false)}
         role="button"
         tabIndex={0}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") openFilePicker();
-          if ((e.key === "Backspace" || e.key === "Delete") && !required) clear();
-        }}
-        aria-label="Upload profile picture"
-        aria-required={required}
       >
         <div className={styles["avatar-inner"]}>
           {previewUrl ? (
-            // preview image
-            // eslint-disable-next-line @next/next/no-img-element
             <img src={previewUrl} alt="Profile preview" className={styles["avatar-img"]} />
           ) : (
-            // placeholder SVG (person icon)
-            <svg className={styles["avatar-icon"]} viewBox="0 0 24 24" aria-hidden focusable="false">
+            <svg className={styles["avatar-icon"]} viewBox="0 0 24 24">
               <circle cx="12" cy="8" r="3.2" fill="none" stroke="var(--icon-color,#09a8ff)" strokeWidth="1.2" />
-              <path d="M4 20c0-4 4-6 8-6s8 2 8 6" fill="none" stroke="var(--icon-color,#09a8ff)" strokeWidth="1.2" strokeLinecap="round" />
+              <path d="M4 20c0-4 4-6 8-6s8 2 8 6" fill="none" stroke="var(--icon-color,#09a8ff)" strokeWidth="1.2" />
             </svg>
           )}
         </div>
 
         <span className={styles["outer-ring"]} />
 
-        <button
-          type="button"
-          className={styles["add-badge"]}
-          onClick={(e) => {
-            e.stopPropagation();
-            openFilePicker();
-          }}
-          aria-label="Add or change profile picture"
-        >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden>
-            <path d="M12 5v14M5 12h14" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
+        <button type="button" className={styles["add-badge"]} onClick={(e) => { e.stopPropagation(); openFilePicker(); }}>
+          <Camera size={14} color="#fff" />
         </button>
 
         <input
@@ -219,25 +174,12 @@ export default function AvatarUploader({
           className={styles["hidden-input"]}
           type="file"
           accept="image/*"
-          // capture="environment"
-          multiple={false}
-
-          onChange={onInputChange}
-          aria-hidden="true"
+          onChange={(e) => { handleFiles(e.target.files); e.target.value = ""; }}
         />
 
         {!required && previewUrl && (
-          <button
-            type="button"
-            className={styles["remove-btn"]}
-            onClick={(e) => {
-              e.stopPropagation();
-              clear(e);
-            }}
-            aria-label="Remove profile picture"
-            title="Remove"
-          >
-            ✕
+          <button type="button" className={styles["remove-btn"]} onClick={clear}>
+            <CloseIcon size={12} />
           </button>
         )}
       </div>
@@ -245,6 +187,21 @@ export default function AvatarUploader({
       <div className={styles["uploader-meta"]}>
         <div className={styles["uploader-title"]}>Upload photo</div>
         <div className={styles["uploader-sub"]}>Image • max 5MB</div>
+
+        {previewUrl && originalFileSource && (
+          <button
+            type="button"
+            className={styles["edit-image"]}
+            onClick={(e) => {
+              e.preventDefault();
+              // Re-open with the ORIGINAL file source
+              setIsCropping(true);
+            }}
+          >
+            <Pencil size={12} />
+            Edit
+          </button>
+        )}
       </div>
     </div>
   );

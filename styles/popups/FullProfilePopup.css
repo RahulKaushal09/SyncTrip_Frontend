@@ -54,6 +54,7 @@
 /* Title */
 .full-profile-title {
     font-size: 1.5rem;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     font-weight: 700;
     text-align: center;
     margin-bottom: 2rem;
@@ -102,14 +103,15 @@
 
 .full-profile-input:focus,
 .full-profile-input:not(:placeholder-shown) {
-  border-color: var(--primary-3);
-  background-color: #fff;
+    border-color: var(--primary-3);
+    background-color: #fff;
 }
+
 .DOBSelects_synctrip-select__GmVpr:focus:focus,
 .DOBSelects_synctrip-select__GmVpr:focus:not(:placeholder-shown) {
-  border-color: var(--primary-3) !important;
-  background-color: #fff !important;
-  box-shadow: none  !important;
+    border-color: var(--primary-3) !important;
+    background-color: #fff !important;
+    box-shadow: none !important;
 }
 
 /* Checkbox */
@@ -155,6 +157,109 @@
     outline: 3px solid #ff9a8b;
     outline-offset: 2px;
 } */
+
+/* --- Multi-Step Enhancements --- */
+
+.profile-progress-wrapper {
+    margin-bottom: 25px;
+    padding-right: 30px;
+    /* Aligns with form width */
+}
+
+.profile-progress-bar-container {
+    height: 8px;
+    background: #f3f4f6;
+    border-radius: 10px;
+    overflow: hidden;
+    width: 100%;
+    border: 1px solid #e5e7eb;
+}
+
+.profile-progress-bar-fill {
+    height: 100%;
+    background: #000;
+    /* Solid black to match your theme */
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.profile-step-text {
+    font-size: 12px;
+    text-align: right;
+    margin-top: 6px;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+/* Step Content Transitions */
+.step-content {
+    animation: fadeInStep 0.3s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+@keyframes fadeInStep {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Error Positioning & Style */
+.full-profile-error-container {
+    background-color: #fef2f2;
+    /* Light red bg */
+    border: 1px solid #fecaca;
+    /* Soft red border */
+    color: #dc2626;
+    /* Deep red text */
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-align: center;
+}
+
+/* Footer Buttons Spacing */
+.profile-footer-btns {
+    display: flex;
+    gap: 12px;
+    padding-top: 20px;
+    border-top: 1px solid #f3f4f6;
+}
+
+/* Maintaining your original Bubble Buttons but improving spacing */
+.bubble-btn-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 5px;
+    padding: 5px 0;
+}
+
+/* Container Tweak for multi-step height stability */
+.full-profile-container {
+    min-height: 500px;
+    /* Prevents jumping as steps change */
+    display: flex;
+    flex-direction: column;
+}
+
+.full-profile-form {
+    flex: 1;
+}
+
+/* Input Focus Tweak */
+.full-profile-input:focus {
+    border-color: #000;
+    background-color: #fff;
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+}
 
 /* Responsive Design */
 @media (max-width: 768px) {

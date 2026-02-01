@@ -123,6 +123,23 @@
   color: #6b7280;
 }
 
+.edit-image {
+  font-size: 14px;
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  background: #000;
+  border-radius: 10px;
+  padding: 6px 0;
+  margin-top: 10px;
+}
+
+.edit-image:hover {
+  background: #242424;
+}
+
 /* focus styles to be keyboard accessible */
 .avatar-wrap:focus {
   outline: none;

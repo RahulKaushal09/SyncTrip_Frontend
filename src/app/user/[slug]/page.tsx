@@ -1,55 +1,37 @@
 'use client';
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import {
   MapPin, Calendar, Edit2, Globe, User as UserIcon,
-  X, Instagram, Plus, Briefcase, Lock, LogIn, CheckCircle,
-  ArrowRight, Users, Heart, Facebook, Twitter, Star, Compass, Luggage,
-  SquarePen, MapPinned, MailIcon,
-  Check,
-  Phone,
-  ChevronDown,
-  Camera,
-  UploadCloud,
-  PencilIcon
+  X, Instagram, Plus, Lock, LogIn, Star, Compass, MailIcon, Phone, Camera, PencilIcon
 } from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';
 import { useLogin } from '@/components/providers/LoginProvider';
 import TripServices from '@/utils/trip.utils';
 import { UserApiService } from '@/utils/user.api.utils';
-import { User, UserTrip } from '@/types';
+import { ExtendedUser, UserTrip } from '@/types';
 import { CommonServices, triggerLogin } from '@/utils';
-import { TravelGoals as TRAVEL_GOALS, CommonLanguages as COMMON_LANGUAGES, TripPreferences as TRIP_PREFERENCES, ROUTES } from '@/constants';
 import apiClient from '@/utils/apiClient';
 import { useLoader } from '@/components/providers/LoaderContext';
+import TripCard from '@/components/Profile/TripCard';
+import EditProfileModal from '@/components/Profile/EditProfileModal';
+import ImageUploadModal from '@/components/Profile/ImageUpload';
+import { ROUTES } from '@/constants';
 
-// --- Types & Interfaces ---
-
-export interface ExtendedUser extends User {
-  persona?: string[]; // Maps to travelerType/travelStyles in UI
-  viewCount?: number;
-  rating?: number;
-  socialMedias?: {
-    instagram?: string;
-  };
-}
-
+// DUMMY DATA FOR BLURRED PROFILE
 const DUMMY_USER: Partial<ExtendedUser> = {
-  id: 'hidden-user',
-  name: 'Hidden Profile',
+  id: 'synctrip-user',
+  name: 'SyncTrip User Profile',
   profile_picture: [],
-  travelGoal: 'Login to view',
-  rating: 0,
+  travelGoal: 'Login to View',
+  rating: 5,
   persona: ['Hidden', 'Locked'],
   languages: 'Hidden',
-  viewCount: 0
+  viewCount: 100
 };
 
-/**
- * FAKE_TRIPS extended to satisfy the UserTrip interface 
- * (adding activitiesCount and source)
- */
+// FAKE TRIPS FOR BLURRED PROFILE
 const FAKE_TRIPS: UserTrip[] = [1, 2, 3, 4, 5, 6].map((i) => ({
   id: `fake-${i}`,
   locationName: 'Hidden Paradise',
@@ -65,510 +47,6 @@ const FAKE_TRIPS: UserTrip[] = [1, 2, 3, 4, 5, 6].map((i) => ({
   source: { type: 'manual' }
 }));
 
-// used in edit profile
-interface MultiSelectProps {
-  label: string;
-  options?: string[];
-  value: string[];
-  onChange: (val: string[]) => void;
-  placeholder?: string;
-  allowCustom?: boolean;
-}
-
-const MultiSelect = ({ label, options = [], value = [], onChange, placeholder, allowCustom = false }: MultiSelectProps) => {
-  const [inputValue, setInputValue] = useState('');
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsDropdownOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  const handleAdd = (item: string) => {
-    if (item && !value.includes(item)) {
-      onChange([...value, item]);
-    }
-    setInputValue('');
-  };
-
-  const handleRemove = (itemToRemove: string) => {
-    onChange(value.filter(item => item !== itemToRemove));
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && allowCustom && inputValue.trim()) {
-      e.preventDefault();
-      handleAdd(inputValue.trim());
-    }
-  };
-
-  const availableOptions = options.filter(opt => !value.includes(opt));
-
-  return (
-    <div className="relative" ref={dropdownRef}>
-      <label className="block text-sm font-medium text-[var(--secondary-1)] mb-2">{label}</label>
-      <div
-        className="min-h-[42px] w-full px-3 py-2 border border-[var(--neutral-4)] rounded-xl bg-white focus-within:ring-2 focus-within:ring-[var(--primary-1)] focus-within:border-transparent transition-all flex flex-wrap gap-2 items-center cursor-text"
-        onClick={() => setIsDropdownOpen(true)}
-      >
-        {value.map((item, idx) => (
-          <span key={idx} className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[var(--primary-5)] text-[var(--primary-hover)] text-xs font-semibold border border-[var(--primary-3)]">
-            {item}
-            <button
-              type="button"
-              onClick={(e) => { e.stopPropagation(); handleRemove(item); }}
-              className="hover:bg-[var(--primary-2)] rounded-full p-0.5 transition-colors"
-            >
-              <X size={12} />
-            </button>
-          </span>
-        ))}
-        <input
-          type="text"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          onKeyDown={handleKeyDown}
-          onFocus={() => setIsDropdownOpen(true)}
-          placeholder={value.length === 0 ? placeholder : ''}
-          className="flex-1 min-w-[120px] bg-transparent outline-none text-sm placeholder:text-[var(--neutral-2)]"
-        />
-      </div>
-      {isDropdownOpen && availableOptions.length > 0 && (
-        <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-[var(--neutral-5)] rounded-xl shadow-lg max-h-48 overflow-y-auto z-50 animate-in fade-in slide-in-from-top-1 duration-100">
-          {availableOptions
-            .filter(opt => opt.toLowerCase().includes(inputValue.toLowerCase()))
-            .map((option, idx) => (
-              <button
-                key={idx}
-                type="button"
-                onClick={() => handleAdd(option)}
-                className="w-full text-left px-4 py-2.5 text-sm hover:bg-[var(--primary-5)] text-[var(--secondary-1)] hover:text-[var(--primary-hover)] transition-colors flex items-center justify-between group"
-              >
-                {option}
-                <Plus size={14} className="opacity-0 group-hover:opacity-100 text-[var(--primary-1)]" />
-              </button>
-            ))}
-          {allowCustom && inputValue && !availableOptions.some(o => o.toLowerCase() === inputValue.toLowerCase()) && (
-            <button
-              type="button"
-              onClick={() => handleAdd(inputValue)}
-              className="w-full text-left px-4 py-2.5 text-sm hover:bg-[var(--primary-5)] text-[var(--primary-hover)] font-medium border-t border-[var(--neutral-5)]"
-            >
-              Add &quot;{inputValue}&quot;
-            </button>
-          )}
-        </div>
-      )}
-    </div>
-  );
-};
-
-// --- Image Upload Modal ---
-const ImageUploadModal = ({
-  isOpen, onClose, currentImage, onSave
-}: {
-  isOpen: boolean; onClose: () => void; currentImage: string | null; onSave: (file: File) => Promise<void>;
-}) => {
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(currentImage);
-  const [isUploading, setIsUploading] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (isOpen) {
-      setPreviewUrl(currentImage);
-      setSelectedFile(null);
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    return () => { document.body.style.overflow = 'unset'; };
-  }, [isOpen, currentImage]);
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setSelectedFile(file);
-      const objectUrl = URL.createObjectURL(file);
-      setPreviewUrl(objectUrl);
-    }
-  };
-
-  const handleSave = async () => {
-    if (!selectedFile) return;
-    setIsUploading(true);
-    await onSave(selectedFile);
-    setIsUploading(false);
-    onClose();
-  };
-
-  if (!isOpen) return null;
-
-  return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-[var(--secondary-1)]/60 backdrop-blur-sm transition-all">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 animate-in fade-in zoom-in-95 duration-200 relative overflow-hidden">
-
-        <div className="flex justify-between items-center mb-6">
-          <h3 className="text-xl font-bold text-[var(--secondary-1)]">Update Profile Picture</h3>
-          <button onClick={onClose} className="p-2 hover:bg-[var(--neutral-5)] rounded-full text-[var(--neutral-1)] transition-colors">
-            <X size={20} />
-          </button>
-        </div>
-
-        <div className="flex flex-col items-center gap-6">
-          <div className="relative group cursor-pointer" onClick={() => fileInputRef.current?.click()}>
-            <div className="w-40 h-40 rounded-full overflow-hidden border-4 border-[var(--primary-5)] shadow-inner bg-[var(--neutral-5)] relative">
-              {previewUrl ? (
-                <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-[var(--neutral-1)]">
-                  <UserIcon size={48} />
-                </div>
-              )}
-              {/* Hover Overlay */}
-              <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                <Camera size={32} className="text-white drop-shadow-md" />
-              </div>
-            </div>
-
-            <div className="absolute bottom-2 right-2 bg-[var(--primary-1)] text-white p-2 rounded-full shadow-lg pointer-events-none">
-              <UploadCloud size={16} />
-            </div>
-          </div>
-
-          <input
-            type="file"
-            ref={fileInputRef}
-            onChange={handleFileChange}
-            accept="image/*"
-            className="hidden"
-          />
-
-          <p className="text-sm text-[var(--neutral-1)] text-center">
-            Click the image to select a new photo.<br />JPG, PNG or WEBP (Max 5MB)
-          </p>
-
-          <div className="flex gap-3 w-full mt-2">
-            <button
-              onClick={onClose}
-              className="flex-1 py-2.5 text-[var(--secondary-1)] hover:bg-[var(--neutral-5)] rounded-xl font-medium transition-colors"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={handleSave}
-              disabled={!selectedFile || isUploading}
-              className={`flex-1 py-2.5 bg-[var(--primary-1)] hover:bg-[var(--primary-hover)] text-white rounded-xl font-medium shadow-md transition-all flex items-center justify-center gap-2 ${(!selectedFile || isUploading) ? 'opacity-50 cursor-not-allowed' : ''}`}
-            >
-              {isUploading ? (
-                <>Updating...</>
-              ) : (
-                <><Check size={18} /> Save Photo</>
-              )}
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// --- Edit Profile Modal Component ---
-const EditProfileModal = ({
-  isOpen, onClose, user, onSave
-}: {
-  isOpen: boolean; onClose: () => void; user: ExtendedUser; onSave: (updatedUser: ExtendedUser) => void;
-}) => {
-  const [formData, setFormData] = useState<Partial<ExtendedUser>>({});
-
-  useEffect(() => {
-    if (user) {
-      setFormData({
-        ...user,
-        dateOfBirth: user.dateOfBirth ? new Date(user.dateOfBirth).toISOString().split('T')[0] : '',
-        persona: user.persona || [],
-        // Base user interface has languages as string, UI needs array
-        languages: Array.isArray(user.languages) ? user.languages.join(",") : (user.languages ? user.languages:''),
-        showProfile: user.showProfile ?? true,
-        socialMedias: {
-          instagram: user.instagram || ''
-        }
-      });
-    }
-  }, [user, isOpen]);
-
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    return () => { document.body.style.overflow = 'unset'; };
-  }, [isOpen]);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSave(formData as ExtendedUser);
-    onClose();
-  };
-
-  if (!isOpen) return null;
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--secondary-1)]/60 backdrop-blur-sm transition-all">
-      <div
-        className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in-95 duration-200"
-        style={{ overscrollBehavior: 'contain' }}
-      >
-        <div className="sticky top-0 bg-white/95 backdrop-blur-md z-10 px-6 py-4 border-b border-[var(--neutral-5)] flex items-center justify-between">
-          <h3 className="text-xl font-bold text-[var(--secondary-1)]">Edit Profile</h3>
-          <button onClick={onClose} className="p-2 hover:bg-[var(--primary-5)] rounded-full text-[var(--neutral-1)] transition-colors">
-            <X size={20} />
-          </button>
-        </div>
-
-        <form onSubmit={handleSubmit} className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* --- Read Only Fields --- */}
-          <div className="md:col-span-2 grid grid-cols-1 bg-gray-100 md:grid-cols-2 gap-6 p-4 bg-[var(--neutral-5)]/30 rounded-xl border border-[var(--neutral-5)]">
-            <div className="md:col-span-2">
-              <span className="text-xs font-bold text-[var(--primary-hover)] uppercase tracking-wider mb-2 block">Identity Details (Locked)</span>
-            </div>
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-[var(--neutral-1)] mb-1">Full Name</label>
-              <input
-                type="text"
-                value={formData.name || ''}
-                disabled
-                className="w-full px-3 py-2 border border-[var(--neutral-4)] rounded-lg bg-[var(--neutral-5)]/50 text-[var(--secondary-1)] font-medium cursor-not-allowed"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-[var(--neutral-1)] mb-1">Date of Birth</label>
-              <input
-                type="date"
-                value={formData.dateOfBirth || ''}
-                disabled
-                className="w-full px-3 py-2 border border-[var(--neutral-4)] rounded-lg bg-[var(--neutral-5)]/50 text-[var(--secondary-1)] cursor-not-allowed"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-[var(--neutral-1)] mb-1">Gender</label>
-              <select
-                value={formData.sex?.toLowerCase() || ''}
-                disabled
-                className="w-full px-3 py-2 border border-[var(--neutral-4)] rounded-lg bg-[var(--neutral-5)]/50 text-[var(--secondary-1)] cursor-not-allowed appearance-none"
-              >
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
-          </div>
-
-          {/* --- Editable Fields --- */}
-          <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-[var(--secondary-1)] mb-1">Instagram Username</label>
-            <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--neutral-1)] select-none">@</span>
-              <input
-                type="text"
-                value={formData.socialMedias?.instagram || ''}
-                onChange={(e) => setFormData({
-                  ...formData,
-                  socialMedias: { ...formData.socialMedias, instagram: e.target.value }
-                })}
-                className="w-full pl-8 pr-4 py-2 border border-[var(--neutral-4)] rounded-xl focus:ring-2 focus:ring-[var(--primary-1)] outline-none transition-all"
-                placeholder="username"
-              />
-            </div>
-          </div>
-
-          <div className="md:col-span-2">
-            <MultiSelect
-              label="My Vibe / Persona"
-              options={TRIP_PREFERENCES}
-              value={formData.persona || []}
-              onChange={(newVal) => setFormData({ ...formData, persona: newVal })}
-              placeholder="Select what defines your travel style..."
-            />
-          </div>
-
-          <div className="md:col-span-2">
-            <MultiSelect
-              label="Languages I Speak"
-              options={COMMON_LANGUAGES}
-              value={Array.isArray(formData.languages) ? formData.languages : []}
-              onChange={(newVal) => setFormData({ ...formData, languages: newVal.join(',') as string })}
-              placeholder="Select languages..."
-              allowCustom={true}
-            />
-          </div>
-
-          <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-[var(--secondary-1)] mb-1">
-              Primary Travel Goal
-            </label>
-            <div className="relative">
-              <select
-                value={formData.travelGoal || ''}
-                onChange={(e) => setFormData({ ...formData, travelGoal: e.target.value })}
-                className="w-full px-3 py-2 border border-[var(--neutral-4)] rounded-xl bg-white text-[var(--secondary-1)] focus:ring-2 focus:ring-[var(--primary-1)] outline-none appearance-none cursor-pointer"
-              >
-                <option value="" disabled className="text-[var(--neutral-2)]">
-                  Select your main reason to travel...
-                </option>
-                {TRAVEL_GOALS.map((goal, idx) => (
-                  <option key={idx} value={goal}>
-                    {goal}
-                  </option>
-                ))}
-              </select>
-              <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-[var(--neutral-1)]">
-                <ChevronDown size={16} />
-              </div>
-            </div>
-          </div>
-
-          {/* --- Profile Visibility --- */}
-          <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-[var(--secondary-1)] mb-2">
-              Profile Visibility
-            </label>
-
-            <div className="flex items-center justify-between p-4 rounded-xl border border-[var(--neutral-4)] bg-[var(--neutral-5)]/20">
-              <div>
-                <p className="font-medium text-[var(--secondary-1)]">
-                  {formData.showProfile ? "Public Profile" : "Private Profile"}
-                </p>
-                <p className="text-sm text-[var(--neutral-2)]">
-                  {formData.showProfile
-                    ? "Anyone can view your profile."
-                    : "Your profile will be hidden."}
-                </p>
-              </div>
-
-              {/* Toggle */}
-              <button
-                type="button"
-                onClick={() =>
-                  setFormData({
-                    ...formData,
-                    showProfile: !formData.showProfile,
-                  })
-                }
-                className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors
-        ${formData.showProfile
-                    ? "bg-[var(--primary-1)]"
-                    : "bg-[var(--neutral-4)]"
-                  }`}
-              >
-                <span
-                  className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform
-          ${formData.showProfile
-                      ? "translate-x-6"
-                      : "translate-x-1"
-                    }`}
-                />
-              </button>
-            </div>
-          </div>
-
-        </form>
-
-        <div className="sticky bottom-0 bg-white border-t border-[var(--neutral-5)] p-4 flex justify-end gap-3 z-10">
-          <button type="button" onClick={onClose} className="px-5 py-2.5 text-[var(--secondary-1)] hover:bg-[var(--neutral-5)] rounded-xl font-medium transition-colors">Cancel</button>
-          <button onClick={handleSubmit} className="px-5 py-2.5 bg-[var(--primary-1)] hover:bg-[var(--primary-hover)] text-white rounded-xl font-medium shadow-lg shadow-[var(--primary-background)] hover:shadow-xl transition-all flex items-center gap-2">
-            <Check size={18} /> Save Changes
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// --- Unified Trip Card Component ---
-const TripCard = ({ trip, isOwner, onClick }: { trip: UserTrip, isOwner: boolean, onClick: () => void }) => {
-  const privacyLabel = trip.privacy?.toLowerCase().includes('public') ? 'Public' : 'Private';
-  const isPublic = privacyLabel === 'Public';
-  const currentYear = new Date().getFullYear();
-  const tripYear = new Date(trip.startDate).getFullYear();
-  const showYear = tripYear !== currentYear;
-
-  return (
-    <div
-      onClick={isOwner ? onClick : () => { }}
-      className="aspect-[4/3] rounded-2xl overflow-hidden relative group cursor-pointer hover:shadow-xl hover:-translate-y-1 transition-all duration-300 shadow-md"
-    >
-      <img
-        src={trip.image}
-        alt={trip.tripName}
-        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
-        loading="lazy"
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent transition-opacity duration-300" />
-      {isOwner && (
-        <div className="absolute inset-0 z-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300">
-          <div className="bg-white/20 backdrop-blur-md border border-white/40 p-3.5 rounded-full text-white shadow-2xl transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-            <SquarePen size={32} strokeWidth={2} />
-          </div>
-        </div>
-      )}
-      <div className="absolute top-3 left-3 z-20 flex flex-col gap-2 items-start">
-        {trip.budget && (
-          <span className="bg-white/90 backdrop-blur-md text-[var(--secondary-1)] text-[10px] font-bold px-2 py-1 rounded-lg shadow-sm">
-            {trip.budget}
-          </span>
-        )}
-        {trip.source?.type === 'hosted' && (
-          <span className="bg-[var(--primary-hover)]/90 backdrop-blur-md text-white text-[10px] font-bold px-2 py-1 rounded-lg shadow-sm flex items-center gap-1">
-            <Briefcase size={10} /> Hosted
-          </span>
-        )}
-      </div>
-      {isOwner && (
-        <div className="absolute top-3 right-3 z-20">
-          <span className={`backdrop-blur-md border border-white/30 text-white text-[10px] uppercase tracking-wide font-bold px-2 py-1 rounded-lg shadow-sm flex items-center gap-1 bg-[var(--secondary-1)] bg-opacity-80`}>
-            {isPublic ? <Globe size={10} /> : <Lock size={10} />}
-            {privacyLabel}
-          </span>
-        </div>
-      )}
-      <div className="absolute bottom-0 left-0 right-0 p-4 z-20">
-        <h3 className="font-bold text-white text-2xl leading-tight drop-shadow-md mb-1.5 line-clamp-2">
-          {trip.tripName || trip.locationName}
-        </h3>
-        <div className="flex flex-col gap-1">
-          <div className="flex items-center gap-2 text-white/90 text-xs font-medium">
-            <Calendar size={12} className="text-white/80" />
-            <span>
-              {new Date(trip.startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-              &mdash;
-              {new Date(trip.endDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-              {showYear && `, ${tripYear}`}
-            </span>
-          </div>
-          {trip.locationName && trip.tripName && (
-            <div className="flex items-center gap-2 text-white/80 text-xs">
-              <MapPin size={12} />
-              <span className="truncate">{trip.locationName}</span>
-            </div>
-          )}
-          <div className="flex items-center gap-2 text-white/80 text-xs">
-            <MapPinned size={12} />
-            <span className="truncate">{trip.activitiesCount as number > 0 ? trip.activitiesCount : "No"} activities planned</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 export default function UserProfilePage() {
   const params = useParams();
   const { showLoader } = useLoader();
@@ -578,15 +56,15 @@ export default function UserProfilePage() {
     showLoader();
     router.push(redirectUrl);
   };
-
   const [profileUser, setProfileUser] = useState<ExtendedUser | null>(null);
   const [displayTrips, setTrips] = useState<UserTrip[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isImageEditModalOpen, setIsImageEditModalOpen] = useState(false);
-  const { user: loggedInUser, isLoggedIn, openLogin } = useLogin();
+  const { user: loggedInUser, isLoggedIn, openLogin, updateUserProfilePicture, updateUserFields } = useLogin();
   const [isNotFound, setIsNotFound] = useState(false);
 
+  // fetch profile data conditionally for logged in user and someone else
   useEffect(() => {
     let mounted = true;
     const fetchData = async () => {
@@ -606,8 +84,13 @@ export default function UserProfilePage() {
       try {
         setIsLoading(true);
         setIsNotFound(false);
-
-        const userData = await UserApiService.fetchUserWithIdForAnyone(profileId);
+        let userData;
+        if (loggedInUser != null && loggedInUser.id == profileId) {
+          userData = loggedInUser;
+        }
+        else {
+          userData = await UserApiService.fetchUserWithIdForAnyone(profileId);
+        }
 
         if (!userData) {
           if (mounted) setIsNotFound(true);
@@ -634,23 +117,72 @@ export default function UserProfilePage() {
     return () => { mounted = false; };
   }, [profileId, isLoggedIn]);
 
+  // for any changes in loggedinUser (at time of update), sync them
+  useEffect(() => {
+    if (!loggedInUser) return;
+
+    setProfileUser((prev) => {
+      if (!prev) return prev;
+
+      return {
+        ...prev,
+        ...loggedInUser,
+      };
+    });
+  }, [loggedInUser]);
+
   const isOwner = loggedInUser?.id === profileId;
   const age = profileUser?.dateOfBirth ? CommonServices.computeAge(profileUser.dateOfBirth) : null;
 
+  // Inside UserProfilePage component
   const onUpdateProfile = async (updatedFormData: ExtendedUser) => {
     try {
-      const payload = {
-        instagram: updatedFormData.socialMedias?.instagram, // Mapping back to flat structure
-        travelGoal: updatedFormData.travelGoal,
-        languages: Array.isArray(updatedFormData.languages) ? updatedFormData.languages.join(', ') : updatedFormData.languages,
-        travelerType: updatedFormData.persona, // Mapping persona back to travelerType
-        showProfile: updatedFormData.showProfile
-      };
-      const response = await apiClient.post('/users/updateuser', payload);
-      setProfileUser(response.data.user);
-      toast.success("Profile updated!");
+      const payload: Record<string, any> = {};
+
+      // Social medias
+      if (updatedFormData.socialMedias?.instagram !== undefined) {
+        payload.socialMedias = {
+          instagram: updatedFormData.socialMedias.instagram,
+        };
+      }
+
+      // Travel goal
+      if (updatedFormData.travelGoal !== undefined) {
+        payload.travelGoal = updatedFormData.travelGoal;
+      }
+
+      // Languages
+      if (Array.isArray(updatedFormData.languages_array)) {
+        payload.languages = updatedFormData.languages_array;
+      }
+
+      // Persona
+      if (Array.isArray(updatedFormData.persona)) {
+        payload.persona = updatedFormData.persona;
+      }
+
+      // Profile visibility
+      if (typeof updatedFormData.showProfile === "boolean") {
+        payload.showProfile = updatedFormData.showProfile;
+      }
+
+      if (Object.keys(payload).length === 0) {
+        toast("Nothing to update");
+        return;
+      }
+      try {
+        const res = await UserApiService.updateUser(payload);
+        if (res.success) {
+          updateUserFields(payload);
+          toast.success("Profile updated!");
+        }
+      }
+      catch (error) {
+        toast.error("Something went wrong!!");
+      }
+
     } catch (error) {
-      console.log(error);
+      console.error("Update Error:", error);
       toast.error("Failed to update profile");
     }
   };
@@ -658,22 +190,33 @@ export default function UserProfilePage() {
   const onUpdateProfileImage = async (file: File) => {
     try {
       const formData = new FormData();
-      formData.append('profile_picture', file);
-      const response = await apiClient.post('/users/update-profile-picture', formData, {
+      formData.append('profilePhoto', file);
+
+      const response = await apiClient.post('/users/update-profile-photo', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
-      setProfileUser(response.data.user);
-      toast.success("Profile picture updated!");
+
+      // console.log("Upload res: ", response);
+
+      // The backend now returns { success: true, url: "..." }
+      const newImageUrl = response.data.url;
+
+      if (newImageUrl) {
+        updateUserProfilePicture(newImageUrl);
+        toast.success("Profile picture updated!");
+      }
     } catch (error) {
-      console.error(error);
-      toast.error("Failed to upload image");
+      // Check if the backend sent a specific error message
+      const errorMessage = error.response?.data?.message || "Failed to upload image";
+      console.error("Upload Error:", error);
+      toast.error(errorMessage);
     }
   };
 
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[var(--primary-5)]">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[var(--primary-1)]"></div>
+        <div className='h-[40px] w-[40px] border-4 border-[#f3f4f6] border-t-[#00bcd4] rounded-full animate-spin' />
       </div>
     );
   }
@@ -731,7 +274,7 @@ export default function UserProfilePage() {
               <div className="h-28 bg-gradient-to-r from-[var(--primary-3)] to-[var(--primary-1)] relative" />
               <div className="px-6 pb-6 relative">
                 <div className="relative -mt-12 mb-3 flex justify-between items-end">
-                  <div className="relative">
+                  <div className="relative group"> {/* Added group for hover effects */}
                     <div className="w-24 h-24 rounded-full border-4 border-white shadow-md bg-white overflow-hidden flex items-center justify-center">
                       {profileUser.profile_picture?.[0] ? (
                         <img
@@ -745,6 +288,17 @@ export default function UserProfilePage() {
                         </div>
                       )}
                     </div>
+
+                    {/* Pencil / Camera Icon Overlay */}
+                    {isOwner && profileUser.profileCompleted && (
+                      <button
+                        onClick={() => setIsImageEditModalOpen(true)}
+                        className="absolute bottom-0 right-0 p-1.5 bg-[var(--primary-1)] hover:bg-[var(--primary-hover)] text-white rounded-full border-2 border-white shadow-lg transition-all transform hover:scale-110 active:scale-95 z-10"
+                        title="Update profile picture"
+                      >
+                        <Camera size={14} strokeWidth={2.5} />
+                      </button>
+                    )}
                   </div>
 
                   {isOwner && profileUser.profileCompleted && (
@@ -771,9 +325,9 @@ export default function UserProfilePage() {
                     <MailIcon size={16} />
                     {profileUser.email}
                   </p>}
-                  {profileUser.instagram && isOwner && <p className="flex mt-1 items-center gap-2 text-[var(--neutral-1)] text-sm">
+                  {profileUser?.socialMedias?.instagram && isOwner && <p className="flex mt-1 items-center gap-2 text-[var(--neutral-1)] text-sm">
                     <Instagram size={16} />
-                    {profileUser.instagram}
+                    {profileUser?.socialMedias?.instagram}
                   </p>}
                   {isOwner && profileUser.phone &&
                     <p className="flex mt-1 items-center gap-2 text-[var(--neutral-1)] text-sm">
@@ -793,11 +347,16 @@ export default function UserProfilePage() {
                       <span className="text-[var(--neutral-1)] flex items-center gap-2"><UserIcon size={14} /> Gender</span>
                       <span className="font-medium capitalize text-[var(--secondary-1)]">{profileUser.sex || 'Not Specified'}</span>
                     </div>}
-                    {profileUser.languages && <div className="flex items-start justify-between text-sm">
+                    {Array.isArray(profileUser.languages) && profileUser.languages.length > 0 && <div className="flex items-start justify-between text-sm">
                       <span className="text-[var(--neutral-1)] flex items-center gap-2"><Globe size={14} /> Languages</span>
-                      <span className="font-medium text-right max-w-[60%] text-[var(--secondary-1)]">
-                        {profileUser.languages}
-                      </span>
+                      <div className="flex flex-wrap gap-1.5 justify-end max-w-[60%]">
+                        {profileUser.languages.map((lang, i) => (
+                          <span key={i} className="px-2 py-0.5 bg-[var(--primary-5)] text-[var(--primary-hover)] rounded-md text-xs font-semibold border border-[var(--primary-3)] whitespace-nowrap">
+                            {lang}
+                          </span>
+                        ))}
+                        {Array(profileUser.languages).length > 4 ? "More..." : ""}
+                      </div>
                     </div>}
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-[var(--neutral-1)] flex items-center gap-2"><Compass size={14} /> Views</span>
