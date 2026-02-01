@@ -1,5 +1,6 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { StorageUtils } from './storage.utils';
+import toast from 'react-hot-toast';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_BASE_URL+"/api" || 'http://localhost:5000/api';
 
@@ -53,6 +54,7 @@ apiClient.interceptors.response.use(
         if (error.response && error.response.status === 409) {
             return Promise.resolve(error.response);
         }
+        toast.error(error.response?.data?.message || 'An error occurred');
         // Handle errors globally
         return Promise.reject(error);
     }

@@ -85,11 +85,16 @@ export default function GroupDetailsPage() {
               </div>
               <div>
                 <p className="font-medium">
-                  {m.userDetails.name}, {m.userDetails.dateOfBirth && CommonServices.computeAge(m.userDetails.dateOfBirth)}
+                  {m.userDetails.name} {m.userDetails.dateOfBirth && (', ' + CommonServices.computeAge(m.userDetails.dateOfBirth))}
                 </p>
                 {m.userDetails.sex && (
                   <p className="text-xs text-neutral-2">
                     {m.userDetails.sex}
+                  </p>
+                )}
+                {m.userDetails.rating !== undefined && m.userDetails.rating !== null && (
+                  <p className="text-xs text-neutral-2">
+                    Rating: {m.userDetails.rating.toFixed(1)}
                   </p>
                 )}
                 {m.role === 'admin' && (
@@ -116,7 +121,7 @@ export default function GroupDetailsPage() {
         </button>
       ) : (
         <button
-          onClick={() => router.push(`/chat/${group.chatId}`)}
+          onClick={() => router.push(`/chats?tripId=${tripId}&chatId=${group.chatId}`)}
           className="btn btn-primary w-full"
         >
           Open Group Chat

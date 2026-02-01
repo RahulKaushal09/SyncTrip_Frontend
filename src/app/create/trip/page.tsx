@@ -232,9 +232,10 @@ function CreateTripContent() {
 
     } catch (err) {
       console.error(err);
+      hideLoader();
       toast.error('Something went wrong');
     } finally {
-      hideLoader();
+      // hideLoader();
       setIsPublishing(false);
     }
   }, [

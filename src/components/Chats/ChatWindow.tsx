@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
 
 import ChatApiService from "@/utils/chats.api.utils";
-import { Message } from "@/types";
+import { Chat, Message } from "@/types";
 import { StorageUtils } from "@/utils";
 
 import "../../../styles/chats/chats.css";
@@ -13,9 +13,10 @@ import { getSocket } from "@/utils/socket";
 type Props = {
   chatId: string;
   currentUserId: string;
+  chat: Chat | null;
 };
 
-export default function ChatWindow({ chatId, currentUserId }: Props) {
+export default function ChatWindow({ chatId, currentUserId, chat }: Props) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -87,12 +88,12 @@ export default function ChatWindow({ chatId, currentUserId }: Props) {
     });
 
     return () => {
-    if (chatId) {
-      socket.emit("leave_chat", chatId);
-    }
-    setRemoteTyping(null);
-  };
-}, [chatId, currentUserId]);  //
+      if (chatId) {
+        socket.emit("leave_chat", chatId);
+      }
+      setRemoteTyping(null);
+    };
+  }, [chatId, currentUserId]);  //
 
   /* ------------------ Join/leave chat when chatId changes ------------------ */
   useEffect(() => {
@@ -169,6 +170,19 @@ export default function ChatWindow({ chatId, currentUserId }: Props) {
     }
   };
 
+  const senderMap = React.useMemo(() => {
+    const map: Record<string, { name: string; avatar?: string }> = {};
+    if (!chat?.users) return map;
+
+    chat.users.forEach(u => {
+      map[u.id] = {
+        name: u.name,
+        avatar: u.profile_picture?.[0],
+      };
+    });
+
+    return map;
+  }, [chat]);
   /* ------------------ Send message (REST) + dedupe update ------------------ */
   const handleSend = async () => {
     if (!input.trim() || !chatId) return;
@@ -181,14 +195,14 @@ export default function ChatWindow({ chatId, currentUserId }: Props) {
       // add saved.id to dedupe set immediately so socket broadcast doesn't duplicate
       // if (saved && saved.id) lastMessageIds.current.add(saved.id);
       if (saved && saved.id) {
-      if (!lastMessageIds.current.has(saved.id)) {
-        lastMessageIds.current.add(saved.id);
-        setMessages((s) => [...s, saved]);
-      } else {
-        // socket already handled it — nothing to do (optional: update existing pending state)
-        // console.debug("message already received via socket, skipping append", saved.id);
+        if (!lastMessageIds.current.has(saved.id)) {
+          lastMessageIds.current.add(saved.id);
+          setMessages((s) => [...s, saved]);
+        } else {
+          // socket already handled it — nothing to do (optional: update existing pending state)
+          // console.debug("message already received via socket, skipping append", saved.id);
+        }
       }
-    }
 
       // append saved message to UI
       // setMessages((s) => [...s, saved]);
@@ -265,7 +279,7 @@ export default function ChatWindow({ chatId, currentUserId }: Props) {
         <div className="flex flex-col gap-3">
           {messages.map((m) => {
             const mine =
-              m.sender === currentUserId ;
+              m.sender === currentUserId;
             const bubbleCls = mine ? "myMessage" : "otherPersonMessage";
             const containerCls = mine ? "flex justify-end" : "flex justify-start";
             const maxW = "max-w-[80%] md:max-w-[60%] lg:max-w-[50%]";
@@ -273,7 +287,14 @@ export default function ChatWindow({ chatId, currentUserId }: Props) {
             return (
               <div key={m.id} className={`${containerCls} px-2`}>
                 <div className={`${bubbleCls} ${maxW}`}>
+                  {!mine && chat?.isGroupChat && (
+                    <div className="text-xs font-semibold text-secondary-1 mb-1">
+                      {senderMap[m.sender]?.name.split(" ")[0] || "Unknown"}
+                    </div>
+                  )}
+
                   <div className="text-sm whitespace-pre-wrap">{m.content}</div>
+                  {/* <div className="text-sm whitespace-pre-wrap">{m.content}</div> */}
                   <div
                     className={`text-[10px] mt-1 ${mine ? "mineTimeInfoText" : "otherTimeInfoText"}`}
                   >
@@ -300,7 +321,7 @@ export default function ChatWindow({ chatId, currentUserId }: Props) {
         className="sticky bottom-0 bg-white border-t px-3 py-2 flex items-end gap-2"
         style={{ paddingBottom: "env(safe-area-inset-bottom)", zIndex: 10 }}
       >
-        <div className="flex align-items-center flex-1" style={{height:'100%'}}>
+        <div className="flex align-items-center flex-1" style={{ height: '100%' }}>
           <textarea
             ref={textareaRef}
             value={input}

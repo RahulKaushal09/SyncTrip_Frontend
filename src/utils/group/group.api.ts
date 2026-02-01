@@ -37,6 +37,7 @@ export class GroupApiServices {
 
     static async joinGroupTrip(
         groupTripId: UUID
+        // userTripId: UUID
     ): Promise<JoinGroupResponse> {
         const res = await apiClient.post(`/groups/${groupTripId}/join`);
         return res.data;
