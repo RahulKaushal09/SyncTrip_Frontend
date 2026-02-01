@@ -27,6 +27,7 @@
     "react-bootstrap": "^2.10.10",
     "react-datepicker": "^8.4.0",
     "react-dom": "^18.3.1",
+    "react-easy-crop": "^5.5.6",
     "react-froala-wysiwyg": "^4.6.0",
     "react-hot-toast": "^2.5.2",
     "react-leaflet": "^4.2.1",

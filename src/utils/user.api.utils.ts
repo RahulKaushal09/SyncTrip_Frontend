@@ -63,5 +63,17 @@ export class UserApiService {
             throw error;
         }
     }
+
+    static async updateUser(payload: Record<string, any>): Promise<{ success: boolean; message?: string }> {
+        try {
+            await apiClient.post("/users/updateuser", payload);
+            return { success: true };
+        } catch (error: any) {
+            return {
+                success: false,
+                message: error?.response?.data?.message || "Something went wrong",
+            };
+        }
+    }
 }
 
