@@ -23,13 +23,15 @@ interface FullProfilePopupProps {
 }
 
 export default function FullProfilePopup({ user, onClose, onProfileComplete }: FullProfilePopupProps) {
-    const [step, setStep] = useState(1);
     const totalSteps = 4;
-    const { updateUserProfilePicture } = useLogin();
+    const { updateUserProfilePicture, updateUserFields, updateLastStepOfCompleteProfile, lastStepOfCompleteProfile } = useLogin();
+    const [step, setStep] = useState(lastStepOfCompleteProfile > 0 ? lastStepOfCompleteProfile : 1);
     const { showLoader, hideLoader } = useLoader();
     const [form, setForm] = useState({
         bio: user.bio || '',
-        pincode: user.pincode || '',
+        address: {
+            pincode: user.address?.pincode || '',
+        },
         travelStyles: user.travelStyles || [],
         travelerType: user.travelerType || [],
         matchGender: user.matchGender || 'Any',
@@ -39,7 +41,7 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
         profilePicture: null as File | string | null,
         instagram: user.instagram || '',
         travelGoal: user.travelGoal || '',
-        languages: '',
+        languages: user.languages || '',
         dateOfBirth: user.dateOfBirth || '',
         sex: user.sex || '',
     });
@@ -100,7 +102,6 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
         }
     };
     useEffect(() => {
-        // console.log(form);
         if (
             step === 3 &&
             form.profilePicture &&
@@ -110,32 +111,64 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
         }
     }, [step]);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement> | undefined, field?: string, value?: string) => {
+    const setNestedValue = (obj: any, path: string, value: any) => {
+        const keys = path.split(".");
+        const lastKey = keys.pop()!;
+        const newObj = { ...obj };
+
+        let temp = newObj;
+        for (const key of keys) {
+            temp[key] = { ...temp[key] };
+            temp = temp[key];
+        }
+
+        temp[lastKey] = value;
+        return newObj;
+    };
+
+    const handleChange = (
+        e?: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+        field?: string,
+        value?: string
+    ) => {
         if (e) {
             const { name, value: inputValue, type } = e.target;
             const target = e.target as HTMLInputElement;
 
-            if (type === 'checkbox') {
-                setForm((prev) => ({
+            setForm((prev) => {
+                if (type === "checkbox") {
+                    const prevArr = (prev as any)[name] as string[] || [];
+                    return {
+                        ...prev,
+                        [name]: target.checked
+                            ? [...prevArr, inputValue]
+                            : prevArr.filter((item) => item !== inputValue),
+                    };
+                }
+
+                if (type === "file") {
+                    return setNestedValue(prev, name, target.files?.[0] || null);
+                }
+
+                if (name.endsWith("pincode")) {
+                    return setNestedValue(prev, name, inputValue.replace(/\D/g, ""));
+                }
+
+                return setNestedValue(prev, name, inputValue);
+            });
+        }
+
+        // manual toggle case
+        else if (field && value) {
+            setForm((prev) => {
+                const prevArr = (prev as any)[field] as string[] || [];
+                return {
                     ...prev,
-                    [name]: target.checked
-                        ? [...(prev[name as keyof typeof prev] as string[]), inputValue]
-                        : (prev[name as keyof typeof prev] as string[]).filter((item) => item !== inputValue),
-                }));
-            } else if (type === 'file') {
-                setForm((prev) => ({ ...prev, [name]: target.files?.[0] || null }));
-            } else if (name == 'pincode') {
-                setForm((prev) => ({ ...prev, [name]: String(inputValue) }))
-            } else {
-                setForm((prev) => ({ ...prev, [name]: inputValue }));
-            }
-        } else if (field && value) {
-            setForm((prev) => ({
-                ...prev,
-                [field]: (prev[field as keyof typeof prev] as string[]).includes(value)
-                    ? (prev[field as keyof typeof prev] as string[]).filter((item) => item !== value)
-                    : [...(prev[field as keyof typeof prev] as string[]), value],
-            }));
+                    [field]: prevArr.includes(value)
+                        ? prevArr.filter((item) => item !== value)
+                        : [...prevArr, value],
+                };
+            });
         }
     };
 
@@ -159,7 +192,7 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
             if (age < 18) return "You must be 18 or older to continue.";
             if (!form.bio) return "User Bio is required";
             if (user.sex === undefined && !form.sex) return "Gender is required";
-            if (!form.pincode) return "PIN Code is required";
+            if (!form.address.pincode) return "PIN Code is required";
             if (!form.travelGoal) return "Please select your travel goal";
             if (form.languages.length === 0) return "Please select minimum one language you understand and speak";
         } else if (step === 2) {
@@ -186,7 +219,37 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
             setError(stepError);
             toast.error(stepError);
             return;
+        } else {
+            if (step < totalSteps) {
+                if (step === 1) {
+                    updateUserFields({
+                        bio: form.bio,
+                        address: {
+                            pincode: form.address.pincode,
+                        },
+                        dateOfBirth: form.dateOfBirth,
+                        sex: form.sex as "Male" | "Female" | "Other" | undefined,
+                        instagram: form.instagram,
+                        travelGoal: form.travelGoal,
+                        languages: form.languages,
+                    });
+                } else if (step === 2) {
+                } else if (step === 3) {
+                    updateUserFields({
+                        travelStyles: form.travelStyles,
+                        travelerType: form.travelerType,
+                    });
+                } else {
+                    const idsToSend = selectedLocations.map(loc => loc.id);
+                    updateUserFields({
+                        preferredDestinations: idsToSend,
+                        matchGender: form.matchGender,
+                        ageGroup: form.ageGroup,
+                    });
+                }
+            }
         }
+        updateLastStepOfCompleteProfile(step + 1);
         setStep(prev => prev + 1);
     };
 
@@ -212,15 +275,18 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
             } else if (Array.isArray(value)) {
                 formData.append(key, JSON.stringify(value));
             } else if (value !== null) {
-                if(key === "profilePicture" && typeof value === "string") {
-                    if(value.startsWith("http") || !value.startsWith("/compressed")) {
+                if (key === "profilePicture" && typeof value === "string") {
+                    if (value.startsWith("http") || !value.startsWith("/compressed")) {
                         let relativeImagePath = value.split("/compressed")[1] + "/compressed";
                         formData.append(key, relativeImagePath);
-                    } else {
+                    }
+                    else {
                         formData.append(key, value);
                     }
+                } else if (key === 'address') {
+                    formData.append(key, JSON.stringify(value));
                 }
-                else{
+                else {
                     formData.append(key, String(value));
                 }
             }
@@ -323,9 +389,9 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
                                 <input
                                     type="text"
                                     maxLength={6}
-                                    name="pincode"
+                                    name="address.pincode"
                                     className="full-profile-input"
-                                    value={form.pincode || ""}
+                                    value={form.address.pincode || ""}
                                     onChange={handleChange}
                                     placeholder="Enter your area PINCODE"
                                 />
@@ -475,7 +541,7 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
                                 Next Step
                             </button>
                         ) : (
-                            <button disabled={isLoading || !isFormValid} type="submit" className="btn btn-black" style={{ flex: 2 }}>
+                            <button disabled={isLoading || !isFormValid} type="submit" className="btn btn-primary" style={{ flex: 2 }}>
                                 {isLoading ? 'Saving...' : 'Save Profile'}
                             </button>
                         )}

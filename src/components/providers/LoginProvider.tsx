@@ -11,6 +11,8 @@ import { User } from '../../types';
 
 import { requestFcmToken, onForegroundNotification } from '../../utils/firebaseClient';
 import apiClient from '@/utils/apiClient';
+import { last } from 'lodash';
+import { STORAGE_KEYS } from '@/constants';
 
 interface LoginContextType {
     user: User | null;
@@ -20,6 +22,8 @@ interface LoginContextType {
     logout: () => void;
     updateUserProfilePicture: (newUrl: string) => void;
     updateUserFields: (fields: Partial<User>) => void;
+    updateLastStepOfCompleteProfile: (step: number) => void;
+    lastStepOfCompleteProfile: number;
 }
 
 const LoginContext = createContext<LoginContextType | undefined>(undefined);
@@ -43,6 +47,7 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
     const [loginOptions, setLoginOptions] = useState<LoginOptions>({});
     const [onLoginCallback, setOnLoginCallback] = useState<(user: User, requiresPhone?: boolean) => void>(() => () => { });
     const [user, setUser] = useState<User | null>(null);
+    const [lastStepOfCompleteProfile, setLastStepOfCompleteProfile] = useState<number>(1);
 
     useEffect(() => {
         if (!user) {
@@ -50,6 +55,18 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
             if (storedUser) setUser(storedUser);
         }
     }, [user]);
+
+    useEffect(() => {
+        if (StorageUtils.getItem<number>(STORAGE_KEYS.COMPLETE_PROFILE_STEP)) {
+            setLastStepOfCompleteProfile(StorageUtils.getItem<number>(STORAGE_KEYS.COMPLETE_PROFILE_STEP) || 1);
+        }
+
+        if (!lastStepOfCompleteProfile && user) {
+            if (user.profileCompleted) {
+                setLastStepOfCompleteProfile(4);
+            }
+        }
+    }, [lastStepOfCompleteProfile, user]);
 
     const [showPhoneNumber, setShowPhoneNumber] = useState(false);
     const [showFullProfile, setShowFullProfile] = useState(false);
@@ -184,6 +201,11 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
         setLoginHandler(openLogin);
     }, [openLogin]);
 
+    const updateLastStepOfCompleteProfile = useCallback((step: number) => {
+        StorageUtils.setItem<number>(STORAGE_KEYS.COMPLETE_PROFILE_STEP, step);
+        console.log("Updated COMPLETE_PROFILE_STEP in storage to:", step);
+        setLastStepOfCompleteProfile(step);
+    }, []);
 
     const handleProfileComplete = useCallback((updatedUser: User) => {
         setUser(updatedUser);
@@ -232,7 +254,9 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
         closeLogin,
         logout,
         updateUserProfilePicture,
-        updateUserFields
+        updateUserFields,
+        updateLastStepOfCompleteProfile,
+        lastStepOfCompleteProfile
     };
 
     return (

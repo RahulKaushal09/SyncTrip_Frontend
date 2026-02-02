@@ -33,7 +33,9 @@ export interface User {
     travelGoal?: string;
     languages?: string;
     preferredDestinations?: string[];
-    pincode?: string;
+    address?: {
+        pincode?: string;
+    };
     viewCount?: number;
 }
 // below is used in profile page

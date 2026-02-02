@@ -23,6 +23,7 @@ export const STORAGE_KEYS = {
     REFRESH_TOKEN: 'refreshToken',
     THEME: 'theme',
     LANGUAGE: 'language',
+    COMPLETE_PROFILE_STEP: 'completeProfileStep',
 } as const;
 
 export const ROUTES = {
