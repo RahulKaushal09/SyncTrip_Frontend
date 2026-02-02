@@ -41,7 +41,7 @@ export default function LocationSelector({
 
             try {
                 setLoading(true);
-                const res = await LocationServices.fetchLocationsBySearch(query);
+                const res = await LocationServices.fetchLocationsBySearch(query,[]);
 
                 setResults((res || []) as Location[]);
                 setError(null);

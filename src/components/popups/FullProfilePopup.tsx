@@ -111,19 +111,28 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
         }
     }, [step]);
 
-    const setNestedValue = (obj: any, path: string, value: any) => {
+    type AnyObject = Record<string, unknown>;
+
+    const setNestedValue = <T extends AnyObject>(
+        obj: T,
+        path: string,
+        value: unknown
+    ): T => {
         const keys = path.split(".");
         const lastKey = keys.pop()!;
-        const newObj = { ...obj };
 
-        let temp = newObj;
+        const newObj = { ...obj } as AnyObject;
+
+        let temp: AnyObject = newObj;
+
         for (const key of keys) {
-            temp[key] = { ...temp[key] };
-            temp = temp[key];
+            temp[key] = { ...(temp[key] as AnyObject) };
+            temp = temp[key] as AnyObject;
         }
 
         temp[lastKey] = value;
-        return newObj;
+
+        return newObj as T;
     };
 
     const handleChange = (
@@ -137,7 +146,7 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
 
             setForm((prev) => {
                 if (type === "checkbox") {
-                    const prevArr = (prev as any)[name] as string[] || [];
+                    const prevArr = (prev as Record<string, unknown>)[name] as string[] || [];
                     return {
                         ...prev,
                         [name]: target.checked
@@ -161,7 +170,7 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
         // manual toggle case
         else if (field && value) {
             setForm((prev) => {
-                const prevArr = (prev as any)[field] as string[] || [];
+                const prevArr = (prev as Record<string, unknown>)[field] as string[] || [];
                 return {
                     ...prev,
                     [field]: prevArr.includes(value)
@@ -277,7 +286,7 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
             } else if (value !== null) {
                 if (key === "profilePicture" && typeof value === "string") {
                     if (value.startsWith("http") || !value.startsWith("/compressed")) {
-                        let relativeImagePath = value.split("/compressed")[1] + "/compressed";
+                        const relativeImagePath = value.split("/compressed")[1] + "/compressed";
                         formData.append(key, relativeImagePath);
                     }
                     else {
@@ -296,22 +305,21 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
         formData.append('preferredDestinations', JSON.stringify(idsToSend));
 
         // --- Logging Data for testing ---
-        console.log("Form Submission Triggered!");
-        const loggedData: Record<string, any> = {};
-        formData.forEach((value, key) => {
-            loggedData[key] = value;
-        });
-        console.log("FormData Content:", loggedData);
+        // console.log("Form Submission Triggered!");
+        // const loggedData: Record<string, any> = {};
+        // formData.forEach((value, key) => {
+        //     loggedData[key] = value;
+        // });
+        // console.log("FormData Content:", loggedData);
 
         // Reset loading immediately so the button reverts from "Saving..."
         // Wrapping in a tiny timeout just so you can see the state change
-        setTimeout(() => {
-            setIsLoading(false);
-            toast.success("Check console for form data!");
-        }, 800);
+        // setTimeout(() => {
+        //     setIsLoading(false);
+        //     toast.success("Check console for form data!");
+        // }, 800);
 
         // Keeping your actual logic commented as requested
-        /*
         try {
             showLoader();
             const response = await ApiService.completeProfile(formData);
@@ -337,7 +345,6 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
             setIsLoading(false);
             hideLoader();
         }
-        */
     };
 
     const filteredLocations = locations.filter((dest) =>
@@ -436,7 +443,7 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
                                 <MultiSelect
                                     label="Languages I Speak: *"
                                     options={CommonLanguages}
-                                    value={form.languages ? form.languages.split(",").map((lang) => lang.trim()) : []}
+                                    value={Array.isArray(form.languages) ? form.languages : (typeof form.languages === "string" ? form?.languages?.split(",").map((lang) => lang.trim()) : [])}
                                     onChange={(newVal) => setForm({ ...form, languages: newVal.join(",") })}
                                     placeholder="Select languages..."
                                     allowCustom={true}

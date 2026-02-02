@@ -420,20 +420,11 @@ const NavbarClient = ({ }) => {
                     </div> */}
           {user ? (
             <>
-              <div
+              <Link
+                href={`/user/${user.id}`}
+                onClick={closeDrawer}
                 style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
               >
-
-                {/* <img
-                  src={user.profile_picture?.[0] || "https://via.placeholder.com/40"}
-                  alt="Profile"
-                  style={{
-                    width: "40px",
-                    height: "40px",
-                    borderRadius: "50%",
-                    objectFit: "cover",
-                  }}
-                /> */}
                 {user.profile_picture?.[0] ? (
                   <Image
                     src={user.profile_picture[0]}
@@ -474,8 +465,7 @@ const NavbarClient = ({ }) => {
                   </div>
                 )}
                 <span className="ms-2 mt-2">{user?.name || "User"}</span>
-
-              </div>
+              </Link>
 
 
             </>

@@ -3,34 +3,57 @@ import Cropper from 'react-easy-crop';
 import { RotateCw, ZoomIn, Scissors, RotateCcw } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { getCroppedImg } from '@/utils/crop.utils';
+import { Area, Point } from "react-easy-crop";
 
-export const ImageCropper = ({ image, onCropComplete, onCancel, presetRotation, presetZoom, presetCrop }) => {
-    const [crop, setCrop] = useState(presetCrop ? presetCrop : { x: 0, y: 0 });
-    const [zoom, setZoom] = useState(presetZoom);
-    const [rotation, setRotation] = useState(presetRotation);
-    const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
+interface ImageCropperProps {
+    image: string;
+    onCropComplete: (
+        blob: Blob,
+        zoom: number,
+        rotation: number,
+        crop: Point
+    ) => void;
+    onCancel: () => void;
+    presetRotation?: number;
+    presetZoom?: number;
+    presetCrop?: Point;
+}
+
+
+export const ImageCropper = ({
+    image,
+    onCropComplete,
+    onCancel,
+    presetRotation = 0,
+    presetZoom = 1,
+    presetCrop = { x: 0, y: 0 },
+}: ImageCropperProps) => {
+    const [crop, setCrop] = useState<Point>(presetCrop);
+    const [zoom, setZoom] = useState<number>(presetZoom);
+    const [rotation, setRotation] = useState<number>(presetRotation);
+    const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
 
     const handleDone = async () => {
+        if (!croppedAreaPixels) return;
+
         try {
             const blob = await getCroppedImg(image, croppedAreaPixels, rotation);
             onCropComplete(blob, zoom, rotation, crop);
-        } catch (e) {
+        } catch {
             toast.error("Error cropping image");
         }
     };
 
-    // Quick rotate function
     const rotate90 = () => {
-        setRotation((prev: number) => (prev + 90) % 360);
+        setRotation((prev) => (prev + 90) % 360);
     };
 
     const rotateNeg90 = () => {
-        setRotation((prev: number) => (prev - 90) % 360);
-    }
+        setRotation((prev) => (prev - 90) % 360);
+    };
 
     return (
         <div className="flex flex-col h-full bg-white max-h-[90vh]">
-            {/* Cropper Area */}
             <div className="relative flex-1 bg-[#1a1a1a] min-h-[380px]">
                 <Cropper
                     image={image}
@@ -43,9 +66,8 @@ export const ImageCropper = ({ image, onCropComplete, onCancel, presetRotation, 
                     onRotationChange={setRotation}
                     onCropComplete={(_, pixels) => setCroppedAreaPixels(pixels)}
                     onZoomChange={setZoom}
-                    showGrid={true}
+                    showGrid
                 />
-
                 <button
                     onClick={rotateNeg90}
                     className="absolute bottom-4 left-4 z-10 p-3 bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-full hover:bg-white/20 transition-all active:scale-90 shadow-2xl"
@@ -63,7 +85,6 @@ export const ImageCropper = ({ image, onCropComplete, onCancel, presetRotation, 
                 </button>
             </div>
 
-            {/* Controls Area */}
             <div className="p-6 bg-white space-y-6">
 
                 {/* Zoom Control */}
@@ -142,6 +163,6 @@ export const ImageCropper = ({ image, onCropComplete, onCancel, presetRotation, 
                     </button>
                 </div>
             </div>
-        </div >
+        </div>
     );
 };

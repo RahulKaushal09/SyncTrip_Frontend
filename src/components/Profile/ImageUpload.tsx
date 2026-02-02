@@ -11,6 +11,7 @@ export default function ImageUploadModal({
     const [selectedFile, setSelectedFile] = useState<string | null>(null);
     const [croppedPreview, setCroppedPreview] = useState<string | null>(null);
     const [zoomLevel, setZoomLevel] = useState<number>(1);
+    const [cropLevel, setCropLevel] = useState<{x: number, y: number}>({ x: 0, y: 0 });
     const [rotateLevel, setRotateLevel] = useState<number>(0);
     const [finalBlob, setFinalBlob] = useState<Blob | null>(null);
     const [isCropping, setIsCropping] = useState(false);
@@ -77,10 +78,11 @@ export default function ImageUploadModal({
         }
     };
 
-    const onCropFinished = async (blob: Blob, zoom: number, rotate: number) => {
+    const onCropFinished = async (blob: Blob, zoom: number, rotate: number, crop: {x: number, y: number}) => {
         const previewUrl = URL.createObjectURL(blob);
         setCroppedPreview(previewUrl);
         setZoomLevel(zoom);
+        setCropLevel(crop)
         setRotateLevel(rotate);
         setFinalBlob(blob);
         setIsCropping(false);
@@ -99,6 +101,7 @@ export default function ImageUploadModal({
                         image={selectedFile}
                         onCancel={() => setIsCropping(false)}
                         onCropComplete={onCropFinished}
+                        presetCrop={cropLevel}
                     />
                 ) : (
                     <div className="p-6">

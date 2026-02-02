@@ -244,7 +244,7 @@
 
 /* Container Tweak for multi-step height stability */
 .full-profile-container {
-    min-height: 500px;
+    min-height: 400px;
     /* Prevents jumping as steps change */
     display: flex;
     flex-direction: column;

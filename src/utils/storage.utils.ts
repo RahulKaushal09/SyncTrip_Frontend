@@ -88,7 +88,9 @@ export class StorageUtils {
         this.removeItem(STORAGE_KEYS.TOKEN);
         this.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
         this.removeItem(STORAGE_KEYS.REFRESH_TOKEN);
+        this.removeItem(STORAGE_KEYS.COMPLETE_PROFILE_STEP);
         Cookies.remove(STORAGE_KEYS.TOKEN);
         Cookies.remove(STORAGE_KEYS.USER_INFO);
+
     }
 }

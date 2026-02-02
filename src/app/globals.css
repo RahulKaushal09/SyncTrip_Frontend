@@ -95,6 +95,11 @@
   padding: var(--container-padding-y) var(--container-padding-x);
   max-width: -webkit-fill-available !important;
 }
+.paddingTopAndSide{
+  padding: 20px var(--container-padding-x) 0px;
+    max-width: -webkit-fill-available !important;
+
+}
 
 /*================= Color Library End ==================== */
 /* ============ Backgound Colors ============ */

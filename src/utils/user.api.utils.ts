@@ -64,14 +64,16 @@ export class UserApiService {
         }
     }
 
-    static async updateUser(payload: Record<string, any>): Promise<{ success: boolean; message?: string }> {
+    static async updateUser(payload: Partial<User>): Promise<{ success: boolean; message?: string }> {
         try {
             await apiClient.post("/users/updateuser", payload);
             return { success: true };
-        } catch (error: any) {
+        } catch (error: unknown) {
             return {
                 success: false,
-                message: error?.response?.data?.message || "Something went wrong",
+                message: 
+                // error?.response?.data?.message || 
+                "Something went wrong",
             };
         }
     }
@@ -90,13 +92,11 @@ export class UserApiService {
             );
 
             return response.data;
-        } catch (error: any) {
+        } catch (error : unknown) {
             return {
                 success: false,
                 // code: error?.code,
-                message:
-                    error?.response?.data?.message ||
-                    "Failed to upload profile picture",
+                message: "Failed to upload profile picture. Please try again later.",
             };
         }
     }

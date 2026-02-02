@@ -10,7 +10,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import { useLogin } from '@/components/providers/LoginProvider';
 import TripServices from '@/utils/trip.utils';
 import { UserApiService } from '@/utils/user.api.utils';
-import { ExtendedUser, UserTrip } from '@/types';
+import { ExtendedUser, User, UserTrip } from '@/types';
 import { CommonServices, triggerLogin } from '@/utils';
 import { useLoader } from '@/components/providers/LoaderContext';
 import TripCard from '@/components/Profile/TripCard';
@@ -135,9 +135,10 @@ export default function UserProfilePage() {
   const age = profileUser?.dateOfBirth ? CommonServices.computeAge(profileUser.dateOfBirth) : null;
 
   // Inside UserProfilePage component
+
   const onUpdateProfile = async (updatedFormData: ExtendedUser) => {
     try {
-      const payload: Record<string, any> = {};
+      const payload: Partial<ExtendedUser> = {};
 
       // Social medias
       if (updatedFormData.socialMedias?.instagram !== undefined) {
@@ -153,7 +154,7 @@ export default function UserProfilePage() {
 
       // Languages
       if (Array.isArray(updatedFormData.languages_array)) {
-        payload.languages = updatedFormData.languages_array;
+        payload.languages = updatedFormData.languages_array.join(',');
       }
 
       // Persona
@@ -173,7 +174,7 @@ export default function UserProfilePage() {
       try {
         const res = await UserApiService.updateUser(payload);
         if (res.success) {
-          updateUserFields(payload);
+          updateUserFields(payload as Partial<ExtendedUser>);
           toast.success("Profile updated!");
         }
       }
@@ -203,7 +204,7 @@ export default function UserProfilePage() {
         updateUserProfilePicture(newImageUrl);
         toast.success("Profile picture updated!");
       }
-    } catch (error :unknown) {
+    } catch (error: unknown) {
       // Check if the backend sent a specific error message
       const errorMessage = (error as apiErrorType)?.message || "Failed to upload image";
       console.error("Upload Error:", error);
@@ -384,7 +385,7 @@ export default function UserProfilePage() {
           </div>
 
           {!isLoggedIn && (
-            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center">
+            <div className="hidden absolute inset-0 z-10 lg:flex flex-col items-center justify-center text-center">
               <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg text-[var(--neutral-2)] mb-3">
                 <Lock size={32} />
               </div>
@@ -395,14 +396,14 @@ export default function UserProfilePage() {
         {/* RIGHT COLUMN - TRIPS */}
         <div className="lg:col-span-8 xl:col-span-9">
           <div className="flex items-center justify-between mb-6">
-            <div>
+            {isLoggedIn && <div>
               <h2 className="text-2xl font-bold text-[var(--secondary-1)]">Trips</h2>
               <p className="text-sm text-[var(--neutral-1)]">Upcoming and past adventures</p>
-            </div>
+            </div>}
             {isOwner && isLoggedIn && (
               <button
                 onClick={() => triggerLogin(() => redirectToUrl(ROUTES.CREATE_TRIP))}
-                className="hidden sm:flex items-center gap-2 bg-[var(--primary-1)] hover:bg-[var(--primary-hover)] text-white px-4 py-2 rounded-xl font-medium shadow-md shadow-[var(--primary-background)] transition-all text-sm"
+                className="flex items-center gap-2 bg-[var(--primary-1)] hover:bg-[var(--primary-hover)] text-white px-4 py-2 rounded-xl font-medium shadow-md shadow-[var(--primary-background)] transition-all text-sm"
               >
                 <Plus size={16} /> Plan New Trip
               </button>
@@ -411,7 +412,7 @@ export default function UserProfilePage() {
 
           {!isLoggedIn ? (
             <div className="relative">
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 filter blur-md select-none pointer-events-none opacity-60">
+              <div className="lg:grid hidden grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 filter blur-md select-none pointer-events-none opacity-60">
                 {FAKE_TRIPS.map((fakeTrip) => (
                   <div key={fakeTrip.id} className="aspect-[4/3] rounded-2xl overflow-hidden relative">
                     <img src={fakeTrip.image} alt={fakeTrip.tripName} className="w-full h-full object-cover" />
@@ -436,11 +437,11 @@ export default function UserProfilePage() {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-              {isOwner && (
+              {/* {isOwner && (
                 <div onClick={() => router.push('/create/trip')} className="sm:hidden flex items-center justify-center p-6 border-2 border-dashed border-[var(--primary-2)] bg-[var(--primary-5)] rounded-2xl text-[var(--primary-hover)] font-medium cursor-pointer aspect-[4/2]">
                   <Plus size={20} className="mr-2" /> Plan a New Trip
                 </div>
-              )}
+              )} */}
               {displayTrips.length > 0 ? displayTrips.map((trip) => (
                 <TripCard key={trip.id} trip={trip} isOwner={isOwner} onClick={() => router.push(`/userTrip/${encodeURIComponent(trip.id || '')}/details?locationId=${encodeURIComponent(trip.locationId || '')}`)} />
               )) : (

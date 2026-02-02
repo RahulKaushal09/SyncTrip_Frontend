@@ -21,7 +21,7 @@ import { LocationFields } from '@/constants';
 import { LocationServices } from '@/utils/location.utils';
 import TripServices from '@/utils/trip.utils';
 import { PlacesToVisit, UserTrip, UserTripActivity } from '@/types';
-import '../../../styles/tripPlanner.css';
+import '../../../../styles/tripPlanner.css';
 import { IsUserProfileComplete } from '@/utils';
 import toast from 'react-hot-toast';
 import { useLoader } from '@/components/providers/LoaderContext';
