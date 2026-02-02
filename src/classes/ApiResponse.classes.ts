@@ -39,7 +39,7 @@ export interface EventsResponse {
 }
 export interface CompleteProfileApiResponse {
     success: boolean;
-    message: string;
+    message?: string;
     user: User;
     token?: string;
     error?: string;
@@ -66,4 +66,9 @@ export interface exploreNearByApiResponse {
 export interface responseUserTripWithGroupContext {
     trip: UserTrip,
     groupContext: groupContextTrip
+}
+
+export interface apiErrorType {
+  message: string;
+  code?: string;
 }

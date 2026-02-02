@@ -4,17 +4,21 @@ import { LocationFields } from "@/constants/enums";
 
 export class LocationServices {
 
-    static async fetchLocationsBySearch(query: string): Promise<Location[]> {
-        const locationFieldsRequiredForSearch = [
-            LocationFields.ID,
+    static async fetchLocationsBySearch(query: string, fields: string[]): Promise<Location[]> {
+        let locationFieldsRequiredForSearch;
+        if (fields.length > 0) {
+            locationFieldsRequiredForSearch = fields;
+        }
+        else {
+            locationFieldsRequiredForSearch = [LocationFields.ID,
             LocationFields.TITLE,
             LocationFields.STATE,
             LocationFields.COUNTRY,
             LocationFields.PHOTOS,
             LocationFields.BEST_TIME,
             LocationFields.RATING,
-            LocationFields.PLACES_NUMBER_TO_VISIT,
-        ];
+            LocationFields.PLACES_NUMBER_TO_VISIT];
+        }
         try {
             const controller = new AbortController();
             const res = await apiClient.get("/app/getLocationsBySearch", {
@@ -60,9 +64,9 @@ export class LocationServices {
         try {
             const res = await apiClient.post(`/hotels/getHotelsByIds`, { hotelIds });
             // clean hotel_name for nay number wiht . ex 76. 67. etc 
-            if(res.data && Array.isArray(res.data)) {
+            if (res.data && Array.isArray(res.data)) {
                 res.data = res.data.map((h: Hotel) => {
-                    if(h.hotel_name) {
+                    if (h.hotel_name) {
                         h.hotel_name = h.hotel_name.replace(/^\d+(\.\s*)?/, '').trim();
                     }
                     return h;

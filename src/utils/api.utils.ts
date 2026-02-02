@@ -383,15 +383,19 @@ export class ApiService {
     });
     return this.handleResponse(response);
   } // being used - 27/01/2026
-  static async completeProfile(formData: FormData): Promise<CompleteProfileApiResponse> {
-    const response = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/auth/complete-profile`, {
-      method: 'POST',
-      body: formData,
-      headers: {
-        Authorization: `Bearer ${StorageUtils.getItem(STORAGE_KEYS.TOKEN)}`,
-      },
-    });
-    return this.handleResponse(response);
+  // static async completeProfile(formData: FormData): Promise<CompleteProfileApiResponse> {
+  //   const response = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/auth/complete-profile`, {
+  //     method: 'POST',
+  //     body: formData,
+  //     headers: {
+  //       Authorization: `Bearer ${StorageUtils.getItem(STORAGE_KEYS.TOKEN)}`,
+  //     },
+  //   });
+  //   return this.handleResponse(response);
+  // } // being used - 27/01/2026
+  static async completeProfile(formData:FormData): Promise<CompleteProfileApiResponse> {
+    const response = await apiClient.post(`${API_CONFIG.BACKEND_BASE_URL}/api/auth/complete-profile`, formData);
+    return response.data;
   } // being used - 27/01/2026
   static async addPhoneNumber(userId: string, phone: string): Promise<CompleteProfileApiResponse> {
     const response = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/auth/google-complete`, {

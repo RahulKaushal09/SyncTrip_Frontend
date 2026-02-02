@@ -124,7 +124,7 @@ export default function EditProfileModal({
                 languages_array: Array.isArray(user.languages)
                     ? user.languages
                     : (user.languages ? (user.languages as string).split(',').map(s => s.trim()) : []),
-                showProfile: user.showProfile ?? true,
+                showProfile: user.showProfile ? true : false,
                 socialMedias: {
                     instagram: user.instagram || user.socialMedias?.instagram || ''
                 }

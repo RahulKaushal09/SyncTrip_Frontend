@@ -34,6 +34,7 @@ export default function AvatarUploader({
   
   const [zoomLevel, setZoomLevel] = useState<number>(1);
   const [rotateLevel, setRotateLevel] = useState<number>(0);
+  const [cropLevel, setCropLevel] = useState<{x: number, y: number}>({ x: 0, y: 0 });
 
   const inputRef = useRef<HTMLInputElement | null>(null);
   const lastObjectUrlRef = useRef<string | null>(null);
@@ -92,12 +93,13 @@ export default function AvatarUploader({
       // Reset zoom/rotate for a new file
       setZoomLevel(1);
       setRotateLevel(0);
+      setCropLevel({ x: 0, y: 0 });
       setIsCropping(true);
     };
     reader.readAsDataURL(file);
   };
 
-  const onCropFinished = async (blob: Blob, zoom: number, rotate: number) => {
+  const onCropFinished = async (blob: Blob, zoom: number, rotate: number, crop: {x: number, y: number}) => {
     const file = new File([blob], "profile_photo.jpg", { type: "image/jpeg" });
 
     revokeLastObjectUrl();
@@ -107,6 +109,7 @@ export default function AvatarUploader({
     setPreviewUrl(url);
     setZoomLevel(zoom);
     setRotateLevel(rotate);
+    setCropLevel(crop);
     setIsCropping(false);
 
     onChange(file);
@@ -132,6 +135,7 @@ export default function AvatarUploader({
               image={originalFileSource} // Pass the RAW original, not the preview
               onCancel={() => setIsCropping(false)}
               onCropComplete={onCropFinished}
+              presetCrop={cropLevel}
             />
           </div>
         </div>

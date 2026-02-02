@@ -4,8 +4,8 @@ import { RotateCw, ZoomIn, Scissors, RotateCcw } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { getCroppedImg } from '@/utils/crop.utils';
 
-export const ImageCropper = ({ image, onCropComplete, onCancel, presetRotation, presetZoom }) => {
-    const [crop, setCrop] = useState({ x: 0, y: 0 });
+export const ImageCropper = ({ image, onCropComplete, onCancel, presetRotation, presetZoom, presetCrop }) => {
+    const [crop, setCrop] = useState(presetCrop ? presetCrop : { x: 0, y: 0 });
     const [zoom, setZoom] = useState(presetZoom);
     const [rotation, setRotation] = useState(presetRotation);
     const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
@@ -13,7 +13,7 @@ export const ImageCropper = ({ image, onCropComplete, onCancel, presetRotation, 
     const handleDone = async () => {
         try {
             const blob = await getCroppedImg(image, croppedAreaPixels, rotation);
-            onCropComplete(blob, zoom, rotation);
+            onCropComplete(blob, zoom, rotation, crop);
         } catch (e) {
             toast.error("Error cropping image");
         }

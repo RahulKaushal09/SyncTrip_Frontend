@@ -79,7 +79,7 @@ export default function TravelModePage() {
 
             <button
               onClick={() => router.push(`/userTrip/${tripId}/matching`)}
-              className="text-sm text-primary-1 underline"
+              className="text-sm btn btn-secondary underline"
             >
               Find solo travelers
             </button>

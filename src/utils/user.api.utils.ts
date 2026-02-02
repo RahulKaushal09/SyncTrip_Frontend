@@ -1,4 +1,4 @@
-import { userWishlistResponse } from '@/classes/ApiResponse.classes';
+import { apiErrorType, userWishlistResponse } from '@/classes/ApiResponse.classes';
 import { API_CONFIG } from '../constants';
 import { getUserWishlistRequestSchema } from '@/classes/ApiRequest.classes';
 import { User, UserWishList } from '@/types';
@@ -68,5 +68,32 @@ export class UserApiService {
         }
     }
 
+    static async updateProfilePhoto(file: File): Promise<{ success: boolean; url?: string; message?: string; }> {
+        try {
+            const formData = new FormData();
+            formData.append("profilePhoto", file);
+
+            const response = await apiClient.post("/users/update-profile-photo",
+                formData,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                }
+            );
+
+            return response.data;
+        } catch (error: any) {
+            return {
+                success: false,
+                // code: error?.code,
+                message:
+                    error?.response?.data?.message ||
+                    "Failed to upload profile picture",
+            };
+        }
+    }
 }
+
+
 

@@ -8,8 +8,10 @@ export interface UserWishList {
     parentId?: string; // e.g., locationId for a place/hotel, tripId for transport/activity
     parentType?: 'location' | 'trip'; // e.g., "location" or "trip" (optional but useful for clarity)
 }
+
 export interface User {
     id: string;
+    bio?: string;
     name: string;
     email?: string;
     phone?: string;
@@ -31,11 +33,12 @@ export interface User {
     travelGoal?: string;
     languages?: string;
     preferredDestinations?: string[];
+    pincode?: string;
+    viewCount?: number;
 }
 // below is used in profile page
 export interface ExtendedUser extends User {
   persona?: string[]; // Maps to travelerType/travelStyles in UI
-  viewCount?: number;
   rating?: number;
   socialMedias?: {
     instagram?: string;

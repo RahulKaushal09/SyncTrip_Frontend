@@ -12,12 +12,12 @@ import TripServices from '@/utils/trip.utils';
 import { UserApiService } from '@/utils/user.api.utils';
 import { ExtendedUser, UserTrip } from '@/types';
 import { CommonServices, triggerLogin } from '@/utils';
-import apiClient from '@/utils/apiClient';
 import { useLoader } from '@/components/providers/LoaderContext';
 import TripCard from '@/components/Profile/TripCard';
 import EditProfileModal from '@/components/Profile/EditProfileModal';
 import ImageUploadModal from '@/components/Profile/ImageUpload';
 import { ROUTES } from '@/constants';
+import { apiErrorType } from '@/classes/ApiResponse.classes';
 
 // DUMMY DATA FOR BLURRED PROFILE
 const DUMMY_USER: Partial<ExtendedUser> = {
@@ -28,7 +28,7 @@ const DUMMY_USER: Partial<ExtendedUser> = {
   rating: 5,
   persona: ['Hidden', 'Locked'],
   languages: 'Hidden',
-  viewCount: 100
+  viewCount: 10,
 };
 
 // FAKE TRIPS FOR BLURRED PROFILE
@@ -192,22 +192,20 @@ export default function UserProfilePage() {
       const formData = new FormData();
       formData.append('profilePhoto', file);
 
-      const response = await apiClient.post('/users/update-profile-photo', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
+      const response = await UserApiService.updateProfilePhoto(file);
 
       // console.log("Upload res: ", response);
 
       // The backend now returns { success: true, url: "..." }
-      const newImageUrl = response.data.url;
+      const newImageUrl = response.url;
 
       if (newImageUrl) {
         updateUserProfilePicture(newImageUrl);
         toast.success("Profile picture updated!");
       }
-    } catch (error) {
+    } catch (error :unknown) {
       // Check if the backend sent a specific error message
-      const errorMessage = error.response?.data?.message || "Failed to upload image";
+      const errorMessage = (error as apiErrorType)?.message || "Failed to upload image";
       console.error("Upload Error:", error);
       toast.error(errorMessage);
     }

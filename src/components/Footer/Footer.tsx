@@ -8,7 +8,7 @@ import { Facebook, Instagram } from 'lucide-react';
 
 const Footer = () => {
     const pathname = usePathname();
-    const shouldHideFooter = pathname.includes('/chats') || pathname.includes('/create') ||(pathname.includes('userTrip/') && pathname.includes('/groups'))||(pathname.includes('userTrip/') && pathname.includes('/planner')) || (pathname.includes('userTrip/') && pathname.includes('/matching'));
+    const shouldHideFooter = pathname.includes('/chats') || pathname.includes('/create') ||(pathname.includes('userTrip/') && pathname.includes('/travel-mode')) ||(pathname.includes('userTrip/') && pathname.includes('/groups'))||(pathname.includes('userTrip/') && pathname.includes('/planner')) || (pathname.includes('userTrip/') && pathname.includes('/matching'));
 
     const companyLinks = [
         { name: 'About', url: '/about' },
