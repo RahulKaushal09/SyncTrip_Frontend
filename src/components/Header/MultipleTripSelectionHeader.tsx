@@ -100,9 +100,9 @@ export default function MultipleTripSelectionHeader({
   const onChatOpen = () => {
     router.push("/chats?tripId=" + tripId);
   };
-  // const onMatchingOpen = () => {
-  //   router.push("/userTrip/"+tripId+"/matching");
-  // };
+  const onMatchingOpen = () => {
+    router.push("/userTrip/"+tripId+"/matching");
+  };
 
   return (
     <header style={containerStyle} className={`${className} border-b`}>
@@ -210,8 +210,8 @@ export default function MultipleTripSelectionHeader({
       {headerType === 'matching' && tripId && (
         <ChatIcon onClickOpen={() => onChatOpen()} />
       )}
-      {/* {headerType === 'chat' && tripId &&
-        <MatchingUsersIcon onClickOpen={() => onMatchingOpen()} />} */}
+      {headerType === 'chat' && tripId &&
+        <MatchingUsersIcon onClickOpen={() => onMatchingOpen()} />}
 
 
     </header>

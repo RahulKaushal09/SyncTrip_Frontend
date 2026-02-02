@@ -35,65 +35,102 @@ export default function ChatWindow({ chatId, currentUserId, chat }: Props) {
   const [composerHeight, setComposerHeight] = useState<number>(72); // default
 
   /* ------------------ Socket: connect once ------------------ */
+  // useEffect(() => {
+  //   // only run on client
+  //   if (typeof window === "undefined") return;
+
+  //   // const token = StorageUtils.getToken();
+  //   const socket = getSocket();
+
+  //   socketRef.current = socket;
+
+  //   // on connect: if chatId already present, join it (avoids join-before-connect race)
+  //   socket.on("connect", () => {
+  //     console.log("socket connected", socket.id);
+  //     if (chatId) {
+  //       socket.emit("join_chat", chatId);
+  //     }
+  //   });
+
+  //   socket.on("connect_error", (err: unknown) => {
+  //     console.error("socket connect_error", err);
+  //   });
+
+  //   // receive messages broadcast from server
+  //   socket.on("receive_message", (message: Message) => {
+  //     try {
+  //       if (!message || !message.id) return;
+  //       // if message belongs to another chat (just in case), ignore
+  //       // server normally emits only to the room, but sanity check:
+  //       if ((message as Message).chat && chatId && (message as Message).chat !== chatId) return;
+
+  //       if (lastMessageIds.current.has(message.id)) return;
+  //       lastMessageIds.current.add(message.id);
+
+  //       setMessages((prev) => [...prev, message]);
+  //       setTimeout(scrollToBottom, 40);
+  //     } catch (e) {
+  //       console.error("receive_message handler error", e);
+  //     }
+  //   });
+
+  //   // typing indicators from other users
+  //   socket.on("typing", ({ chatId: cId, userId }: { chatId: string; userId: string }) => {
+  //     if (cId === chatId && userId !== currentUserId) {
+  //       setRemoteTyping({ userId });
+  //     }
+  //   });
+
+  //   socket.on("stop_typing", ({ chatId: cId, userId }: { chatId: string; userId: string }) => {
+  //     if (cId === chatId && userId !== currentUserId) {
+  //       setRemoteTyping(null);
+  //     }
+  //   });
+
+  //   return () => {
+  //     if (chatId) {
+  //       socket.emit("leave_chat", chatId);
+  //     }
+  //     setRemoteTyping(null);
+  //   };
+  // }, [chatId, currentUserId]);  //
   useEffect(() => {
-    // only run on client
-    if (typeof window === "undefined") return;
+  if (typeof window === "undefined") return;
 
-    // const token = StorageUtils.getToken();
-    const socket = getSocket();
+  const socket = getSocket();
+  if (!socket) return;
 
-    socketRef.current = socket;
+  socketRef.current = socket;
 
-    // on connect: if chatId already present, join it (avoids join-before-connect race)
-    socket.on("connect", () => {
-      console.log("socket connected", socket.id);
-      if (chatId) {
-        socket.emit("join_chat", chatId);
-      }
-    });
+  const onReceiveMessage = (message: Message) => {
+    if (message.chat !== chatId) return;
+    if (lastMessageIds.current.has(message.id)) return;
 
-    socket.on("connect_error", (err: unknown) => {
-      console.error("socket connect_error", err);
-    });
+    lastMessageIds.current.add(message.id);
+    setMessages(prev => [...prev, message]);
+    setTimeout(scrollToBottom, 40);
+  };
 
-    // receive messages broadcast from server
-    socket.on("receive_message", (message: Message) => {
-      try {
-        if (!message || !message.id) return;
-        // if message belongs to another chat (just in case), ignore
-        // server normally emits only to the room, but sanity check:
-        if ((message as Message).chat && chatId && (message as Message).chat !== chatId) return;
+  socket.on("receive_message", onReceiveMessage);
 
-        if (lastMessageIds.current.has(message.id)) return;
-        lastMessageIds.current.add(message.id);
+  socket.on("typing", ({ chatId: cId, userId }) => {
+    if (cId === chatId && userId !== currentUserId) {
+      setRemoteTyping({ userId });
+    }
+  });
 
-        setMessages((prev) => [...prev, message]);
-        setTimeout(scrollToBottom, 40);
-      } catch (e) {
-        console.error("receive_message handler error", e);
-      }
-    });
-
-    // typing indicators from other users
-    socket.on("typing", ({ chatId: cId, userId }: { chatId: string; userId: string }) => {
-      if (cId === chatId && userId !== currentUserId) {
-        setRemoteTyping({ userId });
-      }
-    });
-
-    socket.on("stop_typing", ({ chatId: cId, userId }: { chatId: string; userId: string }) => {
-      if (cId === chatId && userId !== currentUserId) {
-        setRemoteTyping(null);
-      }
-    });
-
-    return () => {
-      if (chatId) {
-        socket.emit("leave_chat", chatId);
-      }
+  socket.on("stop_typing", ({ chatId: cId, userId }) => {
+    if (cId === chatId && userId !== currentUserId) {
       setRemoteTyping(null);
-    };
-  }, [chatId, currentUserId]);  //
+    }
+  });
+
+  return () => {
+    socket.off("receive_message", onReceiveMessage);
+    socket.off("typing");
+    socket.off("stop_typing");
+  };
+}, [chatId, currentUserId]);
 
   /* ------------------ Join/leave chat when chatId changes ------------------ */
   useEffect(() => {
@@ -267,7 +304,7 @@ export default function ChatWindow({ chatId, currentUserId, chat }: Props) {
 
   /* ------------------ Render ------------------ */
   return (
-    <div className="flex flex-col h-[calc(100vh-64px)] md:h-[80vh]">
+    <div className="flex flex-col h-[calc(100vh-64px)]">
       {/* messages area */}
       <div
         ref={msgsRef}
