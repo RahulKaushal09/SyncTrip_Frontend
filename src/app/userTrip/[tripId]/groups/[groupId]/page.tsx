@@ -10,327 +10,205 @@ import Image from 'next/image';
 import { CommonServices } from '@/utils';
 
 export default function GroupDetailsPage() {
-<<<<<<< HEAD
-  const { tripId, groupId } = useParams() as { tripId: string; groupId: string };
-  const router = useRouter();
-  const { showLoader, hideLoader } = useLoader();
-
-  const [group, setGroup] = useState<GroupDetails | null>(null);
-  const [showFullList, setShowFullList] = useState(false);
-
-  useEffect(() => {
-    showLoader();
-    const load = async () => {
-      try {
-        const res = await GroupApiServices.getGroupDetails(groupId);
-        setGroup(res);
-      } finally {
-        hideLoader();
-      }
-=======
-    const { tripId, groupId } = useParams() as {
-        tripId: string;
-        groupId: string;
->>>>>>> 64e05bd (group chat socket working + matching screen to show card of gourp)
-    };
+    const { tripId, groupId } = useParams() as { tripId: string; groupId: string };
     const router = useRouter();
-
-<<<<<<< HEAD
-  if (!group) return <div className="paddingTopAndSide text-center py-20 r1">Group not found</div>;
-
-  return (
-    <div style={{
-      width: "56rem"
-    }} className="paddingTopAndSide  mx-auto !pb-32">
-      {/* Navigation */}
-      <button
-        onClick={() => router.back()}
-        className="flex items-center gap-2 text-neutral-2 hover:text-secondary-1 mb-6 transition-colors b3 uppercase tracking-wider"
-      >
-        <ArrowLeft size={16} />
-        Back
-      </button>
-
-      {/* Hero Header Section */}
-      <div className="m-animate play m-slide-up relative aspect-[16/10] w-full rounded-[32px] overflow-hidden mb-8 shadow-md border border-neutral-5">
-        {group.groupImageUrl ? (
-          <Image src={group.groupImageUrl} alt={group.groupName} fill className="object-cover" priority />
-        ) : (
-          <div className="w-full h-full bg-primary-5 flex items-center justify-center">
-            <Users size={60} className="text-primary-2" />
-          </div>
-        )}
-        <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-sm px-4 py-1.5 rounded-full s1 font-bold text-secondary-1 flex items-center gap-2 shadow-sm">
-          <ShieldCheck size={16} className="text-success-1" />
-          Verified Plan
-        </div>
-      </div>
-
-      {/* Group Title & Tags */}
-      <div className="m-animate play m-slide-up mb-8">
-        <h1 className="h2 text-secondary-1 mb-3 font-bold">{group.groupName}</h1>
-
-        <div className="flex flex-wrap gap-3 mb-6">
-          <div className="flex border py-1 px-2 rounded-full items-center gap-2 text-secondary-1 s1 font-bold">
-            <Users size={16} className="text-primary-1" />
-            {group.membersCount} / {group.maxMembers} Members
-          </div>
-          <div className="flex border py-1 px-2 rounded-full items-center gap-1 text-neutral-1 s1">
-            <MapPin size={16} className="text-neutral-3" />
-            {group.isMember ? 'Joined trip' : 'Open for joiners'}
-          </div>
-        </div>
-
-        <div className="chipsBox">
-          {group.tags?.map(tag => (
-            <span key={tag} className="chip  !py-1.5 !px-4 s2 font-bold">
-              {tag}
-            </span>
-          ))}
-        </div>
-      </div>
-
-      {/* Description Box */}
-      {group.description && (
-        <div className="m-animate play m-slide-up mb-10 bg-secondary-5 p-6 rounded-[24px] border border-secondary-4">
-          <p className="r2 text-secondary-1 leading-relaxed opacity-90">{group.description}</p>
-        </div>
-      )}
-
-      {/* Techy Members Section */}
-      <div className="m-animate play m-slide-up mb-16">
-        <div className="flex items-center justify-between mb-6">
-          <h3 className="b1 text-secondary-1 mb-0 uppercase tracking-widest text-[12px] font-black">Group Roster</h3>
-          <span className="s2 text-neutral-2 font-bold uppercase">{group.maxMembers - group.membersCount} slots remaining</span>
-        </div>
-
-        {/* Overlapping Avatar Stack (The Trigger) */}
-        <div
-          className="flex items-center gap-4 cursor-pointer group hover:bg-neutral-5 p-3 rounded-2xl transition-all"
-          onClick={() => setShowFullList(!showFullList)}
-        >
-          <div className="flex -space-x-4">
-            {group.members.map((m, idx) => (
-              <div
-                key={m.userId}
-                className="relative h-14 w-14 rounded-full border-4 border-white overflow-hidden bg-neutral-5 shadow-sm"
-                style={{ zIndex: group.members.length - idx }}
-              >
-                {m.userDetails.profile_picture ? (
-                  <Image src={m.userDetails.profile_picture[0]} alt={m.userDetails.name} fill className="object-cover" />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-primary-4 text-primary-1 font-bold">
-                    {m.userDetails.name.charAt(0)}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-          <div className="flex items-center gap-2 s1 text-secondary-1 font-bold">
-            {showFullList ? 'Hide details' : 'View all profiles'}
-            {showFullList ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-          </div>
-        </div>
-
-        {/* Expanded Direct-View Members List */}
-        {showFullList && (
-          <div className="my-6 grid grid-cols-1 md:grid-cols-2 gap-3 m-animate play m-fade-in">
-            {group.members.map(m => (
-              <div
-                key={m.userId}
-                className="flex items-center justify-between p-3 bg-white rounded-2xl border border-neutral-5 shadow-sm hover:border-primary-3 transition-colors"
-              >
-                {/* Left: Avatar & Primary Info */}
-                <div className="flex items-center gap-3 min-w-0">
-                  <div className="relative h-11 w-11 rounded-xl overflow-hidden flex-shrink-0 border border-neutral-5 bg-neutral-5">
-                    {m.userDetails.profile_picture ? (
-                      <Image
-                        src={m.userDetails.profile_picture[0]}
-                        alt={m.userDetails.name}
-                        fill
-                        className="object-cover"
-                      />
-                    ) : (
-                      <UserCircle size={20} className="m-auto text-neutral-3 h-full w-full p-2" />
-                    )}
-                  </div>
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-1.5">
-                      <p className="b3 text-secondary-1 truncate font-bold">
-                        {m.userDetails.name} {m.userDetails.sex ? ` | ${m.userDetails.sex}` : ''}
-                      </p>
-                      {m.role === 'admin' && <Crown size={12} className="text-warning-1 flex-shrink-0" />}
-                    </div>
-                    <p className="s1 text-neutral-1 font-bold uppercase tracking-tighter truncate">
-                      {m.userDetails.age ? ` ${m.userDetails.age} YEARS` : ''}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Right: Technical Stats */}
-                <div className="flex flex-col items-end gap-1.5 flex-shrink-0 ml-2">
-                  {m.userDetails.rating !== undefined && (
-                    <div className="flex items-center gap-1 s2 font-bold text-secondary-1">
-                      <Star size={11} fill="#FFC53D" className="text-warning-1" />
-                      {m.userDetails.rating}
-                    </div>
-                  )}
-                  <div className={`text-[9px] font-semibold px-1.5 py-0.5 rounded uppercase ${m.role === 'admin'
-                    ? 'bg-[var(--warning-5)] text-neutral-1 border border-warning-4'
-                    : 'bg-[var(--neutral-5)] text-neutral-1'
-                    }`}>
-                    {m.role === 'admin' ? 'Host' : 'Member'}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Floating Action Button */}
-      <div className="fixed bottom-0 left-0 right-0 p-6 bg-white/70 backdrop-blur-lg border-t border-neutral-5 z-50">
-        <div className="max-w-2xl mx-auto">
-          {!group.isMember ? (
-            <button
-              onClick={async () => {
-                const res = await GroupApiServices.joinGroupTrip(group.id, tripId);
-                router.push(`/chats?tripId=${tripId}&chatId=${res.chatId}`);
-              }}
-              className="btn btn-primary w-full !h-14 !rounded-full shadow-lg flexbtn transition-transform active:scale-95"
-            >
-              <span className="b1 font-bold tracking-tight">Join the Trip</span>
-            </button>
-          ) : (
-            <button
-              onClick={() => router.push(`/chats?tripId=${tripId}&chatId=${group.chatId}`)}
-              className="btn btn-secondary w-full !h-14 !rounded-full shadow-lg flexbtn"
-            >
-              <MessageCircle size={20} />
-              <span className="b1 font-bold tracking-tight">Open group chat</span>
-            </button>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
-=======
-    const [group, setGroup] = useState<GroupDetails | null>(null);
-    //   const [loading, setLoading] = useState(true);
     const { showLoader, hideLoader } = useLoader();
+
+    const [group, setGroup] = useState<GroupDetails | null>(null);
+    const [showFullList, setShowFullList] = useState(false);
+
     useEffect(() => {
         showLoader();
         const load = async () => {
             try {
                 const res = await GroupApiServices.getGroupDetails(groupId);
-                console.log(res);
                 setGroup(res);
             } finally {
-                // setLoading(false);
                 hideLoader();
             }
         };
         load();
     }, [groupId]);
 
-    //   if (loading) {
-    //     return <div className="container-custom">Loading...</div>;
-    //   }
-
-    if (!group) {
-        return <div className="container-custom">Group not found</div>;
-    }
+    if (!group) return <div className="paddingTopAndSide text-center py-20 r1">Group not found</div>;
 
     return (
-        <div className="container-custom">
-            {/* Header */}
-            <div className="mb-6">
-                <h1 className="text-2xl font-bold text-secondary-1">
-                    {group.groupName}
-                </h1>
-                <p className="text-neutral-2 mt-1">
-                    {group.membersCount} / {group.maxMembers} members
-                </p>
+        <div style={{
+            width: "56rem"
+        }} className="paddingTopAndSide  mx-auto !pb-32">
+            {/* Navigation */}
+            <button
+                onClick={() => router.back()}
+                className="flex items-center gap-2 text-neutral-2 hover:text-secondary-1 mb-6 transition-colors b3 uppercase tracking-wider"
+            >
+                <ArrowLeft size={16} />
+                Back
+            </button>
+
+            {/* Hero Header Section */}
+            <div className="m-animate play m-slide-up relative aspect-[16/10] w-full rounded-[32px] overflow-hidden mb-8 shadow-md border border-neutral-5">
+                {group.groupImageUrl ? (
+                    <Image src={group.groupImageUrl} alt={group.groupName} fill className="object-cover" priority />
+                ) : (
+                    <div className="w-full h-full bg-primary-5 flex items-center justify-center">
+                        <Users size={60} className="text-primary-2" />
+                    </div>
+                )}
+                <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-sm px-4 py-1.5 rounded-full s1 font-bold text-secondary-1 flex items-center gap-2 shadow-sm">
+                    <ShieldCheck size={16} className="text-success-1" />
+                    Verified Plan
+                </div>
             </div>
 
-            {/* Description */}
-            {group.description && (
-                <div className="mb-6 text-neutral-2">
-                    {group.description}
+            {/* Group Title & Tags */}
+            <div className="m-animate play m-slide-up mb-8">
+                <h1 className="h2 text-secondary-1 mb-3 font-bold">{group.groupName}</h1>
+
+                <div className="flex flex-wrap gap-3 mb-6">
+                    <div className="flex border py-1 px-2 rounded-full items-center gap-2 text-secondary-1 s1 font-bold">
+                        <Users size={16} className="text-primary-1" />
+                        {group.membersCount} / {group.maxMembers} Members
+                    </div>
+                    <div className="flex border py-1 px-2 rounded-full items-center gap-1 text-neutral-1 s1">
+                        <MapPin size={16} className="text-neutral-3" />
+                        {group.isMember ? 'Joined trip' : 'Open for joiners'}
+                    </div>
                 </div>
-            )}
 
-            {/* Members */}
-            <div className="mb-10">
-                <h3 className="font-semibold mb-3 text-secondary-1">
-                    Members
-                </h3>
-
-                <div className="grid grid-cols-1 gap-3">
-                    {group.members.map(m => (
-                        !m || !m.userDetails ? (null) : (
-
-                            <div
-                                key={m.userId}
-                                className="flex items-center gap-3 border rounded-lg p-3"
-                            >
-                                <div className="w-10 h-10 rounded-full bg-primary-4 flex items-center justify-center">
-                                    {/* <Users size={18} className="text-primary-1" /> */}
-                                    {m && m.userDetails && m.userDetails.profile_picture ? <Image
-                                        src={m.userDetails.profile_picture[0]}
-                                        alt={m.userDetails.name}
-                                        width={40}
-                                        height={40}
-                                        className="rounded-full object-cover"
-                                    /> : <Users size={18} className="text-primary-1" />}
-                                </div>
-                                <div>
-                                    <p className="font-medium">
-                                        {m && m.userDetails && m.userDetails.name} {m.userDetails.dateOfBirth && (', ' + CommonServices.computeAge(m.userDetails.dateOfBirth))}
-                                    </p>
-                                    {m.userDetails.sex && (
-                                        <p className="text-xs text-neutral-2">
-                                            {m && m.userDetails && m.userDetails.sex}
-                                        </p>
-                                    )}
-                                    {m && m.userDetails && m.userDetails.rating !== undefined && m.userDetails.rating !== null && (
-                                        <p className="text-xs text-neutral-2">
-                                            Rating: {m.userDetails.rating.toFixed(1)}
-                                        </p>
-                                    )}
-                                    {m && m.role === 'admin' && (
-                                        <p className="text-xs text-neutral-2">
-                                            Group admin
-                                        </p>
-                                    )}
-                                </div>
-                            </div>
-                        )
+                <div className="chipsBox">
+                    {group.tags?.map(tag => (
+                        <span key={tag} className="chip  !py-1.5 !px-4 s2 font-bold">
+                            {tag}
+                        </span>
                     ))}
                 </div>
             </div>
 
-            {/* CTA */}
-            {!group.isMember ? (
-                <button
-                    onClick={async () => {
-                        const res = await GroupApiServices.joinGroupTrip(group.id, tripId);
-                        router.push(`/chats?tripId=${tripId}&chatId=${res.chatId}`);
-                    }}
-                    className="btn btn-primary w-full"
-                >
-                    Join Group
-                </button>
-            ) : (
-                <button
-                    onClick={() => router.push(`/chats?tripId=${tripId}&chatId=${group.chatId}`)}
-                    className="btn btn-primary w-full"
-                >
-                    Open Group Chat
-                </button>
+            {/* Description Box */}
+            {group.description && (
+                <div className="m-animate play m-slide-up mb-10 bg-secondary-5 p-6 rounded-[24px] border border-secondary-4">
+                    <p className="r2 text-secondary-1 leading-relaxed opacity-90">{group.description}</p>
+                </div>
             )}
+
+            {/* Techy Members Section */}
+            <div className="m-animate play m-slide-up mb-16">
+                <div className="flex items-center justify-between mb-6">
+                    <h3 className="b1 text-secondary-1 mb-0 uppercase tracking-widest text-[12px] font-black">Group Roster</h3>
+                    <span className="s2 text-neutral-2 font-bold uppercase">{group.maxMembers - group.membersCount} slots remaining</span>
+                </div>
+
+                {/* Overlapping Avatar Stack (The Trigger) */}
+                <div
+                    className="flex items-center gap-4 cursor-pointer group hover:bg-neutral-5 p-3 rounded-2xl transition-all"
+                    onClick={() => setShowFullList(!showFullList)}
+                >
+                    <div className="flex -space-x-4">
+                        {group.members.map((m, idx) => (
+                            <div
+                                key={m.userId}
+                                className="relative h-14 w-14 rounded-full border-4 border-white overflow-hidden bg-neutral-5 shadow-sm"
+                                style={{ zIndex: group.members.length - idx }}
+                            >
+                                {m.userDetails.profile_picture ? (
+                                    <Image src={m.userDetails.profile_picture[0]} alt={m.userDetails.name} fill className="object-cover" />
+                                ) : (
+                                    <div className="w-full h-full flex items-center justify-center bg-primary-4 text-primary-1 font-bold">
+                                        {m.userDetails.name.charAt(0)}
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                    <div className="flex items-center gap-2 s1 text-secondary-1 font-bold">
+                        {showFullList ? 'Hide details' : 'View all profiles'}
+                        {showFullList ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                    </div>
+                </div>
+
+                {/* Expanded Direct-View Members List */}
+                {showFullList && (
+                    <div className="my-6 grid grid-cols-1 md:grid-cols-2 gap-3 m-animate play m-fade-in">
+                        {group.members.map(m => (
+                            !m || !m.userDetails ? (null) : (
+                                <div
+                                    key={m.userId}
+                                    className="flex items-center justify-between p-3 bg-white rounded-2xl border border-neutral-5 shadow-sm hover:border-primary-3 transition-colors"
+                                >
+                                    {/* Left: Avatar & Primary Info */}
+                                    <div className="flex items-center gap-3 min-w-0">
+                                        <div className="relative h-11 w-11 rounded-xl overflow-hidden flex-shrink-0 border border-neutral-5 bg-neutral-5">
+                                            {m.userDetails.profile_picture ? (
+                                                <Image
+                                                    src={m.userDetails.profile_picture[0]}
+                                                    alt={m.userDetails.name}
+                                                    fill
+                                                    className="object-cover"
+                                                />
+                                            ) : (
+                                                <UserCircle size={20} className="m-auto text-neutral-3 h-full w-full p-2" />
+                                            )}
+                                        </div>
+                                        <div className="min-w-0">
+                                            <div className="flex items-center gap-1.5">
+                                                <p className="b3 text-secondary-1 truncate font-bold">
+                                                    {m.userDetails.name} {m.userDetails.sex ? ` | ${m.userDetails.sex}` : ''}
+                                                </p>
+                                                {m.role === 'admin' && <Crown size={12} className="text-warning-1 flex-shrink-0" />}
+                                            </div>
+                                            <p className="s1 text-neutral-1 font-bold uppercase tracking-tighter truncate">
+                                                {m.userDetails.age ? ` ${m.userDetails.age} YEARS` : ''}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    {/* Right: Technical Stats */}
+                                    <div className="flex flex-col items-end gap-1.5 flex-shrink-0 ml-2">
+                                        {m.userDetails.rating !== undefined && (
+                                            <div className="flex items-center gap-1 s2 font-bold text-secondary-1">
+                                                <Star size={11} fill="#FFC53D" className="text-warning-1" />
+                                                {m.userDetails.rating}
+                                            </div>
+                                        )}
+                                        <div className={`text-[9px] font-semibold px-1.5 py-0.5 rounded uppercase ${m.role === 'admin'
+                                            ? 'bg-[var(--warning-5)] text-neutral-1 border border-warning-4'
+                                            : 'bg-[var(--neutral-5)] text-neutral-1'
+                                            }`}>
+                                            {m.role === 'admin' ? 'Host' : 'Member'}
+                                        </div>
+                                    </div>
+                                </div>
+                            )
+                        ))}
+                    </div>
+                )}
+            </div>
+
+            {/* Floating Action Button */}
+            <div className="fixed bottom-0 left-0 right-0 p-6 bg-white/70 backdrop-blur-lg border-t border-neutral-5 z-50">
+                <div className="max-w-2xl mx-auto">
+                    {!group.isMember ? (
+                        <button
+                            onClick={async () => {
+                                const res = await GroupApiServices.joinGroupTrip(group.id, tripId);
+                                router.push(`/chats?tripId=${tripId}&chatId=${res.chatId}`);
+                            }}
+                            className="btn btn-primary w-full !h-14 !rounded-full shadow-lg flexbtn transition-transform active:scale-95"
+                        >
+                            <span className="b1 font-bold tracking-tight">Join the Trip</span>
+                        </button>
+                    ) : (
+                        <button
+                            onClick={() => router.push(`/chats?tripId=${tripId}&chatId=${group.chatId}`)}
+                            className="btn btn-secondary w-full !h-14 !rounded-full shadow-lg flexbtn"
+                        >
+                            <MessageCircle size={20} />
+                            <span className="b1 font-bold tracking-tight">Open group chat</span>
+                        </button>
+                    )}
+                </div>
+            </div>
         </div>
     );
 }
->>>>>>> 64e05bd (group chat socket working + matching screen to show card of gourp)
+
