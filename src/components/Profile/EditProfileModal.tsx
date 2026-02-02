@@ -309,8 +309,8 @@ export default function EditProfileModal({
                 </form>
 
                 <div className="sticky bottom-0 bg-white border-t border-[var(--neutral-5)] p-4 flex justify-end gap-3 z-10">
-                    <button type="button" onClick={onClose} className="px-5 py-2.5 text-[var(--secondary-1)] hover:bg-[var(--neutral-5)] rounded-xl font-medium transition-colors">Cancel</button>
-                    <button onClick={handleSubmit} className="px-5 py-2.5 bg-[var(--primary-1)] hover:bg-[var(--primary-hover)] text-white rounded-xl font-medium shadow-lg shadow-[var(--primary-background)] hover:shadow-xl transition-all flex items-center gap-2">
+                    <button type="button" onClick={onClose} className="px-3 py-2.5 text-[var(--secondary-1)] hover:bg-[var(--neutral-5)] rounded-xl font-medium transition-colors">Cancel</button>
+                    <button onClick={handleSubmit} className="px-3 py-2.5 bg-[var(--primary-1)] hover:bg-[var(--primary-hover)] text-white rounded-xl font-medium shadow-lg shadow-[var(--primary-background)] hover:shadow-xl transition-all flex items-center gap-2">
                         <Check size={18} /> Save Changes
                     </button>
                 </div>

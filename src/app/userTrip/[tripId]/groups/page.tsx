@@ -55,12 +55,12 @@ export default function GroupsPage() {
             {/* Header */}
             <div className="flex items-center justify-between mb-8 m-animate play m-slide-up">
                 <div>
-                    <h1 className="h3 text-secondary-1 mb-0 !font-bold" style={{ fontSize: '26px' }}>Groups for your trip</h1>
+                    <h1 className="h3 text-secondary-1 mb-0 !font-bold" style={{ fontSize: '25px' }}>Groups for your trip</h1>
                     <p className="r3 italic text-neutral-1">Choose a group that matches your vibe!</p>
                 </div>
                 <button
                     onClick={() => router.push(`/userTrip/${tripId}/groups/create`)}
-                    className="btn btn-secondary flexbtn !h-11 !px-5 !rounded-full shadow-sm"
+                    className="btn btn-secondary flexbtn !h-9 !px-5 !rounded-full shadow-sm"
                 >
                     <Plus size={18} />
                     <span className="b2">Create Group</span>

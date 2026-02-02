@@ -10,7 +10,7 @@ export default function TravelModePage() {
   const tripId = params.tripId as string;
 
   return (
-    <div className="paddingTopAndSide" >
+    <div className="paddingTopAndSide !pb-20" >
 
       {/* Header Section - Using your m-animate and Serif H1 */}
       <div className="m-animate play m-slide-up text-center mb-12 max-w-[800px] mx-auto">
