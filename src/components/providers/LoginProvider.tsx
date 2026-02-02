@@ -11,8 +11,8 @@ import { User } from '../../types';
 
 import { requestFcmToken, onForegroundNotification } from '../../utils/firebaseClient';
 import apiClient from '@/utils/apiClient';
-import { last } from 'lodash';
 import { STORAGE_KEYS } from '@/constants';
+import { UserApiService } from '@/utils/user.api.utils';
 
 interface LoginContextType {
     user: User | null;
@@ -122,7 +122,8 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
         setShowLogin(false);
     }, []);
 
-    const logout = useCallback(() => {
+    const logout = useCallback(async () => {
+        await UserApiService.logoutUser();
         StorageUtils.clearUserData();
         setUser(null);
         window.location.reload();

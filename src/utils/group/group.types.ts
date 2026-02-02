@@ -10,6 +10,7 @@ export interface GroupCard {
   membersCount: number;
   maxMembers: number;
   tags: string[];
+  createdBy: UUID;
 }
 
 export interface GroupPermissions {
@@ -21,9 +22,10 @@ export interface GroupMemberDetails {
   id: UUID;
   name: string;
   profile_picture: string | null;
-  dateOfBirth: string | null;
-  age: number | null; 
-  sex: string | null;  
+  dateOfBirth?: string | null;
+  age?: number | null; 
+  sex?: string | null;  
+  rating?: number | null;
 }
 
 export interface GroupMember {
@@ -52,6 +54,7 @@ export interface GroupDetails {
   isMember: boolean;
   isAdmin: boolean;
   chatId?: UUID;
+//   userTripId?: UUID;
   permissions: GroupPermissions;
 }
 

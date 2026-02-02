@@ -277,7 +277,7 @@ function UserTripDetailsPageContent() {
                 if (groupContext?.isInGroup) {
                     setBottomButtons([{
                         text: "Go to Group Chat", onClick: () => {
-                            // router.push(`/groupTrip/${groupContext.groupTripId}/chat`);
+                            router.push(`/chats?tripId=${tripId}&chatId=${groupContext.chatId}`);
                         }, styleClass: "btn btn-primary"
                     },
                     {

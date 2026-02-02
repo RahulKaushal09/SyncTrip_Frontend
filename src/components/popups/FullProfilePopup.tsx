@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ApiService } from '../../utils/api.utils';
 import { User, Location } from '../../types';
 import '../../../styles/popups/FullProfilePopup.css';
@@ -295,6 +295,23 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
         const idsToSend = selectedLocations.map(loc => loc.id);
         formData.append('preferredDestinations', JSON.stringify(idsToSend));
 
+        // --- Logging Data for testing ---
+        console.log("Form Submission Triggered!");
+        const loggedData: Record<string, any> = {};
+        formData.forEach((value, key) => {
+            loggedData[key] = value;
+        });
+        console.log("FormData Content:", loggedData);
+
+        // Reset loading immediately so the button reverts from "Saving..."
+        // Wrapping in a tiny timeout just so you can see the state change
+        setTimeout(() => {
+            setIsLoading(false);
+            toast.success("Check console for form data!");
+        }, 800);
+
+        // Keeping your actual logic commented as requested
+        /*
         try {
             showLoader();
             const response = await ApiService.completeProfile(formData);
@@ -320,6 +337,7 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
             setIsLoading(false);
             hideLoader();
         }
+        */
     };
 
     const filteredLocations = locations.filter((dest) =>

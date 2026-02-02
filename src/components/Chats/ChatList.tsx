@@ -92,12 +92,12 @@ export default function ChatList({
           (isGroup
             ? `Group • ${(c.users?.length || 1)} members`
             : "Say hi 👋");
-        const groupUsers = (c.users || [])
-          .filter((u) => (u as ChatUser).id !== currentUserId)
+        const groupUsers = (c.users as ChatUser[] || [])
+          // .filter((u) => (u as ChatUser).id !== currentUserId)
           .slice(0, 3);
 
         const groupAvatars = groupUsers
-          .map((u) => (u as ChatUser).profile_picture?.[0])
+          .map((u:ChatUser) => (u).profile_picture?.[0])
           .filter(Boolean);
         return (
           <div

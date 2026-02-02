@@ -55,6 +55,14 @@ export class UserApiService {
             throw error;
         }
     }
+    static async logoutUser(): Promise<void> {
+        try {
+            await apiClient.post('/users/logout');
+        } catch (error) {
+            console.error("Error logging out user:", error);
+            throw error;
+        }
+    }
 
     static async updateUser(payload: Record<string, any>): Promise<{ success: boolean; message?: string }> {
         try {
@@ -67,7 +75,6 @@ export class UserApiService {
             };
         }
     }
-
     static async updateProfilePhoto(file: File): Promise<{ success: boolean; url?: string; message?: string; }> {
         try {
             const formData = new FormData();

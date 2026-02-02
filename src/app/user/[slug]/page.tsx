@@ -28,7 +28,7 @@ const DUMMY_USER: Partial<ExtendedUser> = {
   rating: 5,
   persona: ['Hidden', 'Locked'],
   languages: 'Hidden',
-  viewCount: 10,
+  viewCount: 100
 };
 
 // FAKE TRIPS FOR BLURRED PROFILE

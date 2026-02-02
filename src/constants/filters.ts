@@ -45,3 +45,44 @@ export const TripPrivacyOptions = [
   { label: 'Public Trip', description: 'Connect with anyone during your trip.', icon: 'globe' },
   { label: 'Invite only', description: 'Only people you invite can join.', icon: 'person-add' },
 ];
+
+
+
+export const TagOptionGroupTrip = [
+  // Pace & energy
+  'Chill & relaxed',
+  'Fast-paced',
+  'Early risers',
+  'Late mornings',
+
+  // Social style
+  'Social & chatty',
+  'Calm & low-drama',
+  'Independent but friendly',
+  'Close-knit group',
+
+  // Planning style
+  'Well-planned',
+  'Flexible & spontaneous',
+  'Go-with-the-flow',
+
+  // Budget & comfort
+  'Budget-friendly',
+  'Mid-range comfort',
+  'Backpacking',
+  'Comfort-focused',
+
+  // Interests
+  'Adventure',
+  'Sightseeing',
+  'Food-focused',
+  'Culture & history',
+  'Nature & outdoors',
+
+  // Group values
+  'Clean & organized',
+  'Punctual',
+  'Respectful vibes',
+  'Non-smokers',
+  'Alcohol-friendly',
+];

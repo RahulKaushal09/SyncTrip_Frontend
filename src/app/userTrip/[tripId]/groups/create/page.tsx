@@ -6,19 +6,11 @@ import { toast } from 'react-hot-toast';
 import { CreateGroupPayload } from '@/utils/group/group.types';
 import { GroupApiServices } from '@/utils/group/group.api';
 import TripServices from '@/utils/trip.utils';
-import { userTripFields } from '@/constants';
+import { TagOptionGroupTrip, userTripFields } from '@/constants';
 import { useLogin } from '@/components/providers/LoginProvider';
 import { set } from 'lodash';
 import { useLoader } from '@/components/providers/LoaderContext';
 
-const TAG_OPTIONS = [
-    'Budget-friendly',
-    'Backpacking',
-    'Relaxed',
-    'Adventure',
-    'Sightseeing',
-    'Food-focused',
-];
 
 export default function CreateGroupPage() {
     const { tripId } = useParams() as { tripId: string };
@@ -89,7 +81,7 @@ export default function CreateGroupPage() {
                 setGroupName(`${tripDetails.budget ? `$${tripDetails.budget} trip` : 'Trip'} to ${locationName} – ${monthString}`);
                 setDescription(`Group for travelers going to ${locationName} in ${monthString}. Join to connect, plan, and share the experience!`);
                 user?.travelStyles?.forEach(style => {
-                    if (TAG_OPTIONS.includes(style) && tags.length < 3) {
+                    if (TagOptionGroupTrip.includes(style) && tags.length < 3) {
                         setTags(prevTags => [...prevTags, style]);
                     }
                 });
@@ -200,7 +192,7 @@ export default function CreateGroupPage() {
                     Tags (up to 3)
                 </label>
                 <div className="flex flex-wrap gap-2">
-                    {TAG_OPTIONS.map(tag => (
+                    {TagOptionGroupTrip.map(tag => (
                         <button
                             key={tag}
                             onClick={() => toggleTag(tag)}

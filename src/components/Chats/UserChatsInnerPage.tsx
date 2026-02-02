@@ -428,7 +428,7 @@ export default function ChatsPageInner() {
                     {/* Chat window */}
                     <div className={`w-full md:w-2/3 ${!chatId ? "hidden md:block" : "block"}`}>
                         {chatId ? (
-                            <ChatWindow chatId={chatId} currentUserId={user ? user.id : "0"} />
+                            <ChatWindow chatId={chatId} currentUserId={user ? user.id : "0"} chat={activeChat} />
                         ) : (
                             <div className="p-8 text-center text-gray-500">Select a chat to start messaging</div>
                         )}

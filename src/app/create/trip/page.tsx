@@ -227,14 +227,15 @@ function CreateTripContent() {
 
       const tripId = res.id;
 
-      toast.success('Trip created!');
+      // toast.success('Trip created!');
       router.replace(`/userTrip/${tripId}/travel-mode`);
 
     } catch (err) {
       console.error(err);
+      hideLoader();
       toast.error('Something went wrong');
     } finally {
-      hideLoader();
+      // hideLoader();
       setIsPublishing(false);
     }
   }, [

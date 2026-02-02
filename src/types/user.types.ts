@@ -47,6 +47,16 @@ export interface ExtendedUser extends User {
   };
   languages_array?: string[];
 }
+// below is used in profile page
+export interface ExtendedUser extends User {
+  persona?: string[]; // Maps to travelerType/travelStyles in UI
+  viewCount?: number;
+  rating?: number;
+  socialMedias?: {
+    instagram?: string;
+  };
+  languages_array?: string[];
+}
 
 // export interface UserProfile extends User {
 //     bio?: string;

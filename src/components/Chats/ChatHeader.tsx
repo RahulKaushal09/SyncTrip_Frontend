@@ -49,8 +49,8 @@ export default function ChatHeader({
     : null;
 
   const groupUsers = isGroup
-    ? (chat.users || [])
-        .filter((u) => (u as ChatUser).id !== user?.id)
+    ? (chat.users as ChatUser[] || [])
+        // .filter((u) => (u as ChatUser).id !== user?.id)
         .slice(0, 3)
     : [];
 
