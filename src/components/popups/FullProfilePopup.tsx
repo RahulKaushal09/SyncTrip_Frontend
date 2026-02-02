@@ -338,9 +338,10 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
                 setError(response.message || 'Profile completion failed');
                 toast.error(response.message || 'Profile completion failed');
             }
-        } catch (error: any) {
-            setError(error.message || 'An error occurred.');
-            toast.error(error.message || 'An error occurred.');
+        } catch (error: unknown) {
+            console.error("Profile completion error:", error);
+            setError( 'An error occurred.');
+            toast.error( 'An error occurred.');
         } finally {
             setIsLoading(false);
             hideLoader();
