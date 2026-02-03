@@ -205,7 +205,8 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
             if (!form.travelGoal) return "Please select your travel goal";
             if (form.languages.length === 0) return "Please select minimum one language you understand and speak";
         } else if (step === 2) {
-            if (!form.profilePicture && user.profile_picture?.length === 0) return "Profile picture is required";
+            const anyValidImage = form.profilePicture || (user.profile_picture && user.profile_picture.length > 0) || user.profile_picture?.map(pic => pic != "").includes(true);
+            if (anyValidImage) return "Profile picture is required";
         }
         else if (step === 3) {
             if (!form.travelStyles || form.travelStyles.length === 0) return "Please select at least one travel style.";
