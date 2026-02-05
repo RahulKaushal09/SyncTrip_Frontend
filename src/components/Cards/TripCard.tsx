@@ -40,7 +40,7 @@ const TripCard: React.FC<Props> = ({ trip, onPressCard, onPressChats, onPressMat
             <Users2 size={16} color="var(--primary-1)" />
             {trip.groupContext?.membersCount}/ {trip.groupContext?.maxMembers} members
           </div>
-        ): null}
+        ) : null}
         {trip.groupContext?.isInGroup ? (
           <div style={cardStyles.chipbox}>
             <Users2 size={16} color="var(--primary-1)" />
@@ -85,6 +85,8 @@ export default React.memo(TripCard);
 /* Styles (const) */
 const cardStyles: { [k: string]: React.CSSProperties } = {
   card: {
+    width: "100%",
+    boxSizing: "border-box",
     backgroundColor: "var(--card-bg, #fff)",
     borderRadius: 14,
     margin: "16px 0",

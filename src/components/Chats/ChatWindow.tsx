@@ -9,6 +9,7 @@ import { StorageUtils } from "@/utils";
 import "../../../styles/chats/chats.css";
 import { debug } from "console";
 import { getSocket } from "@/utils/socket";
+import ChatInstructions from "./ChatInstructions";
 
 type Props = {
   chatId: string;
@@ -21,7 +22,6 @@ export default function ChatWindow({ chatId, currentUserId, chat }: Props) {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [remoteTyping, setRemoteTyping] = useState<{ userId: string } | null>(null);
-
   const msgsRef = useRef<HTMLDivElement | null>(null);
   const composerRef = useRef<HTMLDivElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -45,12 +45,12 @@ export default function ChatWindow({ chatId, currentUserId, chat }: Props) {
   //   socketRef.current = socket;
 
   //   // on connect: if chatId already present, join it (avoids join-before-connect race)
-  //   socket.on("connect", () => {
-  //     console.log("socket connected", socket.id);
-  //     if (chatId) {
-  //       socket.emit("join_chat", chatId);
-  //     }
-  //   });
+  // socket.on("connect", () => {
+  //   console.log("socket connected", socket.id);
+  //   if (chatId) {
+  //     socket.emit("join_chat", chatId);
+  //   }
+  // });
 
   //   socket.on("connect_error", (err: unknown) => {
   //     console.error("socket connect_error", err);
@@ -95,42 +95,55 @@ export default function ChatWindow({ chatId, currentUserId, chat }: Props) {
   //   };
   // }, [chatId, currentUserId]);  //
   useEffect(() => {
-  if (typeof window === "undefined") return;
+    if (typeof window === "undefined") return;
 
-  const socket = getSocket();
-  if (!socket) return;
+    const socket = getSocket();
+    if (!socket) console.error("Socket is null");
+    if (!socket) return;
 
-  socketRef.current = socket;
+    // on connect: if chatId already present, join it (avoids join-before-connect race)
+    socket.on("connect", () => {
+      console.log("socket connected", socket.id);
+      if (chatId) {
+        socket.emit("join_chat", chatId);
+      }
+    });
 
-  const onReceiveMessage = (message: Message) => {
-    if (message.chat !== chatId) return;
-    if (lastMessageIds.current.has(message.id)) return;
+    socket.on("connect_error", (err: unknown) => {
+      console.error("socket connect_error", err);
+    });
 
-    lastMessageIds.current.add(message.id);
-    setMessages(prev => [...prev, message]);
-    setTimeout(scrollToBottom, 40);
-  };
+    socketRef.current = socket;
 
-  socket.on("receive_message", onReceiveMessage);
+    const onReceiveMessage = (message: Message) => {
+      if (message.chat !== chatId) return;
+      if (lastMessageIds.current.has(message.id)) return;
 
-  socket.on("typing", ({ chatId: cId, userId }) => {
-    if (cId === chatId && userId !== currentUserId) {
-      setRemoteTyping({ userId });
-    }
-  });
+      lastMessageIds.current.add(message.id);
+      setMessages(prev => [...prev, message]);
+      setTimeout(scrollToBottom, 40);
+    };
 
-  socket.on("stop_typing", ({ chatId: cId, userId }) => {
-    if (cId === chatId && userId !== currentUserId) {
-      setRemoteTyping(null);
-    }
-  });
+    socket.on("receive_message", onReceiveMessage);
 
-  return () => {
-    socket.off("receive_message", onReceiveMessage);
-    socket.off("typing");
-    socket.off("stop_typing");
-  };
-}, [chatId, currentUserId]);
+    socket.on("typing", ({ chatId: cId, userId }) => {
+      if (cId === chatId && userId !== currentUserId) {
+        setRemoteTyping({ userId });
+      }
+    });
+
+    socket.on("stop_typing", ({ chatId: cId, userId }) => {
+      if (cId === chatId && userId !== currentUserId) {
+        setRemoteTyping(null);
+      }
+    });
+
+    return () => {
+      socket.off("receive_message", onReceiveMessage);
+      socket.off("typing");
+      socket.off("stop_typing");
+    };
+  }, [chatId, currentUserId]);
 
   /* ------------------ Join/leave chat when chatId changes ------------------ */
   useEffect(() => {
@@ -305,6 +318,7 @@ export default function ChatWindow({ chatId, currentUserId, chat }: Props) {
   /* ------------------ Render ------------------ */
   return (
     <div className="flex flex-col h-[calc(100vh-64px)]">
+      {chat && chat.isGroupChat && <ChatInstructions />}
       {/* messages area */}
       <div
         ref={msgsRef}
@@ -348,9 +362,11 @@ export default function ChatWindow({ chatId, currentUserId, chat }: Props) {
       </div>
 
       {/* typing indicator (simple) */}
-      {remoteTyping && (
-        <div className="px-4 py-1 text-xs text-gray-500">{`typing...`}</div>
-      )}
+      {
+        remoteTyping && (
+          <div className="px-4 py-1 text-xs text-gray-500">{`typing...`}</div>
+        )
+      }
 
       {/* composer */}
       <div
@@ -392,6 +408,6 @@ export default function ChatWindow({ chatId, currentUserId, chat }: Props) {
           </button>
         </div>
       </div>
-    </div>
+    </div >
   );
 }

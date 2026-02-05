@@ -313,6 +313,7 @@ export default function UserProfilePage() {
                     {profileUser.name}
                     {profileUser.rating ? <span className="flex items-center text-xs bg-yellow-100 text-yellow-700 px-2 py-0.5 ml-1 rounded-full"><Star size={10} className="fill-yellow-700 mr-1" /> {profileUser.rating}</span> : null}
                   </h1>
+                  {profileUser.bio && (<p className="text-[var(--secondary-1)] mb-2 text-sm">{profileUser.bio}</p>)}
                   {profileUser.travelGoal && (
                     <div className="mt-2 mb-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--primary-5)] border border-[var(--primary-2)]/30 text-[var(--secondary-1)] text-xs font-medium">
                       <Compass size={14} className="text-[var(--primary-hover)]" />

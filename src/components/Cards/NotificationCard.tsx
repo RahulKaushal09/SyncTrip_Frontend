@@ -14,6 +14,9 @@ export default function NotificationCard({ notif }) {
   if (clickAction?.type === "OPEN_CHAT") {
     href = `/chats?chatId=${clickAction.payload.conversationId}`;
   }
+  if (clickAction?.type === "GROUP_DETAILS") {
+    href = `/userTrip/${clickAction.payload.tripId}/groups/${clickAction.payload.groupTripId}`;
+  }
   // if (clickAction?.type === "OPEN_PROFILE") {
   //   href = `/profile/${clickAction.payload.profileId}`;
   // }

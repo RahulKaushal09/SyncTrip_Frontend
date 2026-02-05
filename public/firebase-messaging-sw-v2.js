@@ -46,12 +46,17 @@ self.addEventListener("notificationclick", (event) => {
   }
 
   let targetUrl = "/notifications"; // fallback: go to notifications page
-
+  debugger;
   if (clickAction) {
     switch (clickAction.type) {
       case "OPEN_CHAT":
         if (clickAction.payload.conversationId) {
           targetUrl = `/chats?chatId=${clickAction.payload.conversationId}`;
+        }
+        break;
+      case "GROUP_DETAILS":
+        if (clickAction.payload.groupTripId && clickAction.payload.tripId) {
+          targetUrl = `/userTrip/${clickAction.payload.tripId}/groups/${clickAction.payload.groupTripId}`;
         }
         break;
       case "OPEN_PROFILE":
