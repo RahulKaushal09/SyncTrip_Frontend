@@ -38,6 +38,13 @@
 
 }
 
+@media screen and (max-width:990px) {
+    .blogCategories-btn.first {
+    margin-left: 1rem;
+}
+}
+
+
 .blogCategories-btn:hover {
     background-color: var(--secondary-1);
     color: white;

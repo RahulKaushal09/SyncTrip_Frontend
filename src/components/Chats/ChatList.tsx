@@ -87,8 +87,9 @@ export default function ChatList({
           : (otherUser as ChatUser)?.name || "Chat";
 
         // ---------- SUBTITLE ----------
+        console.log(c);
         const subtitle =
-          c.latestMessage?.content ||
+          c.latestMessageText ||
           (isGroup
             ? `Group • ${(c.users?.length || 1)} members`
             : "Say hi 👋");

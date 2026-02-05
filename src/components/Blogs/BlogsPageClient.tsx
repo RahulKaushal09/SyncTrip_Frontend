@@ -16,34 +16,36 @@ const BlogsPageClient = ({ blogs }: BlogsPageClientProps) => {
   return (
     <>
       <BlogCategories blogs={blogs} onFilterChange={setFilteredBlogs} />
-      <div className="blog-header">
-        <h2>Latest Travel Stories</h2>
-        <p>
-          Discover inspiring travel stories, destination guides, and insider
-          tips from experienced travelers around the world
-        </p>
-      </div>
-      <div className="blog-grid">
-        {filteredBlogs.map((blog) => (
-          <BlogCard
-            key={blog.id}
-            id={blog.id}
-            slug={blog.slug}
-            image={blog.featuredImage}
-            title={blog.title}
-            excerpt={blog.seo?.seo_description || ""}
-            author={blog.author}
-            date={new Date(blog.createdAt).toLocaleDateString("en-US", {
-              year: "numeric",
-              month: "short",
-              day: "numeric",
-            })}
-            readTime={blog.readTime}
-            category={blog.category}
-            rating={blog.rating}
-            featured={blog.featured}
-          />
-        ))}
+      <div className="blogPageClient-section">
+        <div className="blog-header">
+          <h2>Latest Travel Stories</h2>
+          <p>
+            Discover inspiring travel stories, destination guides, and insider
+            tips from experienced travelers around the world
+          </p>
+        </div>
+        <div className="blog-grid">
+          {filteredBlogs.map((blog) => (
+            <BlogCard
+              key={blog.id}
+              id={blog.id}
+              slug={blog.slug}
+              image={blog.featuredImage}
+              title={blog.title}
+              excerpt={blog.seo?.seo_description || ""}
+              author={blog.author}
+              date={new Date(blog.createdAt).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+              })}
+              readTime={blog.readTime}
+              category={blog.category}
+              rating={blog.rating}
+              featured={blog.featured}
+            />
+          ))}
+        </div>
       </div>
     </>
   );

@@ -95,9 +95,10 @@
   padding: var(--container-padding-y) var(--container-padding-x);
   max-width: -webkit-fill-available !important;
 }
-.paddingTopAndSide{
+
+.paddingTopAndSide {
   padding: 20px var(--container-padding-x) 0px;
-    max-width: -webkit-fill-available !important;
+  max-width: -webkit-fill-available !important;
 
 }
 
@@ -226,7 +227,8 @@
   border-radius: 4px;
   transition: background 0.2s;
 }
-.btn-secondary-border{
+
+.btn-secondary-border {
   background: var(--background);
   color: var(--secondary-1) !important;
   border: 1px solid var(--secondary-1) !important;
@@ -234,6 +236,7 @@
   border-radius: 4px;
   transition: background 0.2s;
 }
+
 /* .btn-secondary-text{
   color: white;
   border-radius: 4px;
@@ -242,10 +245,11 @@
 
 .btn-secondary:hover {
   background: var(--secondary-5);
-  color:var(--secondary-1) !important;
-  
+  color: var(--secondary-1) !important;
+
 }
-.btn-secondary-outline{
+
+.btn-secondary-outline {
   opacity: 1;
   border: 1px solid var(--secondary-1) !important;
   background: var(--white);
@@ -558,7 +562,7 @@ input {
   display: inline-block;
   padding: 10px 20px !important;
   /* Vertical and horizontal padding for button height and width */
-  border: none ;
+  border: none;
   /* Remove default border */
   border-radius: 9px !important;
   /* Rounded corners */
@@ -638,6 +642,7 @@ input {
   background-color: var(--primary-1) !important;
   color: #fff !important;
 }
+
 .btn-primary:hover {
   border: 1px solid var(--primary-1) !important;
   color: var(--primary-1) !important;
@@ -1157,12 +1162,13 @@ input {
   animation: m-float 4s ease-in-out infinite;
 }
 
-ul{
-  list-style:disc !important;
-      padding-left: 2rem !important;
+ul {
+  list-style: disc !important;
+  padding-left: 2rem !important;
 }
-.ul-withNoListStyle{
-  list-style:none !important;
+
+.ul-withNoListStyle {
+  list-style: none !important;
   padding-left: 0rem !important;
 }
 
@@ -1251,9 +1257,9 @@ ul{
 }
 
 
-.chatsPage{
-  position:fixed;
-  top:0;
+.chatsPage {
+  position: fixed;
+  top: 0;
   width: 100%;
 }
 
@@ -1262,16 +1268,17 @@ ul{
  
     width: -webkit-fill-available;
 } */
-.activityTagRow{
+.activityTagRow {
   width: max-content;
 }
 
 @media (min-width: 600px) {
-.rightSideActivityRow{
-  right:10px;
+  .rightSideActivityRow {
+    right: 10px;
 
+  }
 }
-}
+
 @media (max-width: 600px) {
   .infoSwitchButtons {
     /* Add any specific styles for the InfoSwitchButtons component here */
@@ -1283,9 +1290,10 @@ ul{
     margin-left: -40px;
     padding-left: 40px;
   }
-  .rightSideActivityRow{
-  left:10px;
-}
+
+  .rightSideActivityRow {
+    left: 10px;
+  }
 }
 
 
@@ -1315,7 +1323,7 @@ ul{
   border-radius: 16px;
   max-width: 90%;
   text-align: center;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
 }
 
 .notif-prompt-card h3 {

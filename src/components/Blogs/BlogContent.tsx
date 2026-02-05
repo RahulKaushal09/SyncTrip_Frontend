@@ -30,7 +30,7 @@ const BlogContent = ({ blog }: BlogContentProps) => {
                     className="blogContent-hero-image"
                 />
                 <div className="blogContent-hero-overlay" />
-                <div className="blogContent-category-badge">{blog.category}</div>
+                <div className="blogContent-category-badge select-none">{blog.category}</div>
             </div>
 
             {/* Article Header */}
@@ -38,11 +38,11 @@ const BlogContent = ({ blog }: BlogContentProps) => {
                 <h1 className="blogContent-title">{blog.title}</h1>
 
                 <div className="blogContent-meta">
-                    <div className="blogContent-meta-item">
+                    <div className="blogContent-meta-item select-none">
                         <Icon name={ICONS_CLASS.personIcon.iconName} alt={ICONS_CLASS.personIcon.alt} className="blogContent-icon" />
                         <span>{blog.author}</span>
                     </div>
-                    <div className="blogContent-meta-item">
+                    <div className="blogContent-meta-item select-none">
                         <Icon name={ICONS_CLASS.calendarIcon.iconName} alt={ICONS_CLASS.calendarIcon.alt} className="blogContent-icon" />
                         <span>
                             {new Date(blog.createdAt).toLocaleDateString("en-US", {
@@ -52,18 +52,18 @@ const BlogContent = ({ blog }: BlogContentProps) => {
                             })}
                         </span>
                     </div>
-                    <div className="blogContent-meta-item">
+                    <div className="blogContent-meta-item select-none">
                         <Icon name={ICONS_CLASS.clockIcon.iconName} alt={ICONS_CLASS.clockIcon.alt} className="blogContent-icon" />
                         <span>{blog.readTime}</span>
                     </div>
-                    <button onClick={handleShare} className="blogContent-share-btn">
+                    <button onClick={handleShare} className="blogContent-share-btn select-none">
                         <Icon name={ICONS_CLASS.shareIcon.iconName} alt={ICONS_CLASS.shareIcon.alt} className="blogContent-icon" />
                         <span>Share</span>
                     </button>
                 </div>
 
                 {/* Tags */}
-                <div className="blogContent-tags">
+                <div className="blogContent-tags select-none">
                     {blog.filterTags.map((tag, index) => (
                         <span key={index} className="blogContent-tag">
                             <Icon name={ICONS_CLASS.tagsIcon.iconName} alt={ICONS_CLASS.tagsIcon.alt} className="blogContent-icon-small" />

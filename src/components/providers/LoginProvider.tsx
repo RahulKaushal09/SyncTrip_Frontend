@@ -204,7 +204,7 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
 
     const updateLastStepOfCompleteProfile = useCallback((step: number) => {
         const existingStep = StorageUtils.getItem<number>(STORAGE_KEYS.COMPLETE_PROFILE_STEP) || 1;
-        if(step <= existingStep) return;
+        if (step <= existingStep) return;
         StorageUtils.setItem<number>(STORAGE_KEYS.COMPLETE_PROFILE_STEP, step);
         console.log("Updated COMPLETE_PROFILE_STEP in storage to:", step);
         setLastStepOfCompleteProfile(step);

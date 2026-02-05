@@ -89,9 +89,9 @@ export default async function Home() {
     ...post,
     themeClass: getThemeClass(post.filterTags?.[0] || ""),
     liked: false,
-    likes: Math.floor(Math.random() * 900) + 100,
-    comments: Math.floor(Math.random() * 50) + 5,
-    shares: Math.floor(Math.random() * 20) + 2
+    // likes: Math.floor(Math.random() * 900) + 100,
+    // comments: Math.floor(Math.random() * 50) + 5,
+    // shares: Math.floor(Math.random() * 20) + 2
   }));
   const uniqueTags = Array.from(
     new Set(

@@ -10,6 +10,12 @@ import { UUID } from "@/types";
 export interface JoinGroupResponse {
     chatId: UUID;
 }
+
+export interface GroupDetailsResponse {
+    group: GroupDetails;
+    // tripId: UUID;
+}
+
 export class GroupApiServices {
 
     static async getGroupsByLocationAndMonth(
@@ -47,9 +53,9 @@ export class GroupApiServices {
 
     static async getGroupDetails(
         groupTripId: string
-    ): Promise<GroupDetails> {
+    ): Promise<GroupDetailsResponse> {
         const res = await apiClient.get(`/groups/${groupTripId}`);
-        return res.data.group;
+        return res.data;
     };
 
     /* ---------- MY GROUPS ---------- */

@@ -129,73 +129,76 @@ export interface BlogPost {
 
 
 export type DayWeather = {
-  date: string; // ISO YYYY-MM-DD
-  temp: number; // main temperature (°C)
-  minTemp?: number;
-  maxTemp?: number;
-  description?: string; // e.g. 'Snowy'
-  cloud?: number; // %
-  wind_kmh?: number; // km/h
-  sunrise?: string; // '06:03'
-  sunset?: string; // '17:30'
-  precipitation?: number; // %
-  icon?: string; // emoji or className for icon
-  available?: boolean; // is data available for this day
+    date: string; // ISO YYYY-MM-DD
+    temp: number; // main temperature (°C)
+    minTemp?: number;
+    maxTemp?: number;
+    description?: string; // e.g. 'Snowy'
+    cloud?: number; // %
+    wind_kmh?: number; // km/h
+    sunrise?: string; // '06:03'
+    sunset?: string; // '17:30'
+    precipitation?: number; // %
+    icon?: string; // emoji or className for icon
+    available?: boolean; // is data available for this day
 };
 
 
 export interface ChatUser {
-  id: string;
-  name: string;
-  email?: string;
-  profile_picture?: string[];
+    id: string;
+    name: string;
+    email?: string;
+    profile_picture?: string[];
 }
 
 export interface LatestMessageSender {
-  id: string;
-  name: string;
-  profile_picture?: string;
+    id: string;
+    name: string;
+    profile_picture?: string;
 }
 
 export interface LatestMessage {
-  id: string;
-  content: string;
-  sender: LatestMessageSender;
-  readBy?: string[];
-  createdAt: string;
-  updatedAt: string;
+    id: string;
+    content: string;
+    sender: LatestMessageSender;
+    readBy?: string[];
+    createdAt: string;
+    updatedAt: string;
 }
 
 
 export interface Chat {
-  id: string;
-  tripMap: {
-    userId: string;
-    tripId: string;
-  }[];
-  matchId?: string;
-  isMatchChat: boolean;
-  isGroupChat: boolean;
-  groupTripId?: string;
-  users: ChatUser[] | string[];
-  latestMessage?: LatestMessage;
-  groupAdmin?: ChatUser;
-  chatName: string;
-  createdAt: string;
-  updatedAt: string;
-  unreadCount?: number;
+    id: string;
+    tripMap: {
+        userId: string;
+        tripId: string;
+    }[];
+    matchId?: string;
+    isMatchChat: boolean;
+    isGroupChat: boolean;
+    groupTripId?: string;
+    users: ChatUser[] | string[];
+    latestMessage?: LatestMessage;
+    latestMessageText?: string;
+    latestMessageAt?: string;
+    latestMessageSender?: string;
+    groupAdmin?: ChatUser;
+    chatName: string;
+    createdAt: string;
+    updatedAt: string;
+    unreadCount?: number;
 }
 
 export interface Message {
-  id: string;
-  chat: string;
-  sender: string;
-  content: string;
-  readBy: string[];
-  createdAt: string;
-  updatedAt: string;
+    id: string;
+    chat: string;
+    sender: string;
+    content: string;
+    readBy: string[];
+    createdAt: string;
+    updatedAt: string;
 }
 
 export interface ChatWithMessages extends Chat {
-  messages: Message[];
+    messages: Message[];
 }

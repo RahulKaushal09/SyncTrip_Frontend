@@ -49,10 +49,10 @@ const BlogCategories = ({ blogs, onFilterChange }: Props) => {
     <section className="blogCategories-section">
       <div className="blogCategories-container">
         <div className="blogCategories-list">
-          {categories.map((category) => (
+          {categories.map((category,i) => (
             <button
               key={category.name}
-              className={`blogCategories-btn ${category.active ? "active" : ""}`}
+              className={`blogCategories-btn ${i === 0 ? "first" : ""} ${category.active ? "active" : ""}`}
               onClick={() => handleFilterClick(category.name)}
             >
               <span className="blogCategories-name">{category.name}</span>

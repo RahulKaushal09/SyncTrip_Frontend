@@ -670,7 +670,7 @@ export default function MatchingPage() {
                                 aria-label={`Profile ${current.userSnapshot.name}`}
                                 tabIndex={0}
                             >
-                                <img src={current.userSnapshot.profile_picture[0]} alt={current.userSnapshot.name} />
+                                <img src={current.userSnapshot?.profile_picture?.[0]} alt={current.userSnapshot.name} />
                                 <div className="MatchingCardMeta">
                                     <div className='MatchingCardBottom'>
                                         <div className="MatchingCardTitle">
@@ -763,7 +763,7 @@ export default function MatchingPage() {
                                                 ))}
                                             {current.userSnapshot.profile_picture.filter((url: string) => url.includes('synctrip.in')).length === 0 && (
                                                 <img
-                                                    src={current.userSnapshot.profile_picture[0]}
+                                                    src={current.userSnapshot?.profile_picture?.[0]}
                                                     alt={current.userSnapshot.name}
                                                     style={{
                                                         width: '100px',
