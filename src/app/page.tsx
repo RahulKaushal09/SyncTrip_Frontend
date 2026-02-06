@@ -14,6 +14,9 @@ import { BlogPost } from "@/types";
 import { Metadata } from "next";
 import Script from "next/script";
 import ActiveDestinations from "@/components/Home_new/ActiveDestinations";
+import ChoiceSection from "@/components/Home_new/ChoiceSection";
+import DownloadPopup from "@/components/popups/DownloadAppPopup";
+import SwipeDemo from "@/components/Home_new/SwipeDemo";
 
 // export const metadata: Metadata = {
 //   title: 'SyncTrip — Group Travel & Travel Buddies in India',
@@ -156,7 +159,10 @@ export default async function Home() {
           }),
         }}
       />
+      {/* <DownloadPopup /> */}
       <HomeHeroSection />
+      {/* <SwipeDemo /> */}
+      <ChoiceSection />
       <FeaturesSection />
       <ActiveDestinations />
       {/* <ExploreNearbySection /> */}

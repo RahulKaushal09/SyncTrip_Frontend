@@ -1,76 +1,145 @@
-/* .HomePage {
-    margin: 0 40px;
-} */
-/* .homeHeroSection {
-  height: 100vh;
-  margin-left: -60px;
-  margin-right: -60px;
-  margin-top: -80px;
-  background-size: cover;
-  background-position: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-} */
-.rowHeroSection{
-    justify-content: space-between;
-}
-
+/* ============================================================
+   Home Hero Section Base
+   ============================================================ */
 .homeHeroSection {
   position: relative;
   height: 100vh;
   margin: 0;
-   /* margin-left: -60px;
-  margin-right: -60px; */
   margin-top: -80px;
   background-size: cover;
   background-position: center;
   transition: background-image 0.8s ease-in-out;
+  overflow-x: hidden;
 }
-
 
 .heroOverlay {
   width: 100%;
   height: 100%;
-  /* background: linear-gradient(
-    180deg,
-    rgba(0, 0, 0, 0.5) 0%,
-    rgba(0, 0, 0, 0.5) 100%
-  ); */
   display: flex;
   align-items: center;
-    position: relative; /* anchor for absolute children */
-
+  position: relative;
+  justify-content: center;
 }
 
 .rowHeroSection {
   width: 100%;
   padding: 0 10%;
+  align-items: center !important;
+  justify-content: space-between;
+}
+
+.heroText {
+  position: relative;
+  z-index: 5;
+}
+
+.hero-badge {
+  width: fit-content;
+}
+
+.heroBtnsSection {
+  margin-top: 20px;
+}
+
+/* ============================================================
+   LARGE IMAGE COLLAGE STACK (Updated Sizes)
+   ============================================================ */
+.group-collage-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
   align-items: center;
+  /* Increased height to accommodate larger cards */
+  height: 650px;
+  width: 100%;
 }
-.heroBtnsSection{
-    margin-top:20px;
+
+.collage-card {
+  position: absolute;
+  border-radius: 24px;
+  overflow: hidden;
+  background: var(--white);
+  /* Added GPU acceleration for smoother large-card movements */
+  will-change: transform;
+  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
+
+/* The Long Details Image (Back) - SCALED UP */
+.collage-card.details-back {
+  width: 380px;
+  /* Increased from 300px */
+  height: auto;
+  max-height: 580px;
+  z-index: 2;
+  border: 4px solid var(--white);
+  /* Thicker border for better "pop" */
+  transform: rotate(-3deg);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+}
+
+/* The Members Card (Front) - SCALED UP */
+.collage-card.members-front {
+  width: 300px;
+  /* Increased from 260px */
+  bottom: 20px;
+  right: -40px;
+  /* Adjusted to overlap correctly at larger size */
+  z-index: 4;
+  border: 10px solid var(--white);
+  transform: rotate(4deg);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.18);
+}
+
+.collage-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Floating Stats Badge relative to collage */
+.floating-stat-badge {
+  position: absolute;
+  top: 10%;
+  left: -20px;
+  z-index: 10;
+  padding: 12px 20px;
+  border-radius: 14px;
+  background: var(--white);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+/* Interaction: Spreading the cards on hover */
+.group-collage-wrapper:hover .details-back {
+  transform: rotate(-5deg) translateX(-15px);
+}
+
+.group-collage-wrapper:hover .members-front {
+  transform: rotate(6deg) translateY(-10px) translateX(15px);
+}
+
+/* ============================================================
+   FLOATING ICONS & ASSETS
+   ============================================================ */
 .heroVectorBottom {
   position: absolute;
   bottom: -1px;
   left: 0;
   right: 0;
   background: url("/images/heroVectorBottom.png") no-repeat center bottom;
-  background-size: cover; /* or contain if you don't want cropping */
-  height: 120px; /* adjust to your vector image height */
-  pointer-events: none; /* so it doesn’t block clicks */
+  background-size: cover;
+  height: 120px;
+  pointer-events: none;
 }
-
 
 .floating-icon-hero {
   position: absolute;
-  z-index:2;
+  z-index: 2;
   animation: floatIcon 6s ease-in-out infinite;
 }
 
-/* Icon circle wrapper */
 .icon-wrapper-hero {
   width: 3rem;
   height: 3rem;
@@ -81,105 +150,290 @@
   opacity: 0.2;
 }
 
-/* Floating animation keyframes */
-@keyframes floatIcon {
-  0% {
-    transform: translateY(0) rotate(0deg) scale(1);
-  }
-  25% {
-    transform: translateY(-15px) rotate(8deg) scale(1.05);
-  }
-  50% {
-    transform: translateY(0) rotate(-8deg) scale(1);
-  }
-  75% {
-    transform: translateY(-10px) rotate(5deg) scale(1.05);
-  }
-  100% {
-    transform: translateY(0) rotate(0deg) scale(1);
-  }
+/* --- Bento Grid Layout --- */
+.feature-bento-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 280px;
+  gap: 24px;
 }
 
-
-@media screen and (max-width: 1050px) and (min-width: 990px) {
-  .homeHeroSection {
-
-    /* margin-left: -80px;
-    
-    margin-right: -80px; */
-  }
-  
-
-}@media screen and (max-width: 1000px) and (min-width: 768px) {
-  /* .heroText h1{
-    width:50%;
-  } */
-  .heroText h3{
-    font-size:24px;
-  }
-  
+.bento-item {
+  border-radius: 32px;
+  padding: 40px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.3s ease;
 }
 
-@media screen and (max-width:1000px){
-  .heroText{
-    padding-left: 20px;
-  }
-  /* .heroText h1{
-    font-size:50px !important;
-  } */
-  .heroText .homebtnprimary{
-    margin-bottom:20px;
-  }
-  
+.bento-item:hover {
+  transform: translateY(-5px);
 }
 
-@media screen and (max-width:800px) {
-  .heroBtnsSection{
-    flex-direction: column;
-  }
+.bento-item.large {
+  grid-column: span 2;
 }
 
-.HomePageMoreExploreButtonCss {
-  border: 1px solid #3abef5;
-  color: #3abef5;
-  background-color: transparent;
-  padding: 0.75rem 2rem; /* py-3 px-8 */
+.bento-item.small {
+  grid-column: span 1;
+}
+
+.icon-badge {
+  width: 50px;
+  height: 50px;
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem; /* gap-2 */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+}
+
+/* --- Enhanced Image Spread Container --- */
+.image-spread-container {
+  position: relative;
+  height: 500px;
+  /* Increased from 400px */
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
-  border-radius:8px;
-  transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
-.HomePageMoreExploreButtonCss:hover {
-  background-color: #f2faff;
+.spread-card {
+  position: absolute;
+  width: 260px;
+  /* Increased from 200px */
+  height: 360px;
+  /* Increased from 280px */
+  border-radius: 24px;
+  overflow: hidden;
+  background: var(--white);
+  border: 8px solid var(--white);
+  /* Thicker border for larger scale */
+  transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+  will-change: transform, opacity;
 }
 
-.HomePageMoreExploreButtonCss:active {
-  transform: scale(0.97);
+.spread-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
+
+/* --- Initial State (Tidy Stack) --- */
+.card-1 {
+  z-index: 3;
+  transform: rotate(-2deg);
+}
+
+.card-2 {
+  z-index: 2;
+  transform: rotate(0deg);
+}
+
+.card-3 {
+  z-index: 1;
+  transform: rotate(2deg);
+}
+
+/* --- Hover State: Larger Spread Logic --- */
+
+/* Left Side Spread - Distances increased for larger cards */
+.left-spread:hover .card-1 {
+  transform: rotate(-6deg) translateX(-60px) translateY(-15px);
+}
+
+.left-spread:hover .card-2 {
+  transform: rotate(12deg) translateX(70px) translateY(20px);
+}
+
+.left-spread:hover .card-3 {
+  transform: rotate(-20deg) translateX(-150px) translateY(50px);
+}
+
+/* Right Side Spread - Distances increased for larger cards */
+.right-spread:hover .card-1 {
+  transform: rotate(6deg) translateX(60px) translateY(-15px);
+}
+
+.right-spread:hover .card-2 {
+  transform: rotate(-12deg) translateX(-70px) translateY(20px);
+}
+
+.right-spread:hover .card-3 {
+  transform: rotate(20deg) translateX(150px) translateY(50px);
+}
+
+/* --- Mobile View: Proportional Scaling --- */
+@media screen and (max-width: 991px) {
+  .image-spread-container {
+    height: 420px;
+  }
+
+  .spread-card {
+    width: 200px;
+    /* Bigger on mobile too */
+    height: 280px;
+  }
+
+  /* Adjusted fixed spread for mobile */
+  .left-spread .card-1 {
+    transform: rotate(-5deg) translateX(-40px);
+  }
+
+  .left-spread .card-2 {
+    transform: rotate(8deg) translateX(45px) translateY(20px);
+  }
+
+  .left-spread .card-3 {
+    transform: rotate(-12deg) translateX(-100px) translateY(40px);
+  }
+
+  .right-spread .card-1 {
+    transform: rotate(5deg) translateX(40px);
+  }
+
+  .right-spread .card-2 {
+    transform: rotate(-8deg) translateX(-45px) translateY(20px);
+  }
+
+  .right-spread .card-3 {
+    transform: rotate(12deg) translateX(100px) translateY(40px);
+  }
+}
+
+.mb-100 {
+  margin-bottom: 100px;
+}
+
+/* --- Responsive Overrides --- */
+@media screen and (max-width: 1200px) {
+  .feature-bento-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media screen and (max-width: 768px) {
-  .heroOverlay { 
-    align-items: normal;
-    padding-top:100px;
+  .feature-bento-grid {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .bento-item {
+    height: auto;
+    padding: 30px;
+  }
+
+  .bento-visual {
+    display: none;
+  }
+}
+
+@keyframes floatIcon {
+
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+
+  25% {
+    transform: translateY(-15px) rotate(8deg) scale(1.05);
+  }
+
+  50% {
+    transform: translateY(0) rotate(-8deg) scale(1);
+  }
+
+  75% {
+    transform: translateY(-10px) rotate(5deg) scale(1.05);
+  }
+}
+
+/* ============================================================
+   RESPONSIVE OVERRIDES
+   ============================================================ */
+
+/* Intermediate Tablet/Laptop View (prevents squishing) */
+@media screen and (max-width: 1200px) {
+  .collage-card.details-back {
+    width: 320px;
+  }
+
+  .collage-card.members-front {
+    width: 260px;
+  }
+}
+
+/* Hide Assets & Center Text (Below 1024px) */
+@media screen and (max-width: 1024px) {
+  .hide-tablet-down {
+    display: none !important;
+  }
+
+  .homeHeroSection {
+    height: auto !important;
+  }
+
+  .heroOverlay {
+    padding-top: 140px !important;
+    padding-bottom: 100px !important;
+    align-items: flex-start !important;
+  }
+
+  .heroText {
+    width: 100% !important;
+    text-align: center !important;
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hero-title {
+    font-size: 36px !important;
+    line-height: 1.2 !important;
+  }
+
+  .hero-description {
+    max-width: 100% !important;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .justify-content-center-tablet {
+    justify-content: center !important;
+    width: 100%;
+  }
+
+  .heroBtnsSection {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+}
+
+/* Navbar adjustment for short screens */
+@media screen and (max-height: 700px) and (max-width: 1024px) {
+  .heroOverlay {
+    padding-top: 100px !important;
+  }
+}
+
+/* Mobile View (Below 768px) */
+@media screen and (max-width: 768px) {
+  .heroOverlay {
+    padding-top: 100px;
     padding-bottom: 150px !important;
-    height: auto !important;
   }
-  .heroText{
-    padding-left: 0px;
-    padding-right: 0px;
-  }
-  .homeHeroSection{
-    height: auto !important;
-    ;
-  }
-  .rowHeroSection{
-    margin-left: 0px !important;
-    margin-right: 0px !important;
+
+  .rowHeroSection {
     padding-left: 20px !important;
     padding-right: 20px !important;
   }
-  
 }

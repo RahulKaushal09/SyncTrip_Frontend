@@ -1,46 +1,36 @@
 "use client";
 
-// import Image from "next/image";
 import "../../../styles/home/home.css";
-import HomeHeroFeatures from "./featureHeroSection";
-import { ICONS_CLASS } from "@/utils/icon.utils";
-import Icon from "../Icons/Icons";
 import { useRouter } from "next/navigation";
 import { ROUTES } from "@/constants";
 import { useLoader } from '@/components/providers/LoaderContext';
-import { Heart, Plane, Star } from "lucide-react";
+import { Heart, Plane, Star, Sparkles, ShieldCheck, PlaneIcon, Compass } from "lucide-react";
+import GroupTripImage from "@/assets/images/groupTripDetails.png";
+import GroupTripMembers from "@/assets/images/groupTripMembers.png";
+import Image from "next/image";
 import { triggerLogin } from "@/utils";
+import Link from "next/link";
 
 const HomeHeroSection: React.FC = () => {
     const { showLoader } = useLoader();
     const router = useRouter();
-    const images = [
-        "/images/hero1.png",
-        "/images/hero2.png",
-        "/images/hero3.png",
-    ];
+
     const floatingIcons = [
         { icon: Heart, color: "#e5484d", delay: "0s" },
         { icon: Plane, color: "#3abef5", delay: "0.5s" },
         { icon: Star, color: "#ffc53d", delay: "1s" },
     ];
 
-    // const [bgImage, setBgImage] = useState<string>(images[0]);
     const redirectToUrl = (redirectUrl: string) => {
-        // Implement your redirect logic here
         showLoader();
         router.push(redirectUrl);
     };
 
-
     return (
-        <section
-            className="homeHeroSection"
-        // style={{ backgroundImage: `url(${bgImage})` }}
-        >
-            <div className="absolute inset-0 overflow-hidden pointer-events-none hideInMobile">
+        <section className="homeHeroSection">
+            {/* FLOATING ICONS */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none hide-tablet-down">
                 {floatingIcons.map((item, index) => {
-
                     const IconComponent = item.icon;
                     return (
                         <div
@@ -49,13 +39,11 @@ const HomeHeroSection: React.FC = () => {
                             style={{
                                 left: `${15 + index * 30}%`,
                                 top: `${20 + index * 25}%`,
-                                animationDelay: item.delay
+                                animationDelay: item.delay,
+                                zIndex: 1
                             }}
                         >
-                            <div
-                                className="icon-wrapper-hero"
-                                style={{ backgroundColor: item.color }}
-                            >
+                            <div className="icon-wrapper-hero" style={{ backgroundColor: item.color }}>
                                 <IconComponent className="w-6 h-6 text-white" />
                             </div>
                         </div>
@@ -64,71 +52,64 @@ const HomeHeroSection: React.FC = () => {
             </div>
 
             <div className="heroOverlay bg-gradient-to-br from-[#f2faff] via-[#e3f5ff] to-[#b8e8ff]">
-                <div className="row rowHeroSection ">
-                    <div className="heroVectorBottom"></div>
-
-                    <div className="col-lg-7 col-md-7 col-sm-12 heroText">
-                        <div
-                            className="inline-flex items-center gap-2 bg-white/60 backdrop-blur-sm rounded-full px-4 py-2 border border-[#b8e8ff] hideInMobile" style={{ marginBottom: "10px", position: "relative", zIndex: "5px" }}>
-                            <Plane className="w-4 h-4 text-[#3abef5]" />
-                            <span className="text-sm font-medium text-[#16324f]" >
-                                Join 10,000+ Happy Indian Travelers
-                            </span>
+                <div className="row rowHeroSection align-items-center">
+                    {/* LEFT SIDE: Content */}
+                    <div className="col-lg-7 col-md-12 heroText m-animate m-slide-up" style={{ zIndex: 5 }}>
+                        <div className="inline-flex items-center gap-2 bg-white/90 rounded-full px-3 py-2.5 border border-[#b8e8ff] mb-3 hero-badge">
+                            <Sparkles className="w-4 h-4 text-[#3abef5]" />
+                            <span className="text-sm">Join 10,000+ Happy Indian Travelers</span>
                         </div>
 
-                        {/* <h1 className="text-white" style={{ fontSize: "60px", fontWeight: "bold",position:"relative",zIndex:"5px" }}><span className="text-custom-secondary">Find Your Perfect</span><br></br><span className="text-custom-primary">Travel Companion</span></h1> */}
-
-                        {/* <h1 className="text-white font-bold relative z-[5] text-[40px] md:text-[50px] leading-tight">
-                            <span className="text-custom-secondary">Find Your Perfect</span>
-
-                            <span className="hidden md:inline"><br /></span>
-
-                            <span className="inline md:hidden"> </span>
-
-                            <span className="text-custom-primary">Travel Companion</span>
-                        </h1> */}
-                        <h1 className=" font-bold relative z-[5] text-[40px] md:text-[45px] leading-tight">
-                            <span className="text-custom-secondary">
-                                Plan Trips. Meet Travelers.
-                            </span>
-
-                            <span className="hidden md:inline"><br /></span>
-                            <span className="inline md:hidden"> </span>
-
-                            <span className="text-custom-primary">
-                                Travel Solo, With Friends, or Together
-                            </span>
+                        <h1 className="font-bold relative z-[5] leading-tight hero-title">
+                            <span className="text-secondary-1">Stop Planning Solo.</span>
+                            <br />
+                            <span className="text-primary-1">Start Exploring Together.</span>
                         </h1>
 
-                        {/* <h3 className="text-white">Connect, Plan & Explore Together</h3> */}
-                        <p className="text-[var(--neutral-1)]" style={{ position: "relative", zIndex: "5px", width: "100%" }}>
-                            SyncTrip helps <strong>solo travelers, friends, couples, and groups </strong>
-                            plan trips, discover destinations, and connect with people traveling to the same place.
-                            Whether you&apos;re traveling alone or with friends, SyncTrip makes trip planning social,
-                            simple, and safe across India.
+                        <p className="r1 text-neutral-1 mt-3 hero-description" style={{ maxWidth: "550px" }}>
+                            SyncTrip helps you join <strong>Curated Group Expeditions</strong> or
+                            find <strong>Travel Partners</strong> heading to the same place.
+                            Simple, safe, and social.
                         </p>
-                        {/* <p className="text-[var(--neutral-1)]" style={{ position: "relative", zIndex: "5px", width: "100%" }}>Connect with like-minded Indian travelers, explore incredible India together, and create unforgettable memories. Your next adventure across India is just a match away! 🇮🇳</p> */}
 
-                        <div className="row heroBtnsSection">
-                            <div className="col-lg-5 col-md-5 col-sm-6">
-                                <button className="btn btn-blue homebtnprimary b2" onClick={() => redirectToUrl(ROUTES.EXPLORE)}>
-                                    <Icon name={ICONS_CLASS.UsersIcon.iconName} />
-                                    {/* Start Matching */}
+                        {/* UPDATED BUTTON SECTION */}
+                        <div className="row heroBtnsSection mt-4 g-3 justify-content-center-tablet">
+                            <div className="col-lg-5 col-md-6 col-12">
+                                <button
+                                    className="btn btn-blue homebtnprimary b2 w-100"
+                                    onClick={() => triggerLogin(() => redirectToUrl(ROUTES.CREATE_TRIP))}
+                                >
+                                    <PlaneIcon className="w-5 h-5 mr-2" />
+                                    Plan Your First Trip
+                                </button>
+                            </div>
+                            <div className="col-lg-5 col-md-6 col-12">
+                                <button
+                                    className="btn btn-white-home-hero b2 w-100 h-100 flexbtn"
+                                    style={{ border: '1px solid var(--secondary-1)' }}
+                                    onClick={() => redirectToUrl(ROUTES.EXPLORE)}
+                                >
+                                    <Compass className="w-5 h-5 mr-2" />
                                     Explore Locations
                                 </button>
                             </div>
-                            <div className="col-lg-5 col-md-5 col-sm-6">
-                                <button className="btn btn-white-home-hero text-secondary-1 b2" onClick={() => triggerLogin(() => redirectToUrl(ROUTES.CREATE_TRIP))}>
-                                    <Icon name={ICONS_CLASS.PlayIcon.iconName} />
-                                    Create a Trip
-                                </button>
+                        </div>
+                    </div>
+
+                    {/* RIGHT SIDE: Image Collage */}
+                    <div className="col-lg-5 col-md-12 mt-5 mt-lg-0 m-animate m-zoom-in hide-tablet-down" style={{ zIndex: 5 }}>
+                        <div onClick={() => triggerLogin(() => redirectToUrl(ROUTES.CREATE_TRIP))} className="group-collage-wrapper">
+                            <div className="collage-card details-back shadow-lg">
+                                <Image src={GroupTripImage} alt="Group Trip Details" priority className="img-fluid" />
+                            </div>
+                            <div className="collage-card members-front shadow-xl">
+                                <Image src={GroupTripMembers} alt="Group Trip Members" className="img-fluid" />
                             </div>
                         </div>
                     </div>
-                    <div className="col-lg-5 col-md-12 col-sm-12">
-                        <HomeHeroFeatures showInMobile={false} />
-                    </div>
                 </div>
+
+                <div className="heroVectorBottom"></div>
             </div>
         </section>
     );
