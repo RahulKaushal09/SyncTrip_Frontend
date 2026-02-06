@@ -433,12 +433,13 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
                                 <label>Your travel goal:</label>
                                 <select name="travelGoal" className="full-profile-input" onChange={handleChange} value={form.travelGoal}>
                                     <option value="">Select a goal</option>
-                                    <option value="Explore India">Explore India</option>
+                                    <option value="Explore Culture">Explore Culture</option>
                                     <option value="Make friends">Make friends</option>
                                     <option value="Relax">Relax</option>
-                                    <option value="Spiritual journey">Spiritual journey</option>
+                                    <option value="Adventure">Adventure</option>
                                 </select>
                             </div>
+                            {/* We can add here to allow the user to choose if he wants to keep his profile public/private. */}
                             {/* Languages */}
                             <div className="full-profile-section">
                                 {/* <label>Languages you speak:</label> */}
@@ -478,7 +479,7 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
                             <div className="full-profile-section">
                                 <label>How do you like to travel? <span className="required-star">*</span></label>
                                 <div className="bubble-btn-container">
-                                    {['Backpacking', 'Beach vacations', 'Hill stations & adventure', 'City tours', 'Food & culture', 'Pilgrimage', 'Luxury getaways'].map((style) => (
+                                    {['Adventure', 'Relaxation', 'Cultural', 'Food', 'Nature', 'City', 'Beach', 'Mountains', 'Desert', 'Forest', 'Backpacking', 'Pilgrimage', 'Road Trips', 'Cruise'].map((style) => (
                                         <button key={style} type="button" className={`bubble-btn ${form.travelStyles.includes(style) ? 'selected' : ''}`} onClick={() => handleChange(undefined, 'travelStyles', style)}>
                                             {style}
                                         </button>
@@ -546,9 +547,9 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
                                 <select name="ageGroup" className="full-profile-input" onChange={handleChange} value={form.ageGroup}>
                                     <option value="">Any age group</option>
                                     <option value="18-25">18-25</option>
-                                    <option value="25-35">25-35</option>
-                                    <option value="35-45">35-45</option>
-                                    <option value="45+">45+</option>
+                                    <option value="25-35">26-35</option>
+                                    <option value="35-45">36-50</option>
+                                    <option value="45+">50+</option>
                                 </select>
                             </div>
                         </div>

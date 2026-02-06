@@ -11,7 +11,7 @@ import Link from 'next/link';
 // import { CommonServices } from '@/utils';
 
 export default function GroupDetailsPage() {
-  let { tripId, groupId } = useParams() as { tripId: string; groupId: string };
+  const { tripId, groupId } = useParams() as { tripId: string; groupId: string };
   const router = useRouter();
   const { showLoader, hideLoader } = useLoader();
 
