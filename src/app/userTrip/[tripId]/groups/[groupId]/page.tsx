@@ -16,6 +16,7 @@ export default function GroupDetailsPage() {
   const { showLoader, hideLoader } = useLoader();
 
   const [group, setGroup] = useState<GroupDetails | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [showFullList, setShowFullList] = useState(false);
 
   const MAX_VISIBLE = 3;
@@ -208,25 +209,34 @@ export default function GroupDetailsPage() {
       {/* Floating Action Button */}
       <div className="fixed bottom-0 left-0 right-0 p-6 bg-white/70 backdrop-blur-lg border-t border-neutral-5 z-50">
         <div className="max-w-2xl mx-auto">
-          {!group.isMember ? (
-            <button
-              onClick={async () => {
-                const res = await GroupApiServices.joinGroupTrip(group.id, tripId);
-                router.push(`/chats?tripId=${tripId}&chatId=${res.chatId}`);
-              }}
-              className="btn btn-primary w-full !h-14 !rounded-full shadow-lg flexbtn transition-transform active:scale-95"
-            >
-              <span className="b1 font-bold tracking-tight">Join Group</span>
-            </button>
-          ) : (
-            <button
-              onClick={() => router.push(`/chats?tripId=${tripId}&chatId=${group.chatId}`)}
-              className="btn btn-secondary w-full !h-14 !rounded-full shadow-lg flexbtn"
-            >
-              <MessageCircle size={20} />
-              <span className="b1 font-bold tracking-tight">Open group chat</span>
-            </button>
-          )}
+          {isLoading ?
+            <button disabled className={`btn ${group.isMember ? 'btn-secondary' : 'btn-primary'} opacity-60 w-full !h-14 !rounded-full shadow-lg flexbtn animate-pulse duration-300`}>
+              <span className="b1 font-bold tracking-tight">Loading...</span>
+            </button> :
+            !group.isMember ? (
+              <button
+                onClick={async () => {
+                  setIsLoading(true);
+                  const res = await GroupApiServices.joinGroupTrip(group.id, tripId);
+                  router.push(`/chats?tripId=${tripId}&chatId=${res.chatId}`);
+                }}
+                className="btn btn-primary w-full !h-14 !rounded-full shadow-lg flexbtn transition-transform active:scale-95"
+              >
+                <span className="b1 font-bold tracking-tight">Join Group</span>
+              </button>
+            ) : (
+              <button
+                onClick={() => {
+                  setIsLoading(true);
+                  router.push(`/chats?tripId=${tripId}&chatId=${group.chatId}`)
+                }
+                }
+                className="btn btn-secondary w-full !h-14 !rounded-full shadow-lg flexbtn"
+              >
+                <MessageCircle size={20} />
+                <span className="b1 font-bold tracking-tight">Open group chat</span>
+              </button>
+            )}
         </div>
       </div>
     </div>

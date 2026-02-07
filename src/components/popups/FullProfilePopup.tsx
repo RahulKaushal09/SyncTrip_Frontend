@@ -44,11 +44,11 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
         languages: user.languages || '',
         dateOfBirth: user.dateOfBirth || '',
         sex: user.sex || '',
+        preferredDestinations: [] as Location[],
     });
 
     const [searchTerm, setSearchTerm] = useState('');
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const [selectedLocations, setSelectedLocations] = useState<Location[]>([]);
     const [locations, setLocations] = useState<Location[]>([]);
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -182,10 +182,14 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
     };
 
     const handleDestinationSelect = (dest: Location) => {
-        setSelectedLocations((prev) => {
-            const isAlreadySelected = prev.some(loc => loc.id === dest.id);
-            if (isAlreadySelected) return prev.filter((loc) => loc.id !== dest.id);
-            return [...prev, dest];
+        setForm((prev) => {
+            const isAlreadySelected = prev.preferredDestinations.some(loc => loc.id === dest.id);
+            return {
+                ...prev,
+                preferredDestinations: isAlreadySelected
+                    ? prev.preferredDestinations.filter((loc) => loc.id !== dest.id)
+                    : [...prev.preferredDestinations, dest],
+            };
         });
     };
 
@@ -212,7 +216,7 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
             if (!form.travelStyles || form.travelStyles.length === 0) return "Please select at least one travel style.";
             if (!form.travelerType || form.travelerType.length === 0) return "Please select at least one traveler type.";
         } else if (step === 4) {
-            if (selectedLocations.length === 0) return "Please select at least one favorite travel destination.";
+            if (form.preferredDestinations.length === 0) return "Please select at least one favorite travel destination.";
         }
         return null;
     };
@@ -250,7 +254,7 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
                         travelerType: form.travelerType,
                     });
                 } else {
-                    const idsToSend = selectedLocations.map(loc => loc.id);
+                    const idsToSend = form.preferredDestinations.map(loc => loc.id);
                     updateUserFields({
                         preferredDestinations: idsToSend,
                         matchGender: form.matchGender,
@@ -302,7 +306,7 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
             }
         });
 
-        const idsToSend = selectedLocations.map(loc => loc.id);
+        const idsToSend = form.preferredDestinations.map(loc => loc.id);
         formData.append('preferredDestinations', JSON.stringify(idsToSend));
 
         // --- Logging Data for testing ---
@@ -353,7 +357,7 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
         dest.title?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    const selectedTitles = selectedLocations.map((loc) => loc.title);
+    const selectedTitles = form.preferredDestinations.map((loc) => loc.title);
 
     return (
         <div className="full-profile-overlay">
@@ -430,7 +434,7 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
                             </div>
                             {/* Travel Goal */}
                             <div className="full-profile-section">
-                                <label>Your travel goal:</label>
+                                <label>Your travel goal: <span className="required-star">*</span></label>
                                 <select name="travelGoal" className="full-profile-input" onChange={handleChange} value={form.travelGoal}>
                                     <option value="">Select a goal</option>
                                     <option value="Explore Culture">Explore Culture</option>
@@ -509,7 +513,7 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
                                         {selectedTitles.map((title) => (
                                             <span key={title} className="full-profile-selected-tag">
                                                 {title.replace(/[0-9.]/g, "")}
-                                                <button type="button" className="full-profile-remove-tag" onClick={() => setSelectedLocations(prev => prev.filter(loc => loc.title !== title))}>×</button>
+                                                <button type="button" className="full-profile-remove-tag" onClick={() => setForm(prev => ({ ...prev, preferredDestinations: prev.preferredDestinations.filter(loc => loc.title !== title) }))}>×</button>
                                             </span>
                                         ))}
                                     </div>
@@ -520,8 +524,8 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
                                     />
                                     {isDropdownOpen && (
                                         <div className="full-profile-dropdown">
-                                            {filteredLocations.filter(dest => !selectedLocations.some(sel => sel.id === dest.id)).length > 0 ? (
-                                                filteredLocations.map((dest) => !selectedLocations.some(sel => sel.id === dest.id) && (
+                                            {filteredLocations.filter(dest => !form.preferredDestinations.some(sel => sel.id === dest.id)).length > 0 ? (
+                                                filteredLocations.map((dest) => !form.preferredDestinations.some(sel => sel.id === dest.id) && (
                                                     <div key={dest.id} className="full-profile-dropdown-item" onMouseDown={() => { handleDestinationSelect(dest); setSearchTerm(""); }}>
                                                         {dest.title?.replace(/[0-9.]/g, "") || dest.title}
                                                     </div>

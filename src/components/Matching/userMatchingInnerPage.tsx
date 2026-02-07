@@ -649,7 +649,7 @@ export default function MatchingPage() {
                             {/* NEXT CARD PREVIEW */}
                             {profiles[index + 1] && (
                                 <div className="next-card" aria-hidden>
-                                    <img src={profiles[index + 1].userSnapshot.profile_picture[0]} alt={profiles[index + 1].userSnapshot.name} />
+                                    <img src={profiles[index + 1].userSnapshot.profile_picture?.[0]} alt={profiles[index + 1].userSnapshot.name} />
                                 </div>
                             )}
 

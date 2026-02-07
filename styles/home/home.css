@@ -9,7 +9,7 @@
   background-size: cover;
   background-position: center;
   transition: background-image 0.8s ease-in-out;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 .heroOverlay {

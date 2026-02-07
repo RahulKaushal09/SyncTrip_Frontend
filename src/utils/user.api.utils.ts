@@ -7,6 +7,15 @@ import apiClient from './apiClient';
 // import { cookies } from 'next/headers';
 
 export class UserApiService {
+    static async getUserViewAndTripCount(): Promise<{ tripCount: number, viewCount: number }> {
+        try {
+            const res = await apiClient.get('/users/getUserTripCountAndViewCount');
+            return res.data || { tripCount: 0, viewCount: 0 };
+        } catch (error) {
+            console.error("Error fetching user view and trip count:", error);
+            return { tripCount: 0, viewCount: 0 };
+        }
+    }
 
     static async fetchUserWishlist(wishlistType: string): Promise<UserWishList[]> {
         const getWishlistBody: getUserWishlistRequestSchema = {
@@ -71,9 +80,9 @@ export class UserApiService {
         } catch (error: unknown) {
             return {
                 success: false,
-                message: 
-                // error?.response?.data?.message || 
-                "Something went wrong",
+                message:
+                    // error?.response?.data?.message || 
+                    "Something went wrong",
             };
         }
     }
@@ -92,7 +101,7 @@ export class UserApiService {
             );
 
             return response.data;
-        } catch (error : unknown) {
+        } catch (error: unknown) {
             return {
                 success: false,
                 // code: error?.code,

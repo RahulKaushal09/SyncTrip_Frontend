@@ -127,7 +127,8 @@ export default function EditProfileModal({
                 showProfile: user.showProfile ? true : false,
                 socialMedias: {
                     instagram: user.instagram || user.socialMedias?.instagram || ''
-                }
+                },
+                bio: user.bio
             });
         }
     }, [user, isOpen]);
@@ -213,6 +214,22 @@ export default function EditProfileModal({
                                     socialMedias: { ...formData.socialMedias, instagram: e.target.value }
                                 })}
                                 className="w-full pl-8 pr-4 py-2 border border-[var(--neutral-4)] rounded-xl focus:ring-2 focus:ring-[var(--primary-1)] outline-none transition-all"
+                                placeholder="username"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="md:col-span-2">
+                        <label className="block text-sm font-medium text-[var(--secondary-1)] mb-1">User Bio</label>
+                        <div className="relative">
+                            <input
+                                type="text"
+                                value={formData.bio || ''}
+                                onChange={(e) => setFormData({
+                                    ...formData,
+                                    bio: e.target.value
+                                })}
+                                className="w-full !px-4 py-2 border border-[var(--neutral-4)] rounded-xl focus:ring-2 focus:ring-[var(--primary-1)] outline-none transition-all"
                                 placeholder="username"
                             />
                         </div>
