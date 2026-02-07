@@ -263,24 +263,7 @@ const NavbarClient = ({ }) => {
                     Create Trip
                   </span>
                 </li>
-              )) : (
-
-              <li className="nav-item" onClick={() => {
-                if (!isActive(ROUTES.HOSTED_TRIPS)) {
-                  redirectBtnClick(ROUTES.HOSTED_TRIPS);
-                }
-              }}
-                style={{
-                  cursor: isActive(ROUTES.HOSTED_TRIPS) ? "default" : "pointer",
-                  pointerEvents: isActive(ROUTES.HOSTED_TRIPS) ? "none" : "auto",
-                  borderBottom: isActive(ROUTES.HOSTED_TRIPS) ? "2px solid var(--secondary-1)" : "",
-                }}>
-                <span className="nav-link">
-                  Hosted Trips
-                </span>
-              </li>
-            )
-            }
+              )) : ""}
             <li className="nav-item"
               onClick={() => setFeedbackFormOpen(true)}
               style={{ cursor: "pointer" }}>
@@ -575,7 +558,7 @@ const NavbarClient = ({ }) => {
             </li>
           )
             : ( */}
-          <li className="nav-item"
+          {/* <li className="nav-item"
             onClick={() => {
               if (!isActive(ROUTES.HOSTED_TRIPS)) {
                 redirectBtnClick(ROUTES.HOSTED_TRIPS);
@@ -590,7 +573,7 @@ const NavbarClient = ({ }) => {
           // onClick={() => { redirectBtnClick(ROUTES.GROUP_TRIPS); closeDrawer(); }}
           >
             <span className="nav-link">Hosted Trips</span>
-          </li>
+          </li> */}
           {/* )
           } */}
           <li className="nav-item"

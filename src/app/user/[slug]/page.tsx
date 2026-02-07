@@ -57,6 +57,13 @@ export default function UserProfilePage() {
     router.push(redirectUrl);
   };
   const [profileUser, setProfileUser] = useState<ExtendedUser | null>(null);
+  const userLanguages = React.useMemo(() => {
+    if (!profileUser?.languages) return [];
+
+    return Array.isArray(profileUser.languages)
+      ? profileUser.languages
+      : profileUser.languages.split(",").map(l => l.trim());
+  }, [profileUser?.languages]);
   const [displayTrips, setTrips] = useState<UserTrip[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -97,6 +104,15 @@ export default function UserProfilePage() {
           return;
         }
 
+        // if (userData && userData.languages) {
+        //   if (Array.isArray(userData.languages)) {
+        //     setUserLanguages(userData.languages);
+        //   } else {
+        //     const langs = userData.languages.split(",");
+        //     setUserLanguages(langs);
+        //   }
+        // }
+
         const userTrips = await TripServices.getTripsOfUserOnRequest(profileId) || [];
 
         if (mounted) {
@@ -116,6 +132,33 @@ export default function UserProfilePage() {
     fetchData();
     return () => { mounted = false; };
   }, [profileId, isLoggedIn]);
+
+  useEffect(() => {
+    if (!profileId || !isLoggedIn) return;
+
+    const fetchCounts = async () => {
+      try {
+        const { viewCount, tripCount } =
+          await UserApiService.getUserViewAndTripCount();
+
+        setProfileUser(prev =>
+          prev
+            ? {
+              ...prev,
+              viewCount,
+              tripCount
+            }
+            : prev
+        );
+
+      } catch (err) {
+        console.error("Failed to fetch counts", err);
+      }
+    };
+
+    fetchCounts();
+  }, [profileId, isLoggedIn]);
+
 
   // for any changes in loggedinUser (at time of update), sync them
   useEffect(() => {
@@ -165,6 +208,10 @@ export default function UserProfilePage() {
       // Profile visibility
       if (typeof updatedFormData.showProfile === "boolean") {
         payload.showProfile = updatedFormData.showProfile;
+      }
+
+      if (updatedFormData.bio !== undefined) {
+        payload.bio = updatedFormData.bio;
       }
 
       if (Object.keys(payload).length === 0) {
@@ -347,10 +394,10 @@ export default function UserProfilePage() {
                       <span className="text-[var(--neutral-1)] flex items-center gap-2"><UserIcon size={14} /> Gender</span>
                       <span className="font-medium capitalize text-[var(--secondary-1)]">{profileUser.sex || 'Not Specified'}</span>
                     </div>}
-                    {Array.isArray(profileUser.languages) && profileUser.languages.length > 0 && <div className="flex items-start justify-between text-sm">
+                    {userLanguages.length > 0 && <div className="flex items-start justify-between text-sm">
                       <span className="text-[var(--neutral-1)] flex items-center gap-2"><Globe size={14} /> Languages</span>
                       <div className="flex flex-wrap gap-1.5 justify-end max-w-[60%]">
-                        {profileUser.languages.map((lang, i) => (
+                        {userLanguages.map((lang, i) => (
                           <span key={i} className="px-2 py-0.5 bg-[var(--primary-5)] text-[var(--primary-hover)] rounded-md text-xs font-semibold border border-[var(--primary-3)] whitespace-nowrap">
                             {lang}
                           </span>

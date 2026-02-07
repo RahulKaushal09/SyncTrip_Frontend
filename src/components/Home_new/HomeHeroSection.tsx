@@ -9,7 +9,6 @@ import GroupTripImage from "@/assets/images/groupTripDetails.png";
 import GroupTripMembers from "@/assets/images/groupTripMembers.png";
 import Image from "next/image";
 import { triggerLogin } from "@/utils";
-import Link from "next/link";
 
 const HomeHeroSection: React.FC = () => {
     const { showLoader } = useLoader();
