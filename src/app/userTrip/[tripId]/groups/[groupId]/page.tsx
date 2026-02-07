@@ -40,7 +40,21 @@ export default function GroupDetailsPage() {
   }, [groupId]);
 
   if (!group) return <div className="paddingTopAndSide text-center py-20 r1">Group not found</div>;
+  const joinGroup = async () => {
+    try {
+      setIsLoading(true);
+      showLoader();
+      const res = await GroupApiServices.joinGroupTrip(group.id, tripId);
+      router.push(`/chats?tripId=${tripId}&chatId=${res.chatId}`);
+    } catch (error) {
+      hideLoader();
+      console.log("Error while joining group: ", error);
+    }
+    finally {
 
+    }
+
+  }
   return (
     <div style={{
       width: "56rem"
@@ -215,11 +229,7 @@ export default function GroupDetailsPage() {
             </button> :
             !group.isMember ? (
               <button
-                onClick={async () => {
-                  setIsLoading(true);
-                  const res = await GroupApiServices.joinGroupTrip(group.id, tripId);
-                  router.push(`/chats?tripId=${tripId}&chatId=${res.chatId}`);
-                }}
+                onClick={joinGroup}
                 className="btn btn-primary w-full !h-14 !rounded-full shadow-lg flexbtn transition-transform active:scale-95"
               >
                 <span className="b1 font-bold tracking-tight">Join Group</span>
@@ -227,7 +237,9 @@ export default function GroupDetailsPage() {
             ) : (
               <button
                 onClick={() => {
+                  showLoader();
                   setIsLoading(true);
+
                   router.push(`/chats?tripId=${tripId}&chatId=${group.chatId}`)
                 }
                 }
