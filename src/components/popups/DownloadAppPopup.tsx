@@ -3,8 +3,8 @@
 import React, { useState, useEffect } from "react";
 import { X, Download, ShieldCheck, Zap, Users } from "lucide-react";
 import Image from "next/image";
-import GroupTripImage from "@/assets/images/groupTripDetails.png";
-import GroupTripMembers from "@/assets/images/groupTripMembers.png";
+import GroupTripImage from "../../assets/images/groupTripDetails.png";
+import GroupTripMembers from "../../assets/images/groupTripMembers.png";
 import "./downloadPopup.css";
 
 const STRIKE_LIMIT = 3;

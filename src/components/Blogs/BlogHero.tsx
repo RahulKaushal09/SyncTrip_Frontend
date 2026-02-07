@@ -1,5 +1,5 @@
 
-import heroImage from "@/assets/images/hero-blog.jpg";
+import heroImage from "../../assets/images/hero-blog.jpg";
 import "../../../styles/Blogs/blogHero.css"; // Adjust path as needed
 import { ICONS_CLASS } from "@/utils/icon.utils";
 import Icon from "../Icons/Icons";

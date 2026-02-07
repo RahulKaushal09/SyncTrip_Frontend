@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation";
 import { ROUTES } from "@/constants";
 import { useLoader } from '@/components/providers/LoaderContext';
 import { Heart, Plane, Star, Sparkles, ShieldCheck, PlaneIcon, Compass } from "lucide-react";
-import GroupTripImage from "@/assets/images/groupTripDetails.png";
-import GroupTripMembers from "@/assets/images/groupTripMembers.png";
+import GroupTripImage from "../../assets/images/groupTripDetails.png";
+import GroupTripMembers from "../../assets/images/groupTripMembers.png";
 import Image from "next/image";
 import { triggerLogin } from "@/utils";
 

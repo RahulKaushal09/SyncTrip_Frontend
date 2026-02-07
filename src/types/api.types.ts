@@ -91,6 +91,31 @@ export type groupContextTrip = {
 }
 
 
+export interface Notification {
+    id: string;
+    recipientId: string;
+    actor: {
+        id: string;
+        name: string;
+        avatar?: string;
+    };
+    type: 'MATCH' | 'MESSAGE' | 'LIKE' | 'TRIP_JOIN' | 'TRIP_UPDATE' | 'SYSTEM' | 'MILESTONE' | 'GROUP_JOIN';
+    title: string;
+    message: string;
+    clickAction: {
+        type: 'OPEN_PROFILE' | 'OPEN_CHAT' | 'OPEN_TRIP' | 'OPEN_MATCH' | 'GROUP_DETAILS' | 'NONE';
+        payload: Record<string, unknown>;
+    };
+    related: {
+        matchId?: string;
+        conversationId?: string;
+        tripId?: string;
+    };
+    isRead: boolean;
+    readAt?: string; // ISO date string
+    createdAt: string; // ISO date string
+}       
+
 type FAQSchema = {
     question: string;
     answer: string;

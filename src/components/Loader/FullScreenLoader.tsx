@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Logo from '@/assets/images/logo_main_withoutBG.png'
+import Logo from '../../assets/images/logo_main_withoutBG.png'
 import Image from "next/image";
 
 interface FullScreenLoaderProps {

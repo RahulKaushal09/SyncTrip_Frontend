@@ -3,18 +3,29 @@
 import React, { useEffect, useState } from "react";
 import NotificationCard from "@/components/Cards/NotificationCard";
 import apiClient from "@/utils/apiClient";
+import { Notification } from "@/types";
 
+interface NotificationResponse {
+  items: Notification[];
+  meta: {
+    page: number;
+    limit: number;
+    total: number;
+    pages: number;
+  };
+}
 export default function NotificationsPage() {
-  const [notifications, setNotifications] = useState([]);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
 
   const fetchNotifications = async () => {
-    
+
     const res = await apiClient.get("/notifications");
+    
     if (!res || res.status !== 200) {
       console.error("Failed to fetch notifications");
       return;
     }
-    const data = res.data;
+    const data: NotificationResponse = res.data;
     setNotifications(data.items || []);
   };
 
