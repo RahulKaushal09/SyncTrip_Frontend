@@ -283,7 +283,8 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
 
         Object.keys(form).forEach(async (key) => {
             const value = form[key as keyof typeof form];
-            if (key === 'profilePicture' && value instanceof File && typeof value !== 'string') {
+            if( key === "preferredDestinations") return; // we will handle this separately after the loop
+            else if (key === 'profilePicture' && value instanceof File && typeof value !== 'string') {
                 const responseImg = await UserApiService.updateProfilePhoto(value);
                 formData.append(key, responseImg.url as string);
             } else if (Array.isArray(value)) {
