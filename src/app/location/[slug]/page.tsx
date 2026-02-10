@@ -48,24 +48,29 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         location.images?.[0] ??
         "https://via.placeholder.com/1200x630?text=SyncTrip";
 
-    /** Title + Description: prefer DB SEO over fallback */
+    // Inside generateMetadata function in LocationPage.tsx
+
+    /** * STRATEGIC FALLBACKS 
+     * Targets high-growth keywords: "{Location} Solo Travel" and "Verified Travel Buddy"
+     */
     const title =
         seo.title ??
-        `${destination} Travel Guide: Top ${placesCount} Things To Do | SyncTrip`;
+        `${destination} Solo Travel Groups & Verified Buddies | SyncTrip`;
 
     const description =
         seo.metaDescription ??
-        `Plan your ${destination} trip: ${placesCount}+ attractions, ${hotelsCount}+ hotels and travel tips.`;
+        `Join the ${destination} solo traveler community. Host your own trip to ${destination}, find verified travel buddies, or join active groups heading to 'top attractions'. Plan DIY, share costs, and travel safely. ${placesCount}+ attractions, ${hotelsCount}+ hotels and travel tips.`;
 
     const keywords =
         seo.keywords?.length
             ? seo.keywords.join(", ")
             : [
-                `${destination} travel guide`,
-                `${destination} itinerary`,
-                `${destination} trip planner`,
-                `things to do in ${destination}`,
-                `SyncTrip ${destination}`,
+                `${destination} solo travel groups`,
+                `find travel buddy in ${destination}`,
+                `verified travel companions ${destination}`,
+                `solo travel tips for ${destination}`,
+                `host a trip to ${destination}`,
+                `SyncTrip ${destination} community`,
             ].join(", ");
 
     // OG + Twitter use dynamic image + dynamic URL

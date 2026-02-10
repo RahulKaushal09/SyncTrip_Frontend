@@ -44,44 +44,91 @@ export const viewport = {
 //   },
 //   alternates: { canonical: 'https://synctrip.in/explore' },
 // };
+// export const metadata: Metadata = {
+//   title: 'Explore Travel Destinations in India | SyncTrip',
+//   // description: 'Discover the best travel destinations in India with SyncTrip. Explore cities, hill stations, beaches, and cultural hotspots with itineraries, hotels, events, and travel guides.',
+//   // keywords: 'travel destinations India, explore places to visit, hill stations, beaches, cultural trips, adventure travel, group trips, SyncTrip explore',
+//   // authors: [{ name: 'SyncTrip' }],
+//     description: 'Discover unique group trips & curated travel destinations with SyncTrip. Explore detailed itineraries, connect with fellow adventurers, and book your dream vacation today!',
+//   keywords: 'group travel, adventure trips, curated destinations, travel planning, India tours, solo travel, budget travel, luxury travel, bespoke itineraries, SyncTrip',
+//   authors: [{ name: 'SyncTrip' }],
+//   robots: 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1',
+//   openGraph: {
+//     title: 'Explore Amazing Travel Destinations in India | SyncTrip',
+//     description: 'Plan your next trip with SyncTrip. Explore curated travel destinations across India including beaches, hill stations, cultural hotspots, and festivals.',
+//     type: 'website',
+//     url: 'https://synctrip.in/explore',
+//     siteName: 'SyncTrip',
+//     locale: 'en_US',
+//     images: [
+//       {
+//         url: 'https://synctrip.in/logo_main_withoutBG.png',
+//         width: 1200,
+//         height: 630,
+//         alt: 'SyncTrip Explore Destinations',
+//       },
+//     ],
+//   },
+//   twitter: {
+//     card: 'summary_large_image',
+//     site: '@synctrip',
+//     creator: '@synctrip',
+//     title: 'Explore Travel Destinations in India | SyncTrip',
+//     description: 'Find and join group trips, explore curated travel destinations, and discover events across India with SyncTrip.',
+//     images: ['https://synctrip.in/logo_main_withoutBG.png'],
+//   },
+//   alternates: {
+//     canonical: 'https://synctrip.in/explore',
+//   },
+//   other: {
+//     'theme-color': '#1976d2',
+//     'color-scheme': 'light',
+//   },
+// };
 export const metadata: Metadata = {
-  title: 'Explore Travel Destinations in India | SyncTrip',
-  // description: 'Discover the best travel destinations in India with SyncTrip. Explore cities, hill stations, beaches, and cultural hotspots with itineraries, hotels, events, and travel guides.',
-  // keywords: 'travel destinations India, explore places to visit, hill stations, beaches, cultural trips, adventure travel, group trips, SyncTrip explore',
-  // authors: [{ name: 'SyncTrip' }],
-    description: 'Discover unique group trips & curated travel destinations with SyncTrip. Explore detailed itineraries, connect with fellow adventurers, and book your dream vacation today!',
-  keywords: 'group travel, adventure trips, curated destinations, travel planning, India tours, solo travel, budget travel, luxury travel, bespoke itineraries, SyncTrip',
-  authors: [{ name: 'SyncTrip' }],
+  // TARGET: High-volume "Travel Buddy" + "Lead" intent
+  title: 'SyncTrip | Lead Your Own Trip & Find Verified Travel Buddies',
+
+  description: 'The DIY social travel platform. Don’t wait for a tour — create your own trip, host a solo traveler group, or find verified travel companions heading your way. Plan together, share costs, and travel safely.',
+
+  // TARGET: +9,900% Growth keywords: "Solo travel tips", "Verified", "Create"
+  keywords: 'find travel buddy India, solo traveler community, create travel groups, host a trip, verified travel companion, solo travel tips India, group trip coordination, SyncTrip',
+
+  authors: [{ name: 'SyncTrip Community' }],
   robots: 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1',
+
   openGraph: {
-    title: 'Explore Amazing Travel Destinations in India | SyncTrip',
-    description: 'Plan your next trip with SyncTrip. Explore curated travel destinations across India including beaches, hill stations, cultural hotspots, and festivals.',
+    title: 'Stop Waiting for Tours. Start Leading Your Own Adventure | SyncTrip',
+    description: 'Host your trip or join verified solo traveler groups. Connect safely with people who share your vibe and destination.',
     type: 'website',
-    url: 'https://synctrip.in/explore',
+    url: 'https://synctrip.in', // Ensure this is the root if this is your homepage
     siteName: 'SyncTrip',
-    locale: 'en_US',
+    locale: 'en_IN',
     images: [
       {
         url: 'https://synctrip.in/logo_main_withoutBG.png',
         width: 1200,
         height: 630,
-        alt: 'SyncTrip Explore Destinations',
+        alt: 'SyncTrip - The DIY Travel Social Network',
       },
     ],
   },
+
   twitter: {
     card: 'summary_large_image',
-    site: '@synctrip',
-    creator: '@synctrip',
-    title: 'Explore Travel Destinations in India | SyncTrip',
-    description: 'Find and join group trips, explore curated travel destinations, and discover events across India with SyncTrip.',
+    site: '@synctrips',
+    creator: '@synctrips',
+    title: 'SyncTrip | Find Your Crew & Lead Your Journey',
+    description: 'Create your own trips, find verified buddies, and plan together. The traveler is in the driver’s seat.',
     images: ['https://synctrip.in/logo_main_withoutBG.png'],
   },
+
   alternates: {
-    canonical: 'https://synctrip.in/explore',
+    canonical: 'https://synctrip.in', // Changed from /explore to root for Home Page
   },
+
   other: {
-    'theme-color': '#1976d2',
+    'theme-color': '#3ABEF5', // SyncTrip Primary Blue
     'color-scheme': 'light',
   },
 };
@@ -172,11 +219,11 @@ export default async function Home() {
         initialHasMore={initialLocations.length >= 12}
       />
       {/* <div className="HomePage paddingSectionLeftRight"> */}
-        {/* <FestivalsEvents
+      {/* <FestivalsEvents
           initialEvents={initialEvents}
           initialLocation={initialLocation}
         /> */}
-        {/* <HomeClientSection randomLocations={randomLocations} /> */}
+      {/* <HomeClientSection randomLocations={randomLocations} /> */}
       {/* </div> */}
     </>
   );

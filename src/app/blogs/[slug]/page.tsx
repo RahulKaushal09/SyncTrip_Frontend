@@ -54,34 +54,76 @@ interface BlogDetailProps {
 //   };
 // }
 
+// export async function generateMetadata({ params }: BlogDetailProps): Promise<Metadata> {
+//   const { slug } = await params;
+//   const blog: BlogPost = await BlogsApiServices.fetchBlogBySlug(slug);
+//   if (!blog) return {};
+
+//   return {
+//     title: blog.seo?.seo_title || blog.title,
+//     description: blog.seo?.seo_description || blog.content?.substring(0, 160),
+//     keywords: blog.seo?.seo_keywords?.join(", "),
+//     openGraph: {
+//       title: blog.seo?.seo_title || blog.title,
+//       description: blog.seo?.seo_description,
+//       images: [
+//         {
+//           url: blog.seo?.seo_image || blog.featuredImage,
+//           alt: blog.title,
+//         },
+//       ],
+//       type: "article",
+//     },
+//     twitter: {
+//       card: "summary_large_image",
+//       title: blog.seo?.seo_title || blog.title,
+//       description: blog.seo?.seo_description,
+//       images: [blog.seo?.seo_image || blog.featuredImage],
+//     },
+//     alternates: {
+//       canonical: blog.seo?.canonical_url || `https://synctrip.in/blogs/${blog.slug}`,
+//     },
+//   };
+// }
+
+// Inside generateMetadata in blog/[slug]/page.tsx
+
 export async function generateMetadata({ params }: BlogDetailProps): Promise<Metadata> {
   const { slug } = await params;
   const blog: BlogPost = await BlogsApiServices.fetchBlogBySlug(slug);
   if (!blog) return {};
 
+  const title = blog.seo?.seo_title || `${blog.title} | Verified Traveler Guide`;
+
+  // SEO Boost: We ensure every description mentions the "Social" utility
+  const description = blog.seo?.seo_description ||
+    `${blog.content?.replace(/<[^>]+>/g, '').substring(0, 150)}... Read verified solo travel tips and find travel buddies on SyncTrip.`;
+
   return {
-    title: blog.seo?.seo_title || blog.title,
-    description: blog.seo?.seo_description || blog.content?.substring(0, 160),
-    keywords: blog.seo?.seo_keywords?.join(", "),
-    openGraph: {
-      title: blog.seo?.seo_title || blog.title,
-      description: blog.seo?.seo_description,
-      images: [
-        {
-          url: blog.seo?.seo_image || blog.featuredImage,
-          alt: blog.title,
-        },
-      ],
-      type: "article",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: blog.seo?.seo_title || blog.title,
-      description: blog.seo?.seo_description,
-      images: [blog.seo?.seo_image || blog.featuredImage],
-    },
+    title,
+    description,
+    // Targeting "Solo Travel Tips" and "Safe Trip" keywords found in data
+    keywords: blog.seo?.seo_keywords?.length
+      ? blog.seo.seo_keywords.join(", ")
+      : `${blog.title}, solo travel tips, verified travel buddy, safe solo travel India, SyncTrip guides`,
+
     alternates: {
       canonical: blog.seo?.canonical_url || `https://synctrip.in/blogs/${blog.slug}`,
+    },
+
+    openGraph: {
+      title,
+      description,
+      type: "article", // Important: Tells Google this is long-form content
+      url: `https://synctrip.in/blogs/${blog.slug}`,
+      images: [{ url: blog.seo?.seo_image || blog.featuredImage, alt: blog.title }],
+    },
+
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [blog.seo?.seo_image || blog.featuredImage],
     },
   };
 }
@@ -116,17 +158,44 @@ const BlogDetailPage = async ({ params }: BlogDetailProps) => {
   const openCreateTripPage = () => {
     window.open('/create/trip', '_blank');
   }
+  // const articleSchema = {
+  //   "@context": "https://schema.org",
+  //   "@type": "Article",
+  //   "headline": blog.title,
+  //   "image": [blog.featuredImage],
+  //   "author": { "@type": "Person", "name": blog.author || 'SyncTrip' },
+  //   "datePublished": blog.createdAt,
+  //   "dateModified": blog.createdAt,
+  //   "publisher": { "@type": "Organization", "name": "SyncTrip", "logo": { "@type": "ImageObject", "url": "https://synctrip.in/logo_main_withoutBG.png" } },
+  //   "description": blog.seo?.seo_description || blog.content?.replace(/<[^>]+>/g, '').slice(0, 155),
+  //   "mainEntityOfPage": { "@type": "WebPage", "@id": blog.seo?.canonical_url || `https://synctrip.in/blogs/${blog.slug}` }
+  // };
+
   const articleSchema = {
     "@context": "https://schema.org",
-    "@type": "Article",
-    "headline": blog.title,
-    "image": [blog.featuredImage],
-    "author": { "@type": "Person", "name": blog.author || 'SyncTrip' },
-    "datePublished": blog.createdAt,
-    "dateModified": blog.createdAt,
-    "publisher": { "@type": "Organization", "name": "SyncTrip", "logo": { "@type": "ImageObject", "url": "https://synctrip.in/logo_main_withoutBG.png" } },
+    "@type": "BlogPosting",
+    "headline": blog.seo?.seo_title || blog.title,
     "description": blog.seo?.seo_description || blog.content?.replace(/<[^>]+>/g, '').slice(0, 155),
-    "mainEntityOfPage": { "@type": "WebPage", "@id": blog.seo?.canonical_url || `https://synctrip.in/blogs/${blog.slug}` }
+    "image": [blog.seo?.seo_image || blog.featuredImage],
+    "datePublished": blog.createdAt,
+    "dateModified": blog.createdAt, // Freshness signal
+    "author": {
+      "@type": "Person",
+      "name": blog.author || "Verified Explorer",
+      "url": "https://synctrip.in/community" // Links author back to your social ecosystem
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "SyncTrip",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://synctrip.in/logo_main_withoutBG.png"
+      }
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": `https://synctrip.in/blogs/${blog.slug}`
+    }
   };
 
 

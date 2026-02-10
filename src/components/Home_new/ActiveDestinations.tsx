@@ -26,7 +26,7 @@ const DEFAULT_DESTINATIONS: Destination[] = [
             "https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=1600&q=60&auto=format&fit=crop",
         usp:
             "Experience thrilling Himalayan adventures with snow-capped peaks, challenging treks, and unforgettable mountain memories.",
-        activePlaceLabel: "Most Active Place",
+        activePlaceLabel: "Community Hotspot",
         activePlaceValue: "Old Manali & Solang Valley",
     },
     {
@@ -36,7 +36,7 @@ const DEFAULT_DESTINATIONS: Destination[] = [
             "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=1600&q=60&auto=format&fit=crop",
         usp:
             "Vibrant beach culture, electrifying nightlife, and golden sunsets. Where every moment is a celebration.",
-        activePlaceLabel: "Most Active Place",
+        activePlaceLabel: "Community Hotspot",
         activePlaceValue: "North Goa & Anjuna Beach",
     },
     {
@@ -46,7 +46,7 @@ const DEFAULT_DESTINATIONS: Destination[] = [
             "https://images.unsplash.com/photo-1720819029162-8500607ae232?q=80&w=3132&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
         usp:
             "Find peace by the Ganges with serene yoga retreats, spiritual awakenings, and riverside meditation.",
-        activePlaceLabel: "Most Active Place",
+        activePlaceLabel: "Community Hotspot",
         activePlaceValue: "Laxman Jhula & Tapovan",
     },
 ];
@@ -93,12 +93,12 @@ export default function ActiveDestinations({
         <section className="max-w-[1200px] mx-auto container-custom">
             <header className="text-center mb-12">
                 <h2 className="font-display text-4xl md:text-5xl font-extrabold text-[#16324F] mb-4">
-                    SyncTrip is Currently Active In
+                    <span className="text-[#3ABEF5]">SyncTrip</span> is Currently Active In
                 </h2>
                 <p className="text-neutral-600 max-w-3xl mx-auto text-base md:text-lg leading-relaxed">
-                    <span className="text-[#3ABEF5] font-semibold">Create your trip</span> in these
-                    destinations and <span className="text-[#3ABEF5] font-semibold">instantly match </span>
-                    with like-minded travellers heading to the same place.
+                    <strong>Host your trip</strong> in these trending destinations.
+                    Connect with <strong>verified travel buddies</strong> and lead your own
+                    adventure in India’s most active traveler communities.
                 </p>
             </header>
 
@@ -171,34 +171,52 @@ export default function ActiveDestinations({
             </div>
 
             <div className="rounded-xl p-8 md:p-12 border border-[#E3F5FF] bg-gradient-to-tr from-[#F7FAFD] to-[#F2FAFF] text-center">
-                <h4 className="text-xl md:text-2xl font-semibold text-[#16324F] mb-3">How SyncTrip Works</h4>
-                <p className="text-neutral-600 max-w-2xl mx-auto mb-6">Create your perfect trip and we&apos;ll connect you with travellers going to the same destination on similar dates.</p>
 
-                <div className="flex flex-wrap justify-center items-center gap-4 mb-6">
-                    <div className="px-4 py-2 bg-white rounded-lg font-semibold text-[#16324F] shadow-sm">Create a Trip</div>
-                    <div className="text-[#3ABEF5] font-bold">→</div>
-                    <div className="px-4 py-2 bg-white rounded-lg font-semibold text-[#16324F] shadow-sm">Find Matches</div>
-                    <div className="text-[#3ABEF5] font-bold">→</div>
-                    <div className="px-4 py-2 bg-white rounded-lg font-semibold text-[#16324F] shadow-sm">Swipe & Connect</div>
-                    <div className="text-[#3ABEF5] font-bold">→</div>
-                    <div className="px-4 py-2 bg-white rounded-lg font-semibold text-[#16324F] shadow-sm">Plan Together</div>
+                <h4 className="text-xl md:text-2xl font-semibold text-[#16324F] mb-3">
+                    How SyncTrip Works
+                </h4>
+
+                <p className="text-neutral-600 max-w-2xl mx-auto mb-8">
+                    Create your perfect trip and connect with travellers heading to the same destination — or join groups already planning their adventure.
+                </p>
+
+                {/* FLOW */}
+                <div className="flex flex-wrap justify-center items-center gap-3 md:gap-4 mb-8">
+
+                    <div className="px-4 py-2.5 bg-white rounded-xl font-semibold text-[#16324F] shadow-sm">
+                        Create a Trip
+                    </div>
+
+                    <div className="text-[#3ABEF5] font-bold hidden sm:block">→</div>
+
+                    <div className="px-4 py-2.5 bg-white rounded-xl font-semibold text-[#16324F] shadow-sm">
+                        Find Matches <span className="text-neutral-400 font-medium">or</span> Explore Groups
+                    </div>
+
+                    <div className="text-[#3ABEF5] font-bold hidden sm:block">→</div>
+
+                    <div className="px-4 py-2.5 bg-white rounded-xl font-semibold text-[#16324F] shadow-sm">
+                        Swipe & Connect <span className="text-neutral-400 font-medium">or</span> Join a Group
+                    </div>
+
+                    <div className="text-[#3ABEF5] font-bold hidden sm:block">→</div>
+
+                    <div className="px-4 py-2.5 bg-white rounded-xl font-semibold text-[#16324F] shadow-sm">
+                        Plan Together
+                    </div>
                 </div>
 
                 <button
                     onClick={() => loginThenNavigate('')}
-                    className="btn btn-secondary"
-                    style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        width: 'max-content',
-                        margin: '0 auto'
-                    }}
+                    className="btn btn-secondary mx-auto flex items-center justify-center"
                 >
-                    <span className="btn-secondary-text">Create Your First Trip</span>
-
+                    <span className="btn-secondary-text">
+                        Create Your First Trip
+                    </span>
                 </button>
+
             </div>
+
         </section>
     );
 }
