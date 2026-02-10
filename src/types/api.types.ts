@@ -78,7 +78,7 @@ export interface UserTrip {
     activities?: UserTripActivity[]; // List of activities planned for the trip
     activitiesCount?: number;
     groupContext?: groupContextTrip;
-    
+    isGroupTrip?: boolean;
 };
 export type groupContextTrip = {
     isInGroup: boolean,

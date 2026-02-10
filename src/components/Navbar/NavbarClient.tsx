@@ -225,7 +225,7 @@ const NavbarClient = ({ }) => {
                 Explore
               </span>
             </li>
-            <li className="nav-item"
+            {/* <li className="nav-item"
               onClick={() => {
                 if (!isActive(ROUTES.BLOGS)) {
                   redirectBtnClick(ROUTES.BLOGS);
@@ -242,7 +242,7 @@ const NavbarClient = ({ }) => {
               <span className="nav-link">
                 Blogs
               </span>
-            </li>
+            </li> */}
             {pageType == PageTypeEnum.HOSTED_TRIPS ? (
               (isLoggedIn &&
 
@@ -502,7 +502,7 @@ const NavbarClient = ({ }) => {
           >
             <span className="nav-link">Explore</span>
           </li>
-          <li className="nav-item"
+          {/* <li className="nav-item"
             onClick={() => {
               if (!isActive(ROUTES.BLOGS)) {
                 redirectBtnClick(ROUTES.BLOGS);
@@ -519,7 +519,7 @@ const NavbarClient = ({ }) => {
           //   }}
           >
             <span className="nav-link">Blogs</span>
-          </li>
+          </li> */}
           {isLoggedIn &&
 
             <li className="nav-item"

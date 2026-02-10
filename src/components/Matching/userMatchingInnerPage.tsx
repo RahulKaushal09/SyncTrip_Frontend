@@ -6,12 +6,13 @@ import './matching.css'
 import apiClient from '@/utils/apiClient'
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import TripServices from '@/utils/trip.utils'
-import { userTripFields } from '@/constants'
+import { tripPrivacyOptions, userTripFields } from '@/constants'
 import { UserTrip } from '@/types'
 import { CommonServices } from '@/utils'
 import toast from 'react-hot-toast'
 import NotificationPermissionPrompt from "@/components/popups/NotificationPermissionPrompt"
 import GroupTripOnMatchingCard from '../Cards/GroupTripOnMatchingCard'
+import PrivateTripCard from '../Cards/PrivateTripCard'
 
 export type Candidate = {
     id: string
@@ -541,10 +542,25 @@ export default function MatchingPage() {
         }
     }
 
+    const makeTripPublic = async (tripId: string) => {
+        try {
+            const updatePrivacy: Partial<UserTrip> = { privacy: tripPrivacyOptions.PUBLIC };
+            const res = await TripServices.updateTripPartial(tripId, updatePrivacy);
+
+            if (res.userTrip) toast.success("Trip Privacy changed to Public!");
+            else {
+                toast.error("Something went wrong while updating trip privacy.");
+            }
+        } catch (error: any) {
+            console.error("Failed to update privacy", error);
+        }
+    };
+
     const currentTrip = allTrips.find(trip => trip.id === tripId);
     // -------------------------------------
     // NO PROFILES LEFT
     // -------------------------------------
+    // console.log(currentTrip);
     if (!current || locationId === null) {
         return (
             <main className="matchingpage">
@@ -563,7 +579,9 @@ export default function MatchingPage() {
                         fetchTripDetails();
                     }}
                 />
-                {currentTrip && currentTrip.groupContext && currentTrip.groupContext.isInGroup ? (
+                {currentTrip && currentTrip.privacy?.toLowerCase() === tripPrivacyOptions.PRIVATE ? (
+                <PrivateTripCard trip={currentTrip as UserTrip} onMakePublic={() => makeTripPublic(currentTrip.id as string)} />) : (
+                currentTrip && currentTrip.groupContext && currentTrip.groupContext.isInGroup ? (
                     <GroupTripOnMatchingCard trip={currentTrip as UserTrip} />
                 ) : (
                     <>
@@ -589,7 +607,7 @@ export default function MatchingPage() {
 
                         {matchPopupProfile && <MatchPopUpBox startChat={startChat} matchPopupProfile={matchPopupProfile} closePopup={closePopup} />}
                     </>
-                )}
+                ))}
             </main>
         )
     }
@@ -615,7 +633,8 @@ export default function MatchingPage() {
                     fetchTripDetails();
                 }}
             />
-            {currentTrip && currentTrip.groupContext && currentTrip.groupContext.isInGroup ? (
+            {currentTrip && currentTrip.privacy?.toLowerCase() === tripPrivacyOptions.PRIVATE ? (
+                <PrivateTripCard trip={currentTrip as UserTrip} onMakePublic={() => makeTripPublic(currentTrip.id as string)} />) : (currentTrip && currentTrip.groupContext && currentTrip.groupContext.isInGroup ? (
                 <GroupTripOnMatchingCard trip={currentTrip as UserTrip} />
             ) : (
                 <>
@@ -876,7 +895,7 @@ export default function MatchingPage() {
                     {matchPopupProfile && (<MatchPopUpBox startChat={startChat} matchPopupProfile={matchPopupProfile} closePopup={closePopup} />)}
 
                 </>
-            )}
+            ))}
         </main>
     )
 }

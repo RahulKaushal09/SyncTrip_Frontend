@@ -102,7 +102,7 @@ export default function MoreLocationsUnlocking({ onNotify }: Props) {
             </div>
             <div className="mt-2 text-xs text-neutral-1">
               <span className="font-semibold text-secondary-1">Next launch:</span>{" "}
-              Shimla — Jan 2026
+              Shimla — March 2026
             </div>
             <div className="text-[12px] text-neutral-1 mt-1">{nextLaunchProgress}%</div>
           </div>

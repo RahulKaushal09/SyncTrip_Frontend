@@ -14,9 +14,10 @@ export default function NotificationPermissionPrompt() {
       if (Notification.permission === 'granted') {
         // Optionally auto-register token if already granted
         const token = await requestFcmToken();
+        // store it in local +++
         if (token) {
           try {
-            await apiClient.post('/user/fcm-token', { token });
+            await apiClient.post('/notifications/save-token', { token });
           } catch (err) {
             console.error('Failed to save existing FCM token', err);
           }

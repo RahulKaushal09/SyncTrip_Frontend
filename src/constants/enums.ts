@@ -42,6 +42,11 @@ export const TripStatusEnum = Object.freeze({
     CANCELLED: 'cancelled',
 } as const);
 
+export const tripPrivacyOptions = Object.freeze({
+    PUBLIC: 'public trip',
+    PRIVATE: 'invite only',
+});
+
 export const NotificationTypeEnum = Object.freeze({
     TRIP_INVITATION: 'trip_invitation',
     TRIP_UPDATE: 'trip_update',
@@ -73,7 +78,7 @@ export const LocationFields = Object.freeze({
     CULTURES: 'cultures',
     FESTIVALS: 'festivals',
     FILTER_TAGS: 'filterTags',
-        FEATURED: 'featured',
+    FEATURED: 'featured',
     SEO: 'seo',
 });
 export const TripFields = Object.freeze({

@@ -1,3 +1,55 @@
+.phone-verify-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.send-otp-btn {
+    width: 100%;
+    height: 44px;
+    font-weight: 600;
+}
+
+.verified-badge {
+    background: #e6f7ee;
+    color: #0f9d58;
+    padding: 10px;
+    border-radius: 10px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.otp-section {
+    animation: fadeSlide .25s ease;
+}
+
+.otp-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.resend-btn {
+    background: none;
+    border: none;
+    color: var(--primary);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+@keyframes fadeSlide {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
 /* Overlay */
 .full-profile-overlay {
     position: fixed;
