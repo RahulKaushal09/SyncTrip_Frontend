@@ -91,7 +91,7 @@ export const ImageCropper = ({
                 </button>
                 <button
                     onClick={handleDone}
-                    className="absolute top-4 right-4 py-1.5 text-[var(--primary-1)] bg-white border-[var(--primary-1)] hover:text-white hover:!bg-[var(--primary-1)] border-[1px] font-bold rounded-2xl px-3 shadow-lg shadow-[var(--primary-2)] flex items-center justify-center gap-2 transition-all"
+                    className="absolute top-4 right-4 py-1.5 text-[var(--primary-1)] bg-white hover:!bg-[var(--primary-1)] border-[var(--primary-1)] hover:text-white border-[1px] font-bold rounded-2xl px-3 shadow-lg shadow-[var(--primary-2)] flex items-center justify-center gap-2 transition-all"
                 >
                     <Scissors size={18} /> Apply Crop
                 </button>
