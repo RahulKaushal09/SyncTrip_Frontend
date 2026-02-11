@@ -83,6 +83,18 @@ export const ImageCropper = ({
                 >
                     <RotateCw size={22} strokeWidth={2.5} />
                 </button>
+                <button
+                    onClick={onCancel}
+                    className="absolute px-2 top-4 left-4 py-1.5 text-sm font-semibold text-white hover:bg-neutral-50 rounded-2xl transition-colors hover:!text-black"
+                >
+                    Cancel
+                </button>
+                <button
+                    onClick={handleDone}
+                    className="absolute top-4 right-4 py-1.5 text-[var(--primary-1)] bg-white border-[var(--primary-1)] hover:text-white hover:!bg-[var(--primary-1)] border-[1px] font-bold rounded-2xl px-3 shadow-lg shadow-[var(--primary-2)] flex items-center justify-center gap-2 transition-all"
+                >
+                    <Scissors size={18} /> Apply Crop
+                </button>
             </div>
 
             <div className="p-6 bg-white space-y-6">
@@ -145,22 +157,6 @@ export const ImageCropper = ({
                         onChange={(e) => setRotation(Number(e.target.value))}
                         className="w-full h-1.5 bg-neutral-100 rounded-lg appearance-none cursor-pointer accent-[var(--primary-1)]"
                     />
-                </div>
-
-                {/* Footer Actions */}
-                <div className="flex gap-3 pt-4 border-t border-neutral-50">
-                    <button
-                        onClick={onCancel}
-                        className="flex-1 py-3 text-sm font-semibold text-neutral-500 hover:bg-neutral-50 rounded-2xl transition-colors"
-                    >
-                        Cancel
-                    </button>
-                    <button
-                        onClick={handleDone}
-                        className="flex-1 py-3 bg-[var(--primary-1)] hover:bg-[var(--primary-hover)] text-white font-bold rounded-2xl shadow-lg shadow-[var(--primary-background)] flex items-center justify-center gap-2 transition-all"
-                    >
-                        <Scissors size={18} /> Apply Crop
-                    </button>
                 </div>
             </div>
         </div>
