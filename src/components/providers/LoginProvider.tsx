@@ -25,6 +25,7 @@ interface LoginContextType {
     updateLastStepOfCompleteProfile: (step: number) => void;
     lastStepOfCompleteProfile: number;
     isEmailVerified: boolean;
+    registerFcmTokenForUser: (u: User | null) => Promise<void>;
 }
 
 const LoginContext = createContext<LoginContextType | undefined>(undefined);
@@ -98,6 +99,7 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
 
             // --- CASE 1: User already logged in ---
             if (existingUser) {
+                if (!existingUser.name || existingUser.name === null) existingUser.name = "Guest User";
                 setUser(existingUser);
 
                 // skipCompleteProfile -> force skip
@@ -152,7 +154,10 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
                 console.debug("FCM token not granted or failed to get token");
                 return;
             }
-            // store it in context +++
+            if (u.fcmToken === token) {
+                console.debug("FCM token is already up to date in user profile.");
+                return;
+            }
             // send to backend - use apiClient if available (it should attach auth header), else use fetch
             try {
                 if (apiClient && typeof apiClient.post === "function") {
@@ -169,6 +174,7 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
                         body: JSON.stringify({ token }),
                     });
                 }
+                updateUserFields({ fcmToken: token });
                 console.log("FCM token registered with backend");
             } catch (err) {
                 console.error("Failed to save FCM token to backend", err);
@@ -179,6 +185,7 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
     }, []);
 
     const handleLogin = useCallback((user: User, requiresPhone = false) => {
+        if (!user.name || user.name === null) user.name = "Guest User";
         setUser(user);
         StorageUtils.setUser(user);
 
@@ -274,7 +281,8 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
         updateUserFields,
         updateLastStepOfCompleteProfile,
         lastStepOfCompleteProfile,
-        isEmailVerified
+        isEmailVerified,
+        registerFcmTokenForUser
     };
 
     return (

@@ -2,37 +2,28 @@
 
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import apiClient from '@/utils/apiClient';
-import { requestFcmToken, requestNotificationPermissionOnly } from '@/utils/firebaseClient';
+import { requestNotificationPermissionOnly } from '@/utils/firebaseClient';
+import { useLogin } from '../providers/LoginProvider';
 
 export default function NotificationPermissionPrompt() {
+  const { user, registerFcmTokenForUser } = useLogin();
   const [showPrompt, setShowPrompt] = useState(false);
   const [showGuide, setShowGuide] = useState(false);
 
   useEffect(() => {
     async function checkPermission() {
-      if (Notification.permission === 'granted') {
-        // Optionally auto-register token if already granted
-        const token = await requestFcmToken();
-        // store it in local +++
-        if (token) {
-          try {
-            await apiClient.post('/notifications/save-token', { token });
-          } catch (err) {
-            console.error('Failed to save existing FCM token', err);
-          }
-        }
+      if (Notification.permission === 'granted' && user) {
+        await registerFcmTokenForUser(user);
         return;
       }
 
       const dismissed = localStorage.getItem('synctrip_notif_dismissed');
-      if (dismissed) return;
+      if (dismissed || !user) return;
 
       setShowPrompt(true);
     }
-
     checkPermission();
-  }, []);
+  }, [user, registerFcmTokenForUser]);
 
   async function handleEnable() {
     setShowPrompt(false);
@@ -43,17 +34,11 @@ export default function NotificationPermissionPrompt() {
       return;
     }
 
-    const token = await requestFcmToken();
-    if (token) {
-      try {
-        await apiClient.post('/user/fcm-token', { token });
-        toast.success('Notifications enabled! You’ll get match & message alerts.');
-      } catch (err) {
-        console.error('Failed to save token', err);
-        toast.error('Enabled, but failed to save settings. Try again later.');
-      }
-    } else {
-      toast.error('Failed to enable notifications. Please try again.');
+    try {
+      await registerFcmTokenForUser(user);
+      toast.success('Notifications Enabled!');
+    } catch (error) {
+      toast.error('Failed to sync notifications settings.');
     }
   }
 
@@ -65,8 +50,8 @@ export default function NotificationPermissionPrompt() {
   function closeGuide() {
     setShowGuide(false);
   }
-  console.log("showPrompt",showPrompt);
-  console.log("showGuide",showGuide);
+  console.log("showPrompt", showPrompt);
+  console.log("showGuide", showGuide);
   if (!showPrompt && !showGuide) return null;
 
   return (

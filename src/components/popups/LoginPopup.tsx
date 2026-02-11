@@ -641,7 +641,7 @@ export default function LoginPopup({ onClose, onLogin, headingText, onEmailVerif
         </button>
 
         <h2 className="login-popup-title">
-          {headingText ? headingText : (isRegistering ? 'Create an Account' : 'Welcome Back')}
+          {headingText ? headingText : (isRegistering ? 'Create an Account' : 'Welcome to SyncTrip!')}
         </h2>
         {!isRegistering && (
           <div className="login-popup-google-container">

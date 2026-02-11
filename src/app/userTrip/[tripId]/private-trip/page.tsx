@@ -71,7 +71,7 @@ export default function PrivateTripPage() {
             else {
                 toast.error("Something went wrong while updating trip privacy.");
             }
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error("Failed to update privacy", error);
         } finally {
             setIsUpdating(false);

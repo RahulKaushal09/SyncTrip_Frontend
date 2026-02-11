@@ -30,7 +30,7 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
     const [step, setStep] = useState(lastStepOfCompleteProfile > 0 ? lastStepOfCompleteProfile : 1);
     const { showLoader, hideLoader } = useLoader();
     const [form, setForm] = useState({
-        name: user.name,
+        name: user.name.toLowerCase().includes("guest") ? "" : user.name,
         bio: user.bio || '',
         address: {
             pincode: user.address?.pincode || '',
@@ -273,7 +273,8 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
     const validateStep = async () => {
         setError('');
         if (step === 1) {
-            if (!form.name) return "Please enter your Fullname."
+            if (!form.name) return "Please enter your Fullname.";
+            if (form.name.toLowerCase().includes("guest")) return "Please enter a valid Fullname.";
             if (!form.email) return "Email ID is required.";
             const emailError = ValidationUtils.validateEmail(form.email);
             if (emailError) {

@@ -86,7 +86,7 @@ export default function TravelModePage() {
 
                 <h1 className="h2 text-secondary-1 mb-3">Group Voyage</h1>
                 <p className="r2 text-secondary-1 mb-8 leading-relaxed">
-                  You're currently synced with your travel group. Individual modifications are locked to maintain the collective itinerary.
+                  You&apos;re currently synced with your travel group. Individual modifications are locked to maintain the collective itinerary.
                 </p>
 
                 {/* Status Chips */}
@@ -124,7 +124,9 @@ export default function TravelModePage() {
                 <div className="h-1.5 w-full bg-neutral-4 rounded-full overflow-hidden">
                   <div
                     className="h-full bg-primary-1 transition-all duration-1000"
-                    style={{ width: `${(groupData?.membersCount / groupData?.maxMembers) * 100}%` }}
+                    style={{
+                      width: `${((groupData?.membersCount ?? 0) / (groupData?.maxMembers ?? 1)) * 100}%`
+                    }}
                   />
                 </div>
               </div>

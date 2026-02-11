@@ -128,7 +128,7 @@ const ChoiceFeatureSection = () => {
               </h2>
 
               <p className="text-sm text-neutral-1/70 max-w-xl mx-auto lg:mx-0 font-medium leading-relaxed">
-                Don't wait for a tour guide. Create your itinerary and let SyncTrip connect you with verified travelers heading the same way. Keep your vibe, share the journey.
+                Don&apos;t wait for a tour guide. Create your itinerary and let SyncTrip connect you with verified travelers heading the same way. Keep your vibe, share the journey.
               </p>
             </div>
 
