@@ -6,12 +6,13 @@ import './matching.css'
 import apiClient from '@/utils/apiClient'
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import TripServices from '@/utils/trip.utils'
-import { userTripFields } from '@/constants'
+import { tripPrivacyOptions, userTripFields } from '@/constants'
 import { UserTrip } from '@/types'
 import { CommonServices } from '@/utils'
 import toast from 'react-hot-toast'
 import NotificationPermissionPrompt from "@/components/popups/NotificationPermissionPrompt"
 import GroupTripOnMatchingCard from '../Cards/GroupTripOnMatchingCard'
+import PrivateTripCard from '../Cards/PrivateTripCard'
 
 export type Candidate = {
     id: string
@@ -430,7 +431,6 @@ export default function MatchingPage() {
             // 🔹 send swipe in background
             sendSwipe(current.id, direction)
                 .then((data) => {
-                    debugger;
                     if (data?.match) {
                         setMatchPopupProfile(current)
                         setMatchChatId(data.chatId)
@@ -541,10 +541,35 @@ export default function MatchingPage() {
         }
     }
 
+    const makeTripPublic = async (tripId: string) => {
+        try {
+            const updatePrivacy: Partial<UserTrip> = { privacy: tripPrivacyOptions.PUBLIC };
+            const res = await TripServices.updateTripPartial(tripId, updatePrivacy);
+
+            if (res.userTrip) {
+                setAllTrips((prevTrips) =>
+                    prevTrips.map((trip) =>
+                        trip.id === res.userTrip.id
+                            ? { ...trip, privacy: tripPrivacyOptions.PUBLIC }
+                            : trip
+                    )
+                );
+                fetchCandidates();
+                toast.success("Trip Privacy changed to Public!")
+            }
+            else {
+                toast.error("Something went wrong while updating trip privacy.");
+            }
+        } catch (error: unknown) {
+            console.error("Failed to update privacy", error);
+        }
+    };
+
     const currentTrip = allTrips.find(trip => trip.id === tripId);
     // -------------------------------------
     // NO PROFILES LEFT
     // -------------------------------------
+    // console.log(currentTrip);
     if (!current || locationId === null) {
         return (
             <main className="matchingpage">
@@ -563,33 +588,35 @@ export default function MatchingPage() {
                         fetchTripDetails();
                     }}
                 />
-                {currentTrip && currentTrip.groupContext && currentTrip.groupContext.isInGroup ? (
-                    <GroupTripOnMatchingCard trip={currentTrip as UserTrip} />
-                ) : (
-                    <>
-                        <div className="empty">
-                            <div className='empty-innerBox'>
-                                <p>No more travelers nearby.</p>
+                {currentTrip && currentTrip.privacy?.toLowerCase() === tripPrivacyOptions.PRIVATE ? (
+                    <PrivateTripCard trip={currentTrip as UserTrip} onMakePublic={() => makeTripPublic(currentTrip.id as string)} />) : (
+                    currentTrip && currentTrip.groupContext && currentTrip.groupContext.isInGroup ? (
+                        <GroupTripOnMatchingCard trip={currentTrip as UserTrip} />
+                    ) : (
+                        <>
+                            <div className="empty">
+                                <div className='empty-innerBox'>
+                                    <p>No more travelers nearby.</p>
 
-                                <button
-                                    className="btn btn-secondary"
-                                    style={{ marginTop: "16px" }}
-                                    onClick={loadPassedProfiles}
-                                >
-                                    View Previously Skipped Travellers
-                                </button>
+                                    <button
+                                        className="btn btn-secondary"
+                                        style={{ marginTop: "16px" }}
+                                        onClick={loadPassedProfiles}
+                                    >
+                                        View Previously Skipped Travellers
+                                    </button>
 
-                                {reviewMode && profiles.length === 0 && (
-                                    <p style={{ marginTop: 10, color: "#777" }}>
-                                        You haven’t skipped anyone yet.
-                                    </p>
-                                )}
+                                    {reviewMode && profiles.length === 0 && (
+                                        <p style={{ marginTop: 10, color: "#777" }}>
+                                            You haven’t skipped anyone yet.
+                                        </p>
+                                    )}
+                                </div>
                             </div>
-                        </div>
 
-                        {matchPopupProfile && <MatchPopUpBox startChat={startChat} matchPopupProfile={matchPopupProfile} closePopup={closePopup} />}
-                    </>
-                )}
+                            {matchPopupProfile && <MatchPopUpBox startChat={startChat} matchPopupProfile={matchPopupProfile} closePopup={closePopup} />}
+                        </>
+                    ))}
             </main>
         )
     }
@@ -615,268 +642,270 @@ export default function MatchingPage() {
                     fetchTripDetails();
                 }}
             />
-            {currentTrip && currentTrip.groupContext && currentTrip.groupContext.isInGroup ? (
-                <GroupTripOnMatchingCard trip={currentTrip as UserTrip} />
-            ) : (
-                <>
-                    {/* GUIDELINES */}
-                    {showSwipeGuide && (
-                        <div className="swipe-guide-overlay">
-                            <div className="swipe-guide-card">
-                                <div className="swipe-guide-arrows">
-                                    <div className="arrow left">←</div>
-                                    <div className="arrow up">↑</div>
-                                    <div className="arrow right">→</div>
+            {currentTrip && currentTrip.privacy?.toLowerCase() === tripPrivacyOptions.PRIVATE ? (
+                <PrivateTripCard trip={currentTrip as UserTrip} onMakePublic={() => makeTripPublic(currentTrip.id as string)} />)
+                : (currentTrip && currentTrip.groupContext && currentTrip.groupContext.isInGroup ? (
+                    <GroupTripOnMatchingCard trip={currentTrip as UserTrip} />
+                ) : (
+                    <>
+                        {/* GUIDELINES */}
+                        {showSwipeGuide && (
+                            <div className="swipe-guide-overlay">
+                                <div className="swipe-guide-card">
+                                    <div className="swipe-guide-arrows">
+                                        <div className="arrow left">←</div>
+                                        <div className="arrow up">↑</div>
+                                        <div className="arrow right">→</div>
+                                    </div>
+
+                                    <h3>Swipe to connect</h3>
+
+                                    <p>
+                                        <strong>Swipe right</strong> to connect<br />
+                                        <strong>Swipe left</strong> to skip<br />
+                                        <strong>Swipe up</strong> to view full details
+                                    </p>
+
+
+                                    <button onClick={closeSwipeGuide}>Got it</button>
                                 </div>
-
-                                <h3>Swipe to connect</h3>
-
-                                <p>
-                                    <strong>Swipe right</strong> to connect<br />
-                                    <strong>Swipe left</strong> to skip<br />
-                                    <strong>Swipe up</strong> to view full details
-                                </p>
-
-
-                                <button onClick={closeSwipeGuide}>Got it</button>
                             </div>
-                        </div>
-                    )}
-                    {/* <MultipleTripSelectionHeader tripName={tripName} dates={dateString} setDates={setDateString} tripId={tripId as string} setSelectedTripId={setTripId} setSelectedTripName={setTripName} /> */}
+                        )}
+                        {/* <MultipleTripSelectionHeader tripName={tripName} dates={dateString} setDates={setDateString} tripId={tripId as string} setSelectedTripId={setTripId} setSelectedTripName={setTripName} /> */}
 
-                    <section className="stage">
-                        <div className="card-wrap">
-                            {/* NEXT CARD PREVIEW */}
-                            {profiles[index + 1] && (
-                                <div className="next-card" aria-hidden>
-                                    <img src={profiles[index + 1].userSnapshot.profile_picture?.[0]} alt={profiles[index + 1].userSnapshot.name} />
-                                </div>
-                            )}
+                        <section className="stage">
+                            <div className="card-wrap">
+                                {/* NEXT CARD PREVIEW */}
+                                {profiles[index + 1] && (
+                                    <div className="next-card" aria-hidden>
+                                        <img src={profiles[index + 1].userSnapshot.profile_picture?.[0]} alt={profiles[index + 1].userSnapshot.name} />
+                                    </div>
+                                )}
 
-                            {/* ACTIVE CARD */}
-                            <div
-                                className="card"
-                                onPointerDown={onPointerDown}
-                                onPointerMove={onPointerMove}
-                                onPointerUp={onPointerUp}
-                                onPointerCancel={onPointerCancel}
-                                style={{
-                                    transform: `translate3d(${dx}px, ${expandDy}px, 0) rotate(${rotation}deg)`,
-                                    borderRadius: `18px 18px ${bottomRadius}px ${bottomRadius}px`,
-                                    transition: transitioning ? 'all 0.28s ease' : isDragging ? 'none' : 'all 0.18s ease',
-                                    touchAction: 'none' // ensure pointer capture works and prevents scrolling while swiping
-                                }}
-                                role="button"
-                                aria-label={`Profile ${current.userSnapshot.name}`}
-                                tabIndex={0}
-                            >
-                                <img src={current.userSnapshot?.profile_picture?.[0]} alt={current.userSnapshot.name} />
-                                <div className="MatchingCardMeta">
-                                    <div className='MatchingCardBottom'>
-                                        <div className="MatchingCardTitle">
-                                            <span>{current.userSnapshot.name}, {current.userSnapshot.age}</span>
-                                        </div>
-                                        <div className="MatchingCardActivities">
-                                            {current.tripSnapshot.interests?.join(" • ")}
-                                        </div>
-                                        <div className="MatchingCardTripDates">
-                                            <span>{CommonServices.formatDateShortHeaderTripSelection(current.tripSnapshot.startDate, current.tripSnapshot.endDate)}</span>
+                                {/* ACTIVE CARD */}
+                                <div
+                                    className="card"
+                                    onPointerDown={onPointerDown}
+                                    onPointerMove={onPointerMove}
+                                    onPointerUp={onPointerUp}
+                                    onPointerCancel={onPointerCancel}
+                                    style={{
+                                        transform: `translate3d(${dx}px, ${expandDy}px, 0) rotate(${rotation}deg)`,
+                                        borderRadius: `18px 18px ${bottomRadius}px ${bottomRadius}px`,
+                                        transition: transitioning ? 'all 0.28s ease' : isDragging ? 'none' : 'all 0.18s ease',
+                                        touchAction: 'none' // ensure pointer capture works and prevents scrolling while swiping
+                                    }}
+                                    role="button"
+                                    aria-label={`Profile ${current.userSnapshot.name}`}
+                                    tabIndex={0}
+                                >
+                                    <img src={current.userSnapshot?.profile_picture?.[0]} alt={current.userSnapshot.name} />
+                                    <div className="MatchingCardMeta">
+                                        <div className='MatchingCardBottom'>
+                                            <div className="MatchingCardTitle">
+                                                <span>{current.userSnapshot.name}, {current.userSnapshot.age}</span>
+                                            </div>
+                                            <div className="MatchingCardActivities">
+                                                {current.tripSnapshot.interests?.join(" • ")}
+                                            </div>
+                                            <div className="MatchingCardTripDates">
+                                                <span>{CommonServices.formatDateShortHeaderTripSelection(current.tripSnapshot.startDate, current.tripSnapshot.endDate)}</span>
+                                            </div>
                                         </div>
                                     </div>
+                                    {reviewMode && <div className="badge-previouslySkipped">Previously Skipped</div>}
+
                                 </div>
-                                {reviewMode && <div className="badge-previouslySkipped">Previously Skipped</div>}
 
-                            </div>
-
-                            {/* DETAILS PANEL (revealed on swipe up) */}
-                            {/* DETAILS PANEL (revealed on swipe up) */}
-                            {(expandDy < 0 || isExpanded) && current && (
-                                <div
-                                    className="card-details"
-                                    style={{
-                                        position: 'absolute',
-                                        bottom: 0,
-                                        left: 0,
-                                        width: '100%',
-                                        height: isExpanded ? '320px' : `${Math.max(0, -expandDy)}px`,
-                                        backgroundColor: 'rgba(255, 255, 255, 0.96)',
-                                        backdropFilter: 'blur(12px)',
-                                        transition: transitioning ? 'height 0.28s ease-out' : 'none',
-                                        overflow: 'hidden',
-                                        zIndex: 1,
-                                        borderRadius: '0 0 18px 18px', // optional: keep bottom rounded if you want
-                                    }}
-                                >
+                                {/* DETAILS PANEL (revealed on swipe up) */}
+                                {/* DETAILS PANEL (revealed on swipe up) */}
+                                {(expandDy < 0 || isExpanded) && current && (
                                     <div
+                                        className="card-details"
                                         style={{
-                                            padding: '20px 20px 0',
-                                            height: '100%',
-                                            overflowY: 'auto',
-                                            paddingBottom: '20px',
+                                            position: 'absolute',
+                                            bottom: 0,
+                                            left: 0,
+                                            width: '100%',
+                                            height: isExpanded ? '320px' : `${Math.max(0, -expandDy)}px`,
+                                            backgroundColor: 'rgba(255, 255, 255, 0.96)',
+                                            backdropFilter: 'blur(12px)',
+                                            transition: transitioning ? 'height 0.28s ease-out' : 'none',
+                                            overflow: 'hidden',
+                                            zIndex: 1,
+                                            borderRadius: '0 0 18px 18px', // optional: keep bottom rounded if you want
                                         }}
                                     >
-                                        {/* Close Button */}
-                                        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '16px' }}>
-                                            <button
-                                                onClick={() => {
-                                                    setIsExpanded(false)
-                                                    setExpandDy(0)
-                                                    setTransitioning(true)
-                                                    setTimeout(() => setTransitioning(false), 280)
-                                                }}
-                                                style={{
-                                                    background: 'none',
-                                                    border: 'none',
-                                                    fontSize: '28px',
-                                                    cursor: 'pointer',
-                                                    color: '#444',
-                                                    padding: '0',
-                                                    width: '36px',
-                                                    height: '36px',
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                }}
-                                            >
-                                                ×
-                                            </button>
-                                        </div>
+                                        <div
+                                            style={{
+                                                padding: '20px 20px 0',
+                                                height: '100%',
+                                                overflowY: 'auto',
+                                                paddingBottom: '20px',
+                                            }}
+                                        >
+                                            {/* Close Button */}
+                                            <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '16px' }}>
+                                                <button
+                                                    onClick={() => {
+                                                        setIsExpanded(false)
+                                                        setExpandDy(0)
+                                                        setTransitioning(true)
+                                                        setTimeout(() => setTransitioning(false), 280)
+                                                    }}
+                                                    style={{
+                                                        background: 'none',
+                                                        border: 'none',
+                                                        fontSize: '28px',
+                                                        cursor: 'pointer',
+                                                        color: '#444',
+                                                        padding: '0',
+                                                        width: '36px',
+                                                        height: '36px',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                    }}
+                                                >
+                                                    ×
+                                                </button>
+                                            </div>
 
-                                        {/* Multiple Profile Pictures */}
-                                        <div style={{ display: 'flex', gap: '10px', overflowX: 'auto', paddingBottom: '12px', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-                                            {current.userSnapshot.profile_picture
-                                                .filter((url: string) => url.includes('synctrip.in'))
-                                                .map((url: string, i: number) => (
+                                            {/* Multiple Profile Pictures */}
+                                            <div style={{ display: 'flex', gap: '10px', overflowX: 'auto', paddingBottom: '12px', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+                                                {current.userSnapshot.profile_picture
+                                                    .filter((url: string) => url.includes('synctrip.in'))
+                                                    .map((url: string, i: number) => (
+                                                        <img
+                                                            key={i}
+                                                            src={url}
+                                                            alt={`${current.userSnapshot.name}'s photo ${i + 1}`}
+                                                            style={{
+                                                                width: '100px',
+                                                                height: '100px',
+                                                                borderRadius: '12px',
+                                                                objectFit: 'cover',
+                                                                flexShrink: 0,
+                                                                boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                                                            }}
+                                                        />
+                                                    ))}
+                                                {current.userSnapshot.profile_picture.filter((url: string) => url.includes('synctrip.in')).length === 0 && (
                                                     <img
-                                                        key={i}
-                                                        src={url}
-                                                        alt={`${current.userSnapshot.name}'s photo ${i + 1}`}
+                                                        src={current.userSnapshot?.profile_picture?.[0]}
+                                                        alt={current.userSnapshot.name}
                                                         style={{
                                                             width: '100px',
                                                             height: '100px',
                                                             borderRadius: '12px',
                                                             objectFit: 'cover',
                                                             flexShrink: 0,
-                                                            boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
                                                         }}
                                                     />
-                                                ))}
-                                            {current.userSnapshot.profile_picture.filter((url: string) => url.includes('synctrip.in')).length === 0 && (
-                                                <img
-                                                    src={current.userSnapshot?.profile_picture?.[0]}
-                                                    alt={current.userSnapshot.name}
-                                                    style={{
-                                                        width: '100px',
-                                                        height: '100px',
-                                                        borderRadius: '12px',
-                                                        objectFit: 'cover',
-                                                        flexShrink: 0,
-                                                    }}
-                                                />
-                                            )}
-                                        </div>
-
-                                        {/* User Info Section */}
-                                        <div style={{ marginTop: '20px' }}>
-                                            <h3 style={{ fontSize: '18px', marginBottom: '12px', color: '#222' }}>
-                                                About {current.userSnapshot.name}
-                                            </h3>
-
-                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '15px', color: '#444' }}>
-                                                <div><strong>Age:</strong> {current.userSnapshot.age}  {current.userSnapshot.sex && <>• <strong>Sex:</strong> {current.userSnapshot.sex}</>}</div>
-                                                {current.userSnapshot.rating && (
-                                                    <div><strong>Rating:</strong> ⭐ {current.userSnapshot.rating}/5</div>
-                                                )}
-                                                {current.userSnapshot.languages && current.userSnapshot.languages.length > 0 && (
-                                                    <div><strong>Languages:</strong> {current.userSnapshot.languages.join(', ')}</div>
                                                 )}
                                             </div>
 
-                                            {current.userSnapshot.persona && current.userSnapshot.persona.length > 0 && (
-                                                <div style={{ marginTop: '16px' }}>
-                                                    <strong style={{ fontSize: '15px', color: '#333' }}>Travel Style</strong>
-                                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '8px' }}>
-                                                        {current.userSnapshot.persona.map((trait: string, i: number) => (
-                                                            <span
-                                                                key={i}
-                                                                style={{
-                                                                    background: '#f0f0f0',
-                                                                    padding: '6px 12px',
-                                                                    borderRadius: '20px',
-                                                                    fontSize: '13px',
-                                                                    color: '#333',
-                                                                }}
-                                                            >
-                                                                {trait}
-                                                            </span>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            )}
+                                            {/* User Info Section */}
+                                            <div style={{ marginTop: '20px' }}>
+                                                <h3 style={{ fontSize: '18px', marginBottom: '12px', color: '#222' }}>
+                                                    About {current.userSnapshot.name}
+                                                </h3>
 
-                                            {current.userSnapshot.bio && (
-                                                <div style={{ marginTop: '16px' }}>
-                                                    <strong style={{ fontSize: '15px', color: '#333' }}>Bio</strong>
-                                                    <p style={{ marginTop: '6px', lineHeight: '1.5', color: '#555' }}>
-                                                        {current.userSnapshot.bio}
-                                                    </p>
-                                                </div>
-                                            )}
-                                        </div>
-
-                                        {/* Trip Details Section */}
-                                        <div style={{ marginTop: '24px', paddingTop: '20px', borderTop: '1px solid #eee' }}>
-                                            <h3 style={{ fontSize: '18px', marginBottom: '12px', color: '#222' }}>
-                                                Trip to {current.tripSnapshot.tripName || current.locationName}
-                                            </h3>
-
-                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '15px', color: '#444' }}>
-                                                <div>
-                                                    <strong>Dates:</strong>{' '}
-                                                    {CommonServices.formatDateShortHeaderTripSelection(
-                                                        current.tripSnapshot.startDate,
-                                                        current.tripSnapshot.endDate
+                                                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '15px', color: '#444' }}>
+                                                    <div><strong>Age:</strong> {current.userSnapshot.age}  {current.userSnapshot.sex && <>• <strong>Sex:</strong> {current.userSnapshot.sex}</>}</div>
+                                                    {current.userSnapshot.rating && (
+                                                        <div><strong>Rating:</strong> ⭐ {current.userSnapshot.rating}/5</div>
+                                                    )}
+                                                    {current.userSnapshot.languages && current.userSnapshot.languages.length > 0 && (
+                                                        <div><strong>Languages:</strong> {current.userSnapshot.languages.join(', ')}</div>
                                                     )}
                                                 </div>
-                                                {current.tripSnapshot.budget && (
-                                                    <div><strong>Budget:</strong> {current.tripSnapshot.budget}</div>
-                                                )}
-                                                <div><strong>Privacy:</strong> {current.tripSnapshot.privacy === "public trip" ? "Public" : "Invite Only"}</div>
-                                                {current.tripSnapshot.interests?.length > 0 && (
-                                                    <div style={{ marginTop: '12px' }}>
-                                                        <strong>Interests:</strong>
-                                                        <div style={{ marginTop: '6px', display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                                                            {current.tripSnapshot.interests.map((interest: string, i: number) => (
+
+                                                {current.userSnapshot.persona && current.userSnapshot.persona.length > 0 && (
+                                                    <div style={{ marginTop: '16px' }}>
+                                                        <strong style={{ fontSize: '15px', color: '#333' }}>Travel Style</strong>
+                                                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '8px' }}>
+                                                            {current.userSnapshot.persona.map((trait: string, i: number) => (
                                                                 <span
                                                                     key={i}
                                                                     style={{
-                                                                        background: '#e6f7ff',
-                                                                        color: '#0066cc',
-                                                                        padding: '4px 10px',
-                                                                        borderRadius: '16px',
+                                                                        background: '#f0f0f0',
+                                                                        padding: '6px 12px',
+                                                                        borderRadius: '20px',
                                                                         fontSize: '13px',
+                                                                        color: '#333',
                                                                     }}
                                                                 >
-                                                                    {interest}
+                                                                    {trait}
                                                                 </span>
                                                             ))}
                                                         </div>
                                                     </div>
                                                 )}
+
+                                                {current.userSnapshot.bio && (
+                                                    <div style={{ marginTop: '16px' }}>
+                                                        <strong style={{ fontSize: '15px', color: '#333' }}>Bio</strong>
+                                                        <p style={{ marginTop: '6px', lineHeight: '1.5', color: '#555' }}>
+                                                            {current.userSnapshot.bio}
+                                                        </p>
+                                                    </div>
+                                                )}
+                                            </div>
+
+                                            {/* Trip Details Section */}
+                                            <div style={{ marginTop: '24px', paddingTop: '20px', borderTop: '1px solid #eee' }}>
+                                                <h3 style={{ fontSize: '18px', marginBottom: '12px', color: '#222' }}>
+                                                    Trip to {current.tripSnapshot.tripName || current.locationName}
+                                                </h3>
+
+                                                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '15px', color: '#444' }}>
+                                                    <div>
+                                                        <strong>Dates:</strong>{' '}
+                                                        {CommonServices.formatDateShortHeaderTripSelection(
+                                                            current.tripSnapshot.startDate,
+                                                            current.tripSnapshot.endDate
+                                                        )}
+                                                    </div>
+                                                    {current.tripSnapshot.budget && (
+                                                        <div><strong>Budget:</strong> {current.tripSnapshot.budget}</div>
+                                                    )}
+                                                    <div><strong>Privacy:</strong> {current.tripSnapshot.privacy === "public trip" ? "Public" : "Invite Only"}</div>
+                                                    {current.tripSnapshot.interests?.length > 0 && (
+                                                        <div style={{ marginTop: '12px' }}>
+                                                            <strong>Interests:</strong>
+                                                            <div style={{ marginTop: '6px', display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                                                                {current.tripSnapshot.interests.map((interest: string, i: number) => (
+                                                                    <span
+                                                                        key={i}
+                                                                        style={{
+                                                                            background: '#e6f7ff',
+                                                                            color: '#0066cc',
+                                                                            padding: '4px 10px',
+                                                                            borderRadius: '16px',
+                                                                            fontSize: '13px',
+                                                                        }}
+                                                                    >
+                                                                        {interest}
+                                                                    </span>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            )}
+                                )}
 
-                        </div>
-                    </section>
+                            </div>
+                        </section>
 
-                    {/* MATCH POPUP */}
-                    {matchPopupProfile && (<MatchPopUpBox startChat={startChat} matchPopupProfile={matchPopupProfile} closePopup={closePopup} />)}
+                        {/* MATCH POPUP */}
+                        {matchPopupProfile && (<MatchPopUpBox startChat={startChat} matchPopupProfile={matchPopupProfile} closePopup={closePopup} />)}
 
-                </>
-            )}
+                    </>
+                ))}
         </main>
     )
 }

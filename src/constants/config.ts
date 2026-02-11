@@ -24,6 +24,7 @@ export const STORAGE_KEYS = {
     THEME: 'theme',
     LANGUAGE: 'language',
     COMPLETE_PROFILE_STEP: 'completeProfileStep',
+    EMAIL_VERIFIED: 'isEmailVerified'
 } as const;
 
 export const ROUTES = {

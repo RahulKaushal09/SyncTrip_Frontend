@@ -45,7 +45,7 @@ export default function GroupDetailsPage() {
       setIsLoading(true);
       showLoader();
       const res = await GroupApiServices.joinGroupTrip(group.id, tripId);
-      router.push(`/chats?tripId=${tripId}&chatId=${res.chatId}`);
+      router.push(`/chats?tripId=${tripId}&chatId=${res.chat.id}`);
     } catch (error) {
       hideLoader();
       console.log("Error while joining group: ", error);

@@ -128,22 +128,22 @@ const ChoiceFeatureSection = () => {
               </h2>
 
               <p className="text-sm text-neutral-1/70 max-w-xl mx-auto lg:mx-0 font-medium leading-relaxed">
-                Solo traveling shouldn&apos;t mean being lonely. SyncTrip helps you find the right people heading the same way, so you can share the journey and keep your vibe.
+                Don&apos;t wait for a tour guide. Create your itinerary and let SyncTrip connect you with verified travelers heading the same way. Keep your vibe, share the journey.
               </p>
             </div>
 
             {/* Centralized Feature Boxes */}
             <div className="grid w-full lg:w-3/4 lg:self-start grid-cols-1 sm:grid-cols-2 gap-1 mx-auto lg:mx-0">
               <div className="p-2 transition-all">
-                <div className="flex items-center justify-center gap-3">
-                  <Compass className="text-[#4bbef5]" size={32} />
-                  <h4 className="font-bold text-xl md:text-2xl text-secondary-1">Smart Sync</h4>
+                <div className="flex items-center justify-center gap-2">
+                  <Compass aria-label="Direct Connection" className="text-[#4bbef5]" size={30} />
+                  <h4 className="font-bold text-lg md:text-lg text-secondary-1">Direct Connection</h4>
                 </div>
               </div>
               <div className="p-2 transition-all">
-                <div className="flex items-center justify-center gap-3">
-                  <ShieldCheck className="text-green-600" size={32} />
-                  <h4 className="font-bold text-xl md:text-2xl text-secondary-1">Safety First</h4>
+                <div className="flex items-center justify-center gap-2">
+                  <ShieldCheck aria-label="Verified Safety" className="text-green-600" size={30} />
+                  <h4 className="font-bold text-lg md:text-lg text-secondary-1">100% Verified Profiles</h4>
                 </div>
               </div>
             </div>
@@ -173,7 +173,7 @@ const ChoiceFeatureSection = () => {
                   </div>
                 </div>
                 <span className="text-[11px] font-bold text-neutral-400 uppercase tracking-wider">
-                  Active explorers right now
+                  Travelers hosting trips right now.
                 </span>
               </div>
             </div>

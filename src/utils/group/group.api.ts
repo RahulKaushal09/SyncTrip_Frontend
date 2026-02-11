@@ -4,11 +4,29 @@ import {
     GroupDetails,
     CreateGroupPayload
 } from "./group.types";
-import { UUID } from "@/types";
+import { Chat, UUID } from "@/types";
+
+interface GroupInt {
+    createdAt: string;
+    createdBy: string;
+    description: string;
+    genderPreference?: string;
+    groupImageUrl?: string;
+    groupName?: string;
+    id: string;
+    locationId: string;
+    locationName: string;
+    maxMembers: number;
+    membersCount?: number;
+    month?: string;
+    status?: string;
+    tags?: string[];
+}
 
 /* ---------- GET GROUPS ---------- */
 export interface JoinGroupResponse {
-    chatId: UUID;
+    chat: Chat,
+    group: GroupInt
 }
 
 export interface GroupDetailsResponse {

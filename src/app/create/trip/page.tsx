@@ -10,12 +10,13 @@ import ProgressBar from '@/components/common/progressBar';
 import Step3Preferences from '@/components/createTrip/Step3Preferences';
 import Step4Budget from '@/components/createTrip/Step4Budget';
 import Step5Privacy from '@/components/createTrip/Step5Privacy';
-import { Pencil, MapPin, Calendar, Star, CreditCard, Lock } from "lucide-react";
+import { Pencil, MapPin, Calendar, Star, CreditCard, Lock, ArrowRight } from "lucide-react";
 import TripServices from '@/utils/trip.utils';
 import { useLoader } from '@/components/providers/LoaderContext';
 import { toast } from 'react-hot-toast';
 import ThreeLocationSelector from '@/components/createTrip/ThreeLocationSelector';
 import { useLogin } from '@/components/providers/LoginProvider';
+import { tripPrivacyOptions } from '@/constants';
 
 const TOTAL_STEPS = 4;
 const MAX_TRIP_DAYS = 15;
@@ -227,8 +228,15 @@ function CreateTripContent() {
 
       const tripId = res.id;
 
+      const isPrivate = (selectedPrivacy || '').toLowerCase().includes('invite');
+      const targetPath = isPrivate
+        ? `/userTrip/${tripId}/private-trip`
+        : `/userTrip/${tripId}/travel-mode`;
+
+      router.replace(targetPath);
+
       // toast.success('Trip created!');
-      router.replace(`/userTrip/${tripId}/travel-mode`);
+      // router.replace(`/userTrip/${tripId}/travel-mode`);
 
     } catch (err) {
       console.error(err);
@@ -504,13 +512,27 @@ function CreateTripContent() {
             >
               Find Travel Companions
             </button> */}
-            <button
+            {/* <button
               onClick={() => {
                 if ((selectedPrivacy || '').toLowerCase().includes('invite')) {
                   // setPendingStartMatching(true);
                   setShowPrivacyConfirm(true);
                   return;
                 }
+                publishTripAndContinue();
+              }}
+              className="w-full btn btn-primary"
+            >
+              Continue
+            </button> */}
+            <button
+              onClick={() => {
+                // If you want to ALWAYS show the nudge for private trips:
+                if (selectedPrivacy && tripPrivacyOptions.PRIVATE === selectedPrivacy.toLowerCase()) {
+                  setShowPrivacyConfirm(true);
+                  return;
+                }
+                // If it's public, go straight to /travel-mode
                 publishTripAndContinue();
               }}
               className="w-full btn btn-primary"
@@ -632,31 +654,66 @@ function CreateTripContent() {
             />
 
             {/* modal box */}
-            <div className="relative z-10 w-full max-w-md p-6 bg-white rounded-lg shadow-lg">
-              <h3 className="text-lg font-semibold mb-2">Change trip privacy?</h3>
-              <p className="text-sm text-gray-600 mb-4">
-                Your trip preference is set to <strong>{selectedPrivacy || 'invite only'}</strong>.<br></br> <i className='text-xs '>(To match with other travellers the trip needs to be public)</i>
-              </p>
+            {showPrivacyConfirm && (
+              <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                {/* Modern Backdrop with Blur */}
+                <div
+                  className="absolute inset-0 bg-secondary-1/60 backdrop-blur-md transition-opacity animate-in fade-in duration-300"
+                  onClick={closePrivacyConfirm}
+                />
 
-              <div className="flex gap-3">
-                <button
-                  onClick={makeTripPublic}
-                  className="flex-1 px-4 py-2 rounded btn btn-primary"
-                >
-                  Change to public
-                </button>
+                {/* Refined Modal Card */}
+                <div className="relative z-10 w-full max-w-[400px] bg-white rounded-[32px] p-8 shadow-2xl overflow-hidden m-animate play m-slide-up">
 
-                <button
-                  onClick={() => {
-                    // simply close and do nothing
-                    closePrivacyConfirm();
-                  }}
-                  className="flex-1 px-4 py-2 rounded border bg-white text-gray-700"
-                >
-                  Cancel
-                </button>
+                  {/* Visual Cue - Icon Header */}
+                  <div className="flex justify-center mb-6">
+                    <div className="relative">
+                      <div className="absolute inset-0 bg-primary-1/20 blur-xl rounded-full" />
+                      <div className="relative bg-primary-5 border border-primary-3 p-4 rounded-2xl">
+                        <Lock className="text-primary-1" size={32} />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Text Content */}
+                  <div className="text-center mb-8">
+                    <h3 className="h3 text-secondary-1 mb-3">Change Trip Privacy?</h3>
+                    <p className="r2 text-neutral-1 leading-relaxed">
+                      Your trip is currently <strong>{selectedPrivacy || 'Invite Only'}</strong>.
+                      To find travel companions and travel groups, your trip needs to be <strong>Public</strong>.
+                    </p>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex flex-col gap-3">
+                    <button
+                      onClick={makeTripPublic}
+                      className="btn btn-primary w-full h-[56px] !flex items-center justify-center gap-2 group"
+                    >
+                      <span className="b2">Go Public & Match</span>
+                      <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        closePrivacyConfirm();
+                        publishTripAndContinue();
+                      }}
+                      className="w-full h-[56px] rounded-2xl border border-neutral-4 text-secondary-1 b2 font-semibold hover:bg-neutral-5 transition-colors"
+                    >
+                      Keep Private & Continue
+                    </button>
+
+                    <button
+                      onClick={closePrivacyConfirm}
+                      className="mt-2 text-sm text-neutral-3 hover:text-secondary-1 transition-colors font-medium"
+                    >
+                      Nevermind, go back
+                    </button>
+                  </div>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         )}
         {/* ) : null} */}

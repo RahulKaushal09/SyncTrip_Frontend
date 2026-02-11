@@ -1,236 +1,236 @@
-"use client";
+// "use client";
 
-import React, { useState, useEffect, useRef } from "react";
-import { User } from "../../types";
-import "../../../styles/popups/phoneNumberPopup.css";
-import { sendOtp, verifyOtp } from "@/utils/firebaseAuthClient";
-import { AuthServices } from "@/utils/auth.utils";
-import { ApiService } from "@/utils";
+// import React, { useState, useEffect, useRef } from "react";
+// import { User } from "../../types";
+// import "../../../styles/popups/phoneNumberPopup.css";
+// import { sendOtp, verifyOtp } from "@/utils/firebaseAuthClient";
+// import { AuthServices } from "@/utils/auth.utils";
+// import { ApiService } from "@/utils";
 
-interface PhoneNumberPopupProps {
-  user: User;
-  onClose: () => void;
-  onPhoneSubmit: (user: User) => void;
-}
+// interface PhoneNumberPopupProps {
+//   user: User;
+//   onClose: () => void;
+//   onPhoneSubmit: (user: User) => void;
+// }
 
-export default function PhoneNumberPopup({
-  user,
-  onClose,
-  onPhoneSubmit,
-}: PhoneNumberPopupProps) {
-  const [phone, setPhone] = useState("");
-  const [fullName, setFullName] = useState(user.name);
-  const [otp, setOtp] = useState("");
-  const [otpSent, setOtpSent] = useState(false);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [resendTimer, setResendTimer] = useState(0);
+// export default function PhoneNumberPopup({
+//   user,
+//   onClose,
+//   onPhoneSubmit,
+// }: PhoneNumberPopupProps) {
+//   const [phone, setPhone] = useState("");
+//   const [fullName, setFullName] = useState(user.name);
+//   const [otp, setOtp] = useState("");
+//   const [otpSent, setOtpSent] = useState(false);
+//   const [error, setError] = useState("");
+//   const [loading, setLoading] = useState(false);
+//   const [resendTimer, setResendTimer] = useState(0);
 
-  const otpInputRef = useRef<HTMLInputElement>(null);
+//   const otpInputRef = useRef<HTMLInputElement>(null);
 
-  // Timer for resend cooldown
-  useEffect(() => {
-    if (resendTimer > 0) {
-      const timer = setTimeout(() => setResendTimer(resendTimer - 1), 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [resendTimer]);
+//   // Timer for resend cooldown
+//   useEffect(() => {
+//     if (resendTimer > 0) {
+//       const timer = setTimeout(() => setResendTimer(resendTimer - 1), 1000);
+//       return () => clearTimeout(timer);
+//     }
+//   }, [resendTimer]);
 
-  // Auto-focus OTP input after sending OTP
-  useEffect(() => {
-    if (otpSent && otpInputRef.current) {
-      otpInputRef.current.focus();
-    }
-  }, [otpSent]);
+//   // Auto-focus OTP input after sending OTP
+//   useEffect(() => {
+//     if (otpSent && otpInputRef.current) {
+//       otpInputRef.current.focus();
+//     }
+//   }, [otpSent]);
 
-  async function handleSendOtp() {
-    if (!/^\d{10}$/.test(phone)) {
-      setError("Please enter a valid 10-digit phone number");
-      return;
-    }
+//   async function handleSendOtp() {
+//     if (!/^\d{10}$/.test(phone)) {
+//       setError("Please enter a valid 10-digit phone number");
+//       return;
+//     }
 
-    try {
-      setLoading(true);
-      setError("");
-      const userExists = await ApiService.checkUserExistsWithPhoneNumber(phone);
-      if (userExists) {
-        setError('An account with this phone number already exists. Please use another number or login.');
-        setLoading(false);
-        return;
-      }
-      await sendOtp("+91" + phone);
-      setOtpSent(true);
-      setResendTimer(60); // 60s cooldown
-      setOtp(""); // clear OTP field
+//     try {
+//       setLoading(true);
+//       setError("");
+//       const userExists = await ApiService.checkUserExistsWithPhoneNumber(phone);
+//       if (userExists) {
+//         setError('An account with this phone number already exists. Please use another number or login.');
+//         setLoading(false);
+//         return;
+//       }
+//       await sendOtp("+91" + phone);
+//       setOtpSent(true);
+//       setResendTimer(60); // 60s cooldown
+//       setOtp(""); // clear OTP field
 
-    }
-    // eslint-disable-next-line 
-    catch (e: any) {
-      console.error("Error sending OTP:", e);
-      setError("Failed to send OTP. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  }
+//     }
+//     // eslint-disable-next-line 
+//     catch (e: any) {
+//       console.error("Error sending OTP:", e);
+//       setError("Failed to send OTP. Please try again.");
+//     } finally {
+//       setLoading(false);
+//     }
+//   }
 
-  async function handleVerifyOtp() {
-    if (otp.length !== 6) {
-      setError("Please enter a valid 6-digit OTP");
-      return;
-    }
+//   async function handleVerifyOtp() {
+//     if (otp.length !== 6) {
+//       setError("Please enter a valid 6-digit OTP");
+//       return;
+//     }
 
-    try {
-      setLoading(true);
-      setError("");
+//     try {
+//       setLoading(true);
+//       setError("");
 
-      const firebaseToken = await verifyOtp(otp);
-      const updatedUser = await AuthServices.verifyPhoneAndUpdateName(firebaseToken, phone, fullName);
+//       const firebaseToken = await verifyOtp(otp);
+//       const updatedUser = await AuthServices.verifyPhoneAndUpdateName(firebaseToken, phone, fullName);
 
-      if (!updatedUser) {
-        throw new Error("Verification failed");
-      }
+//       if (!updatedUser) {
+//         throw new Error("Verification failed");
+//       }
 
-      onPhoneSubmit(updatedUser);
-      onClose();
+//       onPhoneSubmit(updatedUser);
+//       onClose();
 
-    }
-    //  eslint-disable-next-line 
-    catch (e: any) {
-      console.error("Error verifying OTP:", e);
-      setError("Invalid OTP or verification failed");
-    } finally {
-      setLoading(false);
-    }
-  }
+//     }
+//     //  eslint-disable-next-line 
+//     catch (e: any) {
+//       console.error("Error verifying OTP:", e);
+//       setError("Invalid OTP or verification failed");
+//     } finally {
+//       setLoading(false);
+//     }
+//   }
 
-  return (
-    <div className="phone-number-overlay">
-      <div className="phone-number-container">
-        <button
-          className="phone-number-close-btn"
-          onClick={onClose}
-          disabled={loading}
-        >
-          ×
-        </button>
+//   return (
+//     <div className="phone-number-overlay">
+//       <div className="phone-number-container">
+//         <button
+//           className="phone-number-close-btn"
+//           onClick={onClose}
+//           disabled={loading}
+//         >
+//           ×
+//         </button>
 
-        <h2 className="phone-number-title">Verify your phone number</h2>
+//         <h2 className="phone-number-title">Verify your phone number</h2>
 
-        <div className="input-group">
-          <label htmlFor="name">Full Name</label>
-          <input
-            id="name"
-            type="text"
-            placeholder="Enter your full name"
-            className="login-popup-input margin1RemBottom"
-            value={fullName || user.name || ""}
-            onChange={(e) => {
-              setFullName(e.target.value);
-              setError("");
-            }}
-            maxLength={30}
-            disabled={loading || otpSent}
-          />
-        </div>
-        {/* Phone number input */}
-        <div className="input-group">
-          <label htmlFor="phone">Phone Number</label>
-          <input
-            id="phone"
-            type="tel"
-            placeholder="Enter 10-digit number"
-            className="phone-number-input"
-            value={phone}
-            onChange={(e) => {
-              setPhone(e.target.value);
-              setError("");
-            }}
-            maxLength={10}
-            disabled={loading || otpSent}
-          />
-        </div>
+//         <div className="input-group">
+//           <label htmlFor="name">Full Name</label>
+//           <input
+//             id="name"
+//             type="text"
+//             placeholder="Enter your full name"
+//             className="login-popup-input margin1RemBottom"
+//             value={fullName || user.name || ""}
+//             onChange={(e) => {
+//               setFullName(e.target.value);
+//               setError("");
+//             }}
+//             maxLength={30}
+//             disabled={loading || otpSent}
+//           />
+//         </div>
+//         {/* Phone number input */}
+//         <div className="input-group">
+//           <label htmlFor="phone">Phone Number</label>
+//           <input
+//             id="phone"
+//             type="tel"
+//             placeholder="Enter 10-digit number"
+//             className="phone-number-input"
+//             value={phone}
+//             onChange={(e) => {
+//               setPhone(e.target.value);
+//               setError("");
+//             }}
+//             maxLength={10}
+//             disabled={loading || otpSent}
+//           />
+//         </div>
 
-        {/* Send OTP button → becomes "Resend OTP" text after first send */}
-        {!otpSent ? (
-          <button
-            type="button"
-            className="phone-number-submit-btn"
-            onClick={handleSendOtp}
-            disabled={loading || resendTimer > 0}
-          >
-            {loading ? "Sending..." : "Send OTP"}
-          </button>
-        ) : (
-          <div className="resend-container">
-            <button
-              type="button"
-              className="resend-text"
-              onClick={handleSendOtp}
-              disabled={loading || resendTimer > 0}
-              style={{
-                background: "none",
-                border: "none",
-                color: resendTimer > 0 ? "#999" : "#007bff",
-                cursor: resendTimer > 0 ? "not-allowed" : "pointer",
-                textDecoration: resendTimer > 0 ? "none" : "underline",
-                fontSize: "0.95rem",
-              }}
-            >
-              {resendTimer > 0
-                ? `Resend OTP in ${resendTimer}s`
-                : "Resend OTP"}
-            </button>
-          </div>
-        )}
+//         {/* Send OTP button → becomes "Resend OTP" text after first send */}
+//         {!otpSent ? (
+//           <button
+//             type="button"
+//             className="phone-number-submit-btn"
+//             onClick={handleSendOtp}
+//             disabled={loading || resendTimer > 0}
+//           >
+//             {loading ? "Sending..." : "Send OTP"}
+//           </button>
+//         ) : (
+//           <div className="resend-container">
+//             <button
+//               type="button"
+//               className="resend-text"
+//               onClick={handleSendOtp}
+//               disabled={loading || resendTimer > 0}
+//               style={{
+//                 background: "none",
+//                 border: "none",
+//                 color: resendTimer > 0 ? "#999" : "#007bff",
+//                 cursor: resendTimer > 0 ? "not-allowed" : "pointer",
+//                 textDecoration: resendTimer > 0 ? "none" : "underline",
+//                 fontSize: "0.95rem",
+//               }}
+//             >
+//               {resendTimer > 0
+//                 ? `Resend OTP in ${resendTimer}s`
+//                 : "Resend OTP"}
+//             </button>
+//           </div>
+//         )}
 
-        {/* OTP section - shown after sending OTP */}
-        {otpSent && (
-          <>
-            <div className="input-group" style={{ marginTop: "1.5rem" }}>
-              <label htmlFor="otp">Enter OTP</label>
-              <input
-                ref={otpInputRef}
-                id="otp"
-                type="text"
-                placeholder="Enter 6-digit OTP"
-                className="phone-number-input"
-                value={otp}
-                onChange={(e) => {
-                  const value = e.target.value.replace(/\D/g, "");
-                  setOtp(value);
-                  setError("");
-                }}
-                maxLength={6}
-                disabled={loading}
-              />
-            </div>
+//         {/* OTP section - shown after sending OTP */}
+//         {otpSent && (
+//           <>
+//             <div className="input-group" style={{ marginTop: "1.5rem" }}>
+//               <label htmlFor="otp">Enter OTP</label>
+//               <input
+//                 ref={otpInputRef}
+//                 id="otp"
+//                 type="text"
+//                 placeholder="Enter 6-digit OTP"
+//                 className="phone-number-input"
+//                 value={otp}
+//                 onChange={(e) => {
+//                   const value = e.target.value.replace(/\D/g, "");
+//                   setOtp(value);
+//                   setError("");
+//                 }}
+//                 maxLength={6}
+//                 disabled={loading}
+//               />
+//             </div>
 
-            {/* Verify button - active only when 6 digits */}
-            <button
-              type="button"
-              className="phone-number-submit-btn"
-              onClick={handleVerifyOtp}
-              disabled={loading || otp.length !== 6}
-              style={{
-                marginTop: "1rem",
-                ...(otp.length === 6 ? {} : { opacity: 0.6 }),
-              }}
-            >
-              {loading ? "Verifying..." : "Verify OTP"}
-            </button>
-          </>
-        )}
+//             {/* Verify button - active only when 6 digits */}
+//             <button
+//               type="button"
+//               className="phone-number-submit-btn"
+//               onClick={handleVerifyOtp}
+//               disabled={loading || otp.length !== 6}
+//               style={{
+//                 marginTop: "1rem",
+//                 ...(otp.length === 6 ? {} : { opacity: 0.6 }),
+//               }}
+//             >
+//               {loading ? "Verifying..." : "Verify OTP"}
+//             </button>
+//           </>
+//         )}
 
 
-        {error && (
-          <div
-            className="phone-number-error"
-            style={{ color: "red", marginTop: "1rem", fontSize: "12px" }}
-          >
-            {error}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
+//         {error && (
+//           <div
+//             className="phone-number-error"
+//             style={{ color: "red", marginTop: "1rem", fontSize: "12px" }}
+//           >
+//             {error}
+//           </div>
+//         )}
+//       </div>
+//     </div>
+//   );
+// }

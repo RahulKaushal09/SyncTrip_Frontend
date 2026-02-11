@@ -152,7 +152,7 @@ const BlogsHomePage: React.FC<BlogsHomePageProps> = ({ posts, categories }) => {
           className="HomePageMoreExploreButtonCss"
         >
           <span>More Blogs</span>
-          <span className="ml-2 m-animate m-rotate-in is-inview"><Newspaper /></span>
+          <span className="ml-2 m-animate m-rotate-in is-inview"><Newspaper size={18} /></span>
         </button>
       </div>
     </section>

@@ -767,6 +767,19 @@ input {
   stroke: #6ECAD5 !important;
 }
 
+.HomePageMoreExploreButtonCss {
+  background-color: var(--primary-1);
+  color: #fff;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  padding: 8px 15px;
+}
+
+.HomePageMoreExploreButtonCss:hover {
+  background-color: var(--primary-2);
+}
+
 /* Capcha Hidden */
 
 .grecaptcha-badge {

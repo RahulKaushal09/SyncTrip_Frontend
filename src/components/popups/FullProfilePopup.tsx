@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ApiService } from '../../utils/api.utils';
 import { User, Location } from '../../types';
 import '../../../styles/popups/FullProfilePopup.css';
@@ -10,11 +10,13 @@ import { useLoader } from '../providers/LoaderContext';
 import toast from 'react-hot-toast';
 import AvatarUploader from './AvatarUploader';
 import { LocationServices } from '@/utils/location.utils';
-import { styles } from '../Trips/ItinearySection';
 import { MultiSelect } from '../Profile/EditProfileModal';
 import { UserApiService } from '@/utils/user.api.utils';
 import Image from 'next/image';
 import { useLogin } from '../providers/LoginProvider';
+import { sendOtp, verifyOtp } from "@/utils/firebaseAuthClient";
+import { AuthServices } from '@/utils/auth.utils';
+import { ValidationUtils } from '@/utils';
 
 interface FullProfilePopupProps {
     user: User;
@@ -23,11 +25,12 @@ interface FullProfilePopupProps {
 }
 
 export default function FullProfilePopup({ user, onClose, onProfileComplete }: FullProfilePopupProps) {
-    const totalSteps = 4;
-    const { updateUserProfilePicture, updateUserFields, updateLastStepOfCompleteProfile, lastStepOfCompleteProfile } = useLogin();
+    const totalSteps = 5;
+    const { updateUserProfilePicture, updateUserFields, updateLastStepOfCompleteProfile, lastStepOfCompleteProfile, isEmailVerified } = useLogin();
     const [step, setStep] = useState(lastStepOfCompleteProfile > 0 ? lastStepOfCompleteProfile : 1);
     const { showLoader, hideLoader } = useLoader();
     const [form, setForm] = useState({
+        name: user.name.toLowerCase().includes("guest") ? "" : user.name,
         bio: user.bio || '',
         address: {
             pincode: user.address?.pincode || '',
@@ -45,14 +48,88 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
         dateOfBirth: user.dateOfBirth || '',
         sex: user.sex || '',
         preferredDestinations: [] as Location[],
+        email: user.email,
+        phone: user.phone
     });
-
     const [searchTerm, setSearchTerm] = useState('');
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [phoneVerified, setPhoneVerified] = useState(user.phone ? true : false);
+    const [otp, setOtp] = useState("");
+    const [otpSent, setOtpSent] = useState(false);
     const [locations, setLocations] = useState<Location[]>([]);
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
+    const [resendTimer, setResendTimer] = useState(0);
+
+    // Timer for resend cooldown
+    useEffect(() => {
+        if (resendTimer > 0) {
+            const timer = setTimeout(() => setResendTimer(resendTimer - 1), 1000);
+            return () => clearTimeout(timer);
+        }
+    }, [resendTimer]);
+
+    async function handleSendOtp() {
+        if (!/^\d{10}$/.test(form.phone as string)) {
+            setError("Please enter a valid 10-digit phone number");
+            return;
+        }
+
+        try {
+            setIsLoading(true);
+            setError("");
+            const userExists = await ApiService.checkUserExistsWithPhoneNumber(form.phone as string);
+            if (userExists) {
+                setError('An account with this phone number already exists. Please use another number or login using your phone.');
+                setIsLoading(false);
+                return;
+            }
+            await sendOtp("+91" + form.phone);
+            setOtpSent(true);
+            setResendTimer(60); // 60s cooldown
+            setOtp(""); // clear OTP field
+        }
+        // eslint-disable-next-line 
+        catch (e: any) {
+            console.error("Error sending OTP:", e);
+            setError("Failed to send OTP. Please try again.");
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
+    async function handleVerifyOtp() {
+        if (otp.length !== 6) {
+            console.log("Entered Otp:", otp);
+            setError("Please enter a valid 6-digit OTP");
+            return;
+        }
+
+        try {
+            setIsLoading(true);
+            setError("");
+
+            const firebaseToken = await verifyOtp(otp);
+            const updatedUser = await AuthServices.verifyPhoneAndUpdateName(firebaseToken, form.phone as string, form.name as string);
+
+            if (!updatedUser) {
+                throw new Error("Verification failed");
+            }
+
+            setPhoneVerified(true);
+            updateUserFields({
+                phone: form.phone,
+            });
+        }
+        //  eslint-disable-next-line 
+        catch (e: any) {
+            console.error("Error verifying OTP:", e);
+            setError("Invalid OTP or verification failed");
+        } finally {
+            setIsLoading(false);
+        }
+    }
 
     // const { showLoader, hideLoader } = useLoader();
 
@@ -103,7 +180,7 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
     };
     useEffect(() => {
         if (
-            step === 3 &&
+            step === 4 &&
             form.profilePicture &&
             typeof form.profilePicture !== "string" && form.profilePicture instanceof File
         ) {
@@ -193,9 +270,28 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
         });
     };
 
-    const validateStep = () => {
+    const validateStep = async () => {
         setError('');
         if (step === 1) {
+            if (!form.name) return "Please enter your Fullname.";
+            if (form.name.toLowerCase().includes("guest")) return "Please enter a valid Fullname.";
+            if (!form.email) return "Email ID is required.";
+            const emailError = ValidationUtils.validateEmail(form.email);
+            if (emailError) {
+                return emailError;
+            }
+            if (!isEmailVerified) {
+                const exists = await ApiService.checkUserExistsWithMail(form.email);
+
+                if (exists) {
+                    return "An account with this email already exists.";
+                }
+            }
+            if (!form.phone) return "Phone Number is required.";
+            if (!phoneVerified) return "Please verify your phone number to proceed further."
+            if (!form.sex) return "Please select your gender.";
+        }
+        else if (step === 2) {
             if (!form.dateOfBirth) return "Date of birth is required";
             const dob = new Date(form.dateOfBirth);
             const today = new Date();
@@ -208,27 +304,27 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
             if (!form.address.pincode) return "PIN Code is required";
             if (!form.travelGoal) return "Please select your travel goal";
             if (form.languages.length === 0) return "Please select minimum one language you understand and speak";
-        } else if (step === 2) {
-            const anyValidImage = form.profilePicture ||  (user.profile_picture && user.profile_picture?.map(pic => pic != "").includes(true));
+        } else if (step === 3) {
+            const anyValidImage = form.profilePicture ||  (user.profile_picture && user.profile_picture.length && user.profile_picture?.map(pic => pic != "").includes(true));
             if (!anyValidImage) return "Profile picture is required";
         }
-        else if (step === 3) {
+        else if (step === 4) {
             if (!form.travelStyles || form.travelStyles.length === 0) return "Please select at least one travel style.";
             if (!form.travelerType || form.travelerType.length === 0) return "Please select at least one traveler type.";
-        } else if (step === 4) {
+        } else if (step === 5) {
             if (form.preferredDestinations.length === 0) return "Please select at least one favorite travel destination.";
         }
         return null;
     };
 
-    const isFormValid = () => {
-        const stepError = validateStep();
+    const isFormValid = async () => {
+        const stepError = await validateStep();
         return stepError ? false : true;
     };
 
-    const nextStep = (e) => {
+    const nextStep = async (e) => {
         e.preventDefault();
-        const stepError = validateStep();
+        const stepError = await validateStep();
         if (stepError) {
             setError(stepError);
             toast.error(stepError);
@@ -237,18 +333,25 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
             if (step < totalSteps) {
                 if (step === 1) {
                     updateUserFields({
+                        name: form.name,
+                        email: form.email,
+                        sex: form.sex as "Male" | "Female" | "Other" | undefined,
+                        phone: form.phone,
+                    });
+                }
+                else if (step === 2) {
+                    updateUserFields({
                         bio: form.bio,
                         address: {
                             pincode: form.address.pincode,
                         },
                         dateOfBirth: form.dateOfBirth,
-                        sex: form.sex as "Male" | "Female" | "Other" | undefined,
                         instagram: form.instagram,
                         travelGoal: form.travelGoal,
                         languages: form.languages,
                     });
-                } else if (step === 2) {
                 } else if (step === 3) {
+                } else if (step === 4) {
                     updateUserFields({
                         travelStyles: form.travelStyles,
                         travelerType: form.travelerType,
@@ -282,6 +385,7 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
         formData.append('userId', user.id);
 
         Object.keys(form).forEach(async (key) => {
+            if (key === "preferredDestinations") return; // skipped for Preferred Destinations
             const value = form[key as keyof typeof form];
             if( key === "preferredDestinations") return; // we will handle this separately after the loop
             else if (key === 'profilePicture' && value instanceof File && typeof value !== 'string') {
@@ -307,23 +411,12 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
             }
         });
 
-        const idsToSend = form.preferredDestinations.map(loc => loc.id);
+        const idsToSend = form.preferredDestinations.map(loc => String(loc.id));
         formData.append('preferredDestinations', JSON.stringify(idsToSend));
-
-        // --- Logging Data for testing ---
-        // console.log("Form Submission Triggered!");
-        // const loggedData: Record<string, any> = {};
-        // formData.forEach((value, key) => {
-        //     loggedData[key] = value;
-        // });
-        // console.log("FormData Content:", loggedData);
-
-        // Reset loading immediately so the button reverts from "Saving..."
-        // Wrapping in a tiny timeout just so you can see the state change
-        // setTimeout(() => {
-        //     setIsLoading(false);
-        //     toast.success("Check console for form data!");
-        // }, 800);
+        formData.delete('phone');
+        if (isEmailVerified) {
+            formData.delete('email');
+        }
 
         // Keeping your actual logic commented as requested
         try {
@@ -345,9 +438,9 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
                 toast.error(response.message || 'Profile completion failed');
             }
         } catch (error: unknown) {
-            console.error("Profile completion error:", error);
-            setError( 'An error occurred.');
-            toast.error( 'An error occurred.');
+            setError('An error occurred.');
+            toast.error('An error occurred.');
+            console.log(error);
         } finally {
             setIsLoading(false);
             hideLoader();
@@ -372,7 +465,7 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
                             style={{ width: `${(step / totalSteps) * 100}%` }}
                         />
                     </div>
-                    <p className="profile-step-text">Step {step} of {totalSteps}</p>
+                    {/* <p className="profile-step-text">Step {step} of {totalSteps}</p> */}
                 </div>
 
                 <h2 className="full-profile-title">Complete Your Travel Profile</h2>
@@ -380,6 +473,133 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
                 <form onSubmit={handleSubmit} className="full-profile-form">
 
                     {step === 1 && (
+                        <div className="step-content">
+                            {/* Name */}
+                            <div className="full-profile-section">
+                                <label>Full Name <span className="required-star">*</span></label>
+                                <input
+                                    name="name"
+                                    className="full-profile-input"
+                                    value={form.name}
+                                    onChange={handleChange}
+                                    placeholder="Enter your fullname"
+                                />
+                            </div>
+
+                            {/* Email ID */}
+                            <div className="full-profile-section">
+                                <label>Email ID {isEmailVerified ? "(Can't be changed)" : ""} <span className="required-star">*</span></label>
+                                <input
+                                    name="email"
+                                    className="full-profile-input"
+                                    value={form.email}
+                                    disabled={isEmailVerified}
+                                    style={{
+                                        backgroundColor: isEmailVerified ? '#F2F6FF' : ''
+                                    }}
+                                    onChange={handleChange}
+                                    placeholder="Enter your email"
+                                />
+                            </div>
+
+                            {/* Phone Number */}
+                            <div className="full-profile-section">
+                                <label>
+                                    Phone Number {phoneVerified ? "(Can't be changed)" : ""} <span className="required-star">*</span>
+                                </label>
+
+                                <div className="phone-verify-container">
+
+                                    <input
+                                        name="phone"
+                                        className="full-profile-input"
+                                        value={form.phone}
+                                        maxLength={10}
+                                        onChange={handleChange}
+                                        placeholder="Enter your 10-digit phone number"
+                                        disabled={phoneVerified}
+                                        style={{
+                                            backgroundColor: phoneVerified ? '#F2F6FF' : ''
+                                        }}
+                                    />
+
+                                    {!otpSent && !phoneVerified && (
+                                        <button
+                                            type="button"
+                                            className="btn btn-primary send-otp-btn"
+                                            style={{
+                                                opacity: isLoading ? 0.5 : 1
+                                            }}
+                                            onClick={handleSendOtp}
+                                            disabled={isLoading}
+                                        >
+                                            Send OTP
+                                        </button>
+                                    )}
+
+                                    {phoneVerified && (
+                                        <div className="verified-badge">
+                                            ✅ Phone Verified
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+
+                            {otpSent && !phoneVerified && (
+                                <div className="full-profile-section otp-section">
+
+                                    <label>Enter OTP</label>
+
+                                    <input
+                                        name="otp"
+                                        className="full-profile-input otp-input"
+                                        placeholder="6-digit code"
+                                        maxLength={6}
+                                        value={otp}
+                                        onChange={(e) => setOtp(e.target.value)}
+                                    />
+
+                                    <div className="otp-actions">
+
+                                        <button
+                                            type="button"
+                                            className="btn btn-primary"
+                                            onClick={handleVerifyOtp}
+                                            style={{
+                                                opacity: isLoading ? 0.5 : 1,
+                                            }}
+                                            disabled={isLoading}
+                                        >
+                                            Verify OTP
+                                        </button>
+
+                                        <button
+                                            type="button"
+                                            className="resend-btn"
+                                            disabled={isLoading || resendTimer > 0}
+                                            onClick={handleSendOtp}
+                                        >
+                                            Resend
+                                        </button>
+
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Gender */}
+                            <div className="full-profile-section gender-section">
+                                <label>Gender <span className="required-star">*</span></label>
+                                <select name="sex" className="full-profile-input" onChange={handleChange} value={form.sex} disabled={isLoading}>
+                                    <option value="" disabled>Please select your gender</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                    )}
+
+                    {step === 2 && (
                         <div className="step-content">
                             {/* DOB */}
                             <div className="full-profile-section dob-section">
@@ -461,7 +681,7 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
                         </div>
                     )}
 
-                    {step === 2 && (
+                    {step === 3 && (
                         <div className="step-content">
                             <div className="full-profile-section">
                                 <label>Upload a profile picture <span className="required-star">*</span></label>
@@ -479,7 +699,7 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
                         </div>
                     )}
 
-                    {step === 3 && (
+                    {step === 4 && (
                         <div className="step-content">
                             <div className="full-profile-section">
                                 <label>How do you like to travel? <span className="required-star">*</span></label>
@@ -505,7 +725,7 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
                         </div>
                     )}
 
-                    {step === 4 && (
+                    {step === 5 && (
                         <div className="step-content">
                             <div className="full-profile-section">
                                 <label>Favorite travel destinations? <span className="required-star">*</span></label>

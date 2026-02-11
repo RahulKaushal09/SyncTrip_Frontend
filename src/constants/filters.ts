@@ -41,11 +41,14 @@ export const TripBudgets = [
   { label: 'Luxury', description: 'High-end, indulgent experiences.', icon: 'diamond' },
   { label: 'Flexible', description: 'No budget restrictions.', icon: 'globe' },
 ];
+// export const TripPrivacyOptions = [
+//   { label: 'Public Trip', description: 'Connect with anyone during your trip.', icon: 'globe' },
+//   { label: 'Invite only', description: 'Only people you invite can join.', icon: 'person-add' },
+// ];
 export const TripPrivacyOptions = [
-  { label: 'Public Trip', description: 'Connect with anyone during your trip.', icon: 'globe' },
-  { label: 'Invite only', description: 'Only people you invite can join.', icon: 'person-add' },
+  { label: 'Public Trip', description: 'Allows you to connect and match with other travellers and explore groups!', icon: 'globe' },
+  { label: 'Invite only', description: 'Sets your trip to private and can only be accessed by you.', icon: 'person-add' },
 ];
-
 
 
 export const TagOptionGroupTrip = [

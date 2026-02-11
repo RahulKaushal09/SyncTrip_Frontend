@@ -66,9 +66,8 @@ const HomeHeroSection: React.FC = () => {
                         </h1>
 
                         <p className="r1 text-neutral-1 mt-3 hero-description" style={{ maxWidth: "550px" }}>
-                            SyncTrip helps you join <strong>Curated Group Expeditions</strong> or
-                            find <strong>Travel Partners</strong> heading to the same place.
-                            Simple, safe, and social.
+                            The social travel network where <strong>YOU lead!</strong> Create your trip, set your vibe, and connect with verified explorers heading your way. 
+                            <strong> Simple, safe, and social.</strong>
                         </p>
 
                         {/* UPDATED BUTTON SECTION */}
@@ -79,7 +78,7 @@ const HomeHeroSection: React.FC = () => {
                                     onClick={() => triggerLogin(() => redirectToUrl(ROUTES.CREATE_TRIP))}
                                 >
                                     <PlaneIcon className="w-5 h-5 mr-2" />
-                                    Plan Your First Trip
+                                    Create Your Trip
                                 </button>
                             </div>
                             <div className="col-lg-5 col-md-6 col-12">

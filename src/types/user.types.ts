@@ -37,6 +37,7 @@ export interface User {
         pincode?: string;
     };
     viewCount?: number;
+    fcmToken?: string;
 }
 // below is used in profile page
 export interface ExtendedUser extends User {

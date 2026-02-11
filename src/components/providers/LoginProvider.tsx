@@ -4,7 +4,7 @@ import React, { useState, useCallback, useEffect, createContext, useContext } fr
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import LoginPopup from '../popups/LoginPopup';
 import FullProfilePopup from '../popups/FullProfilePopup';
-import PhoneNumberPopup from '../popups/PhoneNumberPopup';
+// import PhoneNumberPopup from '../popups/PhoneNumberPopup';
 import { setLoginHandler, type LoginOptions } from '../../utils/login.utils';
 import { StorageUtils } from '../../utils';
 import { User } from '../../types';
@@ -24,6 +24,8 @@ interface LoginContextType {
     updateUserFields: (fields: Partial<User>) => void;
     updateLastStepOfCompleteProfile: (step: number) => void;
     lastStepOfCompleteProfile: number;
+    isEmailVerified: boolean;
+    registerFcmTokenForUser: (u: User | null) => Promise<void>;
 }
 
 const LoginContext = createContext<LoginContextType | undefined>(undefined);
@@ -48,6 +50,16 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
     const [onLoginCallback, setOnLoginCallback] = useState<(user: User, requiresPhone?: boolean) => void>(() => () => { });
     const [user, setUser] = useState<User | null>(null);
     const [lastStepOfCompleteProfile, setLastStepOfCompleteProfile] = useState<number>(1);
+    // const [isEmailVerified, setIsEmailVerified] = useState(false);
+    const [isEmailVerified, setIsEmailVerified] = useState(() => {
+        if (typeof window === "undefined") return false;
+        return StorageUtils.getItem<boolean>(STORAGE_KEYS.EMAIL_VERIFIED) || false;
+    });
+
+    useEffect(() => {
+        StorageUtils.setItem(STORAGE_KEYS.EMAIL_VERIFIED, isEmailVerified);
+    }, [isEmailVerified]);
+
 
     useEffect(() => {
         if (!user) {
@@ -63,7 +75,7 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
 
         if (!lastStepOfCompleteProfile && user) {
             if (user.profileCompleted) {
-                setLastStepOfCompleteProfile(4);
+                setLastStepOfCompleteProfile(5);
             }
         }
     }, [lastStepOfCompleteProfile, user]);
@@ -87,6 +99,7 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
 
             // --- CASE 1: User already logged in ---
             if (existingUser) {
+                if (!existingUser.name || existingUser.name === null) existingUser.name = "Guest User";
                 setUser(existingUser);
 
                 // skipCompleteProfile -> force skip
@@ -97,7 +110,7 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
 
                 // Stage 1: No phone
                 if (!existingUser.phone) {
-                    setShowPhoneNumber(true);
+                    setShowFullProfile(true);
                     return;
                 }
 
@@ -146,7 +159,10 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
                 console.debug("FCM token not granted or failed to get token");
                 return;
             }
-
+            if (u.fcmToken === token) {
+                console.debug("FCM token is already up to date in user profile.");
+                return;
+            }
             // send to backend - use apiClient if available (it should attach auth header), else use fetch
             try {
                 if (apiClient && typeof apiClient.post === "function") {
@@ -163,6 +179,7 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
                         body: JSON.stringify({ token }),
                     });
                 }
+                updateUserFields({ fcmToken: token });
                 console.log("FCM token registered with backend");
             } catch (err) {
                 console.error("Failed to save FCM token to backend", err);
@@ -173,8 +190,12 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
     }, []);
 
     const handleLogin = useCallback((user: User, requiresPhone = false) => {
+        if (!user.name || user.name === null) user.name = "Guest User";
         setUser(user);
         StorageUtils.setUser(user);
+
+        const emailVerified = !!user?.email; // or detect google
+        setIsEmailVerified(emailVerified);
 
         if (loginOptions.skipCompleteProfile) {
             // Skip phone and profile completion
@@ -187,7 +208,7 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
         }
 
         if (requiresPhone) {
-            setShowPhoneNumber(true);
+            setShowFullProfile(true);
         } else if (!(user as User).profileCompleted) {
             setShowFullProfile(true);
         }
@@ -264,7 +285,9 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
         updateUserProfilePicture,
         updateUserFields,
         updateLastStepOfCompleteProfile,
-        lastStepOfCompleteProfile
+        lastStepOfCompleteProfile,
+        isEmailVerified,
+        registerFcmTokenForUser
     };
 
     return (
@@ -277,11 +300,12 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
                         onClose={closeLogin}
                         onLogin={handleLogin}
                         headingText={loginOptions.headingText}
+                        onEmailVerification={() => setIsEmailVerified(true)}
                     />
                 )}
 
                 {/* Phone popup logic */}
-                {showPhoneNumber && user && (
+                {/* {showPhoneNumber && user && (
                     <PhoneNumberPopup
                         user={user}
                         onClose={() => setShowPhoneNumber(false)}
@@ -295,10 +319,10 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
                             }
                         }}
                     />
-                )}
+                )} */}
 
                 {/* Profile popup logic */}
-                {showFullProfile && user && (
+                {(showPhoneNumber || showFullProfile) && user && (
                     <FullProfilePopup
                         user={user}
                         onClose={() => setShowFullProfile(false)}

@@ -1,7 +1,7 @@
 
 import { UserTrip, UserTripActivity } from "@/types";
 import apiClient from "./apiClient";
-import {  responseUserTripWithGroupContext } from "@/classes/ApiResponse.classes";
+import { responseUserTripWithGroupContext } from "@/classes/ApiResponse.classes";
 
 
 
@@ -21,7 +21,7 @@ class TripServices {
             throw error;
         }
     }
-    
+
     static async fetchTripWithGroupDetails(tripId: string, fields: string[] = []): Promise<responseUserTripWithGroupContext> {
         try {
             const res = await apiClient.get(`/app/getUserTripDetails/${tripId}`, {
@@ -61,8 +61,8 @@ class TripServices {
             throw error;
         }
     }
-    static async updateTripPartial(tripId: string, updateFields: Partial<UserTrip>) {
-        const response = await apiClient.patch(`/app/updateUserTripDetails/${tripId}`, updateFields);
+    static async updateTripPartial(tripId: string, updateFields: Partial<UserTrip>): Promise<{ message: string; userTrip: UserTrip }> {
+        const response = await apiClient.patch(`/trips/updateTripDetails/${tripId}`, updateFields);
         if (response.status < 200 || response.status >= 300) {
             const errorMessage = response.data?.message || `HTTP error! status: ${response.status}`;
             throw new Error(errorMessage);

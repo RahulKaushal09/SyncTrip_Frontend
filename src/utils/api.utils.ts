@@ -22,20 +22,20 @@ export class ApiService {
       'Authorization': token ? `Bearer ${token}` : '',
 
     };
-  } // being used - 27/01/2026
+  }
   private static async getAuthHeadersServer(token: string = ""): Promise<HeadersInit> {
     return {
       'Content-Type': 'application/json',
       'Authorization': token ? `Bearer ${token}` : '',
     };
-  } // being used - 27/01/2026
+  }
   private static async handleResponse<T>(response: Response): Promise<T> {
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
       throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
     }
     return response.json();
-  } // being used - 27/01/2026
+  }
   static async getClientUser(fields: UserField[]): Promise<User | null> {
     const token = localStorage.getItem("userToken") || document.cookie.split('; ').find(row => row.startsWith('userToken='))?.split('=')[1];
 
@@ -77,7 +77,23 @@ export class ApiService {
       return false;
     }
   } // check
+  static async checkUserExistsWithMail(email: string): Promise<boolean> {
+    try {
+      const response = await apiClient.post(`${API_CONFIG.BACKEND_BASE_URL}/api/users/checkUserExists`, {
+        email,
+      });
 
+      if (!response) {
+        throw new Error('Failed to check user existence');
+      }
+
+      const data = await response.data;
+      return data.exists || false;
+    } catch (error) {
+      console.error('Error checking user existence:', error);
+      return false;
+    }
+  }
   /**
    * Send user feedback to backend.
    * - If isLoggedIn is true, it will try to hit /api/feedback/submit (protected)
@@ -126,7 +142,7 @@ export class ApiService {
       console.error("ApiService.sendUserFeedback error:", error);
       throw error;
     }
-  } // being used - 27/01/2026
+  }
   static async getServerSidePropsForEvents() {
     const defaultCityName = 'Delhi-NCR';
     let events: Events[] = [];
@@ -209,7 +225,7 @@ export class ApiService {
       console.error('Error fetching locations for events:', error);
       return [];
     }
-  } // being used - 27/01/2026
+  }
   static async fetchEvents(city: IndianCity): Promise<Events[]> {
     if (city) {
       try {
@@ -232,7 +248,7 @@ export class ApiService {
       }
     }
     return [];
-  } // being used - 27/01/2026
+  }
 
   // For server-side rendering and SEO - no auth required
   static async fetchLocations(skip: number = 0, limit: number = 1000, fields: LocationField[], token: string = ""): Promise<{ locations: Location[] }> {
@@ -250,7 +266,7 @@ export class ApiService {
       console.error('Failed to fetch locations:', error);
       return { locations: [] };
     }
-  } // being used - 27/01/2026
+  }
 
   // For client-side - fetches locations with wishlist status
   static async fetchLocationsWithWishlist(skip: number = 0, limit: number = 1000, fields: LocationField[]): Promise<getLocationResponseSchema> {
@@ -275,7 +291,7 @@ export class ApiService {
       // return { locations: [] };
       return result;
     }
-  } // being used - 27/01/2026
+  }
   static async fetchLocationsUnified(
     skip: number = 0,
     limit: number = 1000,
@@ -302,7 +318,7 @@ export class ApiService {
       console.error('Failed to fetch locations:', error);
       return {} as getLocationResponseSchema;
     }
-  } // being used - 27/01/2026
+  }
   static async fetchLocationsByIds(
     ids: string[],
     fields: LocationField[],
@@ -352,7 +368,7 @@ export class ApiService {
       body: JSON.stringify(credentials),
     });
     return this.handleResponse(response);
-  } // being used - 27/01/2026
+  }
   static async LoginWithPhoneNumber(firebaseToken: string, phone: string): Promise<CompleteProfileApiResponse> {
     const response = await apiClient.post(`${API_CONFIG.BACKEND_BASE_URL}/api/auth/loginWithPhone`, {
       firebaseToken,
@@ -374,7 +390,7 @@ export class ApiService {
       body: JSON.stringify(userData),
     });
     return this.handleResponse(response);
-  } // being used - 27/01/2026
+  }
   static async googleLogin(token: string): Promise<GoogleLoginResponse> {
     const response = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/auth/google-login`, {
       method: 'POST',
@@ -382,7 +398,7 @@ export class ApiService {
       body: JSON.stringify({ token }),
     });
     return this.handleResponse(response);
-  } // being used - 27/01/2026
+  }
   // static async completeProfile(formData: FormData): Promise<CompleteProfileApiResponse> {
   //   const response = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/auth/complete-profile`, {
   //     method: 'POST',
@@ -392,11 +408,11 @@ export class ApiService {
   //     },
   //   });
   //   return this.handleResponse(response);
-  // } // being used - 27/01/2026
-  static async completeProfile(formData:FormData): Promise<CompleteProfileApiResponse> {
+  // } 
+  static async completeProfile(formData: FormData): Promise<CompleteProfileApiResponse> {
     const response = await apiClient.post(`${API_CONFIG.BACKEND_BASE_URL}/api/auth/complete-profile`, formData);
     return response.data;
-  } // being used - 27/01/2026
+  }
   static async addPhoneNumber(userId: string, phone: string): Promise<CompleteProfileApiResponse> {
     const response = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/auth/google-complete`, {
       method: 'POST',
@@ -404,7 +420,7 @@ export class ApiService {
       body: JSON.stringify({ userId, phone }),
     });
     return this.handleResponse(response);
-  } // being used - 27/01/2026
+  }
   static async verifyAndAddPhoneNumber(firebaseToken: string, phone: string): Promise<CompleteProfileApiResponse> {
     const response = await apiClient.post(`${API_CONFIG.BACKEND_BASE_URL}/api/auth/verifyAndAddPhone`, {
       firebaseToken,
@@ -424,7 +440,7 @@ export class ApiService {
       console.error("Error saving trip details:", error);
       throw error;
     }
-  } // being used - 27/01/2026
+  }
   static async toggleWishlist(data: { type: string; refId: string; parentType?: string; parentId?: string; name?: string }): Promise<ApiResponse | void> {
     const body: wishlistRequestSchema = {
       type: data.type,
@@ -458,7 +474,7 @@ export class ApiService {
       console.error('Failed to toggle wishlist:', error);
       return;
     }
-  } // being used - 27/01/2026
+  }
   static async fetchLocationById(id: string): Promise<Location | null> {
     try {
       const response = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/locations/${id}`, {
@@ -476,7 +492,7 @@ export class ApiService {
       console.error('Failed to fetch location by ID:', error);
       return null;
     }
-  } // being used - 27/01/2026
+  }
   static async fetchLocationByIdServer(id: string, token: string = ""): Promise<Location | null> {
     try {
       const response = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/locations/${id}`, {
@@ -523,7 +539,7 @@ export class ApiService {
       console.error('Failed to fetch places by IDs:', error);
       return [];
     }
-  } // being used - 27/01/2026
+  }
   static async fetchNearbyEntities(latitude: number, longitude: number, radius: number): Promise<exploreNearByApiResponse> {
     const userToken = localStorage.getItem('userToken');
     const res = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/nearby/getNearbyEntities`,

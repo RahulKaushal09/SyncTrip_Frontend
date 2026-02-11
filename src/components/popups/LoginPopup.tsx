@@ -8,14 +8,17 @@ import { User } from '../../types';
 import '../../../styles/popups/loginPopup.css';
 import { CredentialResponse } from '@react-oauth/google';
 import { sendOtp, verifyOtp } from "@/utils/firebaseAuthClient";
+import { STORAGE_KEYS } from '@/constants';
+import { StorageUtils } from '@/utils';
 
 interface LoginPopupProps {
   onClose: () => void;
   onLogin: (user: User, requiresPhone?: boolean) => void;
   headingText?: string;
+  onEmailVerification: () => void;
 }
 
-export default function LoginPopup({ onClose, onLogin, headingText }: LoginPopupProps) {
+export default function LoginPopup({ onClose, onLogin, headingText, onEmailVerification }: LoginPopupProps) {
   const [isRegistering, setIsRegistering] = useState(false);
   const [form, setForm] = useState({
     name: '',
@@ -354,12 +357,12 @@ export default function LoginPopup({ onClose, onLogin, headingText }: LoginPopup
     try {
       setIsLoading(true);
       setError("");
-      const UserAlreadyExistWithPhone = await ApiService.checkUserExistsWithPhoneNumber(form.phone);
-      if (!UserAlreadyExistWithPhone) {
-        setError("No account found with this phone number. Please create account first.");
-        setIsLoading(false);
-        return;
-      }
+      // const UserAlreadyExistWithPhone = await ApiService.checkUserExistsWithPhoneNumber(form.phone);
+      // if (!UserAlreadyExistWithPhone) {
+      //   setError("No account found with this phone number. Please create account first.");
+      //   setIsLoading(false);
+      //   return;
+      // }
       await sendOtp("+91" + form.phone);
       setLoginOtpSent(true);
       setLoginResendTimer(60);
@@ -415,6 +418,7 @@ export default function LoginPopup({ onClose, onLogin, headingText }: LoginPopup
       setError("");
 
       const token = await verifyOtp(loginOtp);
+
       setLoginFirebaseToken(token);
       setLoginPhoneVerified(true);
       setLoginOtp('');
@@ -637,7 +641,7 @@ export default function LoginPopup({ onClose, onLogin, headingText }: LoginPopup
         </button>
 
         <h2 className="login-popup-title">
-          {headingText ? headingText : (isRegistering ? 'Create an Account' : 'Welcome Back')}
+          {headingText ? headingText : (isRegistering ? 'Create an Account' : 'Welcome to SyncTrip!')}
         </h2>
         {!isRegistering && (
           <div className="login-popup-google-container">
@@ -652,7 +656,7 @@ export default function LoginPopup({ onClose, onLogin, headingText }: LoginPopup
         </div>
 
         <form onSubmit={handleSubmit} className="login-popup-form" noValidate>
-          {isRegistering && (
+          {/* {isRegistering && (
             <>
               <input
                 type="text"
@@ -724,9 +728,9 @@ export default function LoginPopup({ onClose, onLogin, headingText }: LoginPopup
               )}
 
             </>
-          )}
+          )} */}
 
-          <div className={emailFieldClass}>
+          {/* <div className={emailFieldClass}>
             <input
               type="email"
               name="email"
@@ -736,7 +740,7 @@ export default function LoginPopup({ onClose, onLogin, headingText }: LoginPopup
               onChange={isRegistering ? handleChange : handleLoginChange}
               disabled={isLoading}
             />
-          </div>
+          </div> */}
 
           <div className={passwordFieldClass}>
             <input
@@ -752,11 +756,11 @@ export default function LoginPopup({ onClose, onLogin, headingText }: LoginPopup
 
           {!isRegistering && (
             <div className={phoneFieldClass}>
-              <div className="login-popup-divider">
+              {/* <div className="login-popup-divider">
                 <div style={{ width: '46%' }}><hr /></div>
                 OR
                 <div style={{ width: '46%' }}><hr /></div>
-              </div>
+              </div> */}
               <p style={{ fontSize: "11px", color: "#ccc", padding: "0px 2px" }}>
                 Enter your phone number to receive a secure login code.
               </p>
@@ -834,7 +838,7 @@ export default function LoginPopup({ onClose, onLogin, headingText }: LoginPopup
           </button>
         </form>
 
-        <p className="login-popup-toggle-text">
+        {/* <p className="login-popup-toggle-text">
           {isRegistering ? 'Already have an account?' : "Don't have an account?"}
           <button
             type="button"
@@ -847,7 +851,7 @@ export default function LoginPopup({ onClose, onLogin, headingText }: LoginPopup
           >
             {isRegistering ? 'Sign In' : 'Create Account'}
           </button>
-        </p>
+        </p> */}
       </div>
     </div>
   );
