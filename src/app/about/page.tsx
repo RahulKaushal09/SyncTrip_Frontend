@@ -409,7 +409,7 @@ export default function AboutPage() {
                         <p className="r1 text-neutral-1" style={{ maxWidth: '760px' }}>
                             SyncTrip helps travelers find others going to the same destination,
                             match with compatible travel partners, and build collaborative
-                            itineraries together. Whether you're traveling solo or planning
+                            itineraries together. Whether you&apos;re traveling solo or planning
                             with friends, SyncTrip makes group travel planning seamless and social.
                         </p>
 
