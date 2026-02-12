@@ -6,30 +6,40 @@ import Image from 'next/image';
 
 /* ================= SEO METADATA ================= */
 export const metadata: Metadata = {
-    title: 'About SyncTrip | The Collaborative Travel Planner',
-    description: 'SyncTrip is revolutionizing group travel with real-time itinerary collaboration. Connect with us on LinkedIn, Product Hunt, and AngelList.',
-    keywords: ['travel planner', 'group travel', 'collaborative itinerary', 'trip organizer', 'SyncTrip team', 'travel startup'],
-    openGraph: {
+    title: 'About SyncTrip | Collaborative Travel Planning & Trip Matching Platform',
+    description: 'SyncTrip is a collaborative travel planning and trip matching platform that helps travelers plan itineraries together, find travel buddies, and coordinate group trips in real time.',
+    keywords: [
+        'collaborative travel planning',
+        'group trip planner',
+        'find travel buddies',
+        'plan trips together',
+        'travel planning app',
+        'social travel platform',
+        'synctrip'
+    ], openGraph: {
         title: 'About SyncTrip',
         description: 'Planning trips together, simplified. Meet the team behind the best group travel tool.',
         type: 'website',
-        url: 'https://synctrip.com/about',
+        url: 'https://synctrip.in/about',
         siteName: 'SyncTrip',
+    },
+    alternates: {
+        canonical: 'https://synctrip.in/about',
     },
 };
 
 /* ================= SOCIAL LINKS DATA (With SVG Logos) ================= */
 const SOCIALS = [
-    {
-        name: 'Product Hunt',
-        url: 'https://www.producthunt.com/@rahulkaushal',
-        desc: 'Upvote Us',
-        icon: (
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM13.5 13.5H10V15H8.5V9H13.5C14.74 9 15.75 10.01 15.75 11.25C15.75 12.49 14.74 13.5 13.5 13.5ZM13.5 10.5H10V12H13.5C13.91 12 14.25 11.66 14.25 11.25C14.25 10.84 13.91 10.5 13.5 10.5Z" />
-            </svg>
-        )
-    },
+    // {
+    //     name: 'Product Hunt',
+    //     url: 'https://www.producthunt.com/@rahulkaushal',
+    //     desc: 'Upvote Us',
+    //     icon: (
+    //         <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    //             <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM13.5 13.5H10V15H8.5V9H13.5C14.74 9 15.75 10.01 15.75 11.25C15.75 12.49 14.74 13.5 13.5 13.5ZM13.5 10.5H10V12H13.5C13.91 12 14.25 11.66 14.25 11.25C14.25 10.84 13.91 10.5 13.5 10.5Z" />
+    //         </svg>
+    //     )
+    // },
     {
         name: 'Crunchbase',
         url: 'https://www.crunchbase.com/organization/synctrip',
@@ -168,12 +178,40 @@ const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: 'SyncTrip',
-    url: 'https://synctrip.com',
-    logo: 'https://synctrip.com/logo.png',
-    sameAs: SOCIALS.map(s => s.url),
+    url: 'https://synctrip.in',
+    logo: "https://synctrip.in/logo_main_withoutBG.png",
+    sameAs: [
+        'https://linkedin.com/company/synctrip',
+        'https://www.crunchbase.com/organization/synctrip',
+        'https://x.com/synctrip44398',
+        'https://www.youtube.com/@synctripofficial',
+        'https://instagram.com/synctrips'
+    ],
+    foundingDate: '2025',
     description: 'A collaborative travel planning platform allowing groups to synchronize itineraries in real-time.',
 };
-
+const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+        {
+            '@type': 'Question',
+            name: 'What is SyncTrip?',
+            acceptedAnswer: {
+                '@type': 'Answer',
+                text: 'SyncTrip is a collaborative travel planning platform that helps people find travel buddies and plan trips together.'
+            }
+        },
+        {
+            '@type': 'Question',
+            name: 'Can I find travel partners on SyncTrip?',
+            acceptedAnswer: {
+                '@type': 'Answer',
+                text: 'Yes, SyncTrip allows users to match with other travelers heading to the same destination and coordinate itineraries together.'
+            }
+        }
+    ]
+};
 export default function AboutPage() {
     return (
         <main className="App bg-background">
@@ -181,6 +219,10 @@ export default function AboutPage() {
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
             />
 
             {/* Internal Styles for Custom Animations & Layouts */}
@@ -309,15 +351,32 @@ export default function AboutPage() {
                             <p className="r1 text-neutral-1" style={{ marginTop: '20px', lineHeight: '1.6' }}>
                                 Most trips die in the planning phase, lost in a mess of fragmented docs and endless group chats.
                             </p>
-                            <p className="r1 text-neutral-1" style={{ marginTop: '15px', lineHeight: '1.6' }}>
+                            {/* <p className="r1 text-neutral-1" style={{ marginTop: '15px', lineHeight: '1.6' }}>
                                 <strong>SyncTrip</strong> is the collaborative engine that turns travel chaos into synchronized itineraries. We are a team of engineers and explorers dedicated to building a seamless, real-time platform where solo travelers and groups can plan, budget, and explore with total confidence!
+                            </p> */}
+                            <p className="r1 text-neutral-1" style={{ marginTop: '15px', lineHeight: '1.6' }}>
+                                SyncTrip is a collaborative travel planning platform that helps people find travel buddies, coordinate group trips, and build shared itineraries in real time across destinations worldwide.
                             </p>
 
-                            <div style={{ marginTop: '30px' }}>
-                                <a href="/explore" className="btn btn-primary-border">
-                                    Plan your trip for Free
+                            <div style={{ marginTop: '30px', display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+                                <a href="/explore" className="btn btn-primary-border" style={{
+                                    width: "100%",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center"
+                                }}>
+                                    Start planning your trip
+                                </a>
+                                <a href="/how-it-works" className="btn btn-secondary text-primary-1 underline" style={{
+                                    width: "100%",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center"
+                                }}>
+                                    How SyncTrip works
                                 </a>
                             </div>
+
                         </div>
 
                         {/* Right Column: Overlapping Images */}
@@ -339,7 +398,24 @@ export default function AboutPage() {
 
                 </div>
             </section>
+            <section className="bg-white" style={{}}>
+                <div className="container-custom">
+                    <div className="marginSectionLeftRight paddingSectionLeftRight">
 
+                        <h2 className="h2 text-secondary-1">
+                            Plan Trips Together, Not Alone
+                        </h2>
+
+                        <p className="r1 text-neutral-1" style={{ maxWidth: '760px' }}>
+                            SyncTrip helps travelers find others going to the same destination,
+                            match with compatible travel partners, and build collaborative
+                            itineraries together. Whether you're traveling solo or planning
+                            with friends, SyncTrip makes group travel planning seamless and social.
+                        </p>
+
+                    </div>
+                </div>
+            </section>
             {/* ================= SOCIALS SECTION ================= */}
             <section id="connect" className="bg-secondary-5" style={{ padding: '80px 0' }}>
                 <div className="container-custom">
@@ -347,9 +423,10 @@ export default function AboutPage() {
 
                         <div style={{ textAlign: 'center', marginBottom: '40px' }}>
                             <h2 className="h2 italic text-secondary-1">Follow Our Journey</h2>
-                            <p className="r1 text-neutral-1" style={{ maxWidth: '600px', margin: '0 auto' }}>
-                                We are building and growing as a global community.
-                                Connect with us across the web to stay updated on the latest features & updates!
+                            <p className="r1 text-neutral-1" style={{ maxWidth: '720px', margin: '0 auto' }}>
+                                SyncTrip is building the future of collaborative travel planning.
+                                Follow our journey as we launch globally, share product updates, and build in public across startup and travel communities.
+                                Explore our company profile, product launches, and travel inspiration across the platforms below.
                             </p>
                         </div>
 
@@ -359,7 +436,7 @@ export default function AboutPage() {
                                     key={social.name}
                                     href={social.url}
                                     target="_blank"
-                                    rel="noopener noreferrer"
+                                    rel="me noopener noreferrer"
                                     className="social-card"
                                     title={`Follow SyncTrip on ${social.name}`}
                                 >
@@ -375,10 +452,14 @@ export default function AboutPage() {
                         </div>
 
                     </div>
+                    <p className="r1 text-neutral-1" style={{ maxWidth: '700px', margin: '20px auto' }}>
+                        SyncTrip is designed for modern travelers who want to plan trips together, meet new people, and coordinate travel experiences seamlessly across destinations worldwide.
+                    </p>
                 </div>
+
             </section>
 
-            <section className="bg-white" style={{ padding: '40px 0', textAlign: 'center' }}>
+            <section className="bg-white container-custom" style={{ textAlign: 'center' }}>
                 <h3 className="h3 !italic text-secondary-1">Traveling Solo? Not Anymore.</h3>
                 <p className="r1 text-neutral-1">SyncTrip connects solo explorers with like-minded travelers. Build your bucket list, share your itinerary, and find your next travel companion in one click.</p>
             </section>
