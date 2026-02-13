@@ -76,7 +76,7 @@ export default function TermsPage() {
           >
             {`SyncTrip Terms of Use
 Effective Date: January 22, 2026
-Welcome to SyncTrip (the "Platform"), operated by SyncTrip Technologies Private Limited (or the relevant entity operating in India) ("we," "us," "our," or "SyncTrip"). SyncTrip is a social travel coordination platform that connects travelers planning trips to the same destinations in India (and potentially internationally) to enable collaborative itinerary planning, shared experiences, and group travel coordination. SyncTrip is not a dating service, matchmaking for romantic purposes, or a booking platform. It is strictly for facilitating travel companionship and logistical collaboration among users heading to similar locations.
+Welcome to SyncTrip (the "Platform"), operated by SyncTrip Digital Private Limited ("we," "us," "our," or "SyncTrip"). SyncTrip is a social travel coordination platform that connects travelers planning trips to the same destinations in India (and potentially internationally) to enable collaborative itinerary planning, shared experiences, and group travel coordination. SyncTrip is not a dating service, matchmaking for romantic purposes, or a booking platform. It is strictly for facilitating travel companionship and logistical collaboration among users heading to similar locations.
 By accessing, registering, or using the Platform (including the website at synctrip.in, mobile apps, or any related services), you agree to be bound by these Terms of Use ("Terms"). If you do not agree, do not use the Platform.
 1. Eligibility
 

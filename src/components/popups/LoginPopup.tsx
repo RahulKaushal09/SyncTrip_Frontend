@@ -649,11 +649,11 @@ export default function LoginPopup({ onClose, onLogin, headingText, onEmailVerif
           </div>
         )}
 
-        <div className="login-popup-divider" style={{ display: showOROfEmail ? 'flex' : 'none' }}>
+        {/* <div className="login-popup-divider" style={{ display: showOROfEmail ? 'flex' : 'none' }}>
           <div style={{ width: '46%' }}><hr /></div>
           OR
           <div style={{ width: '46%' }}><hr /></div>
-        </div>
+        </div> */}
 
         <form onSubmit={handleSubmit} className="login-popup-form" noValidate>
           {/* {isRegistering && (
@@ -756,11 +756,11 @@ export default function LoginPopup({ onClose, onLogin, headingText, onEmailVerif
 
           {!isRegistering && (
             <div className={phoneFieldClass}>
-              {/* <div className="login-popup-divider">
+              <div className="login-popup-divider">
                 <div style={{ width: '46%' }}><hr /></div>
                 OR
                 <div style={{ width: '46%' }}><hr /></div>
-              </div> */}
+              </div>
               <p style={{ fontSize: "11px", color: "#ccc", padding: "0px 2px" }}>
                 Enter your phone number to receive a secure login code.
               </p>
@@ -813,7 +813,7 @@ export default function LoginPopup({ onClose, onLogin, headingText, onEmailVerif
           <button
             type={loginType === 'phone' && !loginOtpSent ? "button" : "submit"}
             className="btn btn-primary"
-            style={{ marginTop: '20px' }}
+            style={{ marginTop: '10px' }}
             disabled={isLoading}
             onClick={(e) => {
               if (loginType === 'phone') {
@@ -836,6 +836,14 @@ export default function LoginPopup({ onClose, onLogin, headingText, onEmailVerif
               isRegistering ? 'Create Account' :
                 (loginType === 'phone' ? (loginOtpSent ? 'Verify & Sign In' : 'Send OTP') : 'Sign In')}
           </button>
+          <div className='text-neutral-2 mt-4 text-center text-xs'>
+            <p>By continuing, you agree to our</p>
+            <div className='flex gap-3 justify-center mt-1'>
+              <a className='!underline' href="/policies/terms"> Terms of Use </a>
+              <a className='!underline' href="/policies/privacy-policies"> Privacy Policy</a>
+              <a className='!underline' href="/policies/content-policies"> Content Policy</a>
+            </div>
+          </div>
         </form>
 
         {/* <p className="login-popup-toggle-text">

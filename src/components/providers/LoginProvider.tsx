@@ -57,6 +57,17 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
     });
 
     useEffect(() => {
+        try {
+            if (user && user.id && typeof window !== "undefined" && typeof window.clarity === "function") {
+                window.clarity("identify", user.id, undefined, undefined, user.name || "SyncTrip User");
+                console.debug(`Clarity: Identified user ${user.id}`);
+            }
+        } catch (error) {
+            console.error("Error identifying user to Clarity:", error);
+        }
+    }, [user]);
+
+    useEffect(() => {
         StorageUtils.setItem(STORAGE_KEYS.EMAIL_VERIFIED, isEmailVerified);
     }, [isEmailVerified]);
 
