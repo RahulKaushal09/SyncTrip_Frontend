@@ -85,6 +85,7 @@ const LoggedInHeroSection: React.FC = () => {
     router.replace("/#swipedemo");
   };
 
+  console.log("Carousel Data:", carouselData); // Debugging log
   return (
     <section className="homeHeroSection">
       <div className="heroOverlay bg-gradient-to-br from-[#f2faff] via-[#e3f5ff] to-[#b8e8ff]">
@@ -115,14 +116,14 @@ const LoggedInHeroSection: React.FC = () => {
                           ?.slice(0, isMobile ? 2 : 3)
                           .map((item, idx) => (
                             <div key={idx} className="avatar-circle">
-                              {slide.profile_picture?.length ? (
+                              {item ? (
                                 <img
                                   src={item}
                                   alt="profile"
                                   className="w-full h-full object-cover rounded-full"
                                 />
                               ) : (
-                                <span className="avatar-initials">{item}</span>
+                                <span className="avatar-initials">{slide.initials[idx] || slide.initials[0]}</span>
                               )}
                             </div>
                           ))

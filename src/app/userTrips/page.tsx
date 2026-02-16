@@ -124,7 +124,7 @@ export default function AllTripsPage() {
 
 /* Styles (const) */
 const styles: { [k: string]: React.CSSProperties } = {
-  safe: { width: "100%", minHeight: "100vh", backgroundColor: "var(--background-light-app, #F8FAFC)" },
+  safe: { width: "100%", minHeight: "100vh" },
   container: { margin: "0 auto", padding: "24px 40px", display: "grid", gridTemplateColumns: "1fr" }, // container for layout
   headerWrap: { marginBottom: 8 },
 

@@ -1,3 +1,5 @@
+import { Area } from "react-easy-crop";
+
 export const rotateImageBase64 = async (imageSrc: string): Promise<string> => {
     const image = await new Promise<HTMLImageElement>((resolve, reject) => {
         const img = new Image();
@@ -27,7 +29,7 @@ export const rotateImageBase64 = async (imageSrc: string): Promise<string> => {
 
 export const getCroppedImg = async (
     imageSrc: string,
-    _pixelCrop: any, // not needed now
+    _pixelCrop: Area, // not needed now
     rotation = 0
 ): Promise<Blob> => {
 

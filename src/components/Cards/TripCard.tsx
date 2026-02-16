@@ -44,12 +44,12 @@ const TripCard: React.FC<Props> = ({ trip, onPressCard, onPressChats, onPressMat
         {trip.groupContext?.isInGroup ? (
           <div style={cardStyles.chipbox}>
             <Users2 size={16} color="var(--primary-1)" />
-            <p>In a group</p>
+            <p style={{marginBottom:0}}>In a group</p>
           </div>
         ) : (
           <div style={cardStyles.chipbox}>
             <User2 size={16} color="var(--primary-1)" />
-            <p>Solo trip</p>
+            <p style={{marginBottom:0}}>Solo trip</p>
           </div>
 
         )}

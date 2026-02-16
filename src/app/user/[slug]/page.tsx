@@ -271,7 +271,7 @@ export default function UserProfilePage() {
 
   if (isNotFound) {
     return (
-      <div className="min-h-screen bg-[var(--primary-5)] flex items-center justify-center px-4">
+      <div className="min-h-screen  flex items-center justify-center px-4">
         <div className="max-w-md w-full bg-white rounded-3xl shadow-xl p-10 text-center border border-[var(--neutral-5)]">
           <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6 text-red-500">
             <UserIcon size={40} strokeWidth={1.5} />
@@ -294,7 +294,7 @@ export default function UserProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--primary-5)] py-8 px-4 sm:px-6 lg:px-8 font-sans">
+    <div className="min-h-screen  py-8 px-4 sm:px-6 lg:px-8 font-sans">
       <Toaster position="bottom-right" />
       <EditProfileModal
         isOpen={isEditModalOpen}

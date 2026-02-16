@@ -33,7 +33,7 @@ interface AddLocationCardProps {
     price?: number;
     timelines: TripTimeline[] | TripDate[];
     featuredLocation?: boolean;
-    numberOfPeoplePlanningTrips: number;
+    numberOfPeoplePlanningTrips?: number;
 }
 
 const AddLocationCard: React.FC<AddLocationCardProps> = ({
@@ -74,7 +74,7 @@ const AddLocationCard: React.FC<AddLocationCardProps> = ({
     const accommodationTexts = [
         `<strong class="text-secondary-1" style="font-weight: 700;">${placesToVisit}</strong>+ Places to visit`,
         `<strong class="text-secondary-1" style="font-weight: 700;">${HotelsToStay}</strong>+ Hotels to stay at`,
-        `<strong class="text-secondary-1" style="font-weight: 700;">${getRandomNumberReviews}</strong>+ Others planning`
+        getRandomNumberReviews ? `<strong class="text-secondary-1" style="font-weight: 700;">${getRandomNumberReviews}</strong>+ Others planning` : ''
     ];
 
     useEffect(() => {
@@ -196,20 +196,22 @@ const AddLocationCard: React.FC<AddLocationCardProps> = ({
                         {/* Animated Icons */}
                         <div className="location-card-icons" style={{ display: 'flex', gap: '12px', marginBottom: '12px' }}>
                             {[Leaf, Menu, Plane].map((Icon, index) => (
-                                <div
-                                    key={index}
-                                    style={{
-                                        backgroundColor: activeIcon === index ? 'var(--secondary-1)' : 'var(--secondary-5)',
-                                        padding: '8px',
-                                        borderRadius: '50%',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        transition: 'all 0.3s ease'
-                                    }}
-                                >
-                                    <Icon size={16} color={activeIcon === index ? 'white' : 'var(--secondary-1)'} />
-                                </div>
+                                numberOfPeoplePlanningTrips === 0 && index === 2 ? null : (
+                                    <div
+                                        key={index}
+                                        style={{
+                                            backgroundColor: activeIcon === index ? 'var(--secondary-1)' : 'var(--secondary-5)',
+                                            padding: '8px',
+                                            borderRadius: '50%',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            transition: 'all 0.3s ease'
+                                        }}
+                                    >
+                                        <Icon size={16} color={activeIcon === index ? 'white' : 'var(--secondary-1)'} />
+                                    </div>
+                                )
                             ))}
                         </div>
                     </div>

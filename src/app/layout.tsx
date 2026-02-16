@@ -1,8 +1,9 @@
-import './globals.css'; // relative path to the file
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Toaster } from 'react-hot-toast';
 import { LoginProvider } from '@/components/providers/LoginProvider';
 import Footer from '@/components/Footer/Footer';
+import './globals.css'; // relative path to the file
+
 // import NavbarWrapper from './../components/Navbar/NavbarWrapper';
 import NavbarClient from '@/components/Navbar/NavbarClient';
 // import ExploreNearby from '@/components/Explore/ExploreNearby';
@@ -16,6 +17,7 @@ export const metadata = {
 import Script from 'next/script';
 import { LoaderProvider } from '@/components/providers/LoaderContext';
 import { AuthSessionSync } from '@/components/Auth/AuthSessionSync';
+import LayoutUIController from '@/components/Layout/LayoutUIController';
 
 // import generateSitemap from '@/temp/generateStaticSitemap';
 
@@ -79,9 +81,20 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               {/* You can add a global navbar or context providers here */}
               {/* <NavbarWrapper /> */}
               {/* <RouteChangeHandler /> */}
-              <NavbarClient />
+              {/* <NavbarClient /> */}
               {/* <ExploreNearby /> */}
-              {children}
+              {/* {<div className="announcement-bar" style={{ height: "25px", display: "none" }}>
+                <div className="announcement-track">
+                  <div className="announcement-content">
+                    <span>SYNCTRIP APP IS LAUNCHING THIS MARCH!</span>
+                  </div>
+                </div>
+              </div>} */}
+              {/* <div style={{ height: "25px" }}></div> */}
+              {/* {children} */}
+              <LayoutUIController>
+    {children}
+  </LayoutUIController>
               <Toaster position='top-right' />
             </LoginProvider>
           </LoaderProvider>

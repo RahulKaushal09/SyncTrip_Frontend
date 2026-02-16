@@ -97,7 +97,7 @@
 }
 
 .paddingTopAndSide {
-  padding: 20px var(--container-padding-x) 0px;
+  padding: 45px var(--container-padding-x) 0px;
   max-width: -webkit-fill-available !important;
 
 }
@@ -478,7 +478,7 @@ body {
   font-family: Helvetica, sans-serif !important;
   /* margin-left: 60px;
   margin-right: 60px; */
-  margin-top: 80px !important;
+  margin-top: 45px !important;
 }
 
 .fullwidth {
@@ -510,7 +510,8 @@ body {
 
   .App {
     /* margin: 80px 30px 0px 80px; */
-    margin: 80px 0px 0px 0px;
+    margin: 0px 0px 0px 0px !important;
+    padding-top: 80px !important;
     overflow-x: hidden;
   }
 }
@@ -734,13 +735,16 @@ input {
 
 /* ========= Pages ========= */
 .HomePage {
-  margin: 0px 40px;
+  margin: 40px 40px 0px;
+  /* padding-top: 5px; */
+
 }
 
 .DestinationPage {
-  /* margin: 0px 60px; */
-  margin: 0px auto;
-  max-width: 68rem;
+  margin: 40px 60px 0px;
+  /* margin: 0px auto;
+  margin-top: 120px ;
+  max-width: 68rem; */
 }
 
 .heart-icon {
@@ -791,11 +795,12 @@ input {
 /* Responsive Page Layout */
 @media screen and (max-width: 1300px) {
   .DestinationPage {
-    margin: 0 60px;
+    margin:40px 60px 0px;
   }
 
   .HomePage {
-    margin: 0 40px;
+     margin-left: 40px;
+    margin-right: 40px;
   }
 }
 
@@ -814,11 +819,12 @@ input {
   }
 
   .DestinationPage {
-    margin: 0 40px;
+    margin: 60px 20px 0px;
   }
 
   .HomePage {
-    margin: 0 40px;
+    margin-left: 40px;
+    margin-right: 40px;
   }
 
 }

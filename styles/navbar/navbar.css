@@ -8,7 +8,6 @@
             var(--secondary-1, #1e496d),
             #2a6496,
             var(--secondary-1, #1e496d));
-    height: 40px;
     width: 100%;
     position: fixed;
     top: 0;
@@ -80,7 +79,7 @@
     position: fixed;
     /* Changed: top is now handled via inline style or 
        updated here to match announcement height */
-    top: 40px;
+    top: 25px;
     left: 0;
     right: 0;
 }

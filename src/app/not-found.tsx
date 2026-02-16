@@ -13,8 +13,8 @@ const NotFound = () => {
                 <h2 className="h2 text-secondary-1">Oops! Page Not Found</h2>
 
                 <p className="r1 text-neutral-1" style={{ maxWidth: '500px', margin: '10px auto 40px auto' }}>
-                    The page you're looking for doesn't exist or has been moved.
-                    Don't worry, we can help you find your way back!
+                    The page you&apos;re looking for doesn&apos;t exist or has been moved.
+                    Don&apos;t worry, we can help you find your way back!
                 </p>
 
                 <div className="flexbtn" style={{ flexDirection: 'column', gap: '16px' }}>

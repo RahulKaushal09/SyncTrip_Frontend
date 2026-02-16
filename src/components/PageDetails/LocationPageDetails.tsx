@@ -57,7 +57,7 @@ const LocationPageDetails = ({ uuid, locationData }: { uuid: string; locationDat
 
     const findPeoplePlanningTrips = async () => {
         try {
-            const res = await LocationServices.getUsersPlanningTripsToLocation(uuid, user?.id);
+            const res = await LocationServices.getUsersPlanningTripsToLocation(uuid);
             setPeoplePlanningTrips(res.users);
             setNumberOfPeoplePlanningTrips(res.totalUsers);
         } catch (error) {
@@ -120,7 +120,7 @@ const LocationPageDetails = ({ uuid, locationData }: { uuid: string; locationDat
     // if (loading) return <FullScreenLoader isVisible={loading} />;
 
     return (
-        <div className="DestinationPage paddingSectionLeftRight">
+        <div className="DestinationPage">
 
             {/* Main Sections */}
             <LocationHeader
@@ -193,7 +193,7 @@ const LocationPageDetails = ({ uuid, locationData }: { uuid: string; locationDat
 
                 {!isMobile && (
                     <div className="col-lg-4" style={{ marginBottom: '17px' }}>
-                        <div style={{ position: 'sticky', top: '80px', zIndex: 50 }}>
+                        <div style={{ position: 'sticky', top: '120px', zIndex: 50 }}>
                             <AddLocationCard
                                 locationId={locationData?.id}
                                 showBtns

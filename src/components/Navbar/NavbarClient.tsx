@@ -28,6 +28,7 @@ const NavbarClient = ({ }) => {
   const pathname = usePathname();
   const shouldHideNavbar = (pathname.includes('userTrip/') && pathname.includes('/planner')) || (pathname.includes('userTrip/') && pathname.includes('/matching')) || pathname.includes('/chats');
 
+
   // const cookie = Cookies.get('userInfo');
   // const [user, setUser] = useState<User | null>(() => {
   //   try {
@@ -165,84 +166,86 @@ const NavbarClient = ({ }) => {
 
   const toggleDropdown = () => setShowDropdown(!showDropdown);
   const handleLoginClick = () => openLogin();
-  const BAR_HEIGHT = "25px";
   return (
     <>
-      {!shouldHideNavbar && <div className="announcement-bar" style={{ height: BAR_HEIGHT }}>
+    <style jsx>{`
+  .announcement-bar {
+    display: flex !important;
+  }
+`}</style>
+      {/* {!shouldHideNavbar && <div className="announcement-bar" style={{ height: BAR_HEIGHT }}>
         <div className="announcement-track">
           <div className="announcement-content">
             <span>SYNCTRIP APP IS LAUNCHING THIS MARCH!</span>
           </div>
         </div>
-      </div>}
+      </div>} */}
 
-      <nav
-        className={`navbar navbar-expand-lg navbar-light ${isSticky ? "sticky" : ""}`}
-        style={{
-          display: shouldHideNavbar ? 'none' : 'flex',
-          top: shouldHideNavbar ? "0" : BAR_HEIGHT // Moves navbar below bar
-        }}
-      >
-        <div className="container-fluid">
-          <Link href="/" onClick={() => redirectBtnClick("/")} className="navbar-brand" style={{ width: "100px" }}>
-            <Image src={SyncTripLogo} alt="SyncTrip" style={{ width: "100%" }} />
-          </Link>
-          {ismobile ? (
-            <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
-              {isLoggedIn && <NotificationBell />}
-              {isLoggedIn && <ChatIcon />}
-              <button className="navbar-toggler" onClick={() => setMobileNavOpen(!mobileNavOpen)}>
-                <span className="navbar-toggler-icon"></span>
-              </button>
-            </div>
-          ) :
+      {/* <nav */}
+      <nav className={`navbar navbar-expand-lg navbar-light ${isSticky ? "sticky" : ""}`} style={{ paddingTop: "10px", display: shouldHideNavbar ? 'none' : 'flex' }}>
+
+        {/* className={`navbar navbar-expand-lg navbar-light ${isSticky ? "sticky" : ""}`} */}
+        
+      <div className="container-fluid">
+        <Link href="/" onClick={() => redirectBtnClick("/")} className="navbar-brand" style={{ width: "100px" }}>
+          <Image src={SyncTripLogo} alt="SyncTrip" style={{ width: "100%" }} />
+        </Link>
+        {ismobile ? (
+          <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
+            {isLoggedIn && <NotificationBell />}
+            {isLoggedIn && <ChatIcon />}
             <button className="navbar-toggler" onClick={() => setMobileNavOpen(!mobileNavOpen)}>
               <span className="navbar-toggler-icon"></span>
-            </button>}
-          {/* <div className={`collapse navbar-collapse justify-content-end ${mobileNavOpen ? 'show' : ''}`} id="navbarNav"> */}
+            </button>
+          </div>
+        ) :
+          <button className="navbar-toggler" onClick={() => setMobileNavOpen(!mobileNavOpen)}>
+            <span className="navbar-toggler-icon"></span>
+          </button>}
+        {/* <div className={`collapse navbar-collapse justify-content-end ${mobileNavOpen ? 'show' : ''}`} id="navbarNav"> */}
 
-          <div className="collapse navbar-collapse justify-content-end" id="navbarNav" >
-            <ul className="navbar-nav ul-withNoListStyle" style={{ alignItems: "center", gap: "20px" }}>
-              {isLoggedIn &&
-                <li className="nav-item"
-                  onClick={() => {
-                    if (!isActive(ROUTES.USER_TRIPS)) {
-                      redirectBtnClick(ROUTES.USER_TRIPS);
-                    }
-                  }}
-                  style={{
-                    cursor: isActive(ROUTES.USER_TRIPS) ? "default" : "pointer",
-                    pointerEvents: isActive(ROUTES.USER_TRIPS) ? "none" : "auto",
-                    borderBottom: isActive(ROUTES.USER_TRIPS) ? "2px solid var(--secondary-1)" : "",
-                  }}
-                // onClick={() => redirectBtnClick(ROUTES.USER_TRIPS)}
-                // style={{ cursor: "pointer" }}
-                >
-                  <span className="nav-link">
-                    My Trips
-                  </span>
-                </li>
-
-              }
+        <div className="collapse navbar-collapse justify-content-end" id="navbarNav" >
+          <ul className="navbar-nav ul-withNoListStyle" style={{ alignItems: "center", gap: "20px" }}>
+            {isLoggedIn &&
               <li className="nav-item"
                 onClick={() => {
-                  if (!isActive(ROUTES.EXPLORE)) {
-                    redirectBtnClick(ROUTES.EXPLORE);
+                  if (!isActive(ROUTES.USER_TRIPS)) {
+                    redirectBtnClick(ROUTES.USER_TRIPS);
                   }
                 }}
                 style={{
-                  cursor: isActive(ROUTES.EXPLORE) ? "default" : "pointer",
-                  pointerEvents: isActive(ROUTES.EXPLORE) ? "none" : "auto",
-                  borderBottom: isActive(ROUTES.EXPLORE) ? "2px solid var(--secondary-1)" : "",
+                  cursor: isActive(ROUTES.USER_TRIPS) ? "default" : "pointer",
+                  pointerEvents: isActive(ROUTES.USER_TRIPS) ? "none" : "auto",
+                  borderBottom: isActive(ROUTES.USER_TRIPS) ? "2px solid var(--secondary-1)" : "",
                 }}
-              // onClick={() => redirectBtnClick(ROUTES.EXPLORE)}
+              // onClick={() => redirectBtnClick(ROUTES.USER_TRIPS)}
               // style={{ cursor: "pointer" }}
               >
                 <span className="nav-link">
-                  Explore
+                  My Trips
                 </span>
               </li>
-              {/* <li className="nav-item"
+
+            }
+            <li className="nav-item"
+              onClick={() => {
+                if (!isActive(ROUTES.EXPLORE)) {
+                  redirectBtnClick(ROUTES.EXPLORE);
+                }
+              }}
+              style={{
+                cursor: isActive(ROUTES.EXPLORE) ? "default" : "pointer",
+                pointerEvents: isActive(ROUTES.EXPLORE) ? "none" : "auto",
+                borderBottom: isActive(ROUTES.EXPLORE) ? "2px solid var(--secondary-1)" : "",
+              }}
+            // onClick={() => redirectBtnClick(ROUTES.EXPLORE)}
+            // style={{ cursor: "pointer" }}
+            >
+              <span className="nav-link">
+                Explore
+              </span>
+            </li>
+            {/* <li className="nav-item"
               onClick={() => {
                 if (!isActive(ROUTES.BLOGS)) {
                   redirectBtnClick(ROUTES.BLOGS);
@@ -260,269 +263,269 @@ const NavbarClient = ({ }) => {
                 Blogs
               </span>
             </li> */}
-              {pageType == PageTypeEnum.HOSTED_TRIPS ? (
-                (isLoggedIn &&
+            {pageType == PageTypeEnum.HOSTED_TRIPS ? (
+              (isLoggedIn &&
 
-                  <li className="nav-item"
-                    onClick={() => {
-                      if (!isActive(ROUTES.CREATE_TRIP)) {
-                        redirectBtnClick(ROUTES.CREATE_TRIP);
-                      }
-                    }}
+                <li className="nav-item"
+                  onClick={() => {
+                    if (!isActive(ROUTES.CREATE_TRIP)) {
+                      redirectBtnClick(ROUTES.CREATE_TRIP);
+                    }
+                  }}
+                  style={{
+                    cursor: isActive(ROUTES.CREATE_TRIP) ? "default" : "pointer",
+                    pointerEvents: isActive(ROUTES.CREATE_TRIP) ? "none" : "auto",
+                    borderBottom: isActive(ROUTES.CREATE_TRIP) ? "2px solid var(--secondary-1)" : "",
+                  }}
+                // onClick={() => redirectBtnClick(ROUTES.CREATE_TRIP)} style={{ cursor: "pointer" }}
+                >
+                  <span className="nav-link">
+                    Create Trip
+                  </span>
+                </li>
+              )) : ""}
+            <li className="nav-item"
+              onClick={() => setFeedbackFormOpen(true)}
+              style={{ cursor: "pointer" }}>
+              <span className="nav-link">
+                {isLoggedIn ? 'Feedback' : 'Contact'}
+              </span>
+            </li>
+            <li className="nav-item dropdown">
+              {LoadingUser ? (
+                <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px" }}>
+                  <div
+                    className="skeleton skeleton-profile"
                     style={{
-                      cursor: isActive(ROUTES.CREATE_TRIP) ? "default" : "pointer",
-                      pointerEvents: isActive(ROUTES.CREATE_TRIP) ? "none" : "auto",
-                      borderBottom: isActive(ROUTES.CREATE_TRIP) ? "2px solid var(--secondary-1)" : "",
+                      width: '40px',
+                      height: '40px',
+                      borderRadius: '50%',
+                      background: 'linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%)',
+                      backgroundSize: '200% 100%',
+                      animation: 'skeleton-loading 1.5s infinite'
                     }}
-                  // onClick={() => redirectBtnClick(ROUTES.CREATE_TRIP)} style={{ cursor: "pointer" }}
-                  >
-                    <span className="nav-link">
-                      Create Trip
-                    </span>
-                  </li>
-                )) : ""}
-              <li className="nav-item"
-                onClick={() => setFeedbackFormOpen(true)}
-                style={{ cursor: "pointer" }}>
-                <span className="nav-link">
-                  {isLoggedIn ? 'Feedback' : 'Contact'}
-                </span>
-              </li>
-              <li className="nav-item dropdown">
-                {LoadingUser ? (
-                  <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px" }}>
-                    <div
-                      className="skeleton skeleton-profile"
-                      style={{
-                        width: '40px',
-                        height: '40px',
-                        borderRadius: '50%',
-                        background: 'linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%)',
-                        backgroundSize: '200% 100%',
-                        animation: 'skeleton-loading 1.5s infinite'
-                      }}
-                    />
-                    {/* User name or login/register button skeleton */}
-                    <div
-                      className="skeleton skeleton-button"
-                      style={{
-                        width: '120px',
-                        height: '24px',
-                        borderRadius: '4px',
-                        background: 'linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%)',
-                        backgroundSize: '200% 100%',
-                        animation: 'skeleton-loading 1.5s infinite'
-                      }}
-                    />
+                  />
+                  {/* User name or login/register button skeleton */}
+                  <div
+                    className="skeleton skeleton-button"
+                    style={{
+                      width: '120px',
+                      height: '24px',
+                      borderRadius: '4px',
+                      background: 'linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%)',
+                      backgroundSize: '200% 100%',
+                      animation: 'skeleton-loading 1.5s infinite'
+                    }}
+                  />
 
 
+                </div>
+              ) :
+                !LoadingUser && user ? (
+                  <div className="flex items-center gap-4">
+                    {/* Notification Icon */}
+                    {isLoggedIn && <NotificationBell />}
+
+                    {isLoggedIn && <ChatIcon />}
+                    <Dropdown show={showDropdown} onToggle={setShowDropdown}>
+                      <div style={{ display: "flex", alignItems: "center" }}>
+
+                        <Dropdown.Toggle variant="link" onClick={toggleDropdown} style={{
+                          padding: "0",
+                          border: "none",
+                          background: "transparent",
+                          boxShadow: "none",
+                          display: "flex",
+                          alignItems: "center",
+                          color: "black",
+                          gap: "10px"
+                        }}>
+                          {user.profile_picture?.[0] ? (
+                            <Image
+                              src={user.profile_picture[0]}
+                              alt="Profile"
+                              width={40}
+                              height={40}
+                              style={{
+                                borderRadius: "50%",
+                                objectFit: "cover",
+                                width: "40px",
+                                height: "40px"
+                              }}
+                            />
+                          ) : (
+                            <div
+                              style={{
+                                width: "40px",
+                                height: "40px",
+                                borderRadius: "50%",
+                                backgroundColor: "var(--secondary-1)",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                color: "white",
+                                fontSize: "14px",
+                                fontWeight: "bold"
+                              }}
+                            >
+                              {user?.name ?
+                                user.name
+                                  .split(' ')
+                                  .map(word => word[0])
+                                  .join('')
+                                  .toUpperCase()
+                                  .slice(0, 2)
+                                : "U"
+                              }
+                            </div>
+                          )}
+                          <span>{user.name}</span>
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu align="end">
+                          <Dropdown.Item as={Link} href={`/user/${user.id}`}>Profile</Dropdown.Item>
+                          <Dropdown.Item onClick={logout}>Logout</Dropdown.Item>
+                        </Dropdown.Menu>
+                      </div>
+                    </Dropdown>
                   </div>
-                ) :
-                  !LoadingUser && user ? (
-                    <div className="flex items-center gap-4">
-                      {/* Notification Icon */}
-                      {isLoggedIn && <NotificationBell />}
-
-                      {isLoggedIn && <ChatIcon />}
-                      <Dropdown show={showDropdown} onToggle={setShowDropdown}>
-                        <div style={{ display: "flex", alignItems: "center" }}>
-
-                          <Dropdown.Toggle variant="link" onClick={toggleDropdown} style={{
-                            padding: "0",
-                            border: "none",
-                            background: "transparent",
-                            boxShadow: "none",
-                            display: "flex",
-                            alignItems: "center",
-                            color: "black",
-                            gap: "10px"
-                          }}>
-                            {user.profile_picture?.[0] ? (
-                              <Image
-                                src={user.profile_picture[0]}
-                                alt="Profile"
-                                width={40}
-                                height={40}
-                                style={{
-                                  borderRadius: "50%",
-                                  objectFit: "cover",
-                                  width: "40px",
-                                  height: "40px"
-                                }}
-                              />
-                            ) : (
-                              <div
-                                style={{
-                                  width: "40px",
-                                  height: "40px",
-                                  borderRadius: "50%",
-                                  backgroundColor: "var(--secondary-1)",
-                                  display: "flex",
-                                  alignItems: "center",
-                                  justifyContent: "center",
-                                  color: "white",
-                                  fontSize: "14px",
-                                  fontWeight: "bold"
-                                }}
-                              >
-                                {user?.name ?
-                                  user.name
-                                    .split(' ')
-                                    .map(word => word[0])
-                                    .join('')
-                                    .toUpperCase()
-                                    .slice(0, 2)
-                                  : "U"
-                                }
-                              </div>
-                            )}
-                            <span>{user.name}</span>
-                          </Dropdown.Toggle>
-                          <Dropdown.Menu align="end">
-                            <Dropdown.Item as={Link} href={`/user/${user.id}`}>Profile</Dropdown.Item>
-                            <Dropdown.Item onClick={logout}>Logout</Dropdown.Item>
-                          </Dropdown.Menu>
-                        </div>
-                      </Dropdown>
-                    </div>
-                  ) : (
-                    <button className="btn btn-primary ms-2" onClick={handleLoginClick}>Login / Register</button>
-                  )}
-              </li>
-            </ul>
-          </div>
+                ) : (
+                  <button className="btn btn-primary ms-2" onClick={handleLoginClick}>Login / Register</button>
+                )}
+            </li>
+          </ul>
         </div>
+      </div>
 
 
 
-        {feedBackFormOpen && (
-          <FeedbackModal
-            feedBackFormOpen={feedBackFormOpen}
-            setFeedbackFormOpen={setFeedbackFormOpen}
-            isLoggedIn={isLoggedIn}
-            user={user}
-          />
-        )}
+      {feedBackFormOpen && (
+        <FeedbackModal
+          feedBackFormOpen={feedBackFormOpen}
+          setFeedbackFormOpen={setFeedbackFormOpen}
+          isLoggedIn={isLoggedIn}
+          user={user}
+        />
+      )}
 
 
 
 
-        {mobileNavOpen && (
-          <div className="mobile-overlay" onClick={closeDrawer}></div>
-        )}
+      {mobileNavOpen && (
+        <div className="mobile-overlay" onClick={closeDrawer}></div>
+      )}
 
-        {/* Mobile Drawer */}
-        <div
-          className={`mobile-drawer ${mobileNavOpen ? "open" : ""}`}
-          style={{ top: mobileNavOpen ? BAR_HEIGHT : "0" }}
-        >
-          <div className='' style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "1rem" }}>
-            {/* <div><a className="navbar-brand" href="/" style={{ display: 'inline-block', color: '#65CAD3', fontSize: "30px", fontWeight: "700", width: "100px" }}>
+      {/* Mobile Drawer */}
+      <div
+        className={`mobile-drawer ${mobileNavOpen ? "open" : ""}`}
+      // style={{ top: mobileNavOpen ? BAR_HEIGHT : "0" }}
+      >
+        <div className='' style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "1rem" }}>
+          {/* <div><a className="navbar-brand" href="/" style={{ display: 'inline-block', color: '#65CAD3', fontSize: "30px", fontWeight: "700", width: "100px" }}>
                         <img src={SyncTripLogo} alt="SyncTrip" style={{ width: "100%", }} />
                     </a>
                     </div> */}
-            {user ? (
-              <>
-                <Link
-                  href={`/user/${user.id}`}
-                  onClick={closeDrawer}
-                  style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
-                >
-                  {user.profile_picture?.[0] ? (
-                    <Image
-                      src={user.profile_picture[0]}
-                      alt="Profile"
-                      width={40}
-                      height={40}
-                      style={{
-                        borderRadius: "50%",
-                        objectFit: "cover",
-                        width: "40px",
-                        height: "40px"
-                      }}
-                    />
-                  ) : (
-                    <div
-                      style={{
-                        width: "40px",
-                        height: "40px",
-                        borderRadius: "50%",
-                        backgroundColor: 'var(--secondary-1)',
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        color: "white",
-                        fontSize: "14px",
-                        fontWeight: "bold"
-                      }}
-                    >
-                      {user?.name ?
-                        user.name
-                          .split(' ')
-                          .map(word => word[0])
-                          .join('')
-                          .toUpperCase()
-                          .slice(0, 2)
-                        : "U"
-                      }
-                    </div>
-                  )}
-                  <span className="ms-2 mt-2">{user?.name || "User"}</span>
-                </Link>
-
-
-              </>
-            ) : (
-              <div>
-                {/* <a className="navbar-brand" href="/" style={{ display: 'inline-block', color: '#65CAD3', fontSize: "30px", fontWeight: "700", width: "100px" }}> */}
-                <Link href="/" onClick={() => redirectBtnClick("/")} className="navbar-brand" style={{ display: 'inline-block', color: '#65CAD3', fontSize: "30px", fontWeight: "700", width: "100px" }}>
-                  <Image src={SyncTripLogo} alt="SyncTrip" style={{ width: "100%" }} />
-                  {/* <img src={SyncTripLogo.src} alt="SyncTrip" style={{ width: "100%", }} /> */}
-                </Link>
-              </div>
-            )}
-            <div className="drawer-header">
-              <span className="drawer-close" onClick={closeDrawer}>&times;</span>
-            </div>
-          </div>
-          <ul className="navbar-nav ul-withNoListStyle" style={{ alignItems: "flex-start", padding: "1rem" }}>
-            {isLoggedIn &&
-
-              <li className="nav-item"
-                onClick={() => {
-                  if (!isActive(ROUTES.USER_TRIPS)) {
-                    redirectBtnClick(ROUTES.USER_TRIPS);
-                    closeDrawer();
-                  }
-                }}
-                style={{
-                  cursor: isActive(ROUTES.USER_TRIPS) ? "default" : "pointer",
-                  pointerEvents: isActive(ROUTES.USER_TRIPS) ? "none" : "auto",
-                  borderBottom: isActive(ROUTES.USER_TRIPS) ? "2px solid var(--secondary-1)" : "",
-                }}
-              //  onClick={() => { redirectBtnClick(ROUTES.USER_TRIPS); closeDrawer(); }}
+          {user ? (
+            <>
+              <Link
+                href={`/user/${user.id}`}
+                onClick={closeDrawer}
+                style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
               >
-                <span className="nav-link">My Trips</span>
-              </li>
-            }
+                {user.profile_picture?.[0] ? (
+                  <Image
+                    src={user.profile_picture[0]}
+                    alt="Profile"
+                    width={40}
+                    height={40}
+                    style={{
+                      borderRadius: "50%",
+                      objectFit: "cover",
+                      width: "40px",
+                      height: "40px"
+                    }}
+                  />
+                ) : (
+                  <div
+                    style={{
+                      width: "40px",
+                      height: "40px",
+                      borderRadius: "50%",
+                      backgroundColor: 'var(--secondary-1)',
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: "white",
+                      fontSize: "14px",
+                      fontWeight: "bold"
+                    }}
+                  >
+                    {user?.name ?
+                      user.name
+                        .split(' ')
+                        .map(word => word[0])
+                        .join('')
+                        .toUpperCase()
+                        .slice(0, 2)
+                      : "U"
+                    }
+                  </div>
+                )}
+                <span className="ms-2 mt-2">{user?.name || "User"}</span>
+              </Link>
+
+
+            </>
+          ) : (
+            <div>
+              {/* <a className="navbar-brand" href="/" style={{ display: 'inline-block', color: '#65CAD3', fontSize: "30px", fontWeight: "700", width: "100px" }}> */}
+              <Link href="/" onClick={() => redirectBtnClick("/")} className="navbar-brand" style={{ display: 'inline-block', color: '#65CAD3', fontSize: "30px", fontWeight: "700", width: "100px" }}>
+                <Image src={SyncTripLogo} alt="SyncTrip" style={{ width: "100%" }} />
+                {/* <img src={SyncTripLogo.src} alt="SyncTrip" style={{ width: "100%", }} /> */}
+              </Link>
+            </div>
+          )}
+          <div className="drawer-header">
+            <span className="drawer-close" onClick={closeDrawer}>&times;</span>
+          </div>
+        </div>
+        <ul className="navbar-nav ul-withNoListStyle" style={{ alignItems: "flex-start", padding: "1rem" }}>
+          {isLoggedIn &&
+
             <li className="nav-item"
               onClick={() => {
-                if (!isActive(ROUTES.EXPLORE)) {
-                  redirectBtnClick(ROUTES.EXPLORE);
+                if (!isActive(ROUTES.USER_TRIPS)) {
+                  redirectBtnClick(ROUTES.USER_TRIPS);
                   closeDrawer();
-
                 }
               }}
               style={{
-                cursor: isActive(ROUTES.EXPLORE) ? "default" : "pointer",
-                pointerEvents: isActive(ROUTES.EXPLORE) ? "none" : "auto",
-                borderBottom: isActive(ROUTES.EXPLORE) ? "2px solid var(--secondary-1)" : "",
+                cursor: isActive(ROUTES.USER_TRIPS) ? "default" : "pointer",
+                pointerEvents: isActive(ROUTES.USER_TRIPS) ? "none" : "auto",
+                borderBottom: isActive(ROUTES.USER_TRIPS) ? "2px solid var(--secondary-1)" : "",
               }}
-            // onClick={() => { redirectBtnClick(ROUTES.EXPLORE); closeDrawer(); }}
+            //  onClick={() => { redirectBtnClick(ROUTES.USER_TRIPS); closeDrawer(); }}
             >
-              <span className="nav-link">Explore</span>
+              <span className="nav-link">My Trips</span>
             </li>
-            {/* <li className="nav-item"
+          }
+          <li className="nav-item"
+            onClick={() => {
+              if (!isActive(ROUTES.EXPLORE)) {
+                redirectBtnClick(ROUTES.EXPLORE);
+                closeDrawer();
+
+              }
+            }}
+            style={{
+              cursor: isActive(ROUTES.EXPLORE) ? "default" : "pointer",
+              pointerEvents: isActive(ROUTES.EXPLORE) ? "none" : "auto",
+              borderBottom: isActive(ROUTES.EXPLORE) ? "2px solid var(--secondary-1)" : "",
+            }}
+          // onClick={() => { redirectBtnClick(ROUTES.EXPLORE); closeDrawer(); }}
+          >
+            <span className="nav-link">Explore</span>
+          </li>
+          {/* <li className="nav-item"
             onClick={() => {
               if (!isActive(ROUTES.BLOGS)) {
                 redirectBtnClick(ROUTES.BLOGS);
@@ -540,26 +543,26 @@ const NavbarClient = ({ }) => {
           >
             <span className="nav-link">Blogs</span>
           </li> */}
-            {isLoggedIn &&
+          {isLoggedIn &&
 
-              <li className="nav-item"
-                onClick={() => {
-                  if (!isActive(ROUTES.CREATE_TRIP)) {
-                    redirectBtnClick(ROUTES.CREATE_TRIP);
-                    closeDrawer();
-                  }
-                }}
-                style={{
-                  cursor: isActive(ROUTES.CREATE_TRIP) ? "default" : "pointer",
-                  pointerEvents: isActive(ROUTES.CREATE_TRIP) ? "none" : "auto",
-                  borderBottom: isActive(ROUTES.CREATE_TRIP) ? "2px solid var(--secondary-1)" : "",
-                }}
-              //  onClick={() => { openLogin(() => { redirectBtnClick(ROUTES.CREATE_TRIP) }); }}
-              >
-                <span className="nav-link">Create Trip</span>
-              </li>
-            }
-            {/* {pageType == PageTypeEnum.TRIP ? (
+            <li className="nav-item"
+              onClick={() => {
+                if (!isActive(ROUTES.CREATE_TRIP)) {
+                  redirectBtnClick(ROUTES.CREATE_TRIP);
+                  closeDrawer();
+                }
+              }}
+              style={{
+                cursor: isActive(ROUTES.CREATE_TRIP) ? "default" : "pointer",
+                pointerEvents: isActive(ROUTES.CREATE_TRIP) ? "none" : "auto",
+                borderBottom: isActive(ROUTES.CREATE_TRIP) ? "2px solid var(--secondary-1)" : "",
+              }}
+            //  onClick={() => { openLogin(() => { redirectBtnClick(ROUTES.CREATE_TRIP) }); }}
+            >
+              <span className="nav-link">Create Trip</span>
+            </li>
+          }
+          {/* {pageType == PageTypeEnum.TRIP ? (
             <li className="nav-item"
               onClick={() => {
                 if (!isActive(ROUTES.CREATE_TRIP)) {
@@ -578,7 +581,7 @@ const NavbarClient = ({ }) => {
             </li>
           )
             : ( */}
-            {/* <li className="nav-item"
+          {/* <li className="nav-item"
             onClick={() => {
               if (!isActive(ROUTES.HOSTED_TRIPS)) {
                 redirectBtnClick(ROUTES.HOSTED_TRIPS);
@@ -594,35 +597,35 @@ const NavbarClient = ({ }) => {
           >
             <span className="nav-link">Hosted Trips</span>
           </li> */}
-            {/* )
+          {/* )
           } */}
-            <li className="nav-item"
-              onClick={() => { closeDrawer(); setFeedbackFormOpen(true) }}
-              style={{ cursor: "pointer" }}>
-              <span className="nav-link">
-                {isLoggedIn ? 'Feedback' : 'Contact'}
-              </span>
+          <li className="nav-item"
+            onClick={() => { closeDrawer(); setFeedbackFormOpen(true) }}
+            style={{ cursor: "pointer" }}>
+            <span className="nav-link">
+              {isLoggedIn ? 'Feedback' : 'Contact'}
+            </span>
+          </li>
+
+          {user ? (
+            // <li className="nav-item" onClick={() => { window.location.href = "/profile"; closeDrawer(); }}>
+            //     <span className="nav-link">Profile</span>
+            // </li>
+            <li className="nav-item" onClick={logout}>
+              <span className="nav-link">Logout</span>
             </li>
-
-            {user ? (
-              // <li className="nav-item" onClick={() => { window.location.href = "/profile"; closeDrawer(); }}>
-              //     <span className="nav-link">Profile</span>
-              // </li>
-              <li className="nav-item" onClick={logout}>
-                <span className="nav-link">Logout</span>
-              </li>
-            ) : (
-              <li className="nav-item" onClick={() => { handleLoginClick(); closeDrawer(); }}>
-                <button className="btn btn-primary mt-2" style={{ width: "100%" }}>
-                  Login / Register
-                </button>
-              </li>
-            )}
+          ) : (
+            <li className="nav-item" onClick={() => { handleLoginClick(); closeDrawer(); }}>
+              <button className="btn btn-primary mt-2" style={{ width: "100%" }}>
+                Login / Register
+              </button>
+            </li>
+          )}
 
 
-          </ul>
-        </div>
-      </nav>
+        </ul>
+      </div>
+    </nav >
     </>
   );
 };

@@ -19,6 +19,7 @@
   align-items: center;
   position: relative;
   justify-content: center;
+  padding-top: 25px;
 }
 
 .rowHeroSection {
@@ -66,7 +67,7 @@
 
 /* The Long Details Image (Back) - SCALED UP */
 .collage-card.details-back {
-  width: 345px;
+  width: 300px;
   /* Increased from 300px */
   height: auto;
   max-height: 580px;
@@ -361,7 +362,7 @@
 /* Intermediate Tablet/Laptop View (prevents squishing) */
 @media screen and (max-width: 1200px) {
   .collage-card.details-back {
-    width: 320px;
+    width: 280px;
   }
 
   .collage-card.members-front {
@@ -375,9 +376,9 @@
     display: none !important;
   }
 
-  .homeHeroSection {
+  /* .homeHeroSection {
     height: auto !important;
-  }
+  } */
 
   .heroOverlay {
     padding-top: 140px !important;
@@ -385,10 +386,10 @@
     align-items: flex-start !important;
   }
 
-  .heroNotLoggedIn {
+  /* .heroNotLoggedIn {
     padding-bottom: 100px !important;
 
-  }
+  } */
 
   .heroText {
     width: 100% !important;
