@@ -17,6 +17,8 @@ import ActiveDestinations from "@/components/Home_new/ActiveDestinations";
 import ChoiceSection from "@/components/Home_new/ChoiceSection";
 import DownloadPopup from "@/components/popups/DownloadAppPopup";
 import SwipeDemo from "@/components/Home_new/SwipeDemo";
+import { useLogin } from "@/components/providers/LoginProvider";
+import LoggedInHeroSection from "@/components/Home_new/LoggedInHeroSection";
 
 // export const metadata: Metadata = {
 //   title: 'SyncTrip – Travel Planning & Solo Travel Groups in India',

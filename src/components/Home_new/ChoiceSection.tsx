@@ -62,6 +62,7 @@ const ChoiceFeatureSection = () => {
 
   return (
     <section
+      id="swipedemo"
       ref={containerRef}
       className="relative w-full select-none bg-[#F2FAFF] overflow-hidden pb-20"
     >
@@ -121,9 +122,9 @@ const ChoiceFeatureSection = () => {
               </div>
 
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-secondary-1 leading-[1.1] tracking-tight">
-                Don&apos;t just dream of <br />
+                Go solo. But, <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#1583b7] to-[#a2d9f3]">
-                  the perfect trip.
+                  Never be alone.
                 </span>
               </h2>
 
@@ -137,13 +138,13 @@ const ChoiceFeatureSection = () => {
               <div className="p-2 transition-all">
                 <div className="flex items-center justify-center gap-2">
                   <Compass aria-label="Direct Connection" className="text-[#4bbef5]" size={30} />
-                  <h4 className="font-bold text-lg md:text-lg text-secondary-1">Direct Connection</h4>
+                  <h4 className="font-bold my-auto text-lg md:text-lg text-secondary-1">Direct Connection</h4>
                 </div>
               </div>
               <div className="p-2 transition-all">
                 <div className="flex items-center justify-center gap-2">
                   <ShieldCheck aria-label="Verified Safety" className="text-green-600" size={30} />
-                  <h4 className="font-bold text-lg md:text-lg text-secondary-1">100% Verified Profiles</h4>
+                  <h4 className="font-bold my-auto text-lg md:text-lg text-secondary-1">100% Verified Profiles</h4>
                 </div>
               </div>
             </div>

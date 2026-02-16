@@ -9,6 +9,7 @@ import GroupTripImage from "../../assets/images/groupTripDetails.png";
 import GroupTripMembers from "../../assets/images/groupTripMembers.png";
 import Image from "next/image";
 import { triggerLogin } from "@/utils";
+import LoggedInHeroSection from "./LoggedInHeroSection";
 
 const HomeHeroSection: React.FC = () => {
     const { showLoader } = useLoader();
@@ -25,6 +26,9 @@ const HomeHeroSection: React.FC = () => {
         router.push(redirectUrl);
     };
 
+    if (sessionStorage.getItem("isLoggedIn") === "true") {
+        return <LoggedInHeroSection />;
+    }
     return (
         <section className="homeHeroSection">
             {/* FLOATING ICONS */}
@@ -50,7 +54,7 @@ const HomeHeroSection: React.FC = () => {
                 })}
             </div>
 
-            <div className="heroOverlay bg-gradient-to-br from-[#f2faff] via-[#e3f5ff] to-[#b8e8ff]">
+            <div className="heroOverlay bg-gradient-to-br from-[#f2faff] via-[#e3f5ff] to-[#b8e8ff] heroNotLoggedIn">
                 <div className="row rowHeroSection align-items-center">
                     {/* LEFT SIDE: Content */}
                     <div className="col-lg-7 col-md-12 heroText m-animate m-slide-up" style={{ zIndex: 5 }}>
@@ -66,7 +70,7 @@ const HomeHeroSection: React.FC = () => {
                         </h1>
 
                         <p className="r1 text-neutral-1 mt-3 hero-description" style={{ maxWidth: "550px" }}>
-                            The social travel network where <strong>YOU lead!</strong> Create your trip, set your vibe, and connect with verified explorers heading your way. 
+                            The social travel network where <strong>YOU lead!</strong> Create your trip, set your vibe, and connect with verified explorers heading your way.
                             <strong> Simple, safe, and social.</strong>
                         </p>
 
@@ -83,7 +87,7 @@ const HomeHeroSection: React.FC = () => {
                             </div>
                             <div className="col-lg-5 col-md-6 col-12">
                                 <button
-                                    className="btn btn-white-home-hero b2 w-100 h-100 flexbtn"
+                                    className="btn btn-white-home-hero b2 w-100 flexbtn"
                                     style={{ border: '1px solid var(--secondary-1)' }}
                                     onClick={() => redirectToUrl(ROUTES.EXPLORE)}
                                 >

@@ -155,6 +155,7 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
         }
         StorageUtils.clearUserData();
         setUser(null);
+        sessionStorage.removeItem("isLoggedIn");
         window.location.reload();
     }, []);
 
@@ -204,6 +205,7 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
         if (!user.name || user.name === null) user.name = "Guest User";
         setUser(user);
         StorageUtils.setUser(user);
+        sessionStorage.setItem("isLoggedIn", "true");
 
         const emailVerified = !!user?.email; // or detect google
         setIsEmailVerified(emailVerified);

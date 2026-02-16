@@ -15,6 +15,7 @@ export const metadata = {
 };
 import Script from 'next/script';
 import { LoaderProvider } from '@/components/providers/LoaderContext';
+import { AuthSessionSync } from '@/components/Auth/AuthSessionSync';
 
 // import generateSitemap from '@/temp/generateStaticSitemap';
 
@@ -74,6 +75,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <div className="App">
           <LoaderProvider>
             <LoginProvider>
+              <AuthSessionSync />
               {/* You can add a global navbar or context providers here */}
               {/* <NavbarWrapper /> */}
               {/* <RouteChangeHandler /> */}

@@ -27,47 +27,66 @@ export const rotateImageBase64 = async (imageSrc: string): Promise<string> => {
 
 export const getCroppedImg = async (
     imageSrc: string,
-    pixelCrop: { x: number; y: number; width: number; height: number },
+    _pixelCrop: any, // not needed now
     rotation = 0
 ): Promise<Blob> => {
+
     const image = await new Promise<HTMLImageElement>((resolve, reject) => {
         const img = new Image();
-        img.addEventListener('load', () => resolve(img));
-        img.addEventListener('error', (error) => reject(error));
-        img.setAttribute('crossOrigin', 'anonymous');
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+        img.crossOrigin = "anonymous";
         img.src = imageSrc;
     });
 
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-
-    if (!ctx) throw new Error('No 2d context');
-
-    // Calculate canvas size based on rotation
+    const FINAL_WIDTH = 1080;
+    const FINAL_HEIGHT = 1920;
     const rotRad = (rotation * Math.PI) / 180;
-    const { width: bWidth, height: bHeight } = {
-        width: Math.abs(Math.cos(rotRad) * image.width) + Math.abs(Math.sin(rotRad) * image.height),
-        height: Math.abs(Math.sin(rotRad) * image.width) + Math.abs(Math.cos(rotRad) * image.height),
-    };
 
-    canvas.width = bWidth;
-    canvas.height = bHeight;
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    if (!ctx) throw new Error("No 2d context");
 
-    // Rotate and draw
-    ctx.translate(bWidth / 2, bHeight / 2);
+    canvas.width = FINAL_WIDTH;
+    canvas.height = FINAL_HEIGHT;
+
+    ctx.save();
+
+    // Move to center
+    ctx.translate(FINAL_WIDTH / 2, FINAL_HEIGHT / 2);
     ctx.rotate(rotRad);
-    ctx.translate(-image.width / 2, -image.height / 2);
-    ctx.drawImage(image, 0, 0);
 
-    // Extract the cropped area
-    const data = ctx.getImageData(pixelCrop.x, pixelCrop.y, pixelCrop.width, pixelCrop.height);
-    canvas.width = pixelCrop.width;
-    canvas.height = pixelCrop.height;
-    ctx.putImageData(data, 0, 0);
+    // COVER logic (like CSS background-size: cover)
+    const imgRatio = image.width / image.height;
+    const canvasRatio = FINAL_WIDTH / FINAL_HEIGHT;
+
+    let drawWidth = FINAL_WIDTH;
+    let drawHeight = FINAL_HEIGHT;
+
+    if (imgRatio > canvasRatio) {
+        // Image is wider
+        drawHeight = FINAL_HEIGHT;
+        drawWidth = FINAL_HEIGHT * imgRatio;
+    } else {
+        // Image is taller
+        drawWidth = FINAL_WIDTH;
+        drawHeight = FINAL_WIDTH / imgRatio;
+    }
+
+    ctx.drawImage(
+        image,
+        -drawWidth / 2,
+        -drawHeight / 2,
+        drawWidth,
+        drawHeight
+    );
+
+    ctx.restore();
 
     return new Promise((resolve) => {
         canvas.toBlob((file) => {
-            if (file) resolve(file);
-        }, 'image/jpeg');
+            if (!file) throw new Error("Blob failed");
+            resolve(file);
+        }, "image/jpeg", 0.95);
     });
 };

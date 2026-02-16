@@ -66,7 +66,7 @@
 
 /* The Long Details Image (Back) - SCALED UP */
 .collage-card.details-back {
-  width: 380px;
+  width: 345px;
   /* Increased from 300px */
   height: auto;
   max-height: 580px;
@@ -381,8 +381,13 @@
 
   .heroOverlay {
     padding-top: 140px !important;
-    padding-bottom: 100px !important;
+    /* padding-bottom: 100px !important; */
     align-items: flex-start !important;
+  }
+
+  .heroNotLoggedIn {
+    padding-bottom: 100px !important;
+
   }
 
   .heroText {
@@ -419,17 +424,17 @@
 }
 
 /* Navbar adjustment for short screens */
-@media screen and (max-height: 700px) and (max-width: 1024px) {
+/* @media screen and (max-height: 700px) and (max-width: 1024px) {
   .heroOverlay {
     padding-top: 100px !important;
   }
-}
+} */
 
 /* Mobile View (Below 768px) */
 @media screen and (max-width: 768px) {
   .heroOverlay {
-    padding-top: 100px;
-    padding-bottom: 150px !important;
+    padding-top: 150px !important;
+    /* padding-bottom: 150px !important; */
   }
 
   .rowHeroSection {
