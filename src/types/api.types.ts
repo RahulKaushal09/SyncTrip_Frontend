@@ -67,7 +67,7 @@ export interface UserTrip {
     //   destination: string; // Location or destination of the trip
     startDate: string;   // Start date of the trip
     endDate: string;     // End date of the trip
-    budget: string;      // Budget preference ("Cheap", "Economic", "Luxury", etc.)
+    budget: string;      // Budget preference ("Affordable", "Economic", "Luxury", etc.)
     interests?: string[];   // Interests (e.g., "Cultural Exploration", "Beach", etc.)
     //   interests?: string;   // Interests (e.g., "Cultural Exploration", "Beach", etc.)
     privacy?: string;    // Privacy setting ("Public", "Friends", "Only Me", etc.)

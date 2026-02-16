@@ -1,24 +1,86 @@
 .navbar-toggler:focus {
     box-shadow: none !important;
 }
+
+/* 1. The Outer Wrapper */
+.announcement-bar {
+    background: linear-gradient(90deg,
+            var(--secondary-1, #1e496d),
+            #2a6496,
+            var(--secondary-1, #1e496d));
+    height: 40px;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1001;
+    overflow: hidden;
+    /* Clips the content so it stays inside the bar */
+    display: flex;
+    align-items: center;
+}
+
+/* 2. The Moving Track */
+.announcement-track {
+    display: flex;
+    width: max-content;
+    white-space: nowrap;
+    /* Increase to 15s or 20s. 2s is too fast to see the loop logic! */
+    animation: marquee 10s linear infinite;
+    will-change: transform;
+}
+
+/* 3. The Content Blocks */
+.announcement-content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    /* This padding creates the gap between the end of phrase 1 and start of phrase 2 */
+    padding-right: 80px;
+    color: white;
+    font-size: 14px;
+    font-weight: 800;
+    /* Essential: prevents the blocks from shrinking */
+    flex-shrink: 0;
+}
+
+/* 4. The Infinite Loop Logic */
+@keyframes marquee {
+    0% {
+        transform: translate3d(350%, 0, 0);
+    }
+
+    100% {
+        /* This moves exactly one full 'announcement-content' block width 
+           because we have two identical ones */
+        transform: translate3d(-100%, 0, 0);
+    }
+}
+
+/* 5. Interaction */
+.announcement-bar:hover .announcement-track {
+    animation-play-state: paused;
+}
+
 @media(min-width: 992px) {
     .navbar-collapse {
         visibility: visible !important;
     }
+
     .navbar {
         padding-left: 50px;
-    padding-right: 50px;
+        padding-right: 50px;
     }
 }
 
 .navbar {
     transition: all 0.3s ease;
-    /* Smooth transition for background and other properties */
     width: 100%;
     z-index: 1000;
-    
     position: fixed;
-    top: 0;
+    /* Changed: top is now handled via inline style or 
+       updated here to match announcement height */
+    top: 40px;
     left: 0;
     right: 0;
 }
@@ -49,7 +111,7 @@
     height: 100vh;
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 1040;
-    
+
 }
 
 /* Drawer */
@@ -89,6 +151,35 @@
         display: none;
     }
 }
+
+@media (max-width: 768px) {
+    @keyframes marquee {
+        0% {
+            transform: translate3d(200%, 0, 0);
+        }
+
+        100% {
+            /* This moves exactly one full 'announcement-content' block width 
+           because we have two identical ones */
+            transform: translate3d(-100%, 0, 0);
+        }
+    }
+}
+
+@media (max-width: 550px) {
+    @keyframes marquee {
+        0% {
+            transform: translate3d(100%, 0, 0);
+        }
+
+        100% {
+            /* This moves exactly one full 'announcement-content' block width 
+           because we have two identical ones */
+            transform: translate3d(-100%, 0, 0);
+        }
+    }
+}
+
 @keyframes skeleton-loading {
     0% {
         background-position: 200% 0;
@@ -115,37 +206,40 @@
 
 /* Chat icon */
 .chat-icon-btn svg {
-  display: block;
-  color: #111827; /* default icon color — inherits text color */
+    display: block;
+    color: #111827;
+    /* default icon color — inherits text color */
 }
 
 /* unread badge (red) */
 .chat-unread-badge {
-  position: absolute;
-  top: -6px;
-  right: -6px;
-  min-width: 18px;
-  height: 18px;
-  padding: 0 4px;
-  border-radius: 12px;
-  background: #ef4444; /* red */
-  color: white;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 11px;
-  font-weight: 700;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 4px;
+    border-radius: 12px;
+    background: #ef4444;
+    /* red */
+    color: white;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
 }
 
 /* small loading indicator dot (subtle) */
 .chat-loading-dot {
-  position: absolute;
-  bottom: -3px;
-  right: -3px;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #60a5fa; /* subtle blue */
-  box-shadow: 0 0 4px rgba(96,165,250,0.5);
+    position: absolute;
+    bottom: -3px;
+    right: -3px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #60a5fa;
+    /* subtle blue */
+    box-shadow: 0 0 4px rgba(96, 165, 250, 0.5);
 }

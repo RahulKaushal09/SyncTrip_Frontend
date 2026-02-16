@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { Palette, Sparkles } from 'lucide-react';
 import CultureFestivalsCard from './CultureFestivalsCard';
 import { Culture, Festival } from '@/types';
 import '../../../styles/CultureFestivalsSection.css';
@@ -60,23 +61,54 @@ const CultureFestivalsSection: React.FC<CultureFestivalsSectionProps> = ({ data,
   // }
 
   if (!data || data.length === 0) {
-    return <div>No {type === 'culture' ? 'cultural experiences' : 'festivals'} available.</div>;
+    return null; // Returning null is cleaner than rendering an empty text div that breaks the layout flow
   }
 
+  const isCulture = type === 'culture';
+
   return (
-    <div className="cf-section" style={{ marginBottom: '50px' }}>
-      {/* <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      /> */}
-      <h2 className="DescriptionHeading">
-        <strong>{heading}</strong>
-      </h2>
-      <div className="cf-grid">
+    <div className="cf-section m-animate m-fade-in" style={{ marginBottom: '60px', marginTop: '40px' }}>
+
+      {/* =========================================
+          HEADER SECTION WITH ICONS
+          ========================================= */}
+      <div style={{ marginBottom: '24px' }}>
+        <h2 className="h4 text-secondary-1" style={{ display: 'flex', alignItems: 'center', gap: '10px', margin: '0 0 8px 0' }}>
+          {isCulture ? (
+            <Palette size={28} color="var(--primary-1)" />
+          ) : (
+            <Sparkles size={28} color="var(--warning-1)" />
+          )}
+          {heading}
+        </h2>
+
+        {/* UI CHANGE: Added a subtle description to set the context that this is an informational reading section */}
+        <p className="r2 text-neutral-1" style={{ margin: 0 }}>
+          {isCulture
+            ? "Immerse yourself in the heritage, traditions, and local way of life."
+            : "Discover local events, music, and seasonal celebrations."}
+        </p>
+      </div>
+
+      {/* =========================================
+          STATIC GRID LAYOUT
+          ========================================= */}
+      <div
+        className="cf-grid m-stagger"
+        style={{
+          display: 'grid',
+          gridTemplateColumns: '1fr', // UI CHANGE: Forces exactly 1 column (1 item per line)
+          gap: '24px',
+          cursor: 'default' // explicitly removes any pointer hand
+        }}
+      >
         {data.map((item, index) => (
-          <CultureFestivalsCard key={index} data={item} type={type} />
+          <div key={index} style={{ cursor: 'default', transition: 'none' }}>
+            <CultureFestivalsCard data={item} type={type} />
+          </div>
         ))}
       </div>
+
     </div>
   );
 };

@@ -1,11 +1,11 @@
 'use client';
 
 import React, { use, useEffect, useState } from 'react';
-import { usePathname } from 'next/navigation';
+import { redirect, usePathname, useRouter } from 'next/navigation';
 import LocationImageGallery from './locationImages';
 import AddLocationCard from '../Cards/AddLocationCard';
 import CultureFestivalsSection from './CultureFestivalsSection';
-import { Culture, Festival, Location, PlacesToVisit } from '@/types';
+import { Culture, Festival, Location, PlacesToVisit, User } from '@/types';
 import { PageTypeEnum, WishlistTypeEnum } from '@/constants';
 import { triggerLogin } from '@/utils';
 import LocationHeader from './LocationHeader';
@@ -18,6 +18,8 @@ import SyncTripAppPushingSection from '../AppPushingComponents/AppPushingSection
 import Cookies from 'js-cookie';
 import dynamic from 'next/dynamic';
 import { UserApiService } from '@/utils/user.api.utils';
+import { LocationServices } from '@/utils/location.utils';
+import { useLogin } from '../providers/LoginProvider';
 // const LocationMapSection = dynamic(() => import('./LocationMapSection'), {
 //     ssr: false, // This prevents SSR for import { is } from './../../../.next/server/vendor-chunks/next';
 //     loading: () => (
@@ -41,13 +43,31 @@ import { UserApiService } from '@/utils/user.api.utils';
 // });
 const LocationPageDetails = ({ uuid, locationData }: { uuid: string; locationData: Location }) => {
     const pathname = usePathname();
+    const router = useRouter();
     const [loading, setLoading] = useState(true);
     const [isWishlistedLocation, setIsWishlistedLocation] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
     const [pageType, setPageType] = useState<string | null>(null);
+    const [peoplePlanningTrips, setPeoplePlanningTrips] = useState<Partial<User>[]>([]);
+    const [numberOfPeoplePlanningTrips, setNumberOfPeoplePlanningTrips] = useState<number>(0);
     const [placesToVisit, setPlacesToVisit] = useState<PlacesToVisit[]>(locationData?.placesToVisit as PlacesToVisit[] || []);
+    const { user } = useLogin();
     // const [hotelIds, setHotelIds] = useState<string[]>([]);
     const ctaAction = () => triggerLogin(); // arrow function assigned to ctaAction
+
+    const findPeoplePlanningTrips = async () => {
+        try {
+            const res = await LocationServices.getUsersPlanningTripsToLocation(uuid, user?.id);
+            setPeoplePlanningTrips(res.users);
+            setNumberOfPeoplePlanningTrips(res.totalUsers);
+        } catch (error) {
+            console.error('Error fetching users planning trips to location:', error);
+        }
+    };
+
+    useEffect(() => {
+        findPeoplePlanningTrips();
+    }, [uuid]);
 
     useEffect(() => {
         if (pathname?.includes('/trips/')) setPageType(PageTypeEnum.TRIP);
@@ -134,6 +154,7 @@ const LocationPageDetails = ({ uuid, locationData }: { uuid: string; locationDat
                     alreadyEnrolled={false}
                     timelines={[]}
                     featuredLocation={locationData?.featured || false}
+                    numberOfPeoplePlanningTrips={numberOfPeoplePlanningTrips}
                 />
             )}
 
@@ -155,7 +176,7 @@ const LocationPageDetails = ({ uuid, locationData }: { uuid: string; locationDat
                         parentType="location"
                     />
                     <HotelsAndStaysSection
-                        hotelIds={locationData?.hotels as string[]|| []}
+                        hotelIds={locationData?.hotels as string[] || []}
                         locationName={locationData?.title}
                         parentId={uuid}
                         parentType="location"
@@ -174,8 +195,7 @@ const LocationPageDetails = ({ uuid, locationData }: { uuid: string; locationDat
                     <div className="col-lg-4" style={{ marginBottom: '17px' }}>
                         <div style={{ position: 'sticky', top: '80px', zIndex: 50 }}>
                             <AddLocationCard
-                    locationId={locationData?.id}
-
+                                locationId={locationData?.id}
                                 showBtns
                                 pageType={pageType}
                                 ctaAction={ctaAction}
@@ -191,8 +211,104 @@ const LocationPageDetails = ({ uuid, locationData }: { uuid: string; locationDat
                                 alreadyEnrolled={false}
                                 timelines={[]}
                                 featuredLocation={locationData?.featured || false}
-
+                                numberOfPeoplePlanningTrips={numberOfPeoplePlanningTrips}
                             />
+                            {/* Avatar Colors Palette */}
+                            {(() => {
+                                const avatarColors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#9B59B6'];
+
+                                return (
+                                    <div
+                                        className="travel-card border m-animate m-fade-in"
+                                        style={{
+                                            padding: '20px',
+                                            borderRadius: '16px',
+                                            backgroundColor: 'var(--white)',
+                                            boxShadow: '0 4px 15px rgba(0,0,0,0.03)',
+                                            marginTop: '16px'
+                                        }}
+                                    >
+                                        <p className="r1 text-secondary-1" style={{ margin: 0, fontWeight: 600 }}>
+                                            {numberOfPeoplePlanningTrips > 0 ? `${numberOfPeoplePlanningTrips}+ people are ` : 'No one is'} planning a trip to {locationData?.title}
+                                        </p>
+
+                                        {peoplePlanningTrips.length > 0 && (
+                                            <div style={{ display: 'flex', marginTop: '16px', alignItems: 'center' }}>
+                                                {peoplePlanningTrips.map((user: Partial<User>, index) => (
+                                                    <div
+                                                        key={index}
+                                                        title={user?.name}
+                                                        className="hov-lift"
+                                                        style={{
+                                                            position: 'relative',
+                                                            marginLeft: index !== 0 ? '-12px' : '0',
+                                                            zIndex: 5 - index,
+                                                            cursor: 'pointer'
+                                                        }}
+                                                    >
+                                                        {user?.profile_picture?.[0] ? (
+                                                            <img
+                                                                style={{
+                                                                    width: '36px',
+                                                                    height: '36px',
+                                                                    borderRadius: '50%',
+                                                                    border: '2px solid var(--white)',
+                                                                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                                                                    objectFit: 'cover',
+                                                                    objectPosition: 'center'
+                                                                }}
+                                                                src={user?.profile_picture?.[0] || ""}
+                                                                alt={user?.name || "User avatar"}
+                                                            />) : (
+                                                            <span
+                                                                style={{
+                                                                    display: 'flex',
+                                                                    alignItems: 'center',
+                                                                    justifyContent: 'center',
+                                                                    width: '36px',
+                                                                    height: '36px',
+                                                                    borderRadius: '50%',
+                                                                    backgroundColor: avatarColors[index % avatarColors.length],
+                                                                    color: '#fff',
+                                                                    fontWeight: 'bold',
+                                                                    fontSize: '14px',
+                                                                    border: '2px solid var(--white)',
+                                                                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                                                                }}>
+                                                                {user?.name?.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase() || "U"}
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                ))}
+
+                                                {/* Optional: Remaining count bubble if there are more than 5 people */}
+                                                {numberOfPeoplePlanningTrips > 0 && (
+                                                    <div style={{
+                                                        marginLeft: '-8px',
+                                                        zIndex: 0,
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        width: '36px',
+                                                        height: '36px',
+                                                        borderRadius: '50%',
+                                                        backgroundColor: 'var(--neutral-4)',
+                                                        color: 'var(--secondary-1)',
+                                                        fontSize: '12px',
+                                                        fontWeight: 'bold',
+                                                        border: '2px solid var(--white)',
+                                                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                                                        userSelect: 'none',
+                                                        cursor: 'default'
+                                                    }}>
+                                                        +{numberOfPeoplePlanningTrips - peoplePlanningTrips.length}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
+                                );
+                            })()}
                         </div>
                     </div>
                 )}

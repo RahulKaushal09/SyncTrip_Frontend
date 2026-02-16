@@ -89,4 +89,23 @@ export class LocationServices {
             throw error;
         }
     }
+    static async getUsersPlanningTripsToLocation(locationId: string) {
+        try {
+            const res = await apiClient.get(`/locations/enrolledUsers/${locationId}`);
+            console.log('API response for users planning trips to location:', res);
+            return res.data;
+        } catch (error) {
+            console.error("Error fetching users planning trips to location:", error);
+            throw error;
+        }
+    }
+    static async getEnrolledUsersForEveryLocation() {
+        try {
+            const res = await apiClient.get(`/locations/enrolledUsersForEveryLocation`);
+            return res.data;
+        } catch (error) {
+            console.error("Error fetching enrolled users for every location:", error);
+            throw error;
+        }
+    }
 };

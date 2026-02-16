@@ -1,17 +1,15 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Leaf, Menu, Plane } from "lucide-react";
+import { ArrowRight, Leaf, Menu, Plane, Star } from "lucide-react";
 
 import '../../../styles/AddLocationCard.css';
 import { PageTypeEnum } from '@/constants';
 import { TripDate, TripTimeline } from '@/types';
-import { triggerLogin, TripsApiService } from '@/utils';
+import { triggerLogin } from '@/utils';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { useLoader } from '../providers/LoaderContext';
-
-
 
 interface AddLocationCardProps {
     locationId?: string;
@@ -35,6 +33,7 @@ interface AddLocationCardProps {
     price?: number;
     timelines: TripTimeline[] | TripDate[];
     featuredLocation?: boolean;
+    numberOfPeoplePlanningTrips: number;
 }
 
 const AddLocationCard: React.FC<AddLocationCardProps> = ({
@@ -58,44 +57,48 @@ const AddLocationCard: React.FC<AddLocationCardProps> = ({
     btnReference,
     price,
     timelines,
-    featuredLocation=false
+    featuredLocation = false,
+    numberOfPeoplePlanningTrips
 }) => {
-        const router = useRouter();
-    const {showLoader,hideLoader}= useLoader();
+    const router = useRouter();
+    const { showLoader, hideLoader } = useLoader();
+
     const [activeIcon, setActiveIcon] = useState(0);
     const [btn2Text, setBtn2Text] = useState('');
     const [btn2CTA, setBtn2CTA] = useState<() => void>(() => ctaAction);
-    // const [selectedSlotId, setSelectedSlotId] = useState('');
     const [currentText, setCurrentText] = useState(0);
     const [customReviews, setCustomReviews] = useState<number | null>(null);
 
-    const getRandomNumberReviews = Math.floor(Math.random() * (100 - 10 + 1)) + 10;
+    // Dynamic Text for Animation
+    const getRandomNumberReviews = numberOfPeoplePlanningTrips;
     const accommodationTexts = [
-        `<strong style='color:black'>${placesToVisit}</strong>+ Places to visit`,
-        `<strong style='color:black'>${HotelsToStay}</strong>+ Hotels to stay at`,
-        `<strong style='color:black'>${getRandomNumberReviews}</strong>+ Others planning`
+        `<strong class="text-secondary-1" style="font-weight: 700;">${placesToVisit}</strong>+ Places to visit`,
+        `<strong class="text-secondary-1" style="font-weight: 700;">${HotelsToStay}</strong>+ Hotels to stay at`,
+        `<strong class="text-secondary-1" style="font-weight: 700;">${getRandomNumberReviews}</strong>+ Others planning`
     ];
+
+    useEffect(() => {
+        const random = Math.floor(Math.random() * (100 - 10 + 1)) + 10;
+        setCustomReviews(random);
+    }, []);
+
     const createTrip = (locationId: string, featured: boolean) => {
-        // Logic to create a trip
         showLoader();
-        if(featured) {
+        if (featured) {
             router.push(`/create/trip?locationId=${locationId}`);
             return;
-        }
-        else{
-            toast.error("We’re launching city by city to ensure you meet real travellers. For now, Manali, Goa & Rishikesh have active communities.")
+        } else {
+            toast.error("We’re launching city by city to ensure you meet real travellers. For now, Manali, Goa & Rishikesh have active communities.");
             router.push("/explore");
             hideLoader();
             return;
         }
     };
+
     const loginThenNavigate = () => {
-        triggerLogin(createTrip.bind(null, locationId || '',featuredLocation));
-    }
-    useEffect(() => {
-        const random = Math.floor(Math.random() * (100 - 10 + 1)) + 10;
-        setCustomReviews(random);
-    }, []);
+        triggerLogin(createTrip.bind(null, locationId || '', featuredLocation));
+    };
+
     useEffect(() => {
         if (pageType === PageTypeEnum.LOCATION) {
             setBtn2CTA(() => loginThenNavigate);
@@ -115,17 +118,11 @@ const AddLocationCard: React.FC<AddLocationCardProps> = ({
             setCurrentText((prev) => (prev + 1) % accommodationTexts.length);
         }, 2000);
         return () => clearInterval(interval);
-    }, []);
- 
-    useEffect(() => {
-        if (pageType === PageTypeEnum.TRIP && timelines.length === 1) {
-            // setSelectedSlotId(timelines[0].slotId);
-        }
-    }, [timelines]);
+    }, [accommodationTexts.length]);
 
     useEffect(() => {
         if (pageType === PageTypeEnum.LOCATION) {
-            setBtn2Text('Create a Trip →');
+            setBtn2Text('Create a Trip');
         } else if (pageType === PageTypeEnum.TRIP) {
             setBtn2Text(alreadyEnrolled ? 'Trip Updates' : 'Join Trip');
         }
@@ -139,87 +136,146 @@ const AddLocationCard: React.FC<AddLocationCardProps> = ({
     };
 
     return (
-        <div className="travel-card" style={style}>
-            <div className="location-card-header">
-                <div className=" locationCardFlexParent text-start">
+        <div
+            className="travel-card mt-4 m-animate m-fade-in"
+            style={{
+                ...style,
+                backgroundColor: 'var(--white)',
+                borderRadius: '16px',
+                border: '1px solid var(--neutral-4)',
+                padding: '20px',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.03)'
+            }}
+        >
+            <div className="location-card-header" style={{ display: 'flex', gap: '16px', justifyContent: 'space-between' }}>
+
+                {/* =========================================
+                    TEXT CONTENT SIDE
+                    ========================================= */}
+                <div
+                    className="locationCardFlexParent text-start"
+                    style={{
+                        flex: 1,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '8px',
+                        minWidth: 0 // CRITICAL CSS FIX: Allows text to wrap without pushing the image out of the card
+                    }}
+                >
                     <div className="location-card-title text-start">
-                        <h2 className="DescriptionHeading">
-                            <strong>{title}</strong>
+
+                        <h2 className="h3 text-secondary-1" style={{ margin: '0 0 4px 0', lineHeight: 1.2 }}>
+                            {title}
                         </h2>
-                        {address && <p className="text-muted" style={{ fontSize: '14px' }}>{address}</p>}
-                        <div className=" reviewingBox">
-                            <div className="info-box">★ {rating}</div>
-                            <div className="info-box">{customReviews} reviews</div>
+
+                        {address && <p className="r2 text-neutral-1" style={{ margin: '0 0 12px 0' }}>{address}</p>}
+
+                        <div className="flex gap-3 items-center">
+                            <div className="flex items-center gap-1">
+                                <Star size={14} fill="var(--warning-1)" color="var(--warning-1)" />
+                                <span style={{ fontWeight: 600 }}>{rating || '4.0'}</span>
+                            </div>
+                            <div className="text-secondary-1 border border-[var(--secondary-1)] select-none rounded-full px-1.5 py-0.5" style={{ fontSize: '12px' }}>
+                                {customReviews} reviews
+                            </div>
                         </div>
+
+                        {/* Date info */}
                         {pageType === PageTypeEnum.LOCATION ? (
-                            <p className="trip-info">{bestTime}</p>
+                            <p className="s1 text-secondary-1" style={{ margin: '0 0 12px 0' }}>{bestTime}</p>
                         ) : timelines.length > 1 ? (
-                            // <select
-                            //     className="form-select trip-info"
-                            //     value={selectedSlotId}
-                            //     onChange={(e) => setSelectedSlotId(e.target.value)}
-                            //     style={{ marginTop: '10px' }}
-                            //     disabled={!timelines || timelines.length === 0}
-                            // >
-                            //     <option value="" disabled>Select trip date</option>
-                            //     {timelines.map(({ slotId, fromDate, tillDate }) => (
-                            //         <option key={slotId} value={slotId}>
-                            //             {formatDateRange(fromDate, tillDate)}
-                            //         </option>
-                            //     ))}
-                            // </select>
                             <></>
                         ) : timelines.length === 1 ? (
-                            <p className="trip-info">
+                            <p className="s1 text-secondary-1" style={{ margin: '0 0 12px 0' }}>
                                 {formatDateRange((timelines[0] as TripDate).startDate, (timelines[0] as TripDate).endDate)}
                             </p>
                         ) : (
-                            <p className="trip-info">No available trip dates</p>
+                            <p className="s1 text-neutral-2" style={{ margin: '0 0 12px 0' }}>No available trip dates</p>
                         )}
 
-                        <div className="location-card-icons">
+                        {/* Animated Icons */}
+                        <div className="location-card-icons" style={{ display: 'flex', gap: '12px', marginBottom: '12px' }}>
                             {[Leaf, Menu, Plane].map((Icon, index) => (
-                                <Icon
+                                <div
                                     key={index}
-                                    className="locationIcons"
                                     style={{
-                                        backgroundColor: activeIcon === index ? 'black' : 'transparent',
-                                        color: activeIcon === index ? 'white' : 'inherit',
-                                        padding: '5px',
+                                        backgroundColor: activeIcon === index ? 'var(--secondary-1)' : 'var(--secondary-5)',
+                                        padding: '8px',
                                         borderRadius: '50%',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
                                         transition: 'all 0.3s ease'
                                     }}
-                                />
+                                >
+                                    <Icon size={16} color={activeIcon === index ? 'white' : 'var(--secondary-1)'} />
+                                </div>
                             ))}
                         </div>
                     </div>
 
+                    {/* Animated Text */}
                     <div className="location-card-accommodation">
-                        <p style={{ transition: 'opacity 0.3s ease', opacity: 0.7 }}>
+                        <p className="r2 text-neutral-1" style={{ transition: 'opacity 0.3s ease', margin: 0 }}>
                             <span dangerouslySetInnerHTML={{ __html: accommodationTexts[currentText] }} />
                         </p>
                     </div>
                 </div>
 
-                <div className="location-card-image">
-                    <img src={MainImage} alt={`${title} best Package Trip`} />
+                {/* =========================================
+                    IMAGE SIDE (Fluid Width Fix)
+                    ========================================= */}
+                <div
+                    className="location-card-image"
+                    style={{
+                        position: 'relative',
+                        width: '35%',           // Takes exactly 35% of the card's width dynamically
+                        minWidth: '100px',      // Minimum safe width for tiny screens
+                        maxWidth: '130px',      // Maximum width on large screens
+                        aspectRatio: '3/4',     // Automatically calculates height based on the width perfectly
+                        borderRadius: '12px',
+                        overflow: 'hidden',
+                        flexShrink: 0           // Prevents Flexbox from squishing the container
+                    }}
+                >
+                    <img
+                        src={MainImage}
+                        alt={`${title} best Package Trip`}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
+
+                    {/* Premium Frosted Price Badge */}
                     {price && (
-                        <div className="price-marker">
-                            <span>₹ {price}</span>
+                        <div
+                            className="price-marker"
+                            style={{
+                                position: 'absolute',
+                                bottom: '6px',
+                                left: '50%',
+                                transform: 'translateX(-50%)',
+                                backgroundColor: 'rgba(255,255,255,0.9)',
+                                backdropFilter: 'blur(4px)',
+                                padding: '4px 8px',
+                                borderRadius: '8px',
+                                width: 'max-content',
+                                boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                            }}
+                        >
+                            <span className="s2 text-secondary-1" style={{ fontWeight: 700 }}>₹ {price}</span>
                         </div>
                     )}
                 </div>
             </div>
 
+            {/* Buttons */}
             {showBtns && (
-                <div className="location-card-buttons" ref={btnReference}>
-                    {/* {pageType === PageTypeEnum.LOCATION && (
-                        <button className="btn btn-white" onClick={ctaAction} style={btnsStyle}>
-                            Explore itinerary
-                        </button>
-                    )} */}
-                    <button className="btn btn-black" onClick={btn2CTA} style={btnsStyle}>
-                        {btn2Text}
+                <div className="location-card-buttons" ref={btnReference} style={{ marginTop: '16px' }}>
+                    <button
+                        className="btn !flex justify-center items-center gap-1 btn-primary hov-lift"
+                        onClick={btn2CTA}
+                        style={{ width: '100%', ...btnsStyle }}
+                    >
+                        {btn2Text} <ArrowRight />
                     </button>
                 </div>
             )}

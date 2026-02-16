@@ -36,7 +36,7 @@ export const TravelGoals = [
 ];
 
 export const TripBudgets = [
-  { label: 'Cheap', description: 'Budget-friendly, economical travel.', icon: 'wallet' },
+  { label: 'Affordable', description: 'Budget-friendly, economical travel.', icon: 'wallet' },
   { label: 'Economic', description: 'Moderate spending for a balanced trip.', icon: 'cash' },
   { label: 'Luxury', description: 'High-end, indulgent experiences.', icon: 'diamond' },
   { label: 'Flexible', description: 'No budget restrictions.', icon: 'globe' },
