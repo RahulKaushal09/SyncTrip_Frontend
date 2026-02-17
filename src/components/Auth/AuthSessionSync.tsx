@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const syncSessionLogin = () => {
     if (typeof window === "undefined") return;
@@ -19,11 +19,15 @@ const syncSessionLogin = () => {
     }
 };
 
+export const AuthSessionSync = ({ children }) => {
+    const [mounted, setMounted] = useState(false);
 
-export const AuthSessionSync = () => {
     useEffect(() => {
         syncSessionLogin();
+        setMounted(true);
     }, []);
 
-    return null;
+    if (!mounted) return null;
+
+    return children;
 };

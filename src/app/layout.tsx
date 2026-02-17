@@ -77,25 +77,26 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <div className="App">
           <LoaderProvider>
             <LoginProvider>
-              <AuthSessionSync />
-              {/* You can add a global navbar or context providers here */}
-              {/* <NavbarWrapper /> */}
-              {/* <RouteChangeHandler /> */}
-              {/* <NavbarClient /> */}
-              {/* <ExploreNearby /> */}
-              {/* {<div className="announcement-bar" style={{ height: "25px", display: "none" }}>
+              <AuthSessionSync>
+                {/* You can add a global navbar or context providers here */}
+                {/* <NavbarWrapper /> */}
+                {/* <RouteChangeHandler /> */}
+                {/* <NavbarClient /> */}
+                {/* <ExploreNearby /> */}
+                {/* {<div className="announcement-bar" style={{ height: "25px", display: "none" }}>
                 <div className="announcement-track">
                   <div className="announcement-content">
                     <span>SYNCTRIP APP IS LAUNCHING THIS MARCH!</span>
                   </div>
                 </div>
               </div>} */}
-              {/* <div style={{ height: "25px" }}></div> */}
-              {/* {children} */}
-              <LayoutUIController>
-    {children}
-  </LayoutUIController>
-              <Toaster position='top-right' />
+                {/* <div style={{ height: "25px" }}></div> */}
+                {/* {children} */}
+                <LayoutUIController>
+                  {children}
+                </LayoutUIController>
+                <Toaster position='top-right' />
+              </AuthSessionSync>
             </LoginProvider>
           </LoaderProvider>
         </div>

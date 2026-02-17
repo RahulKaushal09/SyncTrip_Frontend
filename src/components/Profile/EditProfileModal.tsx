@@ -151,7 +151,10 @@ export default function EditProfileModal({
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--secondary-1)]/60 backdrop-blur-sm transition-all">
+        <div style={{
+            scrollbarWidth: 'none',
+            zIndex: 1000,
+        }} className="fixed inset-0 flex items-center justify-center p-4 bg-[var(--secondary-1)]/60 backdrop-blur-sm transition-all">
             <div
                 className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in-95 duration-200"
                 style={{ overscrollBehavior: 'contain' }}
