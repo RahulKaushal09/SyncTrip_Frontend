@@ -4,10 +4,10 @@ import { io, Socket } from "socket.io-client";
 
 import ChatApiService from "@/utils/chats.api.utils";
 import { Chat, Message } from "@/types";
-import { StorageUtils } from "@/utils";
+// import { StorageUtils } from "@/utils";
 
 import "../../../styles/chats/chats.css";
-import { debug } from "console";
+// import { debug } from "console";
 import { getSocket } from "@/utils/socket";
 import ChatInstructions from "./ChatInstructions";
 
