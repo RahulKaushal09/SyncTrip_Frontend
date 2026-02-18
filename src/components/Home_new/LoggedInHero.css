@@ -60,9 +60,9 @@
   background: linear-gradient(to right, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.2) 60%, transparent 100%);
 }
 
-.slide-bg-goa { background-image: url("../../assets/images/BannerImageGoa.png"); }
-.slide-bg-manali { background-image: url("../../assets/images/BannerImageManali.png"); }
-.slide-bg-rishikesh { background-image: url("../../assets/images/BannerImageRishikesh.png"); }
+.slide-bg-goa { background-image: url("../../assets/images/BannerImageGoaCompressed.jpeg"); }
+.slide-bg-manali { background-image: url("../../assets/images/BannerImageManaliCompressed.jpeg"); }
+.slide-bg-rishikesh { background-image: url("../../assets/images/BannerImageRishikeshCompressed.jpeg"); }
 
 /* =========================================
    Text Content Layer

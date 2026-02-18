@@ -7,6 +7,7 @@ import { LocationServices } from "@/utils/location.utils";
 import { set } from "lodash";
 import { User } from "@/types";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 interface SlideData {
   id: number;
@@ -85,7 +86,6 @@ const LoggedInHeroSection: React.FC = () => {
     router.replace("/#swipedemo");
   };
 
-  console.log("Carousel Data:", carouselData); // Debugging log
   return (
     <section className="homeHeroSection">
       <div className="heroOverlay bg-gradient-to-br from-[#f2faff] via-[#e3f5ff] to-[#b8e8ff]">
@@ -117,7 +117,7 @@ const LoggedInHeroSection: React.FC = () => {
                           .map((item, idx) => (
                             <div key={idx} className="avatar-circle">
                               {item ? (
-                                <img
+                                <Image
                                   src={item}
                                   alt="profile"
                                   className="w-full h-full object-cover rounded-full"

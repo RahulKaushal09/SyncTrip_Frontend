@@ -9,7 +9,6 @@ import GroupTripImage from "../../assets/images/groupTripDetails.png";
 import GroupTripMembers from "../../assets/images/groupTripMembers.png";
 import Image from "next/image";
 import { triggerLogin } from "@/utils";
-import LoggedInHeroSection from "./LoggedInHeroSection";
 
 const HomeHeroSection: React.FC = () => {
     const { showLoader } = useLoader();
@@ -26,9 +25,6 @@ const HomeHeroSection: React.FC = () => {
         router.push(redirectUrl);
     };
 
-    if (sessionStorage.getItem("isLoggedIn") === "true") {
-        return <LoggedInHeroSection />;
-    }
     return (
         <section className="homeHeroSection">
             {/* FLOATING ICONS */}

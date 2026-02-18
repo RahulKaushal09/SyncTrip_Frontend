@@ -1,5 +1,5 @@
 import React from "react";
-import { MapPin, Users, Star } from "lucide-react";
+import { MapPin, Lock, Hourglass, Star } from "lucide-react";
 import FeedbackModal from "../common/FeedbackModal";
 import { useLogin } from "../providers/LoginProvider";
 
@@ -19,186 +19,140 @@ export default function MoreLocationsUnlocking({ onNotify }: Props) {
     { city: "Pondicherry", count: 500 },
   ];
 
-  // Progress for the next launch (0-100)
-  const nextLaunchProgress = 66;
   // SVG circle config
-  const size = 150; // viewBox size
-  const stroke = 8;
+  const nextLaunchProgress = 66;
+  const size = 120;
+  const stroke = 6;
   const radius = (size - stroke) / 2;
   const circumference = 2 * Math.PI * radius;
   const dash = (nextLaunchProgress / 100) * circumference;
 
   const [feedBackFormOpen, setFeedbackFormOpen] = React.useState(false);
-  const {user, isLoggedIn} =  useLogin();
-  onNotify = onNotify || (() => setFeedbackFormOpen(true));
+  const { user, isLoggedIn } = useLogin();
+  
+  const handleNotify = () => {
+     if (onNotify) onNotify();
+     else setFeedbackFormOpen(true);
+  };
+
   return (
     <section
       aria-labelledby="more-locations-heading"
-      className="container-custom  flex flex-col items-center text-center"
-      style={{padding:0,marginTop:"50px",marginBottom:"50px"}}
+      className="container-custom flex flex-col items-center text-center relative overflow-hidden"
+      style={{ padding: "60px 20px" }}
     >
+      {/* VIBRANT AMBIENT BACKGROUND GLOW */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-primary-1/10 blur-[100px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-secondary-1/5 blur-[100px] rounded-full pointer-events-none" />
+
       {feedBackFormOpen && (
-              <FeedbackModal
-                feedBackFormOpen={feedBackFormOpen}
-                setFeedbackFormOpen={setFeedbackFormOpen}
-                isLoggedIn={false}
-                user={null}
-              />
-            )}
-      {/* Heading */}
-      <h2
-        id="more-locations-heading"
-        className="font-serif text-[26px] sm:text-[30px] mb-2 text-secondary-1"
-      >
-        More locations — unlocking soon
-      </h2>
+        <FeedbackModal
+          feedBackFormOpen={feedBackFormOpen}
+          setFeedbackFormOpen={setFeedbackFormOpen}
+          isLoggedIn={isLoggedIn}
+          user={user}
+        />
+      )}
 
-      <p className="text-neutral-1 max-w-xl mb-6 text-[15px] font-sans">
-        We open cities one-by-one to make sure every location has real travellers
-        and good matches. Join the waitlist to get early access when your city
-        goes live.
-      </p>
-
-      {/* Roadmap — Circular Progress */}
-      <div className="relative mb-6 flex flex-col items-center">
-        <div
-          role="img"
-          aria-label={`Next launch progress ${nextLaunchProgress} percent`}
-          className="w-[150px] h-[150px] rounded-full flex items-center justify-center relative"
+      {/* Header Group */}
+      <div className="max-w-2xl mx-auto mb-10 relative z-10">
+        {/* Colorful Pill */}
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-1/10 border border-primary-1/20 text-primary-1 text-xs font-bold tracking-wider uppercase mb-4 shadow-sm">
+          <Hourglass className="w-3 h-3" />
+          SyncTrip Milestones
+        </div>
+        
+        <h2
+          id="more-locations-heading"
+          className="font-serif text-3xl md:text-4xl text-secondary-1 mb-4"
         >
-          <svg
-            width={size}
-            height={size}
-            viewBox={`0 0 ${size} ${size}`}
-            className="absolute inset-0"
-            aria-hidden
-          >
-            {/* Background ring */}
-            <circle
-              cx={size / 2}
-              cy={size / 2}
-              r={radius}
-              stroke="var(--neutral-4)"
-              strokeWidth={stroke}
-              fill="transparent"
-            />
-            {/* Progress arc (rotated -90deg via transform) */}
-            <circle
-              cx={size / 2}
-              cy={size / 2}
-              r={radius}
-              stroke="var(--primary-1)"
-              strokeWidth={stroke}
-              fill="transparent"
-              strokeDasharray={`${dash} ${circumference - dash}`}
-              strokeLinecap="round"
-              transform={`rotate(-90 ${size / 2} ${size / 2})`}
-            />
-          </svg>
-
-          <div className="z-10 flex flex-col items-center">
-            <div className="p-3 rounded-full bg-primary-1/10">
-              <MapPin className="w-7 h-7 text-primary-1" />
-            </div>
-            <div className="mt-2 text-xs text-neutral-1">
-              <span className="font-semibold text-secondary-1">Next launch:</span>{" "}
-              Shimla — March 2026
-            </div>
-            <div className="text-[12px] text-neutral-1 mt-1">{nextLaunchProgress}%</div>
-          </div>
-        </div>
+          Unlocking New Horizons
+        </h2>
+        
+        <p className="text-neutral-600 text-base max-w-lg mx-auto leading-relaxed">
+          We unlock cities individually to ensure quality matches. 
+          These locations are currently in <span className="font-semibold text-primary-1">staging</span>.
+        </p>
       </div>
 
-      {/* Floating icons row */}
-      <div className="flex gap-4 flex-wrap justify-center mb-6">
-        {Array.from({ length: 5 }).map((_, i) => (
-          <div
-            key={i}
-            style={{ animationDelay: `${i * 150}ms` }}
-            className="relative w-16 h-16 md:w-20 md:h-20 rounded-xl bg-primary-1 shadow-md flex items-center justify-center animate-float transition-transform hover:-translate-y-1 hover:shadow-lg"
-            aria-hidden
-          >
-            <MapPin className="w-6 h-6 text-white" />
-            <span
-              className="absolute -bottom-2 -right-2 bg-neutral-5 text-secondary-1 text-[10px] px-2 py-[2px] rounded-full border border-neutral-3"
-              aria-hidden
+      <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center mb-12 relative z-10">
+        
+        {/* Left Col: The Progress Status */}
+        <div className="flex flex-col items-center justify-center p-8 rounded-3xl bg-white/80 backdrop-blur-md shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-primary-1/10 relative">
+          <div className="relative w-[120px] h-[120px] mb-4">
+             {/* Progress SVG */}
+            <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="transform -rotate-90 drop-shadow-md">
+              {/* Track */}
+              <circle cx={size / 2} cy={size / 2} r={radius} stroke="var(--primary-1)" strokeOpacity="0.1" strokeWidth={stroke} fill="transparent" />
+              {/* Progress */}
+              <circle
+                cx={size / 2}
+                cy={size / 2}
+                r={radius}
+                stroke="var(--primary-1)"
+                strokeWidth={stroke}
+                fill="transparent"
+                strokeDasharray={`${dash} ${circumference - dash}`}
+                strokeLinecap="round"
+                className="transition-all duration-1000 ease-out"
+              />
+            </svg>
+            <div className="absolute inset-0 flex items-center justify-center flex-col">
+                <span className="text-2xl font-bold text-secondary-1">{nextLaunchProgress}%</span>
+                <span className="text-[10px] uppercase text-primary-1/80 font-bold tracking-widest">Loaded</span>
+            </div>
+          </div>
+          
+          <div className="text-center">
+             <div className="text-lg font-serif font-semibold text-secondary-1">Next: Shimla</div>
+             <div className="text-sm text-primary-1/70 mt-1 font-medium">Estimated Launch: March 2026</div>
+          </div>
+        </div>
+
+        {/* Right Col: The Tinted Locked Grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 w-full">
+          {waitlist.map(({ city, count }) => (
+            <div
+              key={city}
+              // Layering opacities: 3% background, 20% border. Gives it a soft tint without looking like a button.
+              className="flex flex-col items-center justify-center p-3.5 rounded-xl border-2 border-dashed border-primary-1/20 bg-primary-1/[0.03] backdrop-blur-sm shadow-sm select-none cursor-default"
             >
-              Soon
-            </span>
+              {/* 10% background for the lock circle */}
+              <div className="mb-2 p-1.5 rounded-full bg-primary-1/10">
+                {/* 60% opacity for the lock icon itself */}
+                <Lock className="w-4 h-4 text-primary-1/60" />
+              </div>
+              <span className="text-sm font-semibold text-secondary-1/90">{city}</span>
+              
+              {/* 10% background, 20% border for the waitlist pill */}
+              <span className="text-[10px] mt-1 bg-primary-1/10 border border-primary-1/20 px-2 py-0.5 rounded-full text-primary-1 font-medium">
+                {count > 999 ? `${(count / 1000).toFixed(1)}k` : count} waiting
+              </span>
+            </div>
+          ))}
+          {/* Placeholder for "More" */}
+          <div className="flex flex-col items-center justify-center p-3 rounded-xl border-2 border-dashed border-primary-1/20 bg-primary-1/[0.02] opacity-70 cursor-default select-none">
+             <span className="text-xs font-medium text-primary-1/50">...and more</span>
           </div>
-        ))}
-      </div>
-
-      {/* Waitlist pills */}
-      <div className="flex flex-wrap gap-3 justify-center mb-6">
-        {waitlist.map(({ city, count }) => (
-          <span
-            key={city}
-            className="px-4 py-2 rounded-full border border-neutral-4 bg-primary-5 text-neutral-1 hover:bg-primary-1 hover:text-black transition-all cursor-default text-sm font-medium flex items-center gap-2"
-          >
-            <span className="sr-only">Waitlist count for</span>
-            <span>{city}</span>
-            <span className="bg-white text-secondary-1 border border-neutral-3 text-[11px] px-2 py-[1px] rounded-full shadow-sm">
-              {count >= 1000 ? `${(count / 1000).toFixed(1)}k` : count}
-            </span>
-          </span>
-        ))}
-      </div>
-
-      {/* CTA */}
-      <button
-        onClick={() => onNotify && onNotify()}
-        className="px-6 py-3 rounded-full font-semibold text-white bg-secondary-1 hover:bg-secondary-hover shadow-sm transition-all font-sans mb-6 focus:outline-none focus:ring-2 focus:ring-primary-1/40"
-        aria-label="Join early access"
-      >
-        Join Early Access
-      </button>
-
-      {/* Micro Testimonials */}
-      <div className="max-w-xl text-neutral-1 text-[14px] font-sans mb-8 space-y-3">
-        <div className="flex items-center gap-2 justify-center">
-          <Star className="w-4 h-4 text-primary-1" />
-          “I want Udaipur next!” — <span className="font-semibold ml-1">213 travelers</span>
-        </div>
-        <div className="flex items-center gap-2 justify-center">
-          <Star className="w-4 h-4 text-primary-1" />
-          “Jaipur is perfect for solo trips!” —{" "}
-          <span className="font-semibold ml-1">140 requests</span>
         </div>
       </div>
 
-      {/* Stats Footer */}
-      <div className="w-full border-t border-neutral-4 pt-6 flex flex-col sm:flex-row items-center justify-center gap-8 text-neutral-1 text-center font-sans">
-        <div>
-          <div className="text-2xl font-bold text-primary-1">15+</div>
-          <div className="text-sm">Cities in pipeline</div>
-        </div>
-
-        <div>
-          <div className="text-2xl font-bold text-primary-1">5K+</div>
-          <div className="text-sm">Travelers waiting</div>
-        </div>
-
-        {/* <div>
-          <div className="text-2xl font-bold text-secondary-1">Q2 2025</div>
-          <div className="text-sm">Next launch</div>
-        </div> */}
+      {/* Action Area */}
+      <div className="flex flex-col items-center relative z-10">
+        <button
+          onClick={handleNotify}
+          className="group relative inline-flex items-center justify-center px-8 py-3.5 text-base font-semibold text-white transition-all duration-200 bg-secondary-1 rounded-full hover:bg-secondary-hover hover:shadow-lg hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary-1"
+        >
+           <span>Notify me when they unlock</span>
+           <Star className="w-4 h-4 ml-2 fill-current text-white/90" />
+        </button>
+        
+        <p className="mt-5 text-sm text-neutral-600 flex items-center gap-2 font-medium">
+           <MapPin className="w-4 h-4 text-primary-1" /> 
+           <span>Join <span className="font-bold text-secondary-1">5,000+</span> travelers on the waitlist</span>
+        </p>
       </div>
 
-      <style jsx>{`
-        @keyframes float {
-          0%,
-          100% {
-            transform: translateY(0px);
-          }
-          50% {
-            transform: translateY(-8px);
-          }
-        }
-        .animate-float {
-          animation: float 3s ease-in-out infinite;
-        }
-      `}</style>
     </section>
   );
 }
