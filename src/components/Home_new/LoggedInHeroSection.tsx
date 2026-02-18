@@ -219,7 +219,7 @@ const LoggedInHeroSection: React.FC = () => {
 
         </div>
       </div>
-      <Image className="heroVectorBottom" src="/images/heroVectorBottom.png" alt="Hero Vector Bottom" width={isMobile ? 500 : 1440} height={120} />
+      <Image className="heroVectorBottom" src="/images/heroVectorBottom.png" alt="Hero Vector Bottom" width={isMobile ? 500 : 1540} height={120} />
     </section>
   );
 };
