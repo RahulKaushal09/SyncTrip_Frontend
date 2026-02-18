@@ -2,9 +2,11 @@ import {
   getAuth,
   RecaptchaVerifier,
   signInWithPhoneNumber,
-  ConfirmationResult
+  ConfirmationResult,
+  Auth
 } from "firebase/auth";
-import { firebaseApp } from "./firebaseApp";
+import { getFirebaseApp } from "./firebaseApp";
+// import { firebaseApp } from "./firebaseApp";
 
 // const firebaseConfig = {
 //   apiKey: process.env.NEXT_PUBLIC_FIREBASE_APIKEY!,
@@ -19,15 +21,36 @@ import { firebaseApp } from "./firebaseApp";
 // }
 
 // export const auth = getAuth(getFirebaseApp());
-export const auth = getAuth(firebaseApp);
+// const firebaseApp = getFirebaseApp();
+// export const auth = getAuth(firebaseApp);
+
 
 let confirmationResult: ConfirmationResult | null = null;
 let recaptchaVerifier: RecaptchaVerifier | null = null;
+let authInstance: Auth | null = null;
+
+/**
+ * Dynamically load Firebase only when needed
+ */
+async function getAuthInstance() {
+  if (!authInstance) {
+    const { getAuth, RecaptchaVerifier } = await import("firebase/auth");
+    const { getFirebaseApp } = await import("./firebaseApp");
+
+    const app = getFirebaseApp();
+    authInstance = getAuth(app);
+  }
+  return authInstance;
+}
+
+// let confirmationResult: ConfirmationResult | null = null;
+// let recaptchaVerifier: RecaptchaVerifier | null = null;
 
 /**
  * Init or reuse invisible recaptcha
  */
-function getRecaptcha() {
+async function getRecaptcha() {
+  const auth = await getAuthInstance();
   if (!recaptchaVerifier) {
     try {
       recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", {
@@ -57,7 +80,8 @@ function getRecaptcha() {
 // }
 export async function sendOtp(phone: string) {
   try {
-    const verifier = getRecaptcha();
+    const auth = await getAuthInstance();
+    const verifier = await getRecaptcha();
     // Clear any previous result
     confirmationResult = null;
     confirmationResult = await signInWithPhoneNumber(auth, phone, verifier);

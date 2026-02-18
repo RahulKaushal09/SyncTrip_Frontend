@@ -47,29 +47,36 @@
 .slide-bg-layer {
   position: absolute;
   inset: 0;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
   z-index: 1;
+  /* Next/Image 'fill' relies on the parent having position relative/absolute */
 }
 
 .slide-bg-layer::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(to right, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.2) 60%, transparent 100%);
+  background: linear-gradient(
+    to right, 
+    rgba(255, 255, 255, 0.85) 0%, 
+    rgba(255, 255, 255, 0.2) 60%, 
+    transparent 100%
+  );
+  z-index: 2; /* Sits above the image but below the text content */
 }
 
+<<<<<<< HEAD
 .slide-bg-goa { background-image: url("../../assets/images/BannerImageGoaCompressed.jpeg"); }
 .slide-bg-manali { background-image: url("../../assets/images/BannerImageManaliCompressed.jpeg"); }
 .slide-bg-rishikesh { background-image: url("../../assets/images/BannerImageRishikeshCompressed.jpeg"); }
 
+=======
+>>>>>>> narrow
 /* =========================================
    Text Content Layer
    ========================================= */
 .slide-content {
   position: relative;
-  z-index: 3;
+  z-index: 10;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -137,6 +144,7 @@
   font-size: 13px;
   font-weight: 600;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
 }
 
 .avatar-circle { color: #fff; z-index: 1; }
@@ -360,7 +368,7 @@
   bottom: -1px;
   left: 0;
   right: 0;
-  background: url("/images/heroVectorBottom.png") no-repeat center bottom;
+  /* background: url("/images/heroVectorBottom.png") no-repeat center bottom; */
   background-size: cover;
   height: 120px;
   pointer-events: none;

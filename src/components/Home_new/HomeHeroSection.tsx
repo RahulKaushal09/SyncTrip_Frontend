@@ -107,7 +107,7 @@ const HomeHeroSection: React.FC = () => {
                     </div>
                 </div>
 
-                <div className="heroVectorBottom"></div>
+                <Image className="heroVectorBottom" priority src="/images/heroVectorBottom.png" alt="Hero Vector Bottom" width={1440} height={120} />
             </div>
         </section>
     );

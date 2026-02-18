@@ -133,11 +133,6 @@ export default async function Home() {
           }),
         }}
       />
-      <Script
-        id="google-maps"
-        strategy="beforeInteractive"
-        src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=maps,marker`}
-      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
