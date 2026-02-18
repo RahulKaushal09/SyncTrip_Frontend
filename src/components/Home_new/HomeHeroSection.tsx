@@ -98,7 +98,7 @@ const HomeHeroSection: React.FC = () => {
                     <div className="col-lg-5 col-md-12 mt-5 mt-lg-0 m-animate m-zoom-in hide-tablet-down" style={{ zIndex: 5 }}>
                         <div onClick={() => triggerLogin(() => redirectToUrl(ROUTES.CREATE_TRIP))} className="group-collage-wrapper">
                             <div className="collage-card details-back shadow-lg">
-                                <Image src={GroupTripImage} alt="Group Trip Details" priority className="img-fluid" />
+                                <Image src={GroupTripImage} alt="Group Trip Details" priority className="img-fluid" width={272} height={411} />
                             </div>
                             <div className="collage-card members-front shadow-xl">
                                 <Image src={GroupTripMembers} alt="Group Trip Members" className="img-fluid" />
@@ -107,7 +107,7 @@ const HomeHeroSection: React.FC = () => {
                     </div>
                 </div>
 
-                <Image className="heroVectorBottom" priority src="/images/heroVectorBottom.png" alt="Hero Vector Bottom" width={1440} height={120} />
+                <Image className="heroVectorBottom" priority src="/images/heroVectorBottom.png" alt="Hero Vector Bottom" width={1440} height={120} fetchPriority="high" />
             </div>
         </section>
     );

@@ -1,12 +1,12 @@
 // src/app/page.tsx
 import "../../styles/home/home.css";
-import HomeHeroSection from "@/components/Home_new/HomeHeroSection";
-import Testimonials from "@/components/Home_new/testimonialSection";
-import BlogsHomePage from "../components/Home_new/homeBlogsSection";
+// import HomeHeroSection from "@/components/Home_new/HomeHeroSection";
+// import Testimonials from "@/components/Home_new/testimonialSection";
+// import BlogsHomePage from "../components/Home_new/homeBlogsSection";
 import { FeaturesSection } from "@/components/Home_new/whyChooseSyncTrip";
 // import ExploreNearbySection from "@/components/Home_new/exploreNearyBySection";
 // import { HowItWorksSectionHome } from "@/components/Home_new/howItWorksHomeSection";
-import SoftLoginTrigger from "@/components/Auth/SoftLoginTrigger";
+// import SoftLoginTrigger from "@/components/Auth/SoftLoginTrigger";
 
 import { getThemeClass } from "@/utils/getThemeClassForBlogs";
 import { BlogsApiServices } from "@/utils/blogs.api.utils";
@@ -15,10 +15,20 @@ import { Metadata } from "next";
 import Script from "next/script";
 import ActiveDestinations from "@/components/Home_new/ActiveDestinations";
 import ChoiceSection from "@/components/Home_new/ChoiceSection";
-import { usePathname } from "next/navigation";
-import DownloadPopup from "@/components/popups/DownloadAppPopup";
+// import { usePathname } from "next/navigation";
+// import DownloadPopup from "@/components/popups/DownloadAppPopup";
 import HomeWrapper from "@/components/Home_new/HomeWrapper";
+import dynamic from "next/dynamic";
 
+const Testimonials = dynamic(() =>
+  import("@/components/Home_new/testimonialSection")
+);
+const BlogsHomePage = dynamic(() =>
+  import("@/components/Home_new/homeBlogsSection")
+);
+const SoftLoginTrigger = dynamic(() =>
+  import("@/components/Auth/SoftLoginTrigger")
+);
 // export const metadata: Metadata = {
 //   title: 'SyncTrip – Travel Planning & Solo Travel Groups in India',
 //   description: 'SyncTrip helps solo travelers, friends, and groups plan trips, find travel groups, and explore India together. Create trips, connect with travelers, and travel your way.',
@@ -116,7 +126,8 @@ export default async function Home() {
 
   return (
     <>
-      <script
+      <Script
+        id="ld-1"
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
@@ -133,7 +144,9 @@ export default async function Home() {
           }),
         }}
       />
-      <script
+      <Script
+        id="ld-2"
+
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({

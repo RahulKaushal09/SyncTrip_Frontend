@@ -23,7 +23,7 @@ const DEFAULT_DESTINATIONS: Destination[] = [
         id: "c9ad104e-9640-477e-a24d-2f9d51d8b50b",
         name: "Manali",
         image:
-            "https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=1600&q=60&auto=format&fit=crop",
+            "/images/Manali.jpg",
         usp:
             "Experience thrilling Himalayan adventures with snow-capped peaks, challenging treks, and unforgettable mountain memories.",
         activePlaceLabel: "Community Hotspot",
@@ -33,7 +33,7 @@ const DEFAULT_DESTINATIONS: Destination[] = [
         id: "9c04b59c-93a3-43e3-aec2-0b36d2670753",
         name: "Goa",
         image:
-            "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=1600&q=60&auto=format&fit=crop",
+            "/images/Goa.jpg",
         usp:
             "Vibrant beach culture, electrifying nightlife, and golden sunsets. Where every moment is a celebration.",
         activePlaceLabel: "Community Hotspot",
@@ -43,7 +43,7 @@ const DEFAULT_DESTINATIONS: Destination[] = [
         id: "6abbfbf0-0ebd-4567-97b0-5b5f129fc206",
         name: "Rishikesh",
         image:
-            "https://images.unsplash.com/photo-1720819029162-8500607ae232?q=80&w=3132&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+            "/images/Rishikesh.jpg",
         usp:
             "Find peace by the Ganges with serene yoga retreats, spiritual awakenings, and riverside meditation.",
         activePlaceLabel: "Community Hotspot",
@@ -103,7 +103,7 @@ export default function ActiveDestinations({
             </header>
 
             <div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mb-10">
-                {destinations.map((d) => (
+                {destinations.map((d,idx) => (
                     <article
                         key={d.id}
                         className="group bg-white rounded-2xl overflow-hidden border border-[#E8E8EC] shadow-sm hover:shadow-lg transform hover:-translate-y-2 transition-all duration-300 cursor-pointer"
@@ -117,6 +117,8 @@ export default function ActiveDestinations({
                                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                 className="object-cover transition-transform duration-500 group-hover:scale-105"
                                 priority={false}
+                                width={idx == 0?290:280}
+                                height={idx == 0?387:466}
                             />
 
                             <div className="absolute inset-0 bg-gradient-to-b from-[rgba(22,50,79,0)] to-[rgba(22,50,79,0.52)] pointer-events-none" />

@@ -1,7 +1,8 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 // import { Toaster } from 'react-hot-toast';
 // import { LoginProvider } from '@/components/providers/LoginProvider';
-import Footer from '@/components/Footer/Footer';
+// import Footer from '@/components/Footer/Footer';
+
 import './globals.css'; // relative path to the file
 
 // import NavbarWrapper from './../components/Navbar/NavbarWrapper';
@@ -15,9 +16,12 @@ export const metadata = {
   description: 'Discover and join trips near you.',
 };
 import Script from 'next/script';
+import dynamic from 'next/dynamic';
 // import { LoaderProvider } from '@/components/providers/LoaderContext';
 import LayoutUIController from '@/components/Layout/LayoutUIController';
 import ClientProviders from '@/components/providers/ClientProviders';
+
+const Footer = dynamic(() => import('@/components/Footer/Footer'));
 
 // import generateSitemap from '@/temp/generateStaticSitemap';
 
