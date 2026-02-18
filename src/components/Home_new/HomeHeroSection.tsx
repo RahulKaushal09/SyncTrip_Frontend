@@ -13,7 +13,7 @@ import { triggerLogin } from "@/utils";
 const HomeHeroSection: React.FC = () => {
     const { showLoader } = useLoader();
     const router = useRouter();
-
+    const isMobile = typeof window !== "undefined" ? window.innerWidth <= 500 : false;
     const floatingIcons = [
         { icon: Heart, color: "#e5484d", delay: "0s" },
         { icon: Plane, color: "#3abef5", delay: "0.5s" },
@@ -107,7 +107,7 @@ const HomeHeroSection: React.FC = () => {
                     </div>
                 </div>
 
-                <Image className="heroVectorBottom" priority src="/images/heroVectorBottom.png" alt="Hero Vector Bottom" width={1440} height={120} fetchPriority="high" />
+                <Image className="heroVectorBottom" priority src="/images/heroVectorBottom.png" alt="Hero Vector Bottom"  width={isMobile ? 500 : 1540} height={120} fetchPriority="high" />
             </div>
         </section>
     );
