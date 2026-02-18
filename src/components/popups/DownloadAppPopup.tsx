@@ -1,26 +1,281 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { X, Download, ShieldCheck, Zap, Users } from "lucide-react";
+import { X, Download, ShieldCheck, Zap, Users, Lock, Smartphone, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import GroupTripImage from "../../assets/images/groupTripDetails.png";
 import GroupTripMembers from "../../assets/images/groupTripMembers.png";
+import AppBanner from "../../assets/images/appBanner.png";
 import "./downloadPopup.css";
 
-const STRIKE_LIMIT = 3;
-const REAPPEAR_DELAY = 10000;
+const STRIKE_LIMIT = 4;
+const REAPPEAR_DELAY = 5000;
 
+type PopupVariantProps = {
+  isLocked: boolean;
+  handleClose: () => void;
+};
+
+// VARIANT 0: Original Bottom Sheet (Stacked Cards)
+const Variant0StackedCards = ({ isLocked, handleClose }: PopupVariantProps) => (
+  <div className="popup-card-base download-popup-sheet-xl">
+    <div className="popup-visual-static-wrapper">
+      <div className="static-stack-container">
+        <div className="stack-card card-details-back shadow-lg">
+          <Image src={GroupTripImage} alt="Trip Details" priority />
+        </div>
+        <div className="stack-card card-members-front shadow-xl">
+          <Image src={GroupTripMembers} alt="Trip Members" />
+        </div>
+      </div>
+      <div className="app-exclusive-tag">
+        <Zap size={12} fill="currentColor" />
+        <span>APP ONLY</span>
+      </div>
+    </div>
+
+    <div className="popup-body-content text-center">
+      <h2 className="text-[28px] !font-sans !font-semibold text-secondary-1">
+        {isLocked ? "App Download Required" : "Ready for the Trip?"}
+      </h2>
+      <p className="text-neutral-1 px-3 mt-2 mb-4">
+        {isLocked
+          ? "Your web session has expired. Install the SyncTrip app to access full itineraries."
+          : "Get the full experience! Join the group chat and see real-time updates."}
+      </p>
+
+      <div className="feature-mini-pill-row">
+        <div className="pill-item"><ShieldCheck size={14} className="text-success-1" /> <span className="text-sm font-medium">Verified</span></div>
+        <div className="pill-item"><Users size={14} className="text-primary-1" /> <span className="text-sm font-medium">Community</span></div>
+      </div>
+
+      <div className="popup-cta-trap mt-6">
+        <button className="w-full btn btn-primary py-4 !flex items-center justify-center gap-2 hover:bg-primary-hover transition-colors">
+          <Download size={20} /> GET THE APP NOW
+        </button>
+        {!isLocked && (
+          <button className="hidden-dismiss-link mt-1.5 block w-full text-center" onClick={handleClose}>
+            Continue with limited web features
+          </button>
+        )}
+      </div>
+    </div>
+  </div>
+);
+
+// VARIANT 1: Centered Modal (Edge-to-Edge Image)
+const Variant1CenteredModal = ({ isLocked, handleClose }: PopupVariantProps) => (
+  <div className="popup-card-base popup-variant-modal shadow-2xl bg-white">
+    <div className="w-full leading-none">
+      <Image
+        src={AppBanner}
+        alt="Trip Details"
+        className="w-full h-auto object-cover block"
+        priority
+      />
+    </div>
+
+    <div className="px-8 pb-8 pt-6 text-center bg-white">
+      <div className="inline-block bg-primary-1/10 text-primary-1 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-2">
+        Exclusive Access
+      </div>
+      <h2 className="text-2xl font-serif text-secondary-1 mb-1">
+        {isLocked ? "Connection Lost" : "Unlock the Full Itinerary"}
+      </h2>
+      <p className="text-neutral-500 text-sm mb-6 leading-relaxed">
+        {isLocked
+          ? "Please download the app to securely resume your session and access member chats."
+          : "Web users only see partial details. Download the SyncTrip app to view maps, group chats, and live updates."}
+      </p>
+
+      <button className="btn btn-secondary w-full !flex items-center justify-center gap-2 mx-auto hover:bg-secondary-hover transition-colors">
+        <Download size={18} /> Download App
+      </button>
+
+      {!isLocked && (
+        <button className="text-neutral-400 text-xs mt-1 underline decoration-neutral-300 hover:text-neutral-600 transition-colors" onClick={handleClose}>
+          Maybe next time
+        </button>
+      )}
+    </div>
+  </div>
+);
+
+// VARIANT 2: Light Mode Compact (No Images)
+const Variant2CompactSheet = ({ isLocked, handleClose }: PopupVariantProps) => (
+  <div className="popup-card-base popup-variant-compact shadow-[0_-10px_40px_rgba(0,0,0,0.1)]">
+    {!isLocked && (
+      <button className="popup-close-ghost" onClick={handleClose}>
+        <X size={16} />
+      </button>
+    )}
+
+    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 p-6 sm:p-8">
+      <div className="w-14 h-14 shrink-0 bg-primary-1/10 rounded-2xl flex items-center justify-center border border-primary-1/20 text-primary-1">
+        {isLocked ? <Lock size={28} /> : <Zap size={28} />}
+      </div>
+
+      <div className="text-left flex-1">
+        <div className="text-[10px] font-bold tracking-widest uppercase text-primary-1 mb-1">
+          SyncTrip Mobile
+        </div>
+        <h2 className="text-xl sm:text-2xl font-sans font-semibold text-secondary-1 mb-1 leading-tight">
+          {isLocked ? "Session Locked" : "Don't travel blindly."}
+        </h2>
+        <p className="text-neutral-500 text-sm sm:text-base leading-relaxed mb-4 sm:mb-0">
+          {isLocked
+            ? "You've reached the web limit. Install our free app to continue planning."
+            : "Over 80% of travelers miss crucial updates because they aren't in the app."}
+        </p>
+      </div>
+
+      <div className="w-full sm:w-auto flex flex-col gap-1 shrink-0">
+        <button className="w-full sm:w-auto btn btn-primary py-3 px-8 rounded-xl font-bold !flex items-center justify-center gap-2 hover:bg-primary-hover transition-colors shadow-sm">
+          <Download size={18} /> GET APP
+        </button>
+      </div>
+    </div>
+  </div>
+);
+
+// VARIANT 3: Bottom Sheet (Single Edge-to-Edge Image)
+const Variant3SingleImageSheet = ({ isLocked, handleClose }: PopupVariantProps) => (
+  <div className="popup-card-base download-popup-sheet-xl">
+
+    <div className="relative -mt-[60px] -mx-[30px] mb-8 rounded-t-[40px] overflow-hidden bg-neutral-50 shadow-sm">
+      <Image
+        src={AppBanner}
+        alt="Trip Details"
+        className="w-full h-auto object-cover block max-h-[240px]"
+        priority
+      />
+    </div>
+
+    <div className="popup-body-content text-center">
+      <h2 className="text-[28px] !font-sans !font-semibold text-secondary-1">
+        {isLocked ? "App Download Required" : "Ready for the Trip?"}
+      </h2>
+      <p className="text-neutral-1 px-3 mt-2 mb-6">
+        {isLocked
+          ? "Your web session has expired. Install the SyncTrip app to access full itineraries."
+          : "Get the full experience! Join the group chat and see real-time updates."}
+      </p>
+
+      <div className="feature-mini-pill-row mb-6">
+        <div className="pill-item"><ShieldCheck size={14} className="text-success-1" /> <span className="text-sm font-medium">Verified</span></div>
+        <div className="pill-item"><Users size={14} className="text-primary-1" /> <span className="text-sm font-medium">Community</span></div>
+      </div>
+
+      <div className="popup-cta-trap mt-2">
+        <button className="w-full btn btn-primary py-4 rounded-xl font-bold !flex items-center justify-center gap-2 hover:bg-primary-hover transition-colors">
+          <Download size={20} /> GET THE APP NOW
+        </button>
+        {!isLocked && (
+          <button className="hidden-dismiss-link mt-1 block w-full text-center" onClick={handleClose}>
+            Continue with limited web features
+          </button>
+        )}
+      </div>
+    </div>
+  </div>
+);
+
+// ============================================================================
+// VARIANT 4: App Banner Toast (10s Auto-Dismiss, Bottom-Right)
+// ============================================================================
+const Variant4AppBannerToast = ({ isLocked, handleClose }: PopupVariantProps) => {
+  const [show, setShow] = useState(false);
+  const DISPLAY_DURATION = 10000; // 10 seconds
+
+  useEffect(() => {
+    // Slight delay to allow DOM to render before triggering CSS transition
+    setTimeout(() => setShow(true), 50);
+
+    const autoHideTimer = setTimeout(() => {
+      triggerExit();
+    }, DISPLAY_DURATION);
+
+    return () => clearTimeout(autoHideTimer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const triggerExit = () => {
+    setShow(false); // Trigger slide-out CSS
+    setTimeout(() => {
+      handleClose(); // Notify parent to cycle to the next variant
+    }, 500);
+  };
+
+  return (
+    // Uses the toast wrapper for bottom-right positioning and slide-in animation
+    <div className={`toast-notification-wrapper ${show ? "is-visible" : ""}`}>
+
+      {/* Floating Close Button */}
+      {!isLocked && (
+        <button
+          onClick={triggerExit}
+          className="absolute top-3 right-3 z-10 bg-white/90 backdrop-blur-sm text-neutral-800 w-7 h-7 rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-sm"
+        >
+          <X size={14} />
+        </button>
+      )}
+
+      {/* Image Container - Flush Edge-to-Edge (Just like Variant 1) */}
+      <div className="w-full leading-none">
+        <Image
+          src={AppBanner}
+          alt="App Banner"
+          // max-h restricts it from getting too tall in the corner
+          className="w-full h-auto object-cover block max-h-[160px]"
+          priority
+        />
+      </div>
+
+      {/* Centered Content Area (Just like Variant 1) */}
+      <div className="px-6 pb-2 pt-2 text-center bg-white">
+        <div className="inline-block bg-primary-1/10 text-primary-1 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-2">
+          Exclusive Access
+        </div>
+
+        <h2 className="text-xl font-serif text-secondary-1 mb-1.5">
+          {isLocked ? "Connection Lost" : "Unlock the Full Itinerary"}
+        </h2>
+
+        <p className="text-neutral-500 text-xs mb-3 leading-relaxed">
+          {isLocked
+            ? "Please download the app to securely resume your session and access member chats."
+            : "Web users only see partial details. Download the SyncTrip app to view maps, group chats, and live updates."}
+        </p>
+
+        <button className="w-full mb-3 btn btn-secondary py-3 rounded-full !flex items-center justify-center gap-2 transition-transform active:scale-95 shadow-md text-sm">
+          <Smartphone size={16} /> OPEN IN APP
+        </button>
+      </div>
+
+      {/* 10-Second Shrinking Progress Track */}
+      <div
+        className="toast-progress-track"
+        style={{ animationDuration: `${DISPLAY_DURATION}ms` }}
+      />
+    </div>
+  );
+};
+
+// MAIN CONTROLLER: DownloadPopup
 const DownloadPopup = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [strikes, setStrikes] = useState(0);
   const [isLocked, setIsLocked] = useState(false);
+
+  // Track which variation to show (0, 1, 2, 3, or 4)
+  const [variant, setVariant] = useState(0);
 
   useEffect(() => {
     const savedStrikes = localStorage.getItem("app_download_strikes");
     if (savedStrikes) {
       const count = parseInt(savedStrikes);
       setStrikes(count);
-      if (count > STRIKE_LIMIT) lockExperience();
+      // if (count > STRIKE_LIMIT) lockExperience();
     }
 
     const timer = setTimeout(() => setIsVisible(true), 3000);
@@ -30,82 +285,48 @@ const DownloadPopup = () => {
   const lockExperience = () => {
     setIsLocked(true);
     setIsVisible(true);
-    document.body.style.overflow = "hidden";
+    // document.body.style.overflow = "hidden";
   };
 
   const handleClose = () => {
     if (isLocked) return;
+
     const newStrikes = strikes + 1;
     setStrikes(newStrikes);
     localStorage.setItem("app_download_strikes", newStrikes.toString());
+
+    // Hide the popup
     setIsVisible(false);
 
+    // Cycle to the next variant design (0 -> 1 -> 2 -> 3 -> 4 -> 0)
+    setTimeout(() => {
+      setVariant((prev) => (prev + 1) % 5);
+    }, 500);
+
+    // Trigger the reappearance delay
     setTimeout(() => {
       if (newStrikes > STRIKE_LIMIT) lockExperience();
       else setIsVisible(true);
     }, newStrikes > STRIKE_LIMIT ? 500 : REAPPEAR_DELAY);
   };
 
+  // If hidden and not locked, render nothing
   if (!isVisible && !isLocked) return null;
 
+  // Variant 4 (Toast) floats independently without the dark overlay
+  if (variant === 4) {
+    return <Variant4AppBannerToast isLocked={isLocked} handleClose={handleClose} />;
+  }
+
+  // Variants 0, 1, 2, 3 use the dark overlay backdrop
+  const overlayAlignment = variant === 1 ? "align-center" : "align-bottom";
+
   return (
-    <div className={`download-popup-overlay ${isVisible ? "active" : ""} ${isLocked ? "is-locked" : ""}`}>
-      <div className="download-popup-sheet-xl">
-
-        {!isLocked && (
-          <button className="popup-close-ghost" onClick={handleClose}>
-            <X size={16} />
-          </button>
-        )}
-
-        {/* --- STATIC STACK WITH HOVER EFFECT --- */}
-        <div className="popup-visual-static-wrapper">
-          <div className="static-stack-container">
-            <div className="stack-card card-details-back shadow-lg">
-              <Image src={GroupTripImage} alt="Trip Details" priority />
-            </div>
-            <div className="stack-card card-members-front shadow-xl">
-              <Image src={GroupTripMembers} alt="Trip Members" />
-            </div>
-          </div>
-          <div className="app-exclusive-tag">
-            <Zap size={12} fill="currentColor" />
-            <span>APP ONLY</span>
-          </div>
-        </div>
-
-        <div className="popup-body-content text-center">
-          <h2 className="text-[28px] !font-sans !font-semibold text-secondary-1">
-            {isLocked ? "App Download Required" : "Ready for the Trip?"}
-          </h2>
-          <p className="r2 text-neutral-1 px-3">
-            {isLocked
-              ? "Your web session has expired. Install the SyncTrip app to access full itineraries and member chats."
-              : "Get the full experience! Join the group chat and see real-time member updates on our app."}
-          </p>
-
-          <div className="feature-mini-pill-row mt-3">
-            <div className="pill-item"><ShieldCheck size={14} className="text-success-1" /> <span className="s2">Verified</span></div>
-            <div className="pill-item"><Users size={14} className="text-primary-1" /> <span className="s2">Community</span></div>
-          </div>
-
-          {/* Ask for review */}
-          {/* <img src="https://logodix.com/logo/1338051.png" alt="" /> */}
-
-          <div className="popup-cta-trap">
-            <button className="btn btn-blue w-100 download-xl-btn">
-              <Download size={20} className="mr-2" />
-              GET THE APP NOW
-            </button>
-
-            {!isLocked && (
-              <button className="hidden-dismiss-link" onClick={handleClose}>
-                Continue with limited web features
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
+    <div className={`download-popup-overlay ${isVisible ? "active" : ""} ${isLocked ? "is-locked" : ""} ${overlayAlignment}`}>
+      {variant === 0 && <Variant0StackedCards isLocked={isLocked} handleClose={handleClose} />}
+      {variant === 1 && <Variant1CenteredModal isLocked={isLocked} handleClose={handleClose} />}
+      {variant === 2 && <Variant2CompactSheet isLocked={isLocked} handleClose={handleClose} />}
+      {variant === 3 && <Variant3SingleImageSheet isLocked={isLocked} handleClose={handleClose} />}
     </div>
   );
 };

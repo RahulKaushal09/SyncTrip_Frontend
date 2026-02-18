@@ -429,9 +429,6 @@ export default function LoginPopup({ onClose, onLogin, headingText, onEmailVerif
       if (response?.token?.trim()) {
         const { user, token: userToken } = response;
         localStorage.setItem('userToken', userToken);
-        document.cookie = `userToken=${userToken}; path=/; max-age=604800; SameSite=Strict; Secure`;
-        const safeUser = { id: user.id, name: user.name, profile_picture: user.profile_picture };
-        document.cookie = `userInfo=${encodeURIComponent(JSON.stringify(safeUser))}; path=/; max-age=604800; SameSite=Lax`;
         onLogin(user);
         onClose();
       } else {
@@ -592,13 +589,6 @@ export default function LoginPopup({ onClose, onLogin, headingText, onEmailVerif
       if (response && user) {
         if (userToken) {
           localStorage.setItem('userToken', userToken);
-          document.cookie = `userToken=${userToken}; path=/; max-age=604800; SameSite=Strict; Secure`;
-          const safeUser = {
-            id: user.id,
-            name: user.name,
-            profile_picture: user.profile_picture,
-          };
-          document.cookie = `userInfo=${encodeURIComponent(JSON.stringify(safeUser))}; path=/; max-age=604800; SameSite=Lax`;
         }
         onLogin(user);
         onClose();

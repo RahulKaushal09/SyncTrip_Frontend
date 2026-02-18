@@ -7,7 +7,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_BASE_URL+"/api" || 'http://
 const apiClient = axios.create({
     baseURL: API_BASE_URL,
     timeout: 10000,
-    
+    withCredentials: true,
 });
 
 apiClient.interceptors.request.use(
@@ -17,6 +17,7 @@ apiClient.interceptors.request.use(
         if (token) {
             config.headers = config.headers || {};
             config.headers['Authorization'] = `Bearer ${token}`;
+            config.withCredentials = true;
         }
 
         // 🔥 KEY FIX

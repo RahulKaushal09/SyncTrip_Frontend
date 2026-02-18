@@ -41,17 +41,18 @@
 .cf-card {
     background: white;
     border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    border: 1px solid #e2e8f0;
     overflow: hidden;
     transition: all 0.3s ease;
     margin-bottom: 1rem;
     height: 150px;
 }
 
-.cf-card:hover {
+/* .cf-card:hover {
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
     transform: translateY(-2px);
-}
+} */
 
 .cf-image-container {
     position: relative;

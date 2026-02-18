@@ -7,6 +7,7 @@ import { LocationServices } from "@/utils/location.utils";
 import { set } from "lodash";
 import { User } from "@/types";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 interface SlideData {
   id: number;
@@ -116,7 +117,7 @@ const LoggedInHeroSection: React.FC = () => {
                           .map((item, idx) => (
                             <div key={idx} className="avatar-circle">
                               {item ? (
-                                <img
+                                <Image
                                   src={item}
                                   alt="profile"
                                   className="w-full h-full object-cover rounded-full"

@@ -16,6 +16,8 @@ import Script from "next/script";
 import ActiveDestinations from "@/components/Home_new/ActiveDestinations";
 import ChoiceSection from "@/components/Home_new/ChoiceSection";
 import { usePathname } from "next/navigation";
+import DownloadPopup from "@/components/popups/DownloadAppPopup";
+import HomeWrapper from "@/components/Home_new/HomeWrapper";
 
 // export const metadata: Metadata = {
 //   title: 'SyncTrip – Travel Planning & Solo Travel Groups in India',
@@ -87,7 +89,6 @@ export const metadata: Metadata = {
 };
 export default async function Home() {
   const data = await BlogsApiServices.fetchAllBlogs();
-
   const limitedData = data.slice(0, 8);
   const enriched = limitedData.map((post: BlogPost) => ({
     ...post,
@@ -161,8 +162,9 @@ export default async function Home() {
         }}
       />
       {/* <DownloadPopup /> */}
-      <HomeHeroSection />
+      <HomeWrapper version="v2" />
       <ChoiceSection />
+      <HomeWrapper version="v1" />
       <FeaturesSection />
       <ActiveDestinations />
       {/* <ExploreNearbySection /> */}

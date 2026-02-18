@@ -13,6 +13,7 @@ import { requestFcmToken, onForegroundNotification } from '../../utils/firebaseC
 import apiClient from '@/utils/apiClient';
 import { STORAGE_KEYS } from '@/constants';
 import { UserApiService } from '@/utils/user.api.utils';
+import { usePathname, useRouter } from 'next/navigation';
 
 interface LoginContextType {
     user: User | null;
@@ -55,6 +56,9 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
         if (typeof window === "undefined") return false;
         return StorageUtils.getItem<boolean>(STORAGE_KEYS.EMAIL_VERIFIED) || false;
     });
+    const router = useRouter();
+    const pathname = usePathname();
+
 
     useEffect(() => {
         try {
@@ -155,7 +159,6 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
         }
         StorageUtils.clearUserData();
         setUser(null);
-        sessionStorage.removeItem("isLoggedIn");
         window.location.reload();
     }, []);
 
@@ -205,7 +208,6 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
         if (!user.name || user.name === null) user.name = "Guest User";
         setUser(user);
         StorageUtils.setUser(user);
-        sessionStorage.setItem("isLoggedIn", "true");
 
         const emailVerified = !!user?.email; // or detect google
         setIsEmailVerified(emailVerified);
@@ -233,6 +235,9 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
         }
 
         // Always run the external callback
+        if (pathname === "/") {
+            router.refresh();   // SSR re-fetch
+        }
         // onLoginCallback(user, requiresPhone);
     }, [onLoginCallback, loginOptions, registerFcmTokenForUser]);
 

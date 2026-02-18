@@ -7,6 +7,7 @@ import peopleTravelling from '../../assets/images/peopleTravelling.svg';
 import syncTripApp from '../../assets/images/syncTripMobile.png';
 import '../../../styles/appPushing.css';
 import { triggerLogin } from '@/utils';
+import { Apple, Download } from 'lucide-react';
 
 interface SyncTripAppPushingSectionProps {
     showWork?: boolean;
@@ -86,28 +87,37 @@ const SyncTripAppPushingSection = ({ showWork }: SyncTripAppPushingSectionProps)
             )} */}
             <div className="AppPushingBlock" style={{ textAlign: "left" }}>
                 <div className="row appPushingSection2">
-                {!mobileView && (
+                    {!mobileView && (
                         <div className="col-md-3 mb-3 mb-md-0 text-center" style={{ marginRight: "50px" }}>
-                        <img
-                            src={syncTripApp.src}
-                            alt="SyncTrip app screenshot"
+                            <img
+                                src={syncTripApp.src}
+                                alt="SyncTrip app screenshot"
                                 className="w-full max-w-sm  mb-6 img-appPushing"
-                        />
-                    </div>
-                )}
+                            />
+                        </div>
+                    )}
 
                     <div className="col-md-7">
-                        <h2 className=" mb-4" style={{ fontWeight: "600", fontSize: "48px" }}>Sync, plan, and explore – the way YOU want.</h2>
-                    <p className="text-muted mb-3">
-                        Your perfect trip planner is <strong>coming soon!</strong> Stay ahead by joining the travel revolution.
-                    </p>
-                        <button className="btn btn-dark" onClick={() => triggerLogin()}>
-                        Click here
-                    </button>
-                    <p className="text-muted mt-3">and register for early access.</p>
+                        <h2 className="mb-4" style={{ fontWeight: "600", fontSize: "48px", fontFamily: "Inter, sans-serif" }}>Sync, Plan, and Explore – the way YOU want.</h2>
+                        <p className="text-muted mb-1">
+                            Your next trip starts here!
+                            <strong> Synctrip</strong> is already helping travelers
+                            <br />
+                            connect and plan better.
+                        </p>
+                        <p className="text-muted mb-6">Download the App today and get early access to our app!</p>
+                        <div className='flex gap-3 items-center mb-5'>
+                            <button className='btn !flex gap-2 items-center btn-dark'>
+                                <Download />
+                                Download the App
+                            </button>
+                            {sessionStorage.getItem('isLoggedIn') !== 'true' && <button className="btn border" onClick={() => triggerLogin()}>
+                                Sign In
+                            </button>}
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
         </div>
     );
 };
