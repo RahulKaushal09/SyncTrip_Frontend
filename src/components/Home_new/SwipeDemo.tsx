@@ -76,7 +76,7 @@ const SwipeDemo: React.FC = () => {
                 {step === 'match' && (
                     <div className="m-animate m-zoom-in" style={overlayWrapperStyle}>
                         <div style={popUpSizeStyle}>
-                            <Image width={400} loading='lazy' src={MatchPopUp} alt="It's a Match!" fill style={{ objectFit: 'contain' }} />
+                            <Image loading='lazy' src={MatchPopUp} alt="It's a Match!" fill style={{ objectFit: 'contain' }} />
                         </div>
                     </div>
                 )}
