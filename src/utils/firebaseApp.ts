@@ -8,6 +8,17 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APPID!,
 };
 
-export const firebaseApp = !getApps().length
-  ? initializeApp(firebaseConfig)
-  : getApp();
+// export const firebaseApp = !getApps().length
+//   ? initializeApp(firebaseConfig)
+//   : getApp();
+
+let firebaseApp;
+
+export function getFirebaseApp() {
+  if (!getApps().length) {
+    firebaseApp = initializeApp(firebaseConfig);
+  } else {
+    firebaseApp = getApp();
+  }
+  return firebaseApp;
+}

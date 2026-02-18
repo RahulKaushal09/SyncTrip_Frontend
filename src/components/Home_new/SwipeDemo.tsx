@@ -55,7 +55,7 @@ const SwipeDemo: React.FC = () => {
                             opacity: (step === 'swiping' || step === 'match') ? 1 : 0.9,
                             transition: 'transform 0.7s ease-out, opacity 0.7s'
                         }}>
-                            <Image src={PriyaProfileCard} loading='lazy' alt="Priya Profile" style={cardImgStyle} />
+                            <Image width={558} height={920} src={PriyaProfileCard} loading='lazy' alt="Priya Profile" style={cardImgStyle} />
                         </div>
 
                         {/* ANANYA CARD: The one that gets swiped */}
@@ -67,7 +67,7 @@ const SwipeDemo: React.FC = () => {
                             opacity: step === 'swiping' ? 0 : 1,
                             transition: 'transform 0.7s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s'
                         }}>
-                            <Image loading='lazy' src={AnanyaProfileCard} alt="Ananya Profile" style={cardImgStyle} />
+                            <Image width={553} height={920} loading='lazy' src={AnanyaProfileCard} alt="Ananya Profile" style={cardImgStyle} />
                         </div>}
                     </div>
                 )}
@@ -76,7 +76,7 @@ const SwipeDemo: React.FC = () => {
                 {step === 'match' && (
                     <div className="m-animate m-zoom-in" style={overlayWrapperStyle}>
                         <div style={popUpSizeStyle}>
-                            <Image loading='lazy' src={MatchPopUp} alt="It's a Match!" fill style={{ objectFit: 'contain' }} />
+                            <Image width={400} loading='lazy' src={MatchPopUp} alt="It's a Match!" fill style={{ objectFit: 'contain' }} />
                         </div>
                     </div>
                 )}
@@ -189,8 +189,8 @@ const nextCardStyle: React.CSSProperties = {
 };
 
 const cardImgStyle: React.CSSProperties = {
-    width: '100%',
-    height: '100%',
+    // width: '100%',
+    // height: '100%',
     objectFit: 'contain',
 };
 

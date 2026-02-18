@@ -4,10 +4,19 @@ import React, { useState, useEffect } from "react";
 import { ChevronDown, MapPin, ArrowRight } from "lucide-react";
 import "./LoggedInHero.css";
 import { LocationServices } from "@/utils/location.utils";
-import { set } from "lodash";
 import { User } from "@/types";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
+
+import GoaBanner from "../../assets/images/BannerImageGoaCompressed.jpeg";
+import ManaliBanner from "../../assets/images/BannerImageManaliCompressed.jpeg";
+import RishikeshBanner from "../../assets/images/BannerImageRishikeshCompressed.jpeg";
+
+const bannerMap: Record<string, StaticImageData> = {
+  goa: GoaBanner,
+  manali: ManaliBanner,
+  rishikesh: RishikeshBanner,
+};
 
 interface SlideData {
   id: number;
@@ -86,6 +95,7 @@ const LoggedInHeroSection: React.FC = () => {
     router.replace("/#swipedemo");
   };
 
+
   return (
     <section className="homeHeroSection">
       <div className="heroOverlay bg-gradient-to-br from-[#f2faff] via-[#e3f5ff] to-[#b8e8ff]">
@@ -96,9 +106,19 @@ const LoggedInHeroSection: React.FC = () => {
               className="carousel-track"
               style={{ transform: `translateX(-${currentIndex * 100}%)` }}
             >
-              {carouselData.map((slide) => (
+              {carouselData.map((slide, index) => (
                 <div key={slide.id} className="carousel-slide">
-                  <div className={`slide-bg-layer ${slide.bgClass}`} />
+                  <div className="slide-bg-layer">
+                    <Image
+                      src={bannerMap[slide.location.toLowerCase()] || GoaBanner}
+                      alt={`Travel to ${slide.location}`}
+                      fill
+                      priority={index === 0}
+                      sizes="100vw"
+                      style={{ objectFit: 'cover' }}
+                      quality={85}
+                    />
+                  </div>
                   <div className="slide-content">
                     <div className="location-badge">
                       <MapPin className="w-3 h-3" />
@@ -120,8 +140,12 @@ const LoggedInHeroSection: React.FC = () => {
                                 <Image
                                   src={item}
                                   alt="profile"
-                                  className="w-full h-full object-cover rounded-full"
+                                  width={36}
+                                  height={36}
+                                  sizes="36px"
+                                  quality={60}
                                 />
+
                               ) : (
                                 <span className="avatar-initials">{slide.initials[idx] || slide.initials[0]}</span>
                               )}
@@ -195,7 +219,7 @@ const LoggedInHeroSection: React.FC = () => {
 
         </div>
       </div>
-      <div className="heroVectorBottom"></div>
+      <Image className="heroVectorBottom" src="/images/heroVectorBottom.png" alt="Hero Vector Bottom" width={isMobile ? 500 : 1440} height={120} />
     </section>
   );
 };

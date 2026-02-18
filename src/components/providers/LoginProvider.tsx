@@ -61,6 +61,8 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
 
 
     useEffect(() => {
+        if (!user) return;
+
         try {
             if (user && user.id && typeof window !== "undefined" && typeof window.clarity === "function") {
                 window.clarity("identify", user.id, undefined, undefined, user.name || "SyncTrip User");
@@ -309,21 +311,20 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
     };
 
     return (
-        <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || ''}>
-            <LoginContext.Provider value={contextValue}>
-                {children}
+        <LoginContext.Provider value={contextValue}>
+            {children}
 
-                {showLogin && (
-                    <LoginPopup
-                        onClose={closeLogin}
-                        onLogin={handleLogin}
-                        headingText={loginOptions.headingText}
-                        onEmailVerification={() => setIsEmailVerified(true)}
-                    />
-                )}
+            {showLogin && (
+                <LoginPopup
+                    onClose={closeLogin}
+                    onLogin={handleLogin}
+                    headingText={loginOptions.headingText}
+                    onEmailVerification={() => setIsEmailVerified(true)}
+                />
+            )}
 
-                {/* Phone popup logic */}
-                {/* {showPhoneNumber && user && (
+            {/* Phone popup logic */}
+            {/* {showPhoneNumber && user && (
                     <PhoneNumberPopup
                         user={user}
                         onClose={() => setShowPhoneNumber(false)}
@@ -339,21 +340,20 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
                     />
                 )} */}
 
-                {/* Profile popup logic */}
-                {(showPhoneNumber || showFullProfile) && user && (
-                    <FullProfilePopup
-                        user={user}
-                        onClose={() => setShowFullProfile(false)}
-                        // onProfileComplete={(updatedUser) => {
-                        //     setUser(updatedUser);
-                        //     StorageUtils.setUser(updatedUser);
-                        //     setShowFullProfile(false);
-                        //     // window.location.reload();
-                        // }}
-                        onProfileComplete={handleProfileComplete}
-                    />
-                )}
-            </LoginContext.Provider>
-        </GoogleOAuthProvider>
+            {/* Profile popup logic */}
+            {(showPhoneNumber || showFullProfile) && user && (
+                <FullProfilePopup
+                    user={user}
+                    onClose={() => setShowFullProfile(false)}
+                    // onProfileComplete={(updatedUser) => {
+                    //     setUser(updatedUser);
+                    //     StorageUtils.setUser(updatedUser);
+                    //     setShowFullProfile(false);
+                    //     // window.location.reload();
+                    // }}
+                    onProfileComplete={handleProfileComplete}
+                />
+            )}
+        </LoginContext.Provider>
     );
 };

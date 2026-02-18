@@ -129,7 +129,7 @@
   bottom: -1px;
   left: 0;
   right: 0;
-  background: url("/images/heroVectorBottom.png") no-repeat center bottom;
+  /* background: url("/images/heroVectorBottom.png") no-repeat center bottom; */
   background-size: cover;
   height: 120px;
   pointer-events: none;

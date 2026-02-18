@@ -9,6 +9,7 @@ import {
   DropResult,
 } from '@hello-pangea/dnd';
 import { GoogleMap, Marker, Polyline } from '@react-google-maps/api';
+import Script from "next/script";
 
 // import { GoogleMap, DirectionsService, DirectionsRenderer, Marker, Polyline } from '@react-google-maps/api';
 import { Plus, Star } from "lucide-react";
@@ -862,6 +863,11 @@ const TripPlannerPageContent: React.FC = () => {
 
   return (
     <div className="flex h-screen w-screen tripPlannerContainer">
+      <Script
+        id="google-maps"
+        strategy="beforeInteractive"
+        src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=maps,marker`}
+      />
       {/* Left narrow search/places column */}
       {!isMobile && <div className="relative left-0 top-0 h-full w-96 bg-white shadow-lg flex flex-col z-40">
         {/* Search Bar */}

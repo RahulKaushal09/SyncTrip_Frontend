@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, useRef } from 'react';
-import { GoogleLogin } from '@react-oauth/google';
+import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 import { ApiService } from '../../utils/api.utils';
 import { ValidationUtils } from '../../utils/validation.utils';
 import { User } from '../../types';
@@ -624,29 +624,30 @@ export default function LoginPopup({ onClose, onLogin, headingText, onEmailVerif
   }, []);
 
   return (
-    <div className="login-popup-overlay">
-      <div className="login-popup-container">
-        <button className="login-popup-close-btn" onClick={onClose} disabled={isLoading}>
-          ×
-        </button>
+    <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || ''}>
+      <div className="login-popup-overlay">
+        <div className="login-popup-container">
+          <button className="login-popup-close-btn" onClick={onClose} disabled={isLoading}>
+            ×
+          </button>
 
-        <h2 className="login-popup-title">
-          {headingText ? headingText : (isRegistering ? 'Create an Account' : 'Welcome to SyncTrip!')}
-        </h2>
-        {!isRegistering && (
-          <div className="login-popup-google-container">
-            {!isLoading && <GoogleLogin onSuccess={handleGoogleLogin} onError={handleGoogleError} />}
-          </div>
-        )}
+          <h2 className="login-popup-title">
+            {headingText ? headingText : (isRegistering ? 'Create an Account' : 'Welcome to SyncTrip!')}
+          </h2>
+          {!isRegistering && (
+            <div className="login-popup-google-container">
+              {!isLoading && <GoogleLogin onSuccess={handleGoogleLogin} onError={handleGoogleError} />}
+            </div>
+          )}
 
-        {/* <div className="login-popup-divider" style={{ display: showOROfEmail ? 'flex' : 'none' }}>
+          {/* <div className="login-popup-divider" style={{ display: showOROfEmail ? 'flex' : 'none' }}>
           <div style={{ width: '46%' }}><hr /></div>
           OR
           <div style={{ width: '46%' }}><hr /></div>
         </div> */}
 
-        <form onSubmit={handleSubmit} className="login-popup-form" noValidate>
-          {/* {isRegistering && (
+          <form onSubmit={handleSubmit} className="login-popup-form" noValidate>
+            {/* {isRegistering && (
             <>
               <input
                 type="text"
@@ -720,7 +721,7 @@ export default function LoginPopup({ onClose, onLogin, headingText, onEmailVerif
             </>
           )} */}
 
-          {/* <div className={emailFieldClass}>
+            {/* <div className={emailFieldClass}>
             <input
               type="email"
               name="email"
@@ -732,111 +733,111 @@ export default function LoginPopup({ onClose, onLogin, headingText, onEmailVerif
             />
           </div> */}
 
-          <div className={passwordFieldClass}>
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              className="login-popup-input password-input"
-              value={form.password}
-              onChange={handleChange}
-              disabled={isLoading}
-            />
-          </div>
+            <div className={passwordFieldClass}>
+              <input
+                type="password"
+                name="password"
+                placeholder="Password"
+                className="login-popup-input password-input"
+                value={form.password}
+                onChange={handleChange}
+                disabled={isLoading}
+              />
+            </div>
 
-          {!isRegistering && (
-            <div className={phoneFieldClass}>
-              <div className="login-popup-divider">
-                <div style={{ width: '46%' }}><hr /></div>
-                OR
-                <div style={{ width: '46%' }}><hr /></div>
-              </div>
-              <p style={{ fontSize: "11px", color: "#ccc", padding: "0px 2px" }}>
-                Enter your phone number to receive a secure login code.
-              </p>
+            {!isRegistering && (
+              <div className={phoneFieldClass}>
+                <div className="login-popup-divider">
+                  <div style={{ width: '46%' }}><hr /></div>
+                  OR
+                  <div style={{ width: '46%' }}><hr /></div>
+                </div>
+                <p style={{ fontSize: "11px", color: "#ccc", padding: "0px 2px" }}>
+                  Enter your phone number to receive a secure login code.
+                </p>
 
-              <div className="phone-input-row margin1RemBottom">
-                <input
-                  type="tel"
-                  name="phone"
-                  placeholder="Phone Number"
-                  className="login-popup-input phone-input"
-                  value={form.phone}
-                  onChange={handleLoginChange}
-                  disabled={isLoading || loginPhoneVerified}
-                  maxLength={10}
-                />
-                {/* Small resend link/button that only appears after OTP is sent */}
+                <div className="phone-input-row margin1RemBottom">
+                  <input
+                    type="tel"
+                    name="phone"
+                    placeholder="Phone Number"
+                    className="login-popup-input phone-input"
+                    value={form.phone}
+                    onChange={handleLoginChange}
+                    disabled={isLoading || loginPhoneVerified}
+                    maxLength={10}
+                  />
+                  {/* Small resend link/button that only appears after OTP is sent */}
+                  {loginOtpSent && !loginPhoneVerified && (
+                    <button
+                      type="button"
+                      className="resend-link-btn"
+                      onClick={handleResendLoginOtp}
+                      disabled={isLoading || loginResendTimer > 0}
+                      style={{ fontSize: '10px', marginLeft: '10px', background: 'none', border: 'none', color: 'var(--primary-1)', cursor: 'pointer' }}
+                    >
+                      {loginResendTimer > 0 ? `Resend in ${loginResendTimer}s` : 'Resend OTP'}
+                    </button>
+                  )}
+                </div>
+
                 {loginOtpSent && !loginPhoneVerified && (
-                  <button
-                    type="button"
-                    className="resend-link-btn"
-                    onClick={handleResendLoginOtp}
-                    disabled={isLoading || loginResendTimer > 0}
-                    style={{ fontSize: '10px', marginLeft: '10px', background: 'none', border: 'none', color: 'var(--primary-1)', cursor: 'pointer' }}
-                  >
-                    {loginResendTimer > 0 ? `Resend in ${loginResendTimer}s` : 'Resend OTP'}
-                  </button>
+                  <div className="otp-input-group margin1RemBottom animate-fade-in">
+                    <input
+                      ref={otpInputRef}
+                      type="text"
+                      placeholder="Enter 6-digit OTP"
+                      className="login-popup-input"
+                      value={loginOtp}
+                      onChange={handleLoginOtpChange}
+                      maxLength={6}
+                      disabled={isLoading}
+                    />
+                  </div>
                 )}
               </div>
+            )}
 
-              {loginOtpSent && !loginPhoneVerified && (
-                <div className="otp-input-group margin1RemBottom animate-fade-in">
-                  <input
-                    ref={otpInputRef}
-                    type="text"
-                    placeholder="Enter 6-digit OTP"
-                    className="login-popup-input"
-                    value={loginOtp}
-                    onChange={handleLoginOtpChange}
-                    maxLength={6}
-                    disabled={isLoading}
-                  />
-                </div>
-              )}
-            </div>
-          )}
+            {error && <div className="login-popup-error" style={{ color: 'red', fontSize: "12px" }}>{error}</div>}
 
-          {error && <div className="login-popup-error" style={{ color: 'red', fontSize: "12px" }}>{error}</div>}
-
-          {/* MODIFIED PRIMARY BUTTON */}
-          <button
-            type={loginType === 'phone' && !loginOtpSent ? "button" : "submit"}
-            className="btn btn-primary"
-            style={{ marginTop: '10px' }}
-            disabled={isLoading}
-            onClick={(e) => {
-              if (loginType === 'phone') {
-                if (!loginOtpSent) {
-                  e.preventDefault();
-                  handleSendLoginOtp();
-                } else if (!loginPhoneVerified) {
-                  e.preventDefault();
-                  handleVerifyLoginOtp().then(() => {
-                    // Once verified, the login is handled by the useEffect or 
-                    // you can trigger handleSubmit manually here if preferred.
-                    // For a single-click experience, handleVerifyLoginOtp should 
-                    // call the login API directly upon success.
-                  });
+            {/* MODIFIED PRIMARY BUTTON */}
+            <button
+              type={loginType === 'phone' && !loginOtpSent ? "button" : "submit"}
+              className="btn btn-primary"
+              style={{ marginTop: '10px' }}
+              disabled={isLoading}
+              onClick={(e) => {
+                if (loginType === 'phone') {
+                  if (!loginOtpSent) {
+                    e.preventDefault();
+                    handleSendLoginOtp();
+                  } else if (!loginPhoneVerified) {
+                    e.preventDefault();
+                    handleVerifyLoginOtp().then(() => {
+                      // Once verified, the login is handled by the useEffect or 
+                      // you can trigger handleSubmit manually here if preferred.
+                      // For a single-click experience, handleVerifyLoginOtp should 
+                      // call the login API directly upon success.
+                    });
+                  }
                 }
-              }
-            }}
-          >
-            {isLoading ? 'Processing...' :
-              isRegistering ? 'Create Account' :
-                (loginType === 'phone' ? (loginOtpSent ? 'Verify & Sign In' : 'Send OTP') : 'Sign In')}
-          </button>
-          <div className='text-neutral-2 mt-4 text-center text-xs'>
-            <p>By continuing, you agree to our</p>
-            <div className='flex gap-3 justify-center mt-1'>
-              <a className='!underline' href="/policies/terms"> Terms of Use </a>
-              <a className='!underline' href="/policies/privacy-policies"> Privacy Policy</a>
-              <a className='!underline' href="/policies/content-policies"> Content Policy</a>
+              }}
+            >
+              {isLoading ? 'Processing...' :
+                isRegistering ? 'Create Account' :
+                  (loginType === 'phone' ? (loginOtpSent ? 'Verify & Sign In' : 'Send OTP') : 'Sign In')}
+            </button>
+            <div className='text-neutral-2 mt-4 text-center text-xs'>
+              <p>By continuing, you agree to our</p>
+              <div className='flex gap-3 justify-center mt-1'>
+                <a className='!underline' href="/policies/terms"> Terms of Use </a>
+                <a className='!underline' href="/policies/privacy-policies"> Privacy Policy</a>
+                <a className='!underline' href="/policies/content-policies"> Content Policy</a>
+              </div>
             </div>
-          </div>
-        </form>
+          </form>
 
-        {/* <p className="login-popup-toggle-text">
+          {/* <p className="login-popup-toggle-text">
           {isRegistering ? 'Already have an account?' : "Don't have an account?"}
           <button
             type="button"
@@ -850,7 +851,8 @@ export default function LoginPopup({ onClose, onLogin, headingText, onEmailVerif
             {isRegistering ? 'Sign In' : 'Create Account'}
           </button>
         </p> */}
+        </div>
       </div>
-    </div>
+    </GoogleOAuthProvider>
   );
 }
