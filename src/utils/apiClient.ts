@@ -55,6 +55,9 @@ apiClient.interceptors.response.use(
         if (error.response && error.response.status === 409) {
             return Promise.resolve(error.response);
         }
+        if (error.response && error.response.status === 422) {
+            return Promise.resolve(error.response);
+        }
         if(error.response && error.response.status === 501){
             toast.error(error.response?.data?.message || 'An error occurred');
         }

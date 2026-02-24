@@ -64,13 +64,6 @@
   z-index: 2; /* Sits above the image but below the text content */
 }
 
-<<<<<<< HEAD
-.slide-bg-goa { background-image: url("../../assets/images/BannerImageGoaCompressed.jpeg"); }
-.slide-bg-manali { background-image: url("../../assets/images/BannerImageManaliCompressed.jpeg"); }
-.slide-bg-rishikesh { background-image: url("../../assets/images/BannerImageRishikeshCompressed.jpeg"); }
-
-=======
->>>>>>> narrow
 /* =========================================
    Text Content Layer
    ========================================= */

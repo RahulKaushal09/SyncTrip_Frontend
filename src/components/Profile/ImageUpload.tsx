@@ -2,21 +2,26 @@ import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { ImageCropper } from "./ImageCropper";
 import { Camera, Check, Edit2, X } from "lucide-react";
+import { UserApiService } from "@/utils/user.api.utils";
+import { apiErrorType } from "@/classes/ApiResponse.classes";
+import { useLogin } from "../providers/LoginProvider";
+
 
 export default function ImageUploadModal({
-    isOpen, onClose, currentImage, onSave
+    isOpen, onClose, currentImage, onSave, optionalHeaderText, optionalSubText
 }: {
-    isOpen: boolean; onClose: () => void; currentImage: string | null; onSave: (file: File) => Promise<void>;
+    isOpen: boolean; onClose: () => void; currentImage: string | null; onSave?: (file: File) => Promise<void>; optionalHeaderText?: string; optionalSubText?: string;
 }) {
     const [selectedFile, setSelectedFile] = useState<string | null>(null);
     const [croppedPreview, setCroppedPreview] = useState<string | null>(null);
     const [zoomLevel, setZoomLevel] = useState<number>(1);
-    const [cropLevel, setCropLevel] = useState<{x: number, y: number}>({ x: 0, y: 0 });
+    const [cropLevel, setCropLevel] = useState<{ x: number, y: number }>({ x: 0, y: 0 });
     const [rotateLevel, setRotateLevel] = useState<number>(0);
     const [finalBlob, setFinalBlob] = useState<Blob | null>(null);
     const [isCropping, setIsCropping] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const { updateUserProfilePicture } = useLogin();
 
     useEffect(() => {
         if (!isOpen) {
@@ -65,7 +70,22 @@ export default function ImageUploadModal({
 
             // 3. Trigger the parent's upload function
             // This calls onUpdateProfileImage in your UserProfilePage
-            await onSave(file);
+            if (onSave) {
+                await onSave(file);
+            } else {
+                // const res = await onUpdateProfileImage(file);
+                try {
+                    const res = await UserApiService.UpdateProfileImageOfUser(file);
+                    if (res?.success && res.url) {
+                        toast.success("Profile picture updated!");
+                        updateUserProfilePicture(res.url);
+                    }
+                }
+                catch (error) {
+                    toast.error("Failed to upload profile picture. Please try again later.");
+                }
+
+            }
 
             // 4. Success cleanup
             setIsUploading(false);
@@ -78,7 +98,7 @@ export default function ImageUploadModal({
         }
     };
 
-    const onCropFinished = async (blob: Blob, zoom: number, rotate: number, crop: {x: number, y: number}) => {
+    const onCropFinished = async (blob: Blob, zoom: number, rotate: number, crop: { x: number, y: number }) => {
         const previewUrl = URL.createObjectURL(blob);
         setCroppedPreview(previewUrl);
         setZoomLevel(zoom);
@@ -91,7 +111,7 @@ export default function ImageUploadModal({
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-[var(--secondary-1)]/60 backdrop-blur-sm">
+        <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4 bg-[var(--secondary-1)]/60 backdrop-blur-sm">
             <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden relative animate-in fade-in zoom-in-95 duration-200">
 
                 {isCropping && selectedFile ? (
@@ -105,14 +125,19 @@ export default function ImageUploadModal({
                     />
                 ) : (
                     <div className="p-6">
-                        <div className="flex justify-between items-center mb-6">
+                        <div className="flex justify-between items-center mb-1">
                             <h3 className="text-xl font-bold text-[var(--secondary-1)]">
-                                {selectedFile ? "Adjust Photo" : "Update Profile Picture"}
+                                {selectedFile ? "Adjust Photo" : optionalHeaderText || "Upload Profile Picture"}
                             </h3>
                             <button onClick={onClose} className="p-2 hover:bg-neutral-100 rounded-full text-neutral-400">
                                 <X size={20} />
                             </button>
                         </div>
+                        {optionalSubText && (
+                            <p className="text-sm text-neutral-500 mb-4">
+                                {optionalSubText}
+                            </p>
+                        )}
 
                         <div className="flex flex-col items-center gap-6">
                             <div className="relative group cursor-pointer" onClick={() => fileInputRef.current?.click()}>

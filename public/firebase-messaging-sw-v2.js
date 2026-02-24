@@ -48,6 +48,7 @@ self.addEventListener("notificationclick", (event) => {
   let targetUrl = "/notifications"; // fallback: go to notifications page
   debugger;
   if (clickAction) {
+    debugger;
     switch (clickAction.type) {
       case "OPEN_CHAT":
         if (clickAction.payload.conversationId) {
@@ -73,6 +74,12 @@ self.addEventListener("notificationclick", (event) => {
         // same as chat usually
         if (clickAction.payload.conversationId) {
           targetUrl = `/chats?chatId=${clickAction.payload.conversationId}`;
+        }
+      case "CREATE_TRIP":
+        if (clickAction.payload && clickAction.payload.locations && clickAction.payload.locations.length === 1) {
+          targetUrl = `/create/trip?locationId=${clickAction.payload.locations[0]}`;
+        } else {
+          targetUrl = `/create/trip`;
         }
         break;
       default:

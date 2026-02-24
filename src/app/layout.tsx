@@ -15,11 +15,7 @@ export const metadata = {
   description: 'Discover and join trips near you.',
 };
 import Script from 'next/script';
-<<<<<<< HEAD
-import { LoaderProvider } from '@/components/providers/LoaderContext';
-=======
 // import { LoaderProvider } from '@/components/providers/LoaderContext';
->>>>>>> narrow
 import LayoutUIController from '@/components/Layout/LayoutUIController';
 import ClientProviders from '@/components/providers/ClientProviders';
 
@@ -78,16 +74,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/manifest.json" />
         <div className="App">
-<<<<<<< HEAD
-          <LoaderProvider>
-            <LoginProvider>
-                {/* You can add a global navbar or context providers here */}
-                {/* <NavbarWrapper /> */}
-                {/* <RouteChangeHandler /> */}
-                {/* <NavbarClient /> */}
-                {/* <ExploreNearby /> */}
-                {/* {<div className="announcement-bar" style={{ height: "25px", display: "none" }}>
-=======
           {/* <LoaderProvider>
             <LoginProvider> */}
               {/* You can add a global navbar or context providers here */}
@@ -96,7 +82,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               {/* <NavbarClient /> */}
               {/* <ExploreNearby /> */}
               {/* {<div className="announcement-bar" style={{ height: "25px", display: "none" }}>
->>>>>>> narrow
                 <div className="announcement-track">
                   <div className="announcement-content">
                     <span>SYNCTRIP APP IS LAUNCHING THIS MARCH!</span>
@@ -109,16 +94,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 <LayoutUIController>
                   {children}
                 </LayoutUIController>
-<<<<<<< HEAD
-                <Toaster position='top-right' />
-            </LoginProvider>
-          </LoaderProvider>
-=======
               </ClientProviders>
               {/* <Toaster position='top-right' /> */}
             {/* </LoginProvider>
           </LoaderProvider> */}
->>>>>>> narrow
         </div>
         <Footer />
       </body>

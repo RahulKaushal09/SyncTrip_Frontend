@@ -187,11 +187,14 @@ export interface Chat {
     createdAt: string;
     updatedAt: string;
     unreadCount?: number;
+    isChatActive?: boolean;
 }
 
 export interface Message {
     id: string;
     chat: string;
+    type: "system" | "user";
+    systemAction?: "user_joined" | "user_left" | "user_deleted_trip";
     sender: string;
     content: string;
     readBy: string[];
