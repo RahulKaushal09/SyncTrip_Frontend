@@ -15,7 +15,7 @@ export default function NotificationCard({ notif }) {
     href = `/chats?chatId=${clickAction.payload.conversationId}`;
   }
   if (clickAction?.type === "GROUP_DETAILS") {
-    href = `/userTrip/${clickAction.payload.tripId}/groups/${clickAction.payload.groupTripId}`;
+    href = `/userTrip/${clickAction.payload.tripId}/groups/${clickAction.payload.groupId}`;
   }
   // if (clickAction?.type === "OPEN_PROFILE") {
   //   href = `/profile/${clickAction.payload.profileId}`;

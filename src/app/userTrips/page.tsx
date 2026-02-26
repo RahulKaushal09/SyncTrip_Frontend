@@ -68,31 +68,31 @@ export default function AllTripsPage() {
     router.push(`/userTrip/${encodeURIComponent(tripId)}/details${query}`);
   };
 
-  const deleteTrip = async (tripId: string, startDate: string) => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+  // const deleteTrip = async (tripId: string, startDate: string) => {
+  //   const today = new Date();
+  //   today.setHours(0, 0, 0, 0);
 
-    const tripDate = new Date(startDate);
-    tripDate.setHours(0, 0, 0, 0);
+  //   const tripDate = new Date(startDate);
+  //   tripDate.setHours(0, 0, 0, 0);
 
-    if (tripDate <= today) {
-      toast.error("You cannot delete your past trips.");
-      return;
-    }
+  //   if (tripDate <= today) {
+  //     toast.error("You cannot delete your past trips.");
+  //     return;
+  //   }
 
-    if (!confirm("Are you sure you want to delete this trip? This action cannot be undone.")) {
-      return;
-    }
+  //   if (!confirm("Are you sure you want to delete this trip? This action cannot be undone.")) {
+  //     return;
+  //   }
 
-    try {
-      await TripServices.deleteTrip(tripId);
-      setTrips((prev) => prev.filter((t) => t.id !== tripId));
-      toast.success("Trip deleted successfully.");
-    } catch (err) {
-      console.error("Failed to delete trip", err);
-      toast.error("Failed to delete trip. Please try again.");
-    }
-  };
+  //   try {
+  //     await TripServices.deleteTrip(tripId);
+  //     setTrips((prev) => prev.filter((t) => t.id !== tripId));
+  //     toast.success("Trip deleted successfully.");
+  //   } catch (err) {
+  //     console.error("Failed to delete trip", err);
+  //     toast.error("Failed to delete trip. Please try again.");
+  //   }
+  // };
 
   const onCreateTrip = () => {
     router.push("/create/trip");
@@ -119,7 +119,7 @@ export default function AllTripsPage() {
                   trip={trip}
                   onPressCard={() => openTripDetailsScreen(trip.id as string, trip.locationId as string)}
                   onPressEdit={() => openTripDetailsScreen(trip.id as string, trip.locationId as string)}
-                  onPressDelete={() => deleteTrip(trip.id as string, trip.startDate as string)}
+                  // onPressDelete={() => deleteTrip(trip.id as string, trip.startDate as string)}
                 />
               </div>
             ))

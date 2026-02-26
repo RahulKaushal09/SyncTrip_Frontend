@@ -56,7 +56,7 @@ self.addEventListener("notificationclick", (event) => {
         }
         break;
       case "GROUP_DETAILS":
-        if (clickAction.payload.groupTripId && clickAction.payload.tripId) {
+        if (clickAction.payload.groupId && clickAction.payload.tripId) {
           targetUrl = `/userTrip/${clickAction.payload.tripId}/groups/${clickAction.payload.groupTripId}`;
         }
         break;

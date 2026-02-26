@@ -8,7 +8,7 @@ import { Bell } from "lucide-react";
 // import { API_CONFIG } from "@/constants";
 import { getSocket } from "@/utils/socket";
 
-export default function NotificationBell() {
+export default function NotificationBell({iconColor = "black"}: {iconColor?: string}) {
   const [count, setCount] = useState(0);
   const socketRef = useRef<Socket | null>(null);
 
@@ -76,7 +76,7 @@ export default function NotificationBell() {
 
   return (
     <Link href="/notifications" className="relative cursor-pointer flex items-center">
-      <Bell size={22} />
+      <Bell color={iconColor} size={22}  />
       {count > 0 && (
         <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
           {count > 9 ? "9+" : count}

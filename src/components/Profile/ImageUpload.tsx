@@ -141,7 +141,7 @@ export default function ImageUploadModal({
 
                         <div className="flex flex-col items-center gap-6">
                             <div className="relative group cursor-pointer" onClick={() => fileInputRef.current?.click()}>
-                                <div className="w-40 h-40 rounded-full overflow-hidden border-4 border-[var(--primary-5)] shadow-inner bg-neutral-100 relative">
+                                <div className="w-64 aspect-[9/16] overflow-hidden rounded-xl border-4 border-[var(--primary-5)] shadow-inner bg-neutral-100">
                                     <img
                                         src={croppedPreview || currentImage || '/default-avatar.png'}
                                         alt="Profile Preview"

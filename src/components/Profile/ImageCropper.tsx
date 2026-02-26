@@ -60,14 +60,16 @@ export const ImageCropper = ({
                     crop={crop}
                     zoom={zoom}
                     rotation={rotation}
-                    aspect={1}
-                    cropShape="round"
+                    aspect={9 / 16}
                     onCropChange={setCrop}
                     onRotationChange={setRotation}
                     onCropComplete={(_, pixels) => setCroppedAreaPixels(pixels)}
                     onZoomChange={setZoom}
                     showGrid
                 />
+                <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+                    <div className="w-[48%] aspect-square border-2 border-white rounded-full shadow-2xl"></div>
+                </div>
                 <button
                     onClick={rotateNeg90}
                     className="absolute bottom-4 left-4 z-10 p-3 bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-full hover:bg-white/20 transition-all active:scale-90 shadow-2xl"

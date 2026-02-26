@@ -27,7 +27,7 @@ const NavbarClient = ({ }) => {
   const { user, isLoggedIn, logout, openLogin } = useLogin(); // ⬅️ use context directly
   const pathname = usePathname();
   const shouldHideNavbar = (pathname.includes('userTrip/') && pathname.includes('/planner')) || (pathname.includes('userTrip/') && pathname.includes('/matching')) || pathname.includes('/chats');
-
+  const isHomePage = pathname === '/';
 
   // const cookie = Cookies.get('userInfo');
   // const [user, setUser] = useState<User | null>(() => {
@@ -192,8 +192,8 @@ const NavbarClient = ({ }) => {
         </Link>
         {ismobile ? (
           <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
-            {isLoggedIn && <NotificationBell />}
-            {isLoggedIn && <ChatIcon />}
+            {isLoggedIn && <NotificationBell iconColor="#ffffff" />}
+            {isLoggedIn && <ChatIcon iconColor="#ffffff" />}
             <button className="navbar-toggler" onClick={() => setMobileNavOpen(!mobileNavOpen)}>
               <span className="navbar-toggler-icon"></span>
             </button>
@@ -221,7 +221,7 @@ const NavbarClient = ({ }) => {
               // onClick={() => redirectBtnClick(ROUTES.USER_TRIPS)}
               // style={{ cursor: "pointer" }}
               >
-                <span className="nav-link">
+                <span style={{color: (!isSticky && isHomePage) ? "white" : ""}} className="nav-link">
                   My Trips
                 </span>
               </li>
@@ -241,7 +241,7 @@ const NavbarClient = ({ }) => {
             // onClick={() => redirectBtnClick(ROUTES.EXPLORE)}
             // style={{ cursor: "pointer" }}
             >
-              <span className="nav-link">
+              <span style={{color: (!isSticky && isHomePage) ? "white" : ""}} className="nav-link">
                 Explore
               </span>
             </li>
@@ -259,7 +259,7 @@ const NavbarClient = ({ }) => {
             // onClick={() => redirectBtnClick(ROUTES.BLOGS)}
             // style={{ cursor: "pointer" }}
             >
-              <span className="nav-link">
+              <span style={{color: (!isSticky && isHomePage) ? "white" : ""}} className="nav-link">
                 Blogs
               </span>
             </li> */}
@@ -287,7 +287,7 @@ const NavbarClient = ({ }) => {
             <li className="nav-item"
               onClick={() => setFeedbackFormOpen(true)}
               style={{ cursor: "pointer" }}>
-              <span className="nav-link">
+              <span style={{color: (!isSticky && isHomePage) ? "white" : ""}} className="nav-link">
                 {isLoggedIn ? 'Feedback' : 'Contact'}
               </span>
             </li>
@@ -324,9 +324,9 @@ const NavbarClient = ({ }) => {
                 !LoadingUser && user ? (
                   <div className="flex items-center gap-4">
                     {/* Notification Icon */}
-                    {isLoggedIn && <NotificationBell />}
+                    {isLoggedIn && <NotificationBell iconColor="#ffffff" />}
 
-                    {isLoggedIn && <ChatIcon />}
+                    {isLoggedIn && <ChatIcon iconColor="#ffffff" />}
                     <Dropdown show={showDropdown} onToggle={setShowDropdown}>
                       <div style={{ display: "flex", alignItems: "center" }}>
 
@@ -337,7 +337,7 @@ const NavbarClient = ({ }) => {
                           boxShadow: "none",
                           display: "flex",
                           alignItems: "center",
-                          color: "black",
+                          color: (!isSticky && isHomePage) ? "white" : "black",
                           gap: "10px"
                         }}>
                           {user.profile_picture?.[0] ? (
@@ -379,7 +379,7 @@ const NavbarClient = ({ }) => {
                               }
                             </div>
                           )}
-                          <span>{user.name}</span>
+                          <span style={{color: (!isSticky && isHomePage) ? "white" : ""}}>{user.name}</span>
                         </Dropdown.Toggle>
                         <Dropdown.Menu align="end">
                           <Dropdown.Item as={Link} href={`/user/${user.id}`}>Profile</Dropdown.Item>

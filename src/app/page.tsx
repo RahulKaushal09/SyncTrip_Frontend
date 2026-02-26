@@ -18,6 +18,7 @@ import ChoiceSection from "@/components/Home_new/ChoiceSection";
 import { usePathname } from "next/navigation";
 import DownloadPopup from "@/components/popups/DownloadAppPopup";
 import HomeWrapper from "@/components/Home_new/HomeWrapper";
+import HomeHeroSectionNew from "@/components/Home_new/NewHome";
 
 // export const metadata: Metadata = {
 //   title: 'SyncTrip – Travel Planning & Solo Travel Groups in India',
@@ -157,9 +158,10 @@ export default async function Home() {
         }}
       />
       {/* <DownloadPopup /> */}
-      <HomeWrapper version="v2" />
+      {/* <HomeWrapper version="v2" /> */}
+      <HomeHeroSectionNew />
       <ChoiceSection />
-      <HomeWrapper version="v1" />
+      {/* <HomeWrapper version="v1" /> */}
       <FeaturesSection />
       <ActiveDestinations />
       {/* <ExploreNearbySection /> */}

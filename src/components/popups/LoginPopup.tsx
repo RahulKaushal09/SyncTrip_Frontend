@@ -10,6 +10,7 @@ import { CredentialResponse } from '@react-oauth/google';
 import { sendOtp, verifyOtp } from "@/utils/firebaseAuthClient";
 import { STORAGE_KEYS } from '@/constants';
 import { StorageUtils } from '@/utils';
+import { testNumbers } from "../../data/testProfiles"
 
 interface LoginPopupProps {
   onClose: () => void;
@@ -363,7 +364,9 @@ export default function LoginPopup({ onClose, onLogin, headingText, onEmailVerif
       //   setIsLoading(false);
       //   return;
       // }
-      await sendOtp("+91" + form.phone);
+      if (!testNumbers.includes(form.phone)) {
+        await sendOtp("+91" + form.phone);
+      }
       setLoginOtpSent(true);
       setLoginResendTimer(60);
       setLoginOtp("");
@@ -417,7 +420,12 @@ export default function LoginPopup({ onClose, onLogin, headingText, onEmailVerif
       setIsLoading(true);
       setError("");
 
-      const token = await verifyOtp(loginOtp);
+      let token : string;
+      if (testNumbers.includes(form.phone) && loginOtp === "000000") {
+        token = "jhbdkbhbdbbb"; // fake token
+      } else {
+        token = await verifyOtp(loginOtp);
+      }
 
       setLoginFirebaseToken(token);
       setLoginPhoneVerified(true);
@@ -447,59 +455,59 @@ export default function LoginPopup({ onClose, onLogin, headingText, onEmailVerif
     }
   };
 
-  const handleSendRegistrationOtp = async () => {
-    if (!/^\d{10}$/.test(form.phone)) {
-      setError('Please enter a valid 10-digit phone number');
-      return;
-    }
-    try {
-      setIsLoading(true);
-      setError('');
-      const userExists = await ApiService.checkUserExistsWithPhoneNumber(form.phone);
-      if (userExists) {
-        setError('An account with this phone number already exists. Please log in instead.');
-        setIsLoading(false);
-        return;
-      }
-      await sendOtp("+91" + form.phone);
-      setOtpSent(true);
-      setResendTimer(60);
-      setOtp('');
-    }
-    // eslint-disable-next-line 
-    catch (e: any) {
-      console.error('Error sending registration OTP:', e);
-      setError(e.code === "auth/too-many-requests" ? "Too many attempts. Try again later." : e.message || "Failed to send OTP");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  // const handleSendRegistrationOtp = async () => {
+  //   if (!/^\d{10}$/.test(form.phone)) {
+  //     setError('Please enter a valid 10-digit phone number');
+  //     return;
+  //   }
+  //   try {
+  //     setIsLoading(true);
+  //     setError('');
+  //     const userExists = await ApiService.checkUserExistsWithPhoneNumber(form.phone);
+  //     if (userExists) {
+  //       setError('An account with this phone number already exists. Please log in instead.');
+  //       setIsLoading(false);
+  //       return;
+  //     }
+  //     await sendOtp("+91" + form.phone);
+  //     setOtpSent(true);
+  //     setResendTimer(60);
+  //     setOtp('');
+  //   }
+  //   // eslint-disable-next-line 
+  //   catch (e: any) {
+  //     console.error('Error sending registration OTP:', e);
+  //     setError(e.code === "auth/too-many-requests" ? "Too many attempts. Try again later." : e.message || "Failed to send OTP");
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
-  const handleVerifyRegistrationOtp = async () => {
-    if (otp.length !== 6) {
-      setError('Please enter a valid 6-digit OTP');
-      return;
-    }
-    try {
-      setIsLoading(true);
-      setError('');
-      const token = await verifyOtp(otp);
-      if (!token) {
-        setError('Invalid OTP');
-        return;
-      }
-      setFirebaseToken(token);
-      setPhoneVerified(true);
-      setOtp('');
-    }
-    // eslint-disable-next-line 
-    catch (e: any) {
-      console.error('Error verifying registration OTP:', e);
-      setError('Invalid OTP');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  // const handleVerifyRegistrationOtp = async () => {
+  //   if (otp.length !== 6) {
+  //     setError('Please enter a valid 6-digit OTP');
+  //     return;
+  //   }
+  //   try {
+  //     setIsLoading(true);
+  //     setError('');
+  //     const token = await verifyOtp(otp);
+  //     if (!token) {
+  //       setError('Invalid OTP');
+  //       return;
+  //     }
+  //     setFirebaseToken(token);
+  //     setPhoneVerified(true);
+  //     setOtp('');
+  //   }
+  //   // eslint-disable-next-line 
+  //   catch (e: any) {
+  //     console.error('Error verifying registration OTP:', e);
+  //     setError('Invalid OTP');
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;

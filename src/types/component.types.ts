@@ -187,7 +187,6 @@ export interface Chat {
     createdAt: string;
     updatedAt: string;
     unreadCount?: number;
-    isChatActive?: boolean;
 }
 
 export interface Message {
