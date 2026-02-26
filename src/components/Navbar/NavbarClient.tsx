@@ -192,8 +192,8 @@ const NavbarClient = ({ }) => {
         </Link>
         {ismobile ? (
           <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
-            {isLoggedIn && <NotificationBell iconColor="#ffffff" />}
-            {isLoggedIn && <ChatIcon iconColor="#ffffff" />}
+            {isLoggedIn && <NotificationBell iconColor={isHomePage && !isSticky ? "#ffffff" : "#000000"} />}
+            {isLoggedIn && <ChatIcon iconColor={isHomePage && !isSticky ? "#ffffff" : "#000000"} />}
             <button className="navbar-toggler" onClick={() => setMobileNavOpen(!mobileNavOpen)}>
               <span className="navbar-toggler-icon"></span>
             </button>
@@ -324,9 +324,9 @@ const NavbarClient = ({ }) => {
                 !LoadingUser && user ? (
                   <div className="flex items-center gap-4">
                     {/* Notification Icon */}
-                    {isLoggedIn && <NotificationBell iconColor="#ffffff" />}
+                    {isLoggedIn && <NotificationBell iconColor={isHomePage && !isSticky ? "#ffffff" : "#000000"} />}
 
-                    {isLoggedIn && <ChatIcon iconColor="#ffffff" />}
+                    {isLoggedIn && <ChatIcon iconColor={isHomePage && !isSticky ? "#ffffff" : "#000000"} />}
                     <Dropdown show={showDropdown} onToggle={setShowDropdown}>
                       <div style={{ display: "flex", alignItems: "center" }}>
 
