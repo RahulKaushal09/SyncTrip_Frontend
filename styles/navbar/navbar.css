@@ -1,13 +1,18 @@
+navbar-toggler {
+    background: #fff;
+}
+
 .navbar-toggler:focus {
     box-shadow: none !important;
 }
 
 /* 1. The Outer Wrapper */
 .announcement-bar {
-    background: linear-gradient(90deg,
+    /* background: linear-gradient(90deg,
             var(--secondary-1, #1e496d),
             #2a6496,
-            var(--secondary-1, #1e496d));
+            var(--secondary-1, #1e496d)); */
+    background-color: var(--primary-4);
     width: 100%;
     position: fixed;
     top: 0;
@@ -36,9 +41,9 @@
     gap: 16px;
     /* This padding creates the gap between the end of phrase 1 and start of phrase 2 */
     padding-right: 80px;
-    color: white;
+    color: var(--secondary-1);
     font-size: 14px;
-    font-weight: 800;
+    font-weight: 600;
     /* Essential: prevents the blocks from shrinking */
     flex-shrink: 0;
 }
@@ -87,7 +92,7 @@
 /* Sticky navbar styles */
 .navbar.sticky {
 
-    background: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255);
     /* Semi-transparent white background */
     backdrop-filter: blur(10px);
     /* Blur effect */

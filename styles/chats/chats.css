@@ -19,6 +19,17 @@
     box-shadow: var(--shadow-sm);
 }
 
+.systemMessage {
+    color: #000;
+    min-height: 20px;
+    font-size: 12px !important;
+    padding: 4px 6px;
+    border-radius: 8px;
+    box-shadow: var(--shadow-sm);
+    justify-self: center !important;
+    user-select: none;
+}
+
 .mineTimeInfoText{
     color: var(--neutral-3);
 }

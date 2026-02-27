@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { PlacesToVisit } from "@/types";
+import GumletImage from "../common/GumletImage";
 
 
 // Styles (no Tailwind, no inline)
@@ -119,7 +120,7 @@ function ActivityRowForTrip({
   const [isMobile, setIsMobile] = React.useState(window.innerWidth <= 768);
   return (
     <div style={styles.activityCard}>
-      <Image
+      <GumletImage
         src={place.image?.[0] || "/placeholder.jpg"}
         alt={place.title}
         width={140}

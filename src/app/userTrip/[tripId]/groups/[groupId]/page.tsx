@@ -8,6 +8,7 @@ import { GroupApiServices, GroupDetailsResponse } from '@/utils/group/group.api'
 import { useLoader } from '@/components/providers/LoaderContext';
 import Image from 'next/image';
 import Link from 'next/link';
+import GumletImage from '@/components/common/GumletImage';
 // import { CommonServices } from '@/utils';
 
 export default function GroupDetailsPage() {
@@ -71,7 +72,7 @@ export default function GroupDetailsPage() {
       {/* Hero Header Section */}
       <div className="m-animate play m-slide-up relative aspect-[16/10] w-full rounded-[32px] overflow-hidden mb-8 shadow-md border border-neutral-5">
         {group.groupImageUrl ? (
-          <Image src={group.groupImageUrl} alt={group.groupName} fill className="object-cover" priority />
+          <GumletImage containerClassName='h-full' src={group.groupImageUrl} alt={group.groupName} fill className="object-cover" priority />
         ) : (
           <div className="w-full h-full bg-primary-5 flex items-center justify-center">
             <Users size={60} className="text-primary-2" />
@@ -134,7 +135,8 @@ export default function GroupDetailsPage() {
                 style={{ zIndex: MAX_VISIBLE - idx }}
               >
                 {m.userDetails?.profile_picture?.[0] ? (
-                  <Image
+                  <GumletImage
+                    containerClassName='h-full'
                     src={m.userDetails.profile_picture[0]}
                     alt={m.userDetails.name}
                     fill
@@ -174,7 +176,8 @@ export default function GroupDetailsPage() {
                   <div className="flex items-center gap-3 min-w-0">
                     <div className="relative h-11 w-11 rounded-xl overflow-hidden flex-shrink-0 border border-neutral-5 bg-neutral-5">
                       {m.userDetails?.profile_picture && m.userDetails?.profile_picture ? (
-                        <Image
+                        <GumletImage
+                          containerClassName='h-full'
                           src={m.userDetails?.profile_picture[0]}
                           alt={m.userDetails?.name}
                           fill

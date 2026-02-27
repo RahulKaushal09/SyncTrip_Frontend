@@ -12,9 +12,10 @@ type Props = {
   className?: string;
   currentUserId?: string;
   onClickOpen?: () => void; // optional callback
+  iconColor?: string; // optional color prop
 };
 
-export default function ChatIcon({ className = "", currentUserId, onClickOpen }: Props) {
+export default function ChatIcon({ className = "", currentUserId, onClickOpen, iconColor = "currentColor" }: Props) {
   const router = useRouter();
   const mountedRef = useRef(true);
   const [unreadCount, setUnreadCount] = useState<number>(0);
@@ -133,7 +134,7 @@ export default function ChatIcon({ className = "", currentUserId, onClickOpen }:
     >
       {/* Chat bubble SVG */}
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-        <path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10z" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10z" stroke={iconColor} strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
 
       {/* unread badge */}

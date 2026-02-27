@@ -17,6 +17,7 @@ import { toast } from 'react-hot-toast';
 import ThreeLocationSelector from '@/components/createTrip/ThreeLocationSelector';
 import { useLogin } from '@/components/providers/LoginProvider';
 import { tripPrivacyOptions } from '@/constants';
+import ImageUploadModal from '@/components/Profile/ImageUpload';
 
 const TOTAL_STEPS = 4;
 const MAX_TRIP_DAYS = 15;
@@ -93,6 +94,7 @@ function CreateTripContent() {
   const [selectedBudget, setSelectedBudget] = useState<string>('');
   const [selectedPrivacy, setSelectedPrivacy] = useState<string>('');
   const [showPrivacyConfirm, setShowPrivacyConfirm] = useState(false);
+  const [isImageEditModalOpen, setIsImageEditModalOpen] = useState(false);
   // const [pendingStartMatching, setPendingStartMatching] = useState(false);
 
   const { showLoader, hideLoader } = useLoader();
@@ -221,6 +223,11 @@ function CreateTripContent() {
 
       const res = await ApiService.saveTripDetails(payload);
 
+      if (res.requireProfilePic) {
+        setIsImageEditModalOpen(true);
+        return;
+      }
+
       if (!res?.id) {
         toast.error('Failed to create trip');
         return;
@@ -243,7 +250,7 @@ function CreateTripContent() {
       hideLoader();
       toast.error('Something went wrong');
     } finally {
-      // hideLoader();
+      hideLoader();
       setIsPublishing(false);
     }
   }, [
@@ -588,6 +595,13 @@ function CreateTripContent() {
   }
   return (
     <div className="" style={{ minHeight: '80vh', paddingBottom: 20 }}>
+      <ImageUploadModal
+        isOpen={isImageEditModalOpen}
+        onClose={() => setIsImageEditModalOpen(false)}
+        currentImage={null}
+        optionalHeaderText='Upload Profile Photo'
+        optionalSubText='Please upload a profile photo to find the best travel companions for your trip!'
+      />
       <div className="mx-auto bg-white" style={{ maxWidth: '900px' }}>
         {headerEl}
 

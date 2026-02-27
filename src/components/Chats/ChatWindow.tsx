@@ -224,12 +224,16 @@ export default function ChatWindow({ chatId, currentUserId, chat }: Props) {
     const map: Record<string, { name: string; avatar?: string }> = {};
     if (!chat?.users) return map;
 
+    console.log("Building sender map for users:", chat.users);
+
     chat.users.forEach(u => {
       map[u.id] = {
         name: u.name,
         avatar: u.profile_picture?.[0],
       };
     });
+
+    console.log("Sender map:", map);
 
     return map;
   }, [chat]);
@@ -331,29 +335,36 @@ export default function ChatWindow({ chatId, currentUserId, chat }: Props) {
           {messages.map((m) => {
             const mine =
               m.sender === currentUserId;
-            const bubbleCls = mine ? "myMessage" : "otherPersonMessage";
-            const containerCls = mine ? "flex justify-end" : "flex justify-start";
+            const system = m.type === "system";
+            const bubbleCls = mine ? "myMessage" : system ? "systemMessage" : "otherPersonMessage";
+            const containerCls = mine ? "flex justify-end" : system ? "flex justify-center" : "flex justify-start";
             const maxW = "max-w-[80%] md:max-w-[60%] lg:max-w-[50%]";
 
             return (
               <div key={m.id} className={`${containerCls} px-2`}>
                 <div className={`${bubbleCls} ${maxW}`}>
-                  {!mine && chat?.isGroupChat && (
+                  {!mine && !system && chat?.isGroupChat && (
                     <div className="text-xs font-semibold text-secondary-1 mb-1">
-                      {senderMap[m.sender]?.name.split(" ")[0] || "Unknown"}
+                      {senderMap[m.sender]?.name.split(" ")[0] || "Synctrip User"}
                     </div>
                   )}
 
-                  <div className="text-sm whitespace-pre-wrap">{m.content}</div>
+                  <div className="text-sm whitespace-pre-wrap">
+                    {system ? (
+                      <>
+                        <strong className={m.systemAction === "user_joined" ? "text-primary-1" : m.systemAction === "user_left" ? "text-error-1" : "text-gray-500"}>{m.content}</strong> {m.systemAction === "user_joined" ? "joined the group" : m.systemAction === "user_left" ? "left the group" : ""}
+                      </>
+                    ) : m.content}
+                  </div>
                   {/* <div className="text-sm whitespace-pre-wrap">{m.content}</div> */}
-                  <div
+                  {!system && <div
                     className={`text-[10px] mt-1 ${mine ? "mineTimeInfoText" : "otherTimeInfoText"}`}
                   >
                     {new Date(m.createdAt).toLocaleTimeString([], {
                       hour: "2-digit",
                       minute: "2-digit",
                     })}
-                  </div>
+                  </div>}
                 </div>
               </div>
             );

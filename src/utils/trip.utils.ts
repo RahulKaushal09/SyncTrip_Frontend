@@ -100,6 +100,15 @@ class TripServices {
             throw error;
         }
     }
+
+    static async deleteTrip(tripId: string): Promise<void> {
+        try {
+            await apiClient.delete(`/trips/delete/${tripId}`);
+        } catch (error) {
+            console.error("Error deleting trip:", error);
+            throw error;
+        }
+    }
 }
 
 export default TripServices;

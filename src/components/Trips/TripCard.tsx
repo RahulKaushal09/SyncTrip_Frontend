@@ -7,6 +7,7 @@ import '../../../styles/trips/tripCard.css';
 import { Trip } from '@/types';
 import HeartIcon from './../smallComponents/HeartIcon';
 import { CommonServices } from '@/utils/CommonServices.utils';
+import GumletImage from '../common/GumletImage';
 
 interface TripCardProps {
     trip: Trip;
@@ -75,10 +76,10 @@ const TripCard: React.FC<TripCardProps> = ({ trip, activeTab, parentId, parentTy
         <div className="trip-card">
             <div className="tripCard-image">
                 <div style={{ position: 'relative', width: '100%', height: '100%' }} onClick={() => window.location.href = urlToTrip}>
-                    <Image
+                    <GumletImage
                         src={MainImageUrl}
                         alt={`Trips To ${title}`}
-                        layout="fill"
+                        fill
                         objectFit="cover"
                         style={{ cursor: 'pointer' }}
                     />

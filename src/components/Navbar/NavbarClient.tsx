@@ -21,13 +21,14 @@ import NotificationBell from "./NotificationBell";
 import ChatIcon from "./ChatIcon";
 import path from "path";
 import { Rocket, Sparkles } from "lucide-react";
+import GumletImage from "../common/GumletImage";
 
 const NavbarClient = ({ }) => {
   const [LoadingUser, setLoadingUser] = useState(true);
   const { user, isLoggedIn, logout, openLogin } = useLogin(); // ⬅️ use context directly
   const pathname = usePathname();
   const shouldHideNavbar = (pathname.includes('userTrip/') && pathname.includes('/planner')) || (pathname.includes('userTrip/') && pathname.includes('/matching')) || pathname.includes('/chats');
-
+  const isHomePage = pathname === '/';
 
   // const cookie = Cookies.get('userInfo');
   // const [user, setUser] = useState<User | null>(() => {
@@ -192,9 +193,11 @@ const NavbarClient = ({ }) => {
         </Link>
         {ismobile ? (
           <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
-            {isLoggedIn && <NotificationBell />}
-            {isLoggedIn && <ChatIcon />}
-            <button className="navbar-toggler" onClick={() => setMobileNavOpen(!mobileNavOpen)}>
+            {isLoggedIn && <NotificationBell iconColor={isHomePage && !isSticky ? "#ffffff" : "#000000"} />}
+            {isLoggedIn && <ChatIcon iconColor={isHomePage && !isSticky ? "#ffffff" : "#000000"} />}
+            <button style={{
+              background: !isSticky && isHomePage ? "var(--primary-4)" : ""
+            }} className="navbar-toggler" onClick={() => setMobileNavOpen(!mobileNavOpen)}>
               <span className="navbar-toggler-icon"></span>
             </button>
           </div>
@@ -221,7 +224,7 @@ const NavbarClient = ({ }) => {
               // onClick={() => redirectBtnClick(ROUTES.USER_TRIPS)}
               // style={{ cursor: "pointer" }}
               >
-                <span className="nav-link">
+                <span style={{color: (!isSticky && isHomePage) ? "white" : ""}} className="nav-link">
                   My Trips
                 </span>
               </li>
@@ -241,7 +244,7 @@ const NavbarClient = ({ }) => {
             // onClick={() => redirectBtnClick(ROUTES.EXPLORE)}
             // style={{ cursor: "pointer" }}
             >
-              <span className="nav-link">
+              <span style={{color: (!isSticky && isHomePage) ? "white" : ""}} className="nav-link">
                 Explore
               </span>
             </li>
@@ -259,7 +262,7 @@ const NavbarClient = ({ }) => {
             // onClick={() => redirectBtnClick(ROUTES.BLOGS)}
             // style={{ cursor: "pointer" }}
             >
-              <span className="nav-link">
+              <span style={{color: (!isSticky && isHomePage) ? "white" : ""}} className="nav-link">
                 Blogs
               </span>
             </li> */}
@@ -287,7 +290,7 @@ const NavbarClient = ({ }) => {
             <li className="nav-item"
               onClick={() => setFeedbackFormOpen(true)}
               style={{ cursor: "pointer" }}>
-              <span className="nav-link">
+              <span style={{color: (!isSticky && isHomePage) ? "white" : ""}} className="nav-link">
                 {isLoggedIn ? 'Feedback' : 'Contact'}
               </span>
             </li>
@@ -324,9 +327,9 @@ const NavbarClient = ({ }) => {
                 !LoadingUser && user ? (
                   <div className="flex items-center gap-4">
                     {/* Notification Icon */}
-                    {isLoggedIn && <NotificationBell />}
+                    {isLoggedIn && <NotificationBell iconColor={isHomePage && !isSticky ? "#ffffff" : "#000000"} />}
 
-                    {isLoggedIn && <ChatIcon />}
+                    {isLoggedIn && <ChatIcon iconColor={isHomePage && !isSticky ? "#ffffff" : "#000000"} />}
                     <Dropdown show={showDropdown} onToggle={setShowDropdown}>
                       <div style={{ display: "flex", alignItems: "center" }}>
 
@@ -337,11 +340,11 @@ const NavbarClient = ({ }) => {
                           boxShadow: "none",
                           display: "flex",
                           alignItems: "center",
-                          color: "black",
+                          color: (!isSticky && isHomePage) ? "white" : "black",
                           gap: "10px"
                         }}>
                           {user.profile_picture?.[0] ? (
-                            <Image
+                            <GumletImage
                               src={user.profile_picture[0]}
                               alt="Profile"
                               width={40}
@@ -379,7 +382,7 @@ const NavbarClient = ({ }) => {
                               }
                             </div>
                           )}
-                          <span>{user.name}</span>
+                          <span style={{color: (!isSticky && isHomePage) ? "white" : ""}}>{user.name}</span>
                         </Dropdown.Toggle>
                         <Dropdown.Menu align="end">
                           <Dropdown.Item as={Link} href={`/user/${user.id}`}>Profile</Dropdown.Item>
@@ -432,7 +435,7 @@ const NavbarClient = ({ }) => {
                 style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
               >
                 {user.profile_picture?.[0] ? (
-                  <Image
+                  <GumletImage
                     src={user.profile_picture[0]}
                     alt="Profile"
                     width={40}

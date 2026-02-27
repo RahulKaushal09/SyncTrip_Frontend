@@ -109,6 +109,32 @@ export class UserApiService {
             };
         }
     }
+
+
+    static UpdateProfileImageOfUser = async (file: File) => {
+        try {
+            const formData = new FormData();
+            formData.append('profilePhoto', file);
+            debugger;
+            const response = await UserApiService.updateProfilePhoto(file);
+    
+            const newImageUrl = response.url;
+    
+            if (newImageUrl) {
+                // toast.success("Profile picture updated!");
+                return {
+                    success: true,
+                    url: newImageUrl
+                }
+            }
+        } catch (error: unknown) {
+            // Check if the backend sent a specific error message
+            const errorMessage = (error as apiErrorType)?.message || "Failed to upload image";
+            console.error("Upload Error:", error);
+            // toast.error(errorMessage);
+        }
+    };
+    
 }
 
 

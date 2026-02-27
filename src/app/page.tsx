@@ -18,6 +18,7 @@ import ChoiceSection from "@/components/Home_new/ChoiceSection";
 // import { usePathname } from "next/navigation";
 // import DownloadPopup from "@/components/popups/DownloadAppPopup";
 import HomeWrapper from "@/components/Home_new/HomeWrapper";
+<<<<<<< HEAD
 import dynamic from "next/dynamic";
 
 const Testimonials = dynamic(() =>
@@ -63,14 +64,18 @@ const SoftLoginTrigger = dynamic(() =>
 //     canonical: 'https://synctrip.in',
 //   },
 // };
+=======
+import HomeHeroSectionNew from "@/components/Home_new/NewHome";
+
+>>>>>>> bhavishya
 export const metadata: Metadata = {
-  title: 'SyncTrip | Create Trips & Find Verified Travel Buddies in India',
-  description: 'The first social travel platform where YOU lead. Create a trip, find 1-on-1 travel buddies, or join traveler groups. Connect safely with verified explorers and design your own adventure.',
-  keywords: 'solo travel groups, travel for solo travelers, solo trips India, solo trips for women, travel groups for solo travelers, group travel India, travel planning, travel communities, SyncTrip, create travel groups India, find a travel buddy, solo trip planner, travel social network, join travel community, verified traveler profiles, group trip coordination',
+  title: 'SyncTrip – Travel Planning & Solo Travel Groups in India',
+  description: 'SyncTrip helps solo travelers, friends, and groups plan trips, find travel groups, and explore India together. Create trips, connect with travelers, and travel your way.',
+  keywords: 'solo travel groups, travel for solo travelers, solo trips India, solo trips for women, travel groups for solo travelers, group travel India, travel planning, travel communities, SyncTrip',
   authors: [{ name: 'SyncTrip' }],
   robots: 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1',
   openGraph: {
-    title: 'SyncTrip | Create Trips & Find Verified Travel Buddies in India',
+    title: 'SyncTrip – Travel Planning & Solo Travel Groups in India',
     description: 'Discover destinations, plan trips, and connect with fellow travelers. Start your journey with SyncTrip today!',
     type: 'website',
     url: 'https://synctrip.in',
@@ -89,7 +94,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     site: '@synctrip',
     creator: '@synctrip',
-    title: 'SyncTrip | Create Trips & Find Verified Travel Buddies in India',
+    title: 'SyncTrip – Travel Planning & Solo Travel Groups in India',
     description: 'Find trips, destinations, itineraries, and fellow travelers with SyncTrip.',
     images: ['https://synctrip.in/logo_main_withoutBG.png'],
   },
@@ -97,6 +102,40 @@ export const metadata: Metadata = {
     canonical: 'https://synctrip.in',
   },
 };
+// export const metadata: Metadata = {
+//   title: 'SyncTrip | Create Trips & Find Verified Travel Buddies in India',
+//   description: 'The first social travel platform where YOU lead. Create a trip, find 1-on-1 travel buddies, or join traveler groups. Connect safely with verified explorers and design your own adventure.',
+//   keywords: 'solo travel groups, travel for solo travelers, solo trips India, solo trips for women, travel groups for solo travelers, group travel India, travel planning, travel communities, SyncTrip, create travel groups India, find a travel buddy, solo trip planner, travel social network, join travel community, verified traveler profiles, group trip coordination',
+//   authors: [{ name: 'SyncTrip' }],
+//   robots: 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1',
+//   openGraph: {
+//     title: 'SyncTrip | Create Trips & Find Verified Travel Buddies in India',
+//     description: 'Discover destinations, plan trips, and connect with fellow travelers. Start your journey with SyncTrip today!',
+//     type: 'website',
+//     url: 'https://synctrip.in',
+//     siteName: 'SyncTrip',
+//     locale: 'en_IN',
+//     images: [
+//       {
+//         url: 'https://synctrip.in/logo_main_withoutBG.png',
+//         width: 1200,
+//         height: 630,
+//         alt: 'SyncTrip Home Page',
+//       },
+//     ],
+//   },
+//   twitter: {
+//     card: 'summary_large_image',
+//     site: '@synctrip',
+//     creator: '@synctrip',
+//     title: 'SyncTrip | Create Trips & Find Verified Travel Buddies in India',
+//     description: 'Find trips, destinations, itineraries, and fellow travelers with SyncTrip.',
+//     images: ['https://synctrip.in/logo_main_withoutBG.png'],
+//   },
+//   alternates: {
+//     canonical: 'https://synctrip.in',
+//   },
+// };
 export default async function Home() {
   const data = await BlogsApiServices.fetchAllBlogs();
   const limitedData = data.slice(0, 8);
@@ -170,9 +209,10 @@ export default async function Home() {
         }}
       />
       {/* <DownloadPopup /> */}
-      <HomeWrapper version="v2" />
+      {/* <HomeWrapper version="v2" /> */}
+      <HomeHeroSectionNew />
       <ChoiceSection />
-      <HomeWrapper version="v1" />
+      {/* <HomeWrapper version="v1" /> */}
       <FeaturesSection />
       <ActiveDestinations />
       {/* <ExploreNearbySection /> */}

@@ -89,7 +89,7 @@ const styles: { [key: string]: React.CSSProperties } = {
         width: "40px",
         height: "40px",
         border: "3px solid #f3f4f6",
-        borderTop: "3px solid #00bcd4",
+        borderTop: "3px solid #3BBEF5",
         borderRadius: "50%",
         animation: "spin 1s linear infinite",
         marginBottom: "24px",

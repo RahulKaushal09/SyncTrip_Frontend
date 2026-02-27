@@ -13,6 +13,7 @@ import toast from 'react-hot-toast'
 import NotificationPermissionPrompt from "@/components/popups/NotificationPermissionPrompt"
 import GroupTripOnMatchingCard from '../Cards/GroupTripOnMatchingCard'
 import PrivateTripCard from '../Cards/PrivateTripCard'
+import GumletImage from '../common/GumletImage'
 
 export type Candidate = {
     id: string
@@ -678,7 +679,7 @@ export default function MatchingPage() {
                                 {/* NEXT CARD PREVIEW */}
                                 {profiles[index + 1] && (
                                     <div className="next-card" aria-hidden>
-                                        <img src={profiles[index + 1].userSnapshot.profile_picture?.[0]} alt={profiles[index + 1].userSnapshot.name} />
+                                        <GumletImage src={profiles[index + 1].userSnapshot.profile_picture?.[0]} alt={profiles[index + 1].userSnapshot.name} />
                                     </div>
                                 )}
 
@@ -776,10 +777,12 @@ export default function MatchingPage() {
                                                 {current.userSnapshot.profile_picture
                                                     .filter((url: string) => url.includes('synctrip.in'))
                                                     .map((url: string, i: number) => (
-                                                        <img
+                                                        <GumletImage
                                                             key={i}
                                                             src={url}
                                                             alt={`${current.userSnapshot.name}'s photo ${i + 1}`}
+                                                            height={100}
+                                                            width={100}
                                                             style={{
                                                                 width: '100px',
                                                                 height: '100px',
@@ -791,9 +794,11 @@ export default function MatchingPage() {
                                                         />
                                                     ))}
                                                 {current.userSnapshot.profile_picture.filter((url: string) => url.includes('synctrip.in')).length === 0 && (
-                                                    <img
+                                                    <GumletImage
                                                         src={current.userSnapshot?.profile_picture?.[0]}
                                                         alt={current.userSnapshot.name}
+                                                        height={100}
+                                                        width={100}
                                                         style={{
                                                             width: '100px',
                                                             height: '100px',

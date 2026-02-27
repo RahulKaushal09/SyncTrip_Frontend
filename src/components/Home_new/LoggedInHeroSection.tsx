@@ -95,7 +95,6 @@ const LoggedInHeroSection: React.FC = () => {
     router.replace("/#swipedemo");
   };
 
-
   return (
     <section className="homeHeroSection">
       <div className="heroOverlay bg-gradient-to-br from-[#f2faff] via-[#e3f5ff] to-[#b8e8ff]">

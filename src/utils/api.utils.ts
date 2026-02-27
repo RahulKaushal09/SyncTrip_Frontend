@@ -432,9 +432,17 @@ export class ApiService {
   static async saveTripDetails(tripDetails: UserTrip) {
     try {
       const res = await apiClient.post(`/app/createUserTripWithDetails`, tripDetails);
-      if (res.status == 409) {
+      console.log('Trip details saved successfully:', res);
+      if (res.status === 409) {
         toast.success("You Already have a trip planned for this location!");
       }
+
+      if (res.status === 422) {
+        return {
+          requireProfilePic: true
+        }
+      }
+
       return res.data.trip;
     }
     catch (error) {

@@ -235,29 +235,43 @@ export default function UserProfilePage() {
     }
   };
 
-  const onUpdateProfileImage = async (file: File) => {
+  const onUpdateProfileImage = async (file: File) => {  
     try {
-      const formData = new FormData();
-      formData.append('profilePhoto', file);
-
-      const response = await UserApiService.updateProfilePhoto(file);
-
-      // console.log("Upload res: ", response);
-
-      // The backend now returns { success: true, url: "..." }
-      const newImageUrl = response.url;
-
-      if (newImageUrl) {
-        updateUserProfilePicture(newImageUrl);
+      const res = await UserApiService.UpdateProfileImageOfUser(file);
+      if (res?.success && res.url) {
+        updateUserProfilePicture(res.url);
         toast.success("Profile picture updated!");
       }
     } catch (error: unknown) {
-      // Check if the backend sent a specific error message
       const errorMessage = (error as apiErrorType)?.message || "Failed to upload image";
       console.error("Upload Error:", error);
       toast.error(errorMessage);
     }
   };
+
+  // const onUpdateProfileImage = async (file: File) => {
+  //   try {
+  //     const formData = new FormData();
+  //     formData.append('profilePhoto', file);
+
+  //     const response = await UserApiService.updateProfilePhoto(file);
+
+  //     // console.log("Upload res: ", response);
+
+  //     // The backend now returns { success: true, url: "..." }
+  //     const newImageUrl = response.url;
+
+  //     if (newImageUrl) {
+  //       updateUserProfilePicture(newImageUrl);
+  //       toast.success("Profile picture updated!");
+  //     }
+  //   } catch (error: unknown) {
+  //     // Check if the backend sent a specific error message
+  //     const errorMessage = (error as apiErrorType)?.message || "Failed to upload image";
+  //     console.error("Upload Error:", error);
+  //     toast.error(errorMessage);
+  //   }
+  // };
 
   if (isLoading) {
     return (

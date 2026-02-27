@@ -25,6 +25,8 @@ export const TripPreferences = [
   "Group Tours",
 ];
 
+export const UserPreferences = ['Adventure', 'Relaxation', 'Cultural', 'Food', 'Nature', 'City', 'Beach', 'Mountains', 'Desert', 'Forest', 'Backpacking', 'Pilgrimage', 'Road Trips', 'Cruise'];
+
 export const CommonLanguages = [
   "English", "Hindi", "Punjabi", "Spanish", "French", "German",
   "Japanese", "Korean", "Mandarin", "Arabic", "Russian", "Portuguese",

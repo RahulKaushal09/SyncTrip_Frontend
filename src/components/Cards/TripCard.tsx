@@ -2,8 +2,9 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
-import { Sun, Pencil, Clock, MessageCircle, Heart, Users2, User2 } from "lucide-react";
+import { Sun, Pencil, Clock, MessageCircle, Heart, Users2, User2, Trash } from "lucide-react";
 import { UserTrip } from "@/types";
+import GumletImage from "../common/GumletImage";
 
 type Props = {
   trip: UserTrip;
@@ -11,6 +12,7 @@ type Props = {
   onPressChats?: () => void;
   onPressMatch?: () => void;
   onPressEdit?: () => void;
+  onPressDelete?: () => void;
 };
 
 const formatRange = (start?: string, end?: string) => {
@@ -28,7 +30,7 @@ const formatRange = (start?: string, end?: string) => {
   }
 };
 
-const TripCard: React.FC<Props> = ({ trip, onPressCard, onPressChats, onPressMatch, onPressEdit }) => {
+const TripCard: React.FC<Props> = ({ trip, onPressCard, onPressChats, onPressMatch, onPressEdit, onPressDelete }) => {
   const router = useRouter();
   const imageUrl = trip.image || "/images/placeholder-trip.jpg"; // replace with real placeholder path
   console.log("TripCard render:", trip);
@@ -44,16 +46,21 @@ const TripCard: React.FC<Props> = ({ trip, onPressCard, onPressChats, onPressMat
         {trip.groupContext?.isInGroup ? (
           <div style={cardStyles.chipbox}>
             <Users2 size={16} color="var(--primary-1)" />
-            <p style={{marginBottom:0}}>In a group</p>
+            <p style={{ marginBottom: 0 }}>In a group</p>
           </div>
         ) : (
           <div style={cardStyles.chipbox}>
             <User2 size={16} color="var(--primary-1)" />
-            <p style={{marginBottom:0}}>Solo trip</p>
+            <p style={{ marginBottom: 0 }}>Solo trip</p>
           </div>
 
         )}
-        <img src={imageUrl} alt={trip.locationName || "trip image"} style={cardStyles.image} loading="lazy" />
+        <GumletImage
+          src={imageUrl}
+          alt={trip.locationName || "trip image"}
+          containerStyle={cardStyles.image} // Applied to the wrapper div!
+          loading="lazy"
+        />
       </div>
 
       <div style={cardStyles.content}>
@@ -62,13 +69,15 @@ const TripCard: React.FC<Props> = ({ trip, onPressCard, onPressChats, onPressMat
 
           </div>
           <h3 style={cardStyles.title}>{trip.locationName}</h3>
-          <button
-            onClick={(e) => { e.stopPropagation(); onPressEdit?.(); }}
-            aria-label="Edit trip"
-            style={cardStyles.iconButton}
-          >
-            <Pencil size={18} color="var(--primary-1)" />
-          </button>
+          <div style={{ display: "flex", gap: "4px" }}>
+            <button
+              onClick={(e) => { e.stopPropagation(); onPressEdit?.(); }}
+              aria-label="Edit trip"
+              style={cardStyles.iconButton}
+            >
+              <Pencil size={18} color="var(--primary-1)" />
+            </button>
+          </div>
         </div>
 
         <div style={cardStyles.dates}>{formatRange(trip.startDate, trip.endDate)}</div>
@@ -159,6 +168,7 @@ const cardStyles: { [k: string]: React.CSSProperties } = {
     borderRadius: 999,
     color: "var(--primary-1)",
     fontWeight: 600,
+    zIndex: 1,
   },
   chipboxMember: {
     position: "absolute",

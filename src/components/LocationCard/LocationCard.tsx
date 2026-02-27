@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { typeOfLocationCardEnum } from '@/constants';
 import { CommonServices } from '@/utils';
 import { useLoader } from '@/components/providers/LoaderContext';
+import GumletImage from '../common/GumletImage';
 
 
 interface LocationCardProps {
@@ -147,7 +148,7 @@ const LocationCard: React.FC<LocationCardProps> = ({
                     {images && images.length > 0 ? (
                         images.map((image, index) => (
                             <Carousel.Item key={index} style={{ cursor: 'pointer' }}>
-                                <Image
+                                <GumletImage
                                     className="d-block"
                                     src={decodeURIComponent(image)}
                                     {...(shouldUseFill ? {

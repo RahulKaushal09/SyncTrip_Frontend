@@ -23,174 +23,174 @@ export const viewport = {
 };
 
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-    const { slug } = await params;
-    let [uuid] = slug.split("_");
-    uuid = mapPreviousIdsWithNew(uuid);
+// export async function generateMetadata({ params }: Props): Promise<Metadata> {
+//     const { slug } = await params;
+//     let [uuid] = slug.split("_");
+//     uuid = mapPreviousIdsWithNew(uuid);
 
-    const location = await ApiService.fetchLocationByIdServer(uuid);
-    if (!location) return {};
-
-    const seo = location.seo || {};
-
-    const destination = location.title || "Destination";
-    const placesCount = location.placesToVisit?.length ?? 10;
-    const hotelsCount = location.hotels?.length ?? 5;
-    const country = location.country ?? "India";
-
-    const canonicalSlug = CommonServices.generateLocationSlug(
-        uuid, destination, String(placesCount), country
-    );
-    const canonicalURL = `https://synctrip.in/location/${canonicalSlug}`;
-
-    // Dynamic OG Image
-    const ogImage =
-        location.images?.[0] ??
-        "https://via.placeholder.com/1200x630?text=SyncTrip";
-
-    // Inside generateMetadata function in LocationPage.tsx
-
-    /** * STRATEGIC FALLBACKS 
-     * Targets high-growth keywords: "{Location} Solo Travel" and "Verified Travel Buddy"
-     */
-    const title =
-        seo.title ??
-        `${destination} Solo Travel Groups & Verified Buddies | SyncTrip`;
-
-    const description =
-        seo.metaDescription ??
-        `Join the ${destination} solo traveler community. Host your own trip to ${destination}, find verified travel buddies, or join active groups heading to 'top attractions'. Plan DIY, share costs, and travel safely. ${placesCount}+ attractions, ${hotelsCount}+ hotels and travel tips.`;
-
-    const keywords =
-        seo.keywords?.length
-            ? seo.keywords.join(", ")
-            : [
-                `${destination} solo travel groups`,
-                `find travel buddy in ${destination}`,
-                `verified travel companions ${destination}`,
-                `solo travel tips for ${destination}`,
-                `host a trip to ${destination}`,
-                `SyncTrip ${destination} community`,
-            ].join(", ");
-
-    // OG + Twitter use dynamic image + dynamic URL
-    return {
-        title,
-        description,
-        keywords,
-
-        alternates: { canonical: canonicalURL },
-
-        openGraph: {
-            title: seo.og?.title ?? title,
-            description: seo.og?.description ?? description,
-            url: canonicalURL,
-            type: "website",
-            siteName: "SyncTrip",
-            images: [{ url: ogImage, width: 1200, height: 630 }]
-        },
-
-        twitter: {
-            card: "summary_large_image",
-            title: seo.twitter?.title ?? title,
-            description: seo.twitter?.description ?? description,
-            images: [ogImage],
-            site: "@synctrip_in",
-            creator: "@synctrip_in"
-        },
-
-        robots: {
-            index: true,
-            follow: true,
-            "max-image-preview": "large"
-        }
-    };
-}
-
-
-// export async function generateMetadata(
-//     { params }: Props
-// ): Promise<Metadata> {
-//     const { slug } = await params; // Await params
-//     let [uuid] = slug.split('_');
-//     if (uuid) {
-//         uuid = mapPreviousIdsWithNew(uuid);
-//     }
-//     // 2. Fetch dynamic data.
 //     const location = await ApiService.fetchLocationByIdServer(uuid);
 //     if (!location) return {};
 
-//     // 3. Derive dynamic counts.
+//     const seo = location.seo || {};
+
+//     const destination = location.title || "Destination";
 //     const placesCount = location.placesToVisit?.length ?? 10;
 //     const hotelsCount = location.hotels?.length ?? 5;
-//     const country = location.country ?? 'India';
-//     const destination = location.title ?? 'Destination';
+//     const country = location.country ?? "India";
 
-//     // 4. Generate reusable strings.
-//     const title = `${destination} Travel Guide: Top ${placesCount} Things to Do & Plan Your Trip with SyncTrip`;
-//     const description =
-//         `Explore ${destination} with SyncTrip! Discover ${placesCount}+ must-see attractions, ${hotelsCount}+ top hotels, and expert tips for your perfect ${destination} adventure. Book now!`;
 //     const canonicalSlug = CommonServices.generateLocationSlug(
 //         uuid, destination, String(placesCount), country
 //     );
 //     const canonicalURL = `https://synctrip.in/location/${canonicalSlug}`;
-//     const ogImage =
-//         location.images?.[0] ?? 'https://via.placeholder.com/1200x630?text=SyncTrip+Destination';
 
+//     // Dynamic OG Image
+//     const ogImage =
+//         location.images?.[0] ??
+//         "https://via.placeholder.com/1200x630?text=SyncTrip";
+
+//     // Inside generateMetadata function in LocationPage.tsx
+
+//     /** * STRATEGIC FALLBACKS 
+//      * Targets high-growth keywords: "{Location} Solo Travel" and "Verified Travel Buddy"
+//      */
+//     const title =
+//         seo.title ??
+//         `${destination} Solo Travel Groups & Verified Buddies | SyncTrip`;
+
+//     const description =
+//         seo.metaDescription ??
+//         `Join the ${destination} solo traveler community. Host your own trip to ${destination}, find verified travel buddies, or join active groups heading to 'top attractions'. Plan DIY, share costs, and travel safely. ${placesCount}+ attractions, ${hotelsCount}+ hotels and travel tips.`;
+
+//     const keywords =
+//         seo.keywords?.length
+//             ? seo.keywords.join(", ")
+//             : [
+//                 `${destination} solo travel groups`,
+//                 `find travel buddy in ${destination}`,
+//                 `verified travel companions ${destination}`,
+//                 `solo travel tips for ${destination}`,
+//                 `host a trip to ${destination}`,
+//                 `SyncTrip ${destination} community`,
+//             ].join(", ");
+
+//     // OG + Twitter use dynamic image + dynamic URL
 //     return {
-//         title, // ≤60 chars
-//         description, // 120-155 chars
-//         keywords: [
-//             `${destination} travel guide`,
-//             `${destination} trip planner`,
-//             `things to do in ${destination}`,
-//             `${destination} attractions`,
-//             `best hotels ${destination}`,
-//             `${destination} itinerary`,
-//             `${destination} tours`,
-//             `group trips ${destination}`,
-//             `${destination} vacation`,
-//             `SyncTrip ${destination}`,
-//         ].join(", "),
+//         title,
+//         description,
+//         keywords,
 
 //         alternates: { canonical: canonicalURL },
 
 //         openGraph: {
-//             title,
-//             description,
+//             title: seo.og?.title ?? title,
+//             description: seo.og?.description ?? description,
 //             url: canonicalURL,
-//             siteName: 'SyncTrip',
-//             locale: 'en_IN',
-//             type: 'website',
-//             images: [
-//                 {
-//                     url: ogImage,
-//                     width: 1200,
-//                     height: 630,
-//                     alt: `${destination} – Travel Guide`,
-//                 },
-//             ],
+//             type: "website",
+//             siteName: "SyncTrip",
+//             images: [{ url: ogImage, width: 1200, height: 630 }]
 //         },
 
 //         twitter: {
-//             card: 'summary_large_image',
-//             title,
-//             description,
+//             card: "summary_large_image",
+//             title: seo.twitter?.title ?? title,
+//             description: seo.twitter?.description ?? description,
 //             images: [ogImage],
-//             site: '@synctrip_in',
-//             creator: '@synctrip_in',
+//             site: "@synctrip_in",
+//             creator: "@synctrip_in"
 //         },
 
 //         robots: {
 //             index: true,
 //             follow: true,
-//             'max-snippet': -1,
-//             'max-image-preview': 'large',
-//             'max-video-preview': -1,
-//         },
-
+//             "max-image-preview": "large"
+//         }
 //     };
 // }
+
+
+export async function generateMetadata(
+    { params }: Props
+): Promise<Metadata> {
+    const { slug } = await params; // Await params
+    let [uuid] = slug.split('_');
+    if (uuid) {
+        uuid = mapPreviousIdsWithNew(uuid);
+    }
+    // 2. Fetch dynamic data.
+    const location = await ApiService.fetchLocationByIdServer(uuid);
+    if (!location) return {};
+
+    // 3. Derive dynamic counts.
+    const placesCount = location.placesToVisit?.length ?? 10;
+    const hotelsCount = location.hotels?.length ?? 5;
+    const country = location.country ?? 'India';
+    const destination = location.title ?? 'Destination';
+
+    // 4. Generate reusable strings.
+    const title = `${destination} Travel Guide: Top ${placesCount} Things to Do & Plan Your Trip with SyncTrip`;
+    const description =
+        `Explore ${destination} with SyncTrip! Discover ${placesCount}+ must-see attractions, ${hotelsCount}+ top hotels, and expert tips for your perfect ${destination} adventure. Book now!`;
+    const canonicalSlug = CommonServices.generateLocationSlug(
+        uuid, destination, String(placesCount), country
+    );
+    const canonicalURL = `https://synctrip.in/location/${canonicalSlug}`;
+    const ogImage =
+        location.images?.[0] ?? 'https://via.placeholder.com/1200x630?text=SyncTrip+Destination';
+
+    return {
+        title, // ≤60 chars
+        description, // 120-155 chars
+        keywords: [
+            `${destination} travel guide`,
+            `${destination} trip planner`,
+            `things to do in ${destination}`,
+            `${destination} attractions`,
+            `best hotels ${destination}`,
+            `${destination} itinerary`,
+            `${destination} tours`,
+            `group trips ${destination}`,
+            `${destination} vacation`,
+            `SyncTrip ${destination}`,
+        ].join(", "),
+
+        alternates: { canonical: canonicalURL },
+
+        openGraph: {
+            title,
+            description,
+            url: canonicalURL,
+            siteName: 'SyncTrip',
+            locale: 'en_IN',
+            type: 'website',
+            images: [
+                {
+                    url: ogImage,
+                    width: 1200,
+                    height: 630,
+                    alt: `${destination} – Travel Guide`,
+                },
+            ],
+        },
+
+        twitter: {
+            card: 'summary_large_image',
+            title,
+            description,
+            images: [ogImage],
+            site: '@synctrip_in',
+            creator: '@synctrip_in',
+        },
+
+        robots: {
+            index: true,
+            follow: true,
+            'max-snippet': -1,
+            'max-image-preview': 'large',
+            'max-video-preview': -1,
+        },
+
+    };
+}
 
 
 export default async function LocationPage({ params }: Props) {

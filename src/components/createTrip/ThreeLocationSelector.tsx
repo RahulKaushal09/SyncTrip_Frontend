@@ -41,7 +41,7 @@ export default  function ThreeLocationSelector({
                     const { data, timestamp } = JSON.parse(cached);
 
                     // 2) Check expiry
-                    if (Date.now() - timestamp < CACHE_TTL) {
+                    if (data.length != 0 && Date.now() - timestamp < CACHE_TTL) {
                         setTopLocations(data);
                         return; // use cached data
                     }

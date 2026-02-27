@@ -1,8 +1,8 @@
 "use client";
-import React, { CSSProperties, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { X, Check, ChevronDown, Plus } from 'lucide-react';
 import { ExtendedUser } from '@/types';
-import { TravelGoals as TRAVEL_GOALS, CommonLanguages as COMMON_LANGUAGES, TripPreferences as TRIP_PREFERENCES, ROUTES } from '@/constants';
+import { TravelGoals as TRAVEL_GOALS, CommonLanguages as COMMON_LANGUAGES, UserPreferences } from '@/constants';
 
 export interface MultiSelectProps {
     label: string;
@@ -241,7 +241,7 @@ export default function EditProfileModal({
                     <div className="md:col-span-2">
                         <MultiSelect
                             label="My Vibe / Persona"
-                            options={TRIP_PREFERENCES}
+                            options={UserPreferences}
                             value={formData.persona || []}
                             onChange={(newVal) => setFormData({ ...formData, persona: newVal })}
                             placeholder="Select what defines your travel style..."

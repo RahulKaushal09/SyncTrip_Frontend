@@ -12,86 +12,86 @@ import "../../../styles/Blogs/blogPage.css";
 import BlogsPageClient from "@/components/Blogs/BlogsPageClient";
 import { BlogPost } from "@/types";
 import { BlogsApiServices } from "@/utils";
-// export const generateMetadata = async (): Promise<Metadata> => {
-//   return {
-//     title: "Explore Travel Blogs | SyncTrip",
-//     description: "Discover inspiring travel stories, guides, and experiences from real travelers. Explore blogs to plan your next adventure.",
-//     keywords: [
-//       "travel blogs",
-//       "destination guides",
-//       "SyncTrip blogs",
-//       "travel stories",
-//       "travel experiences",
-//     ].join(", "),
-//     alternates: {
-//       canonical: "https://synctrip.in/blogs",
-//     },
-//     openGraph: {
-//       title: "Explore Travel Blogs | SyncTrip",
-//       description: "Discover inspiring travel stories, guides, and experiences from real travelers.",
-//       url: "https://synctrip.in/blogs",
-//       type: "website",
-//       images: [
-//         {
-//           url: "https://synctrip.in/logo_main.jpg", // ✅ Replace with your OG image
-//           alt: "Explore Travel Blogs",
-//         },
-//       ],
-//     },
-//     twitter: {
-//       card: "summary_large_image",
-//       title: "Explore Travel Blogs | SyncTrip",
-//       description: "Read blogs and plan your next trip with SyncTrip.",
-//       images: ["https://synctrip.in/logo_main.jpg"], // ✅ Replace with your image
-//     },
-//   };
-// };
 export const generateMetadata = async (): Promise<Metadata> => {
   return {
-    /* TARGET: Breakout keyword "Solo Travel Tips" (+9,900% growth) 
-       and "Verified Travel Buddy" 
-    */
-    title: "Solo Travel Tips & DIY Trip Planning Guides | SyncTrip Community",
-
-    description: "Master the art of DIY travel. From safety tips for solo female travelers to hosting your own group trips—read verified guides that put you in the driver’s seat.",
-
+    title: "Explore Travel Blogs | SyncTrip",
+    description: "Discover inspiring travel stories, guides, and experiences from real travelers. Explore blogs to plan your next adventure.",
     keywords: [
-      "solo travel tips India",
-      "host your own group trip",
-      "verified travel buddy guide",
-      "how to split travel costs",
-      "safe solo travel for women",
-      "DIY itinerary planning",
-      "SyncTrip explorer blogs",
+      "travel blogs",
+      "destination guides",
+      "SyncTrip blogs",
+      "travel stories",
+      "travel experiences",
     ].join(", "),
-
     alternates: {
       canonical: "https://synctrip.in/blogs",
     },
-
     openGraph: {
-      title: "SyncTrip Blog: Lead Your Own Journey with Verified Tips",
-      description: "Expert advice on finding crews, sharing costs, and planning solo adventures safely. Stop reading, start leading.",
+      title: "Explore Travel Blogs | SyncTrip",
+      description: "Discover inspiring travel stories, guides, and experiences from real travelers.",
       url: "https://synctrip.in/blogs",
       type: "website",
       images: [
         {
-          url: "https://synctrip.in/og-blogs-community.jpg",
-          width: 1200,
-          height: 630,
-          alt: "SyncTrip Solo Traveler Knowledge Hub",
+          url: "https://synctrip.in/logo_main.jpg", // ✅ Replace with your OG image
+          alt: "Explore Travel Blogs",
         },
       ],
     },
-
     twitter: {
       card: "summary_large_image",
-      title: "Master Solo Travel with SyncTrip Guides",
-      description: "Everything you need to host trips and find your tribe. Verified, safe, and traveler-led.",
-      images: ["https://synctrip.in/og-blogs-community.jpg"],
+      title: "Explore Travel Blogs | SyncTrip",
+      description: "Read blogs and plan your next trip with SyncTrip.",
+      images: ["https://synctrip.in/logo_main.jpg"], // ✅ Replace with your image
     },
   };
 };
+// export const generateMetadata = async (): Promise<Metadata> => {
+//   return {
+//     /* TARGET: Breakout keyword "Solo Travel Tips" (+9,900% growth) 
+//        and "Verified Travel Buddy" 
+//     */
+//     title: "Solo Travel Tips & DIY Trip Planning Guides | SyncTrip Community",
+
+//     description: "Master the art of DIY travel. From safety tips for solo female travelers to hosting your own group trips—read verified guides that put you in the driver’s seat.",
+
+//     keywords: [
+//       "solo travel tips India",
+//       "host your own group trip",
+//       "verified travel buddy guide",
+//       "how to split travel costs",
+//       "safe solo travel for women",
+//       "DIY itinerary planning",
+//       "SyncTrip explorer blogs",
+//     ].join(", "),
+
+//     alternates: {
+//       canonical: "https://synctrip.in/blogs",
+//     },
+
+//     openGraph: {
+//       title: "SyncTrip Blog: Lead Your Own Journey with Verified Tips",
+//       description: "Expert advice on finding crews, sharing costs, and planning solo adventures safely. Stop reading, start leading.",
+//       url: "https://synctrip.in/blogs",
+//       type: "website",
+//       images: [
+//         {
+//           url: "https://synctrip.in/og-blogs-community.jpg",
+//           width: 1200,
+//           height: 630,
+//           alt: "SyncTrip Solo Traveler Knowledge Hub",
+//         },
+//       ],
+//     },
+
+//     twitter: {
+//       card: "summary_large_image",
+//       title: "Master Solo Travel with SyncTrip Guides",
+//       description: "Everything you need to host trips and find your tribe. Verified, safe, and traveler-led.",
+//       images: ["https://synctrip.in/og-blogs-community.jpg"],
+//     },
+//   };
+// };
 const Blog = async () => {
   const blogs: BlogPost[] = await BlogsApiServices.fetchAllBlogs();
   return (

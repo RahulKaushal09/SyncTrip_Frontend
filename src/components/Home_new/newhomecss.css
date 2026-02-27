@@ -1,0 +1,368 @@
+.homeHeroSection {
+  position: relative;
+  overflow: hidden;
+  /* Ensure floating images don't spill out */
+  padding-top: 6.5rem;
+  /* pt-32 */
+  padding-bottom: 4rem;
+  /* pb-16 */
+}
+
+/* --- Content Wrapper --- */
+.heroContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 10;
+  /* Ensures text stays above floating images */
+}
+
+/* --- Badge (Pill) --- */
+.heroBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  /* gap-2 */
+
+  background-color: rgb(255, 255, 255);
+  border: 1px solid black;
+  border-radius: 9999px;
+  /* rounded-full */
+
+  padding: 6px 16px;
+  margin-bottom: 0.75rem;
+  /* mb-3 */
+
+  color: var(--secondary-1);
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+
+.heroSparkle {
+  width: 1rem;
+  height: 1rem;
+  color: #3abef5;
+}
+
+.floatingChat2 {
+  position: absolute;
+  top: 20%;
+  left: 8%;
+  z-index: 1;
+  pointer-events: none;
+  animation: bounce 6s ease-in-out infinite;
+  animation-delay: 2s;
+}
+
+.floatingChat1 {
+  position: absolute;
+  bottom: 0;
+  top: 20%;
+  right: 10%;
+  z-index: 1;
+  pointer-events: none;
+  animation: bounce 6s ease-in-out infinite;
+}
+
+/* --- Typography --- */
+.heroTitleMain {
+  font-weight: 900;
+  /* font-black */
+  text-align: center;
+  color: #fff;
+  font-size: 3rem;
+  line-height: 1.2;
+}
+
+.heroTitleSub {
+  font-weight: 900;
+  text-align: center;
+  color: var(--primary-1);
+  font-size: 3rem;
+  line-height: 1.2;
+  margin-top: -1rem;
+  /* -mt-6 */
+}
+
+.heroDescription {
+  color: #fff;
+  margin-top: -0.5rem;
+  text-align: center;
+  line-height: 1.5;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+/* --- Buttons --- */
+.heroActions {
+  display: flex;
+  gap: 1rem;
+  /* gap-4 */
+  margin-top: 2rem;
+  /* mt-8 */
+  align-items: center;
+  justify-content: center;
+}
+
+.floatingImagesWrapper {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  width: 100%;
+  z-index: 1;
+  /* Below content */
+  pointer-events: none;
+  /* Prevent clicks blocking buttons */
+}
+
+/* --- Floating Images Container --- */
+.floatingImagesWrapper {
+  position: absolute;
+  inset: 0;
+  /* occupies the whole section space */
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  /* Clicks go through to buttons */
+  z-index: 1;
+  /* Behind the text */
+  overflow: hidden;
+  /* If images rotate off screen, don't show scrollbar */
+}
+
+.floatingImg {
+  position: absolute;
+  object-fit: contain;
+  z-index: 1;
+  /* Lowest layer */
+  bottom: -20px;
+  /* Default anchor */
+}
+
+/* --- Common Image Styles --- */
+.floatingImg {
+  position: absolute;
+  object-fit: contain;
+}
+
+/* --- Image 1: Right Side (Idhr) --- */
+/* woman */
+.floatingImg1 {
+  width: 280px;
+  /* Desktop size */
+  height: auto;
+  right: 26%;
+  /* Pull it slightly off-screen */
+  bottom: 0%;
+  /* Position from bottom */
+  transform: rotate(-15deg);
+}
+
+/* --- Image 2: Left Side (Udhr) --- */
+.floatingImg2 {
+  width: 450px;
+  height: 416px;
+  /* Desktop size */
+  height: auto;
+  left: -6%;
+  /* Pull slightly off-screen */
+  bottom: 20px;
+  rotate: -10deg;
+}
+
+.floatingImg3 {
+  width: 420px;
+  height: auto;
+  right: 32%;
+  bottom: 5%;
+  z-index: 10;
+  /* Staggered delay for more natural movement */
+}
+
+/* man with map */
+.floatingImg4 {
+  width: 280px;
+  height: auto;
+  left: 13%;
+  bottom: 10%;
+}
+
+/* van */
+.floatingImg5 {
+  width: 240px;
+  height: auto;
+  left: 30%;
+  bottom: 6%;
+}
+
+.floatingImg6 {
+  width: 420px;
+  height: auto;
+  right: -6%;
+  bottom: 6%;
+}
+
+.floatingImg7 {
+  width: 450px;
+  height: auto;
+  right: 4%;
+  bottom: -6%;
+}
+
+/* =========================================
+   MOBILE RESPONSIVENESS (Phone View)
+   ========================================= */
+
+
+@media (max-width: 768px) {
+
+  /* 1. Reduce the massive padding */
+  .homeHeroSection {
+    padding-top: 8rem;
+    padding-bottom: 2rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  /* 2. Shrink the Badge */
+  .heroBadge {
+    font-size: 0.75rem;
+    /* Smaller text */
+    padding: 4px 12px;
+  }
+
+  /* 4. Adjust Description */
+  .heroDescription {
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    /* Give it some breathing room */
+    padding: 0 0.5rem;
+  }
+
+  /* 5. Stack Buttons Vertically
+     On phones, full-width stacked buttons are easier to click */
+  .heroActions {
+    flex-direction: column;
+    width: 80%;
+    gap: 0.75rem;
+  }
+
+  .btn {
+    width: 100%;
+    /* Make buttons span full width */
+    justify-content: center;
+  }
+}
+
+/* =========================================
+   RESPONSIVENESS & MEDIA QUERIES
+   ========================================= */
+
+/* 1. Height Adjustments (For Laptops with short screens) 
+      If the screen is short, push images down so they don't cover text. */
+@media (max-height: 750px) {
+  .homeHeroSection {
+    padding-top: 6rem;
+    padding-bottom: 2rem;
+    min-height: 650px;
+  }
+
+  /* Push images down and scale slightly */
+  .floatingImagesWrapper {
+    bottom: -40px;
+    transform: scale(0.9);
+    transform-origin: bottom center;
+  }
+}
+
+/* 2. Main Responsive Breakpoint (Starts at Small Laptops/Tablets - 1280px) 
+      We hide the side images EARLIER here so they don't crash into the text 
+      as you shrink the screen. */
+@media (max-width: 1350px) {
+
+  /* --- A. Hide Side Elements Immediately --- */
+  .floatingImg4,
+  /* Left Big */
+  .floatingImg7,
+  /* Right Big */
+  .floatingChat1,
+  .floatingChat2 {
+    display: none;
+  }
+
+  .floatingImg5 {
+    left: 18%;
+  }
+
+  .floatingImg1 {
+    right: 18%;
+  }
+
+  .floatingImg {
+    animation: none !important;
+  }
+}
+
+@media (max-width: 1114px) {
+
+  .floatingImg5,
+  .floatingImg1 {
+    display: none;
+  }
+
+  .floatingImg2,
+  .floatingImg6 {
+    bottom: 0;
+  }
+}
+
+@media (max-width: 900px) {
+
+  .floatingImg2,
+  .floatingImg6 {
+    display: none;
+  }
+
+  .floatingImg3 {
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+@media (max-width: 600px) {
+  .floatingImg3 {
+    width: 360px;
+  }
+
+  .heroTitleMain,
+  .heroTitleSub {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .heroContent {
+    padding-top: 60px;
+  }
+
+  .heroDescription {
+    font-size: 0.8rem;
+  }
+
+  .floatingImg3 {
+    bottom: 30px;
+  }
+
+  .heroTitleMain,
+  .heroTitleSub {
+    font-size: 2.1rem;
+  }
+
+  .heroDescription {
+    display: none;
+  }
+}

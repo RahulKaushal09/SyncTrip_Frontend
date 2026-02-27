@@ -6,6 +6,7 @@ import { UserTrip } from '@/types';
 import { CommonServices } from '@/utils';
 import "../Matching/matching.css";
 import { Lock, Globe2 } from 'lucide-react';
+import GumletImage from '../common/GumletImage';
 
 type Props = {
   trip: UserTrip;
@@ -32,7 +33,7 @@ export default function PrivateTripCard({ trip, onMakePublic }: Props) {
         <div className="card group-card">
           
           {/* Background image */}
-          <img src={image} alt={locationName} />
+          <GumletImage src={image} alt={locationName as string} />
 
           {/* Dark overlay */}
           <div

@@ -105,7 +105,7 @@ export default function MoreLocationsUnlocking({ onNotify }: Props) {
           
           <div className="text-center">
              <div className="text-lg font-serif font-semibold text-secondary-1">Next: Shimla</div>
-             <div className="text-sm text-primary-1/70 mt-1 font-medium">Estimated Launch: March 2026</div>
+             <div className="text-sm text-primary-1/70 mt-1 font-medium">Estimated Launch: April 2026</div>
           </div>
         </div>
 

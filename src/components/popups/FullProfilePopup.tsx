@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { ApiService } from '../../utils/api.utils';
 import { User, Location } from '../../types';
 import '../../../styles/popups/FullProfilePopup.css';
-import { CommonLanguages, LocationFields } from '@/constants';
+import { CommonLanguages, LocationFields, UserPreferences } from '@/constants';
 import { DOBSelects } from './DOBSelects';
 import { useLoader } from '../providers/LoaderContext';
 import toast from 'react-hot-toast';
@@ -704,7 +704,7 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
                             <div className="full-profile-section">
                                 <label>How do you like to travel? <span className="required-star">*</span></label>
                                 <div className="bubble-btn-container">
-                                    {['Adventure', 'Relaxation', 'Cultural', 'Food', 'Nature', 'City', 'Beach', 'Mountains', 'Desert', 'Forest', 'Backpacking', 'Pilgrimage', 'Road Trips', 'Cruise'].map((style) => (
+                                    {UserPreferences.map((style) => (
                                         <button key={style} type="button" className={`bubble-btn ${form.travelStyles.includes(style) ? 'selected' : ''}`} onClick={() => handleChange(undefined, 'travelStyles', style)}>
                                             {style}
                                         </button>
