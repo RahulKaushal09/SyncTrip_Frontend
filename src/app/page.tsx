@@ -18,7 +18,6 @@ import ChoiceSection from "@/components/Home_new/ChoiceSection";
 // import { usePathname } from "next/navigation";
 // import DownloadPopup from "@/components/popups/DownloadAppPopup";
 import HomeWrapper from "@/components/Home_new/HomeWrapper";
-<<<<<<< HEAD
 import dynamic from "next/dynamic";
 
 const Testimonials = dynamic(() =>
@@ -64,10 +63,8 @@ const SoftLoginTrigger = dynamic(() =>
 //     canonical: 'https://synctrip.in',
 //   },
 // };
-=======
 import HomeHeroSectionNew from "@/components/Home_new/NewHome";
 
->>>>>>> bhavishya
 export const metadata: Metadata = {
   title: 'SyncTrip – Travel Planning & Solo Travel Groups in India',
   description: 'SyncTrip helps solo travelers, friends, and groups plan trips, find travel groups, and explore India together. Create trips, connect with travelers, and travel your way.',
