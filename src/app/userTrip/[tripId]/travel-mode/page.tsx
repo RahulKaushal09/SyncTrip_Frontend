@@ -25,9 +25,9 @@ export default function TravelModePage() {
         const tripDetailsRes = await TripServices.fetchTripWithGroupDetails(tripId, [userTripFields.ID, userTripFields.PRIVACY, userTripFields.START_DATE, userTripFields.END_DATE, userTripFields.LOCATION_NAME, userTripFields.LOCATION_ID]);
 
         const tripDetails = tripDetailsRes.trip;
-        const groupDetails = tripDetailsRes.groupContext;
+        // const groupDetails = tripDetailsRes.groupContext;
 
-        if (groupDetails) setGroupData(groupDetails);
+        // if (groupDetails) setGroupData(groupDetails);
 
         if (!tripDetails.id) {
           router.replace('/');
@@ -36,9 +36,9 @@ export default function TravelModePage() {
 
         setTripData(tripDetails);
 
-        if (groupDetails.isInGroup) {
-          setIsGroupTrip(true);
-        }
+        // if (groupDetails.isInGroup) {
+        //   setIsGroupTrip(true);
+        // }
 
         if (tripDetails.privacy?.toLowerCase() === tripPrivacyOptions.PRIVATE) {
           router.replace(`/userTrip/${tripId}/private-trip`);
@@ -178,7 +178,7 @@ export default function TravelModePage() {
                 >
                   <div className="flex items-center gap-3">
                     <Group size={18} />
-                    <span className="b2">Explore More Groups</span>
+                    <span className="b2">Explore More Discussions</span>
                   </div>
                   <ChevronRight size={18} className="text-secondary-1" />
                 </button>
@@ -190,52 +190,48 @@ export default function TravelModePage() {
     );
   }
 
-
   return (
-    <div className="paddingTopAndSide !pb-20" >
+    <div className="paddingTopAndSide !pb-20">
 
-      {/* Header Section - Using your m-animate and Serif H1 */}
+      {/* Header Section */}
       <div className="m-animate play m-slide-up text-center mb-12 max-w-[800px] mx-auto">
         <h1 className="h2 text-secondary-1">How would you like to explore?</h1>
       </div>
 
+      {/* Grid updated to perfect 50/50 split (col-span-6 each) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 m-stagger play">
 
-        {/* PRIMARY CHOICE: GROUP TRIPS (Col-span 7) */}
-        <div className="lg:col-span-7 m-animate play m-slide-up">
+        {/* PRIMARY CHOICE: GROUP DISCUSSIONS (Col-span 6) */}
+        <div className="lg:col-span-6 m-animate play m-slide-up">
           <div className="bg-primary-5 border-2 border-primary-1 rounded-3xl p-8 hov-lift h-full flex flex-col relative overflow-hidden">
-            {/* "Recommended" Tag using your secondary color */}
-            <div className="absolute top-0 right-0 bg-secondary-1 text-white px-6 py-2 rounded-bl-2xl b3">
-              RECOMMENDED
-            </div>
-
-            <div className="flex mt-4 items-center gap-4 mb-6">
+            
+            <div className="flex mt-2 items-center gap-4 mb-6">
               <div className="bg-primary-1 p-3 rounded-2xl">
-                <Users className="text-white" size={28} />
+                <MessageSquare className="text-white" size={28} />
               </div>
               <div>
-                <h2 className="h3 text-secondary-1 mb-0">Join or Create a Group</h2>
-                <span className="b3 text-primary-1">Best Value & Social Experience</span>
+                <h2 className="h3 text-secondary-1 mb-0">Group Discussions</h2>
+                <span className="b3 text-primary-1">Connect & Plan Together</span>
               </div>
             </div>
 
             <p className="r2 text-secondary-1 mb-8 leading-relaxed">
-              Don’t travel alone! Connect with verified explorers heading to the same destination.
-              Share the magic, split the costs of transport and stays, and make friends for life.
+              Jump into active conversations with verified explorers heading to the same destination. 
+              Share itineraries, ask questions, and form organic connections before you travel.
             </p>
 
             <ul className="ul-withNoListStyle space-y-4 mb-10">
               <li className="flex items-center gap-3 r2 text-secondary-1">
                 <ShieldCheck size={20} className="text-primary-1" />
-                <span>Identity-verified travel companions</span>
+                <span>Interact with <strong>verified travelers</strong></span>
               </li>
               <li className="flex items-center gap-3 r2 text-secondary-1">
                 <CheckCircle2 size={20} className="text-primary-1" />
-                <span>Save up to <strong>40% on total trip costs</strong></span>
+                <span>Ask questions & get local recommendations</span>
               </li>
               <li className="flex items-center gap-3 r2 text-secondary-1">
                 <Sparkles size={20} className="text-primary-1" />
-                <span>Automated group itinerary syncing</span>
+                <span>Find travel buddies organically</span>
               </li>
             </ul>
 
@@ -243,32 +239,34 @@ export default function TravelModePage() {
               onClick={() => router.push(`/userTrip/${tripId}/groups`)}
               className="btn btn-primary homebtnprimary w-full mt-auto flexbtn h-[60px]"
             >
-              <span className="b1">Explore Group Trips</span>
+              <span className="b1">Join Discussions</span>
               <ArrowRight size={20} />
             </button>
           </div>
         </div>
 
-        {/* SECONDARY CHOICE: SOLO/MATCHING (Col-span 5) */}
-        <div className="lg:col-span-5 m-animate play m-slide-up" style={{ '--i': 1 } as React.CSSProperties}>
-          <div className="bg-white border border-neutral-4 rounded-3xl p-8 h-full flex flex-col hov-lift relative overflow-hidden">
-            <div className="absolute top-0 right-0 bg-neutral-5 text-secondary-1 px-6 py-2 rounded-bl-2xl s2 font-bold uppercase tracking-wider border-l border-b border-neutral-4">
-              Default
+        {/* SECONDARY CHOICE: SOLO ADVENTURE (Col-span 6) */}
+        <div className="lg:col-span-6 m-animate play m-slide-up" style={{ '--i': 1 } as React.CSSProperties}>
+          <div className="bg-white border-2 border-neutral-4 rounded-3xl p-8 h-full flex flex-col hov-lift relative overflow-hidden">
+            
+            <div className="flex mt-2 items-center gap-4 mb-6">
+              <div className="bg-neutral-5 w-fit rounded-2xl p-3 border flex items-center justify-center">
+                <User className="text-neutral-1" size={28} />
+              </div>
+              <div>
+                <h2 className="h3 text-secondary-1 mb-0">Solo Adventure</h2>
+                <span className="b3 text-neutral-1">Plan at your own pace</span>
+              </div>
             </div>
 
-            <div className="bg-neutral-5 w-fit rounded-2xl p-3 border flex items-center justify-center mb-6">
-              <User className="text-neutral-1" size={28} />
-            </div>
-
-            <h2 className="h3 text-secondary-1">Solo Adventure</h2>
             <p className="r2 text-neutral-1 mb-8">
-              Prefer your own pace? You can still find one-on-one travel partners for specific activities.
+              Prefer your own pace? Build your private itinerary from scratch. You can still find one-on-one travel partners for specific activities if you want.
             </p>
 
             <div className="mt-auto space-y-4">
               <button
                 onClick={() => router.push(`/userTrip/${tripId}/matching`)}
-                className="btn btn-secondary w-full flexbtn"
+                className="btn btn-secondary w-full flexbtn !h-[60px]"
               >
                 <Sparkles size={18} />
                 <span className="b2">Find Solo Partners</span>
@@ -285,7 +283,7 @@ export default function TravelModePage() {
               <div className="flex gap-3">
                 <ShieldCheck className="text-secondary-1 shrink-0" size={22} />
                 <p className="text-sm text-secondary-1 leading-snug">
-                  Solo travelers are encouraged to enable &quot; Live Location Sharing &quot; with our community safety net.
+                  Solo travelers are encouraged to enable &quot;Live Location Sharing&quot; with our community safety net.
                 </p>
               </div>
             </div>

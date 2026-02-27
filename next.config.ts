@@ -26,7 +26,7 @@ const nextConfig: NextConfig = {
   },
 
   images: {
-    // unoptimized: true,   // disables Next.js image optimization completely
+    unoptimized: true,   // disables Next.js image optimization completely
     remotePatterns: [
       { protocol: "https", hostname: "lh3.googleusercontent.com", pathname: "/**" },
       { protocol: "https", hostname: "synctrip.in", pathname: "/AllImages/**" },
@@ -44,6 +44,7 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "synctrip-backend.vercel.app", pathname: "/**" },
       { protocol: 'https', hostname: 'images.unsplash.com', pathname: '/**' },
       { protocol: 'https', hostname: 'images.synctrip.in', pathname: '/**' },
+      { protocol: 'https', hostname: 'synctrip.gumlet.io', pathname: '/**' },
     ],
   },
 };

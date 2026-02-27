@@ -28,6 +28,7 @@ import { useRouter } from "next/navigation";
 import { Chat, ChatUser } from "@/types";
 import { useLogin } from "../providers/LoginProvider";
 import { Users } from "lucide-react";
+import GumletImage from "../common/GumletImage";
 
 export default function ChatHeader({
   chat,
@@ -73,9 +74,12 @@ export default function ChatHeader({
           groupAvatars.length > 0 ? (
             <div className="relative w-10 h-10 rounded-full bg-primary-4 overflow-hidden">
               {groupAvatars.map((src, index) => (
-                <img
+                <GumletImage
                   key={index}
                   src={src}
+                  alt="Group Members"
+                  height={20}
+                  width={20}
                   className="absolute w-5 h-5 rounded-full object-cover border-2 border-white"
                   style={{
                     top: index === 0 ? 1 : 14,
@@ -91,8 +95,11 @@ export default function ChatHeader({
             </div>
           )
         ) : (
-          <img
+          <GumletImage
             src={(otherUser as ChatUser)?.profile_picture?.[0] || "/user-placeholder.png"}
+            alt={(otherUser as ChatUser)?.name || "User"}
+            height={40}
+            width={40}
             className="w-10 h-10 rounded-full object-cover"
           />
         )}

@@ -3,7 +3,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 
-import '../../../styles/LocationImageGallery.css'; 
+import '../../../styles/LocationImageGallery.css';
+import GumletImage from '../common/GumletImage';
 
 interface Props {
     locationImages: string[];
@@ -29,10 +30,10 @@ const LocationImageGallery: React.FC<Props> = ({ locationImages, locationName })
         if (!isMobile || !carouselRef.current || isUserInteracting || locationImages.length <= 1) return;
 
         const carousel = carouselRef.current;
-        
+
         const interval = setInterval(() => {
             const width = carousel.offsetWidth; // Width of exactly one image container
-            
+
             // If we are at the last image, snap back to the beginning
             if (carousel.scrollLeft + width >= carousel.scrollWidth - 10) {
                 carousel.scrollTo({ left: 0, behavior: 'smooth' });
@@ -40,7 +41,7 @@ const LocationImageGallery: React.FC<Props> = ({ locationImages, locationName })
                 // Otherwise scroll exactly one image width to the right
                 carousel.scrollBy({ left: width, behavior: 'smooth' });
             }
-        }, 3000); 
+        }, 3000);
 
         return () => clearInterval(interval);
     }, [isMobile, isUserInteracting, locationImages]);
@@ -74,26 +75,27 @@ const LocationImageGallery: React.FC<Props> = ({ locationImages, locationName })
                         style={{
                             display: 'flex',
                             overflowX: 'auto',
-                            scrollSnapType: 'x mandatory', 
-                            scrollbarWidth: 'none', 
+                            scrollSnapType: 'x mandatory',
+                            scrollbarWidth: 'none',
                             WebkitOverflowScrolling: 'touch',
                             borderRadius: '16px',
                             // Hide scrollbar for Chrome/Safari
-                            msOverflowStyle: 'none' 
+                            msOverflowStyle: 'none'
                         }}
                     >
                         {locationImages.map((image, index) => (
-                            <div 
-                                key={index} 
-                                style={{ 
-                                    position: 'relative', 
-                                    flex: '0 0 100%', 
-                                    height: '260px',  
-                                    scrollSnapAlign: 'start', 
+                            <div
+                                key={index}
+                                style={{
+                                    position: 'relative',
+                                    flex: '0 0 100%',
+                                    height: '260px',
+                                    scrollSnapAlign: 'start',
                                     overflow: 'hidden'
                                 }}
                             >
-                                <Image
+                                <GumletImage
+                                    containerClassName='h-full'
                                     src={image}
                                     fill
                                     style={{ objectFit: 'cover' }}
@@ -107,11 +109,11 @@ const LocationImageGallery: React.FC<Props> = ({ locationImages, locationName })
                     /* =========================================
                        💻 DESKTOP LAYOUT: Compact Bento Grid
                        ========================================= */
-                    <div 
+                    <div
                         style={{
                             display: 'grid',
                             gridTemplateColumns: 'repeat(4, 1fr)',
-                            gridTemplateRows: 'repeat(2, 170px)', 
+                            gridTemplateRows: 'repeat(2, 170px)',
                             gap: '12px',
                             borderRadius: '24px',
                             overflow: 'hidden',
@@ -119,35 +121,40 @@ const LocationImageGallery: React.FC<Props> = ({ locationImages, locationName })
                         }}
                     >
                         {/* Main Large Image */}
-                        <div 
-                            className="hov-lift" 
+                        <div
+                            className="hov-lift"
                             style={{ gridColumn: 'span 2', gridRow: 'span 2', position: 'relative', cursor: 'pointer' }}
                             onClick={() => setIsPopupOpen(true)}
                         >
-                            <Image src={locationImages[0]} fill style={{ objectFit: 'cover' }} alt={locationName} priority />
+                            <div className='w-full h-full'>
+                                <GumletImage containerClassName='h-full' src={locationImages[0]} fill style={{ objectFit: 'cover' }} alt={locationName} priority />
+                            </div>
+                            {/* <Image src={locationImages[0]} fill style={{ objectFit: 'cover' }} alt={locationName} priority /> */}
                         </div>
 
                         {/* Small Sub Images (Indexes 1, 2, 3) */}
                         {locationImages.slice(1, 4).map((image, index) => (
-                            <div 
-                                key={index} 
-                                className="hov-lift" 
+                            <div
+                                key={index}
+                                className="hov-lift"
                                 style={{ position: 'relative', cursor: 'pointer' }}
                                 onClick={() => setIsPopupOpen(true)}
                             >
-                                <Image src={image} fill style={{ objectFit: 'cover' }} alt={`${locationName} view ${index + 1}`} />
+                                <GumletImage containerClassName='h-full' src={image} fill style={{ objectFit: 'cover' }} alt={`${locationName} view ${index + 1}`} />
+                                {/* <Image src={image} fill style={{ objectFit: 'cover' }} alt={`${locationName} view ${index + 1}`} /> */}
                             </div>
                         ))}
 
                         {/* 5th Image with Classic +X Overlay */}
                         {locationImages.length > 4 && (
-                            <div 
+                            <div
                                 className="hov-lift"
-                                style={{ position: 'relative', cursor: 'pointer' }} 
+                                style={{ position: 'relative', cursor: 'pointer' }}
                                 onClick={handleMoreImagesClick}
                             >
-                                <Image src={locationImages[4]} fill style={{ objectFit: 'cover' }} alt={`${locationName} view 5`} />
-                                
+                                {/* <Image src={locationImages[4]} fill style={{ objectFit: 'cover' }} alt={`${locationName} view 5`} /> */}
+                                <GumletImage containerClassName='h-full' src={locationImages[4]} fill style={{ objectFit: 'cover' }} alt={`${locationName} view 5`} />
+
                                 <div style={{
                                     position: 'absolute', inset: 0,
                                     backgroundColor: 'rgba(0, 0, 0, 0.5)',
@@ -176,7 +183,7 @@ const LocationImageGallery: React.FC<Props> = ({ locationImages, locationName })
                         </button>
                         <div className="popup-images">
                             {locationImages.map((image, index) => (
-                                <Image
+                                <GumletImage
                                     key={index}
                                     src={image}
                                     width={200}
@@ -184,7 +191,7 @@ const LocationImageGallery: React.FC<Props> = ({ locationImages, locationName })
                                     alt={`Attraction in ${locationName} - SyncTrip`}
                                     className="popup-image"
                                     // Added objectFit: 'cover' here so the 200x200 squares don't distort the image
-                                    style={{ height: '200px', width: '200px', objectFit: 'cover' }} 
+                                    style={{ height: '200px', width: '200px', objectFit: 'cover' }}
                                 />
                             ))}
                         </div>

@@ -8,12 +8,14 @@ import FullProfilePopup from '../popups/FullProfilePopup';
 import { setLoginHandler, type LoginOptions } from '../../utils/login.utils';
 import { StorageUtils } from '../../utils';
 import { User } from '../../types';
+import { io, Socket } from "socket.io-client";
 
 import { requestFcmToken, onForegroundNotification } from '../../utils/firebaseClient';
 import apiClient from '@/utils/apiClient';
-import { STORAGE_KEYS } from '@/constants';
+import { API_CONFIG, STORAGE_KEYS } from '@/constants';
 import { UserApiService } from '@/utils/user.api.utils';
 import { usePathname, useRouter } from 'next/navigation';
+import { getSocket } from '@/utils/socket';
 
 interface LoginContextType {
     user: User | null;
@@ -163,6 +165,25 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
         setUser(null);
         window.location.reload();
     }, []);
+
+    // -------------- Real-time Ban/Logout Socket Logic --------------
+    useEffect(() => {
+        if (!user || !user.id) return;
+
+        const socket = getSocket();
+
+        // Listen for the ban hammer from the backend
+        socket.on('force_logout', async (data) => {
+            alert(data.reason || "Your session has been terminated by an admin.");
+            window.location.replace("/");
+            await logout();
+        });
+
+        // Cleanup function to disconnect when the user logs out or leaves the app
+        return () => {
+            socket.disconnect();
+        };
+    }, [user, logout]);
 
     // -------------- FCM registration logic --------------
     // Register FCM token and save it to backend for the current user.

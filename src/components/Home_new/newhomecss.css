@@ -48,7 +48,7 @@
 
 .floatingChat2 {
   position: absolute;
-  top: 18%;
+  top: 20%;
   left: 8%;
   z-index: 1;
   pointer-events: none;
@@ -59,7 +59,7 @@
 .floatingChat1 {
   position: absolute;
   bottom: 0;
-  top: 16%;
+  top: 20%;
   right: 10%;
   z-index: 1;
   pointer-events: none;
@@ -164,6 +164,7 @@
 /* --- Image 2: Left Side (Udhr) --- */
 .floatingImg2 {
   width: 450px;
+  height: 416px;
   /* Desktop size */
   height: auto;
   left: -6%;
@@ -176,7 +177,8 @@
   width: 420px;
   height: auto;
   right: 32%;
-  bottom: 0%;
+  bottom: 5%;
+  z-index: 10;
   /* Staggered delay for more natural movement */
 }
 
@@ -336,7 +338,8 @@
     width: 360px;
   }
 
-  .heroTitleMain, .heroTitleSub {
+  .heroTitleMain,
+  .heroTitleSub {
     font-size: 2.5rem;
   }
 }
@@ -354,7 +357,8 @@
     bottom: 30px;
   }
 
-  .heroTitleMain, .heroTitleSub {
+  .heroTitleMain,
+  .heroTitleSub {
     font-size: 2.1rem;
   }
 

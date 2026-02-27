@@ -10,6 +10,7 @@ import { triggerLogin } from '@/utils';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { useLoader } from '../providers/LoaderContext';
+import GumletImage from '../common/GumletImage';
 
 interface AddLocationCardProps {
     locationId?: string;
@@ -240,7 +241,8 @@ const AddLocationCard: React.FC<AddLocationCardProps> = ({
                         flexShrink: 0           // Prevents Flexbox from squishing the container
                     }}
                 >
-                    <img
+                    <GumletImage
+                        containerClassName='h-full w-full'
                         src={MainImage}
                         alt={`${title} best Package Trip`}
                         style={{ width: '100%', height: '100%', objectFit: 'cover' }}

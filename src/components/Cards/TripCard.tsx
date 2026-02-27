@@ -4,6 +4,7 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { Sun, Pencil, Clock, MessageCircle, Heart, Users2, User2, Trash } from "lucide-react";
 import { UserTrip } from "@/types";
+import GumletImage from "../common/GumletImage";
 
 type Props = {
   trip: UserTrip;
@@ -54,7 +55,12 @@ const TripCard: React.FC<Props> = ({ trip, onPressCard, onPressChats, onPressMat
           </div>
 
         )}
-        <img src={imageUrl} alt={trip.locationName || "trip image"} style={cardStyles.image} loading="lazy" />
+        <GumletImage
+          src={imageUrl}
+          alt={trip.locationName || "trip image"}
+          containerStyle={cardStyles.image} // Applied to the wrapper div!
+          loading="lazy"
+        />
       </div>
 
       <div style={cardStyles.content}>
@@ -63,7 +69,7 @@ const TripCard: React.FC<Props> = ({ trip, onPressCard, onPressChats, onPressMat
 
           </div>
           <h3 style={cardStyles.title}>{trip.locationName}</h3>
-          <div style={{display: "flex", gap: "4px"}}>
+          <div style={{ display: "flex", gap: "4px" }}>
             <button
               onClick={(e) => { e.stopPropagation(); onPressEdit?.(); }}
               aria-label="Edit trip"
@@ -162,6 +168,7 @@ const cardStyles: { [k: string]: React.CSSProperties } = {
     borderRadius: 999,
     color: "var(--primary-1)",
     fontWeight: 600,
+    zIndex: 1,
   },
   chipboxMember: {
     position: "absolute",

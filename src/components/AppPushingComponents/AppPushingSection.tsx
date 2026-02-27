@@ -111,9 +111,6 @@ const SyncTripAppPushingSection = ({ showWork }: SyncTripAppPushingSectionProps)
                                 <Download />
                                 Download the App
                             </button>
-                            {sessionStorage.getItem('isLoggedIn') !== 'true' && <button className="btn border" onClick={() => triggerLogin()}>
-                                Sign In
-                            </button>}
                         </div>
                     </div>
                 </div>

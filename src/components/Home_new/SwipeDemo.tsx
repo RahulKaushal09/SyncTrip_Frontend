@@ -7,7 +7,8 @@ import GeneralScreenLayout from '../../assets/images/GeneralScreenLayout.png';
 import PriyaProfileCard from '../../assets/images/PriyaSharmaProfileCard.png';
 import MatchPopUp from '../../assets/images/MatchPopUp.png';
 // Using the same profile image for the chat avatar
-import AnanyaAvatar from '../../assets/images/AnanyaIyerProfileCard.png'; 
+import AnanyaAvatar from '../../assets/images/AnanyaIyerProfileCard.png';
+import GumletImage from '../common/GumletImage';
 
 type ScreenState = 'browsing' | 'swiping' | 'match' | 'chat';
 
@@ -31,16 +32,16 @@ const SwipeDemo: React.FC = () => {
     return (
         <div style={containerStyle}>
             <div style={phoneFrameStyle}>
-                
+
                 {/* 1. General App Layout (Hidden in Chat) */}
                 {step !== 'chat' && (
                     <div style={fullAbsoluteStyle}>
-                        <Image 
-                            src={GeneralScreenLayout} 
-                            alt="App Layout" 
+                        <GumletImage
+                            containerStyle={{ objectFit: 'cover', height: '100%' }}
+                            src={"https://synctrip.in/AllImages/compressed/Images/GeneralScreenLayout.png"}
+                            alt="App Layout"
                             loading='lazy'
-                            fill 
-                            style={{ objectFit: 'cover' }} 
+                            fill
                         />
                     </div>
                 )}
@@ -55,19 +56,25 @@ const SwipeDemo: React.FC = () => {
                             opacity: (step === 'swiping' || step === 'match') ? 1 : 0.9,
                             transition: 'transform 0.7s ease-out, opacity 0.7s'
                         }}>
-                            <Image width={558} height={920} src={PriyaProfileCard} loading='lazy' alt="Priya Profile" style={cardImgStyle} />
+                            <GumletImage containerStyle={{
+                                ...cardImgStyle,
+                                height: '100%',
+                            }} width={558} height={920} src={"https://synctrip.in/AllImages/compressed/Images/PriyaSharmaProfileCard.png"} loading='lazy' alt="Priya Profile" />
                         </div>
 
                         {/* ANANYA CARD: The one that gets swiped */}
                         {step !== 'match' && <div style={{
                             ...activeCardStyle,
-                            transform: step === 'swiping' 
-                                ? 'translate(130%, -10%) rotate(20deg)' 
+                            transform: step === 'swiping'
+                                ? 'translate(130%, -10%) rotate(20deg)'
                                 : 'translate(0, 0) rotate(0deg)',
                             opacity: step === 'swiping' ? 0 : 1,
                             transition: 'transform 0.7s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s'
                         }}>
-                            <Image width={553} height={920} loading='lazy' src={AnanyaProfileCard} alt="Ananya Profile" style={cardImgStyle} />
+                            <GumletImage containerStyle={{
+                                ...cardImgStyle,
+                                height: '100%',
+                            }} width={553} height={920} loading='lazy' src={"https://synctrip.in/AllImages/compressed/Images/AnanyaIyerProfileCard.png"} alt="Ananya Profile" />
                         </div>}
                     </div>
                 )}
@@ -75,8 +82,14 @@ const SwipeDemo: React.FC = () => {
                 {/* 3. Match Pop-up */}
                 {step === 'match' && (
                     <div className="m-animate m-zoom-in" style={overlayWrapperStyle}>
-                        <div style={popUpSizeStyle}>
-                            <Image loading='lazy' src={MatchPopUp} alt="It's a Match!" fill style={{ objectFit: 'contain' }} />
+                        <div style={{
+                            width: '260px',
+                            height: '450px',
+                            position: 'relative',
+                            borderRadius: '24px',
+                            overflow: 'hidden',
+                        }}>
+                            <GumletImage containerStyle={{ objectFit: 'contain', height: '100%', width: '100%' }} loading='lazy' src={"https://synctrip.in/AllImages/compressed/Images/MatchPopUp.png"} width={260} height={400} alt="It's a Match!" />
                         </div>
                     </div>
                 )}
@@ -89,7 +102,12 @@ const SwipeDemo: React.FC = () => {
                             <div style={{ position: 'absolute', left: '15px', color: '#0d344b', fontSize: '20px' }}>‹</div>
                             <div style={headerInfoStyle}>
                                 <div style={avatarHeaderWrapper}>
-                                    <Image loading='lazy' src={AnanyaAvatar} alt="Ananya" fill style={{ objectFit: 'cover', borderRadius: '50%' }} />
+                                    <GumletImage loading='lazy' src={"https://synctrip.in/AllImages/compressed/Images/AnanyaIyerProfileCard.png"} alt="AnanyaAvatar" height={35} width={35} containerStyle={{
+                                        objectFit: 'cover', borderRadius: '50%', width: '35px',
+                                        height: '35px',
+                                        position: 'relative',
+                                        overflow: 'hidden',
+                                    }} />
                                 </div>
                                 <div className="b1 text-secondary-1" style={{ fontSize: '16px' }}>Ananya Iyer</div>
                             </div>
@@ -100,14 +118,24 @@ const SwipeDemo: React.FC = () => {
                             {/* Received Message Group */}
                             <div style={receivedWrapper}>
                                 <div style={bubbleAvatarWrapper}>
-                                    <Image loading='lazy' src={AnanyaAvatar} alt="Ananya" fill style={{ objectFit: 'cover', borderRadius: '50%' }} />
+                                    <GumletImage loading='lazy' src={"https://synctrip.in/AllImages/compressed/Images/AnanyaIyerProfileCard.png"} alt="AnanyaAvatar" height={28} width={28} containerStyle={{
+                                        objectFit: 'cover', borderRadius: '50%', width: '28px',
+                                        height: '28px',
+                                        position: 'relative',
+                                        overflow: 'hidden',
+                                    }} />
                                 </div>
                                 <div style={bubbleReceived}>Hey! Just saw your profile, you look ready for Goa! 🌴</div>
                             </div>
-                            
+
                             <div className="m-animate m-slide-up" style={{ ...receivedWrapper, animationDelay: '1s' }}>
                                 <div style={bubbleAvatarWrapper}>
-                                    <Image loading='lazy' src={AnanyaAvatar} alt="Ananya" fill style={{ objectFit: 'cover', borderRadius: '50%' }} />
+                                    <GumletImage loading='lazy' src={"https://synctrip.in/AllImages/compressed/Images/AnanyaIyerProfileCard.png"} alt="AnanyaAvatar" height={28} width={28} containerStyle={{
+                                        objectFit: 'cover', borderRadius: '50%', width: '28px',
+                                        height: '28px',
+                                        position: 'relative',
+                                        overflow: 'hidden',
+                                    }} />
                                 </div>
                                 <div style={bubbleReceived}>So... is the Goa Plan officially on? I&apos;ve already started a checklist! 📝</div>
                             </div>
@@ -171,7 +199,7 @@ const cardContainerStyle: React.CSSProperties = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    transform: 'translateY(-10px)' 
+    transform: 'translateY(-10px)'
 };
 
 const activeCardStyle: React.CSSProperties = {

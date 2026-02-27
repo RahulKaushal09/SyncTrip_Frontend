@@ -4,19 +4,21 @@ import Image from 'next/image'
 import React, { useState, useEffect } from 'react'
 import './newhomecss.css'
 import { Compass, PlaneIcon, Sparkles } from 'lucide-react'
-import FloatingImg1 from "../../assets/images/FloatingImg1.png";
-import FloatingImg2 from "../../assets/images/FloatingImg2.png";
-import FloatingImg3 from "../../assets/images/FloatingImg3.png";
-import FloatingImg4 from "../../assets/images/FloatingImg4.png";
-import FloatingImg5 from "../../assets/images/FloatingImg5.png";
-import FloatingImg6 from "../../assets/images/FloatingImg6.png";
-import FloatingImg7 from "../../assets/images/FloatingImg7.png";
-import HomePageBg from "../../assets/images/HomePageBg.png";
-import ChatHomePage1 from "../../assets/images/ChatHomePage1.png";
-import ChatHomePage2 from "../../assets/images/ChatHomePage2.png";
+import { triggerLogin } from '@/utils';
+import { useLoader } from '../providers/LoaderContext';
+import { useRouter } from 'next/navigation';
+import { ROUTES } from '@/constants';
+import GumletImage from '../common/GumletImage';
+import GumletBackgroundImage from '../common/GumletBackgroundImage';
 
 const HomeHeroSectionNew = () => {
     const [screenWidth, setScreenWidth] = useState<number | null>(null);
+    const { showLoader } = useLoader();
+    const router = useRouter();
+    const redirectToUrl = (redirectUrl: string) => {
+        showLoader();
+        router.push(redirectUrl);
+    };
 
     useEffect(() => {
         setScreenWidth(window.innerWidth);
@@ -33,56 +35,93 @@ const HomeHeroSectionNew = () => {
     }, []);
 
     return (
-        <section style={{
-            backgroundImage: `url(${HomePageBg.src})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-        }} className="homeHeroSection customPaddingHome">
-            <div className="heroContent">
-                <div className="heroBadge">
-                    <Sparkles className="heroSparkle" />
-                    <span>Join 10,000+ Happy Indian Travelers</span>
-                </div>
+        <div style={{
+            position: "relative",
+        }}>
+            <GumletBackgroundImage
+                src={"https://synctrip.in/AllImages/compressed/Images/HomePageBg.png"}
+                priority={true}
+                className="homeHeroSection h-[100vh] customPaddingHome"
+            >
+                <section className="homeHeroSection customPaddingHome">
+                    <div className="heroContent">
+                        <div className="heroBadge">
+                            <Sparkles className="heroSparkle" />
+                            <span>Join 10,000+ Happy Indian Travelers</span>
+                        </div>
 
-                <h1 className="heroTitleMain">{screenWidth && screenWidth > 900 ? "Connect with Like-Minded Travel Friends." : "Stop Planning Solo."}</h1>
-                <h1 className="heroTitleSub">{screenWidth && screenWidth > 900 ? "Plan Unforgettable Journeys." : "Start Exploring Together."}</h1>
+                        <h1 className="heroTitleMain">{screenWidth && screenWidth > 900 ? "Connect with Like-Minded Travel Friends." : "Stop Planning Solo."}</h1>
+                        <h1 className="heroTitleSub">{screenWidth && screenWidth > 900 ? "Plan Unforgettable Journeys." : "Start Exploring Together."}</h1>
 
-                <p className="heroDescription">
-                    Lead your trip, set your vibe, connect with verified explorers!
-                </p>
+                        <p className="heroDescription">
+                            Lead your trip, set your vibe, connect with verified explorers!
+                        </p>
 
-                <span className='floatingChat1'>
-                    <Image src={ChatHomePage1} alt='' width={200} height={120} />
-                </span>
-                
-                <span className='floatingChat2'>
-                    <Image src={ChatHomePage2} alt='' width={200} height={120} />
-                </span>
+                        <span className='floatingChat1'>
+                            <GumletImage src={"https://synctrip.in/AllImages/compressed/Images/ChatHomePage1.png"} alt='ChatBubble1' width={200} height={120} />
+                        </span>
 
-                <div className="heroActions">
-                    <button className="btn btn-primary hover:scale-105 transition-transform duration-200 !flex items-center justify-center">
-                        <PlaneIcon className="w-5 h-5 mr-2" />
-                        Create Your Trip
-                    </button>
-                    <button className="btn border text-white border-white !flex items-center justify-center hover:scale-105 transition-transform duration-400">
-                        <Compass className="w-5 h-5 mr-2" />
-                        Explore Locations
-                    </button>
-                </div>
-            </div>
+                        <span className='floatingChat2'>
+                            <GumletImage src={"https://synctrip.in/AllImages/compressed/Images/ChatHomePage2.png"} alt='ChatBubble2' width={200} height={120} />
+                        </span>
 
-            <div className="floatingImagesWrapper">
-                <Image className="floatingImg floatingImg2" priority src={FloatingImg1} alt="Floating Image 1" width={500} height={500} />
-                <Image className="floatingImg floatingImg4" priority src={FloatingImg3} alt="Floating Image 3" width={500} height={500} />
-                <Image className="floatingImg floatingImg5" priority src={FloatingImg4} alt="Floating Image 4" width={500} height={500} />
-                <Image className="floatingImg floatingImg3" priority src={FloatingImg2} alt="Floating Image 2" width={500} height={500} />
-                <Image className="floatingImg floatingImg1" priority src={FloatingImg5} alt="Floating Image 5" width={500} height={500} />
-                <Image className="floatingImg floatingImg7" priority src={FloatingImg7} alt="Floating Image 7" width={500} height={500} />
-                <Image className="floatingImg floatingImg6" priority src={FloatingImg6} alt="Floating Image 6" width={500} height={500} />
-            </div>
+                        <div className="heroActions">
+                            <button
+                                onClick={() => triggerLogin(() => redirectToUrl(ROUTES.CREATE_TRIP))}
+                                className="btn btn-primary hover:scale-105 transition-transform duration-200 !flex items-center justify-center">
+                                <PlaneIcon className="w-5 h-5 mr-2" />
+                                Create Your Trip
+                            </button>
+                            <button
+                                onClick={() => redirectToUrl(ROUTES.EXPLORE)}
+                                className="btn border text-white border-white !flex items-center justify-center hover:scale-105 transition-transform duration-400">
+                                <Compass className="w-5 h-5 mr-2" />
+                                Explore Locations
+                            </button>
+                        </div>
+                    </div>
 
+                    <div className="floatingImagesWrapper">
+                        <div className="floatingImg floatingImg2">
+                            <GumletImage containerStyle={{
+                                height: '416px',
+                            }} src={"https://synctrip.in/AllImages/compressed/Images/FloatingImg1.png"} alt="Floating Image 1" fill />
+                        </div>
+                        <div className="floatingImg floatingImg4">
+                            <GumletImage containerStyle={{
+                                height: '300px',
+                            }} src={"https://synctrip.in/AllImages/compressed/Images/FloatingImg3.png"} alt="Floating Image 3" fill />
+                        </div>
+                        <div className="floatingImg floatingImg5">
+                            <GumletImage containerStyle={{
+                                height: '250px',
+                            }} src={"https://synctrip.in/AllImages/compressed/Images/FloatingImg4.png"} alt="Floating Image 4" fill />
+                        </div>
+                        <div className="floatingImg floatingImg3">
+                            <GumletImage containerStyle={{
+                                height: '360px',
+                            }} src={"https://synctrip.in/AllImages/compressed/Images/FloatingImg2.png"} alt="Floating Image 2" fill />
+                        </div>
+                        <div className="floatingImg floatingImg1">
+                            <GumletImage containerStyle={{
+                                height: '300px',
+                            }} src={"https://synctrip.in/AllImages/compressed/Images/FloatingImg5.png"} alt="Floating Image 5" fill />
+                        </div>
+                        <div className="floatingImg floatingImg7">
+                            <GumletImage containerStyle={{
+                                height: '416px',
+                            }} src={"https://synctrip.in/AllImages/compressed/Images/FloatingImg7.png"} alt="Floating Image 7" fill />
+                        </div>
+                        <div className="floatingImg floatingImg6">
+                            <GumletImage containerStyle={{
+                                height: '416px',
+                            }} src={"https://synctrip.in/AllImages/compressed/Images/FloatingImg6.png"} alt="Floating Image 6" fill />
+                        </div>
+                    </div>
+                </section>
+            </GumletBackgroundImage >
             <Image className="heroVectorBottom z-50" priority src="/images/heroVectorBottom.png" alt="Hero Vector Bottom" width={1550} height={120} />
-        </section>
+        </div>
     )
 }
 

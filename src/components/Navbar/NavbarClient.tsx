@@ -21,6 +21,7 @@ import NotificationBell from "./NotificationBell";
 import ChatIcon from "./ChatIcon";
 import path from "path";
 import { Rocket, Sparkles } from "lucide-react";
+import GumletImage from "../common/GumletImage";
 
 const NavbarClient = ({ }) => {
   const [LoadingUser, setLoadingUser] = useState(true);
@@ -194,7 +195,9 @@ const NavbarClient = ({ }) => {
           <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
             {isLoggedIn && <NotificationBell iconColor={isHomePage && !isSticky ? "#ffffff" : "#000000"} />}
             {isLoggedIn && <ChatIcon iconColor={isHomePage && !isSticky ? "#ffffff" : "#000000"} />}
-            <button className="navbar-toggler" onClick={() => setMobileNavOpen(!mobileNavOpen)}>
+            <button style={{
+              background: !isSticky && isHomePage ? "var(--primary-4)" : ""
+            }} className="navbar-toggler" onClick={() => setMobileNavOpen(!mobileNavOpen)}>
               <span className="navbar-toggler-icon"></span>
             </button>
           </div>
@@ -341,7 +344,7 @@ const NavbarClient = ({ }) => {
                           gap: "10px"
                         }}>
                           {user.profile_picture?.[0] ? (
-                            <Image
+                            <GumletImage
                               src={user.profile_picture[0]}
                               alt="Profile"
                               width={40}
@@ -432,7 +435,7 @@ const NavbarClient = ({ }) => {
                 style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
               >
                 {user.profile_picture?.[0] ? (
-                  <Image
+                  <GumletImage
                     src={user.profile_picture[0]}
                     alt="Profile"
                     width={40}

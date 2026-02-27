@@ -224,12 +224,16 @@ export default function ChatWindow({ chatId, currentUserId, chat }: Props) {
     const map: Record<string, { name: string; avatar?: string }> = {};
     if (!chat?.users) return map;
 
+    console.log("Building sender map for users:", chat.users);
+
     chat.users.forEach(u => {
       map[u.id] = {
         name: u.name,
         avatar: u.profile_picture?.[0],
       };
     });
+
+    console.log("Sender map:", map);
 
     return map;
   }, [chat]);
@@ -341,7 +345,7 @@ export default function ChatWindow({ chatId, currentUserId, chat }: Props) {
                 <div className={`${bubbleCls} ${maxW}`}>
                   {!mine && !system && chat?.isGroupChat && (
                     <div className="text-xs font-semibold text-secondary-1 mb-1">
-                      {senderMap[m.sender]?.name.split(" ")[0] || "Unknown"}
+                      {senderMap[m.sender]?.name.split(" ")[0] || "Synctrip User"}
                     </div>
                   )}
 

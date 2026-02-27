@@ -42,6 +42,7 @@
 import { Chat, ChatUser } from "@/types";
 import React from "react";
 import { Users } from "lucide-react";
+import GumletImage from "../common/GumletImage";
 
 type Props = {
   chats: Chat[];
@@ -98,7 +99,7 @@ export default function ChatList({
           .slice(0, 3);
 
         const groupAvatars = groupUsers
-          .map((u:ChatUser) => (u).profile_picture?.[0])
+          .map((u: ChatUser) => (u).profile_picture?.[0])
           .filter(Boolean);
         return (
           <div
@@ -120,10 +121,13 @@ export default function ChatList({
                     groupAvatars.length > 0 ? (
                       <div className="relative w-12 h-12 rounded-full bg-primary-4 overflow-hidden">
                         {groupAvatars.slice(0, 3).map((src, index) => (
-                          <img
+                          <GumletImage
                             key={index}
                             src={src}
-                            className={`absolute w-6 h-6 rounded-full object-cover border-2 border-white`}
+                            alt={`Member`}
+                            height={6}
+                            width={6}
+                            className={`absolute h-6 w-6 rounded-full object-cover border-2 border-white`}
                             style={{
                               top: index === 0 ? 2 : index === 1 ? 18 : 18,
                               left: index === 0 ? 18 : index === 1 ? 2 : 18,
@@ -138,15 +142,21 @@ export default function ChatList({
                       </div>
                     )
                   ) : (
-                    <img
+                    <GumletImage
                       src={avatarSrc}
+                      alt={title}
+                      height={48}
+                      width={48}
                       className="w-12 h-12 rounded-full object-cover"
                     />
                   )}
                 </div>
               ) : (
-                <img
+                <GumletImage
                   src={avatarSrc}
+                  alt={title}
+                  height={48}
+                  width={48}
                   className="w-12 h-12 rounded-full object-cover"
                 />
               )}

@@ -6,6 +6,7 @@ import { UserTrip } from '@/types';
 import { CommonServices } from '@/utils';
 import "../Matching/matching.css"
 import { MessageCircle, Users2 } from 'lucide-react';
+import GumletImage from '../common/GumletImage';
 type Props = {
     trip: UserTrip;
 };
@@ -35,7 +36,7 @@ export default function GroupTripOnMatchingCard({ trip }: Props) {
             <div className="card-wrap">
                 <div className="card group-card">
                     {/* Background image */}
-                    <img src={image} alt={locationName} />
+                    <GumletImage src={image} alt={locationName as string} />
 
                     {/* Gradient overlay */}
                     <div className="MatchingCardMeta" style={{ background: "rgba(0, 0, 0, 0.6)" }}>

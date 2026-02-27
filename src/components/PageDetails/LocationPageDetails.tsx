@@ -20,6 +20,7 @@ import dynamic from 'next/dynamic';
 import { UserApiService } from '@/utils/user.api.utils';
 import { LocationServices } from '@/utils/location.utils';
 import { useLogin } from '../providers/LoginProvider';
+import GumletImage from '../common/GumletImage';
 // const LocationMapSection = dynamic(() => import('./LocationMapSection'), {
 //     ssr: false, // This prevents SSR for import { is } from './../../../.next/server/vendor-chunks/next';
 //     loading: () => (
@@ -247,7 +248,7 @@ const LocationPageDetails = ({ uuid, locationData }: { uuid: string; locationDat
                                                         }}
                                                     >
                                                         {user?.profile_picture?.[0] ? (
-                                                            <img
+                                                            <GumletImage
                                                                 style={{
                                                                     width: '36px',
                                                                     height: '36px',
@@ -257,6 +258,8 @@ const LocationPageDetails = ({ uuid, locationData }: { uuid: string; locationDat
                                                                     objectFit: 'cover',
                                                                     objectPosition: 'center'
                                                                 }}
+                                                                height={36}
+                                                                width={36}
                                                                 src={user?.profile_picture?.[0] || ""}
                                                                 alt={user?.name || "User avatar"}
                                                             />) : (

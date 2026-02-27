@@ -7,6 +7,7 @@ import { MapPin, Clock } from "lucide-react";
 
 import { Culture, Festival } from '@/types';
 import '../../../styles/CultureFestivalsSection.css';
+import GumletImage from '../common/GumletImage';
 
 interface CultureFestivalsCardProps {
     data: Culture | Festival;
@@ -51,7 +52,7 @@ const CultureFestivalsCard: React.FC<CultureFestivalsCardProps> = ({ data, type 
                                 >
                                     {data.images.map((image, index) => (
                                         <div key={index} className="cf-carousel-slide">
-                                            <Image
+                                            <GumletImage
                                                 src={image.image_url || '/api/placeholder/300/200'}
                                                 alt={`${data.name} - Image ${index + 1}`}
                                                 className="cf-image"
@@ -93,7 +94,7 @@ const CultureFestivalsCard: React.FC<CultureFestivalsCardProps> = ({ data, type 
                                 </div>
                             </div>
                         ) : (
-                            <Image
+                            <GumletImage
                                 src={data.images?.[0]?.image_url || '/api/placeholder/300/200'}
                                 alt={data.name}
                                 className="cf-image cf-single-image"
