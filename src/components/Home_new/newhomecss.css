@@ -59,7 +59,7 @@
 .floatingChat1 {
   position: absolute;
   bottom: 0;
-  top: 20%;
+  top: 23%;
   right: 10%;
   z-index: 1;
   pointer-events: none;
