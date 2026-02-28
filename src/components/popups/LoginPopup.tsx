@@ -355,7 +355,6 @@ export default function LoginPopup({ onClose, onLogin, headingText, onEmailVerif
       setError("Please enter a valid 10-digit phone number");
       return;
     }
-    debugger;
 
     try {
       setIsLoading(true);
@@ -435,15 +434,14 @@ export default function LoginPopup({ onClose, onLogin, headingText, onEmailVerif
   };
 
   const handleVerifyLoginOtp = async () => {
-    debugger;
     const otpLimitReached = await ApiService.checkIfOTPLimitReached();
 
-    if (loginOtp.length !== 6 && !otpLimitReached) {
+    if (loginOtp.length !== 6 && !otpLimitReached && !testNumbers.includes(form.phone)) {
       setError("Please enter a valid 6-digit OTP");
       return;
     }
 
-    if (otpLimitReached && loginOtp.length !== 4) {
+    if (otpLimitReached && loginOtp.length !== 4 && !testNumbers.includes(form.phone)) {
       setError("Please enter a valid 4-digit OTP");
       return;
     }
