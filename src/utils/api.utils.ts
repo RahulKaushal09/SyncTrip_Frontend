@@ -361,6 +361,16 @@ export class ApiService {
     });
   }
 
+  static async checkIfOTPLimitReached({update} : {update?: boolean} = {}): Promise<boolean> {
+    try {
+      const res = await apiClient.get(`${API_CONFIG.BACKEND_BASE_URL}/api/auth/checkIfOTPLimitReached`, { params: { update } });
+      return res.data.limitReached || false;
+    } catch (error) {
+      console.error('Error checking OTP limit:', error);
+      return false;
+    }
+  }
+
   static async login(credentials: { email: string; password: string }): Promise<CompleteProfileApiResponse> {
     const response = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/users/login`, {
       method: 'POST',

@@ -22,11 +22,11 @@ const HomeHeroSectionNew = () => {
 
     useEffect(() => {
         setScreenWidth(window.innerWidth);
-        console.log("Screen width:", window.innerWidth);
+        // console.log("Screen width:", window.innerWidth);
 
         const handleResize = () => {
             setScreenWidth(window.innerWidth);
-            console.log("Screen width:", window.innerWidth);
+            // console.log("Screen width:", window.innerWidth);
         };
         window.addEventListener('resize', handleResize);
         return () => {

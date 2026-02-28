@@ -189,12 +189,19 @@ export interface Chat {
     unreadCount?: number;
 }
 
+export interface MessageSender {
+    id: string;
+    age?: number;
+    name: string;
+    profile_picture?: string[];
+}
+
 export interface Message {
     id: string;
     chat: string;
     type: "system" | "user";
     systemAction?: "user_joined" | "user_left" | "user_deleted_trip";
-    sender: string;
+    sender: MessageSender | string;
     content: string;
     readBy: string[];
     createdAt: string;

@@ -148,8 +148,7 @@
   object-fit: contain;
 }
 
-/* --- Image 1: Right Side (Idhr) --- */
-/* woman */
+/* woman with bag */
 .floatingImg1 {
   width: 280px;
   /* Desktop size */
@@ -161,7 +160,7 @@
   transform: rotate(-15deg);
 }
 
-/* --- Image 2: Left Side (Udhr) --- */
+/* hand with phone */
 .floatingImg2 {
   width: 450px;
   height: 416px;
@@ -173,6 +172,7 @@
   rotate: -10deg;
 }
 
+/* girl with open hands */
 .floatingImg3 {
   width: 420px;
   height: auto;
@@ -182,7 +182,7 @@
   /* Staggered delay for more natural movement */
 }
 
-/* man with map */
+/* two friends */
 .floatingImg4 {
   width: 280px;
   height: auto;
@@ -190,7 +190,7 @@
   bottom: 10%;
 }
 
-/* van */
+/* man with map */
 .floatingImg5 {
   width: 240px;
   height: auto;
@@ -198,6 +198,7 @@
   bottom: 6%;
 }
 
+/* phone synctrip */
 .floatingImg6 {
   width: 420px;
   height: auto;
@@ -205,6 +206,7 @@
   bottom: 6%;
 }
 
+/* car */
 .floatingImg7 {
   width: 450px;
   height: auto;

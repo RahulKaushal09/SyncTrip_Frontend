@@ -59,5 +59,37 @@ export class AuthServices {
     //     }
     // }
 
+    // msg91 otp
+    static async sendOTPViaMsg91(phone: string): Promise<{ success: boolean; message: string }> {
+        try {
+            const res = await apiClient.post("/auth/send-otp-for-signup", { phone });
+            return res.data;
+        }
+        catch (err) {
+            console.error("Error sending OTP via Msg91:", err);
+            return { success: false, message: "Failed to send OTP. Please try again." };
+        }
+    }
 
+    static async verifyOTPViaMsg91AndSignIn(phone: string, otp: string): Promise<{ success: boolean; message: string; user?: User, token?: string, anyTripCreatedByUser?: boolean }> {
+        try {
+            const res = await apiClient.post("/auth/verify-otp", { phone, otp });
+            return res.data;
+        }
+        catch (err) {
+            console.error("Error verifying OTP via Msg91:", err);
+            return { success: false, message: "Failed to verify OTP. Please try again." };
+        }
+    }
+
+    static async verifyOtpViaMsg91AndUpdateNumber(phone: string, otp: string): Promise<{ success: boolean; message: string; user?: User }> {
+        try {
+            const res = await apiClient.post("/auth/verify-Otp-Update-Phone", { phone, otp });
+            return res.data;
+        }
+        catch (err) {
+            console.error("Error verifying OTP via Msg91 for update phone:", err);
+            return { success: false, message: "Failed to verify OTP. Please try again." };
+        }
+    }
 }

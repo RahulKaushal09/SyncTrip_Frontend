@@ -6,6 +6,10 @@ navbar-toggler {
     box-shadow: none !important;
 }
 
+.nav-link {
+    cursor: pointer;
+}
+
 /* 1. The Outer Wrapper */
 .announcement-bar {
     /* background: linear-gradient(90deg,

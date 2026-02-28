@@ -117,8 +117,8 @@ export default function ActiveDestinations({
                                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                 className="object-cover transition-transform duration-500 group-hover:scale-105"
                                 priority={false}
-                                width={idx == 0?290:280}
-                                height={idx == 0?387:466}
+                                // width={idx == 0?290:280}
+                                // height={idx == 0?387:466}
                             />
 
                             <div className="absolute inset-0 bg-gradient-to-b from-[rgba(22,50,79,0)] to-[rgba(22,50,79,0.52)] pointer-events-none" />

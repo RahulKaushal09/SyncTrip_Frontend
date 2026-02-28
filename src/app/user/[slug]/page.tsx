@@ -18,6 +18,7 @@ import EditProfileModal from '@/components/Profile/EditProfileModal';
 import ImageUploadModal from '@/components/Profile/ImageUpload';
 import { ROUTES } from '@/constants';
 import { apiErrorType } from '@/classes/ApiResponse.classes';
+import GumletImage from '@/components/common/GumletImage';
 
 // DUMMY DATA FOR BLURRED PROFILE
 const DUMMY_USER: Partial<ExtendedUser> = {
@@ -337,7 +338,8 @@ export default function UserProfilePage() {
                   <div className="relative group"> {/* Added group for hover effects */}
                     <div className="w-24 h-24 rounded-full border-4 border-white shadow-md bg-white overflow-hidden flex items-center justify-center">
                       {profileUser.profile_picture?.[0] ? (
-                        <img
+                        <GumletImage
+                          containerClassName='h-full'
                           src={profileUser.profile_picture[0]}
                           alt={profileUser.name}
                           className="w-full h-full object-cover"

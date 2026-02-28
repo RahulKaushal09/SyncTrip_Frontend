@@ -85,6 +85,14 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
                 setIsLoading(false);
                 return;
             }
+            const otpLimitReached = await ApiService.checkIfOTPLimitReached({update: true});
+            if (otpLimitReached) {
+                await AuthServices.sendOTPViaMsg91(form.phone as string);
+                setOtpSent(true);
+                setResendTimer(60); // 60s cooldown
+                setOtp(""); // clear OTP field
+                return;
+            }
             await sendOtp("+91" + form.phone);
             setOtpSent(true);
             setResendTimer(60); // 60s cooldown
@@ -100,15 +108,34 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
     }
 
     async function handleVerifyOtp() {
-        if (otp.length !== 6) {
+        const otpLimitReached = await ApiService.checkIfOTPLimitReached();
+        if (otp.length !== 6 && !otpLimitReached) {
             console.log("Entered Otp:", otp);
             setError("Please enter a valid 6-digit OTP");
+            return;
+        }
+
+        if (otpLimitReached && otp.length !== 4) {
+            console.log("Entered Otp:", otp);
+            setError("Please enter a valid 4-digit OTP");
             return;
         }
 
         try {
             setIsLoading(true);
             setError("");
+
+            if (otpLimitReached) {
+                const response = await AuthServices.verifyOtpViaMsg91AndUpdateNumber(form.phone as string, otp);
+                if (!response.success) {
+                    throw new Error(response.message || "Verification failed");
+                }
+                setPhoneVerified(true);
+                updateUserFields({
+                    phone: form.phone,
+                });
+                return;
+            }
 
             const firebaseToken = await verifyOtp(otp);
             const updatedUser = await AuthServices.verifyPhoneAndUpdateName(firebaseToken, form.phone as string, form.name as string);
@@ -305,7 +332,7 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
             if (!form.travelGoal) return "Please select your travel goal";
             if (form.languages.length === 0) return "Please select minimum one language you understand and speak";
         } else if (step === 3) {
-            const anyValidImage = form.profilePicture ||  (user.profile_picture && user.profile_picture.length && user.profile_picture?.map(pic => pic != "").includes(true));
+            const anyValidImage = form.profilePicture || (user.profile_picture && user.profile_picture.length && user.profile_picture?.map(pic => pic != "").includes(true));
             if (!anyValidImage) return "Profile picture is required";
         }
         else if (step === 4) {
@@ -387,7 +414,7 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
         Object.keys(form).forEach(async (key) => {
             if (key === "preferredDestinations") return; // skipped for Preferred Destinations
             const value = form[key as keyof typeof form];
-            if( key === "preferredDestinations") return; // we will handle this separately after the loop
+            if (key === "preferredDestinations") return; // we will handle this separately after the loop
             else if (key === 'profilePicture' && value instanceof File && typeof value !== 'string') {
                 const responseImg = await UserApiService.updateProfilePhoto(value);
                 formData.append(key, responseImg.url as string);
@@ -553,7 +580,7 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
                                     <input
                                         name="otp"
                                         className="full-profile-input otp-input"
-                                        placeholder="6-digit code"
+                                        placeholder="OTP sent to your phone"
                                         maxLength={6}
                                         value={otp}
                                         onChange={(e) => setOtp(e.target.value)}

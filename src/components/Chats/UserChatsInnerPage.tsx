@@ -101,7 +101,7 @@ export default function ChatsPageInner() {
             // console.log("fu",futureTrips);
             // const usable = futureTrips.length > 0 ? futureTrips : trips;
             const usable = futureTrips.length > 0 ? futureTrips : [];
-            console.log(usable);
+            // console.log(usable);
             if (!Array.isArray(usable)) {
                 router.replace("/");
                 return [];

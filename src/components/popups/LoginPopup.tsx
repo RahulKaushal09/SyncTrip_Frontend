@@ -11,6 +11,7 @@ import { sendOtp, verifyOtp } from "@/utils/firebaseAuthClient";
 import { STORAGE_KEYS } from '@/constants';
 import { StorageUtils } from '@/utils';
 import { testNumbers } from "../../data/testProfiles"
+import { AuthServices } from '@/utils/auth.utils';
 
 interface LoginPopupProps {
   onClose: () => void;
@@ -354,19 +355,28 @@ export default function LoginPopup({ onClose, onLogin, headingText, onEmailVerif
       setError("Please enter a valid 10-digit phone number");
       return;
     }
+    debugger;
 
     try {
       setIsLoading(true);
       setError("");
-      // const UserAlreadyExistWithPhone = await ApiService.checkUserExistsWithPhoneNumber(form.phone);
-      // if (!UserAlreadyExistWithPhone) {
-      //   setError("No account found with this phone number. Please create account first.");
-      //   setIsLoading(false);
-      //   return;
-      // }
-      if (!testNumbers.includes(form.phone)) {
-        await sendOtp("+91" + form.phone);
+      if (testNumbers.includes(form.phone)) {
+        setLoginOtpSent(true);
+        setLoginResendTimer(60);
+        setLoginOtp("");
+        return;
       }
+      const otpLimitReached = await ApiService.checkIfOTPLimitReached({ update: true });
+      if (otpLimitReached) {
+        await AuthServices.sendOTPViaMsg91(form.phone);
+        setLoginOtpSent(true);
+        setLoginResendTimer(60);
+        setLoginOtp("");
+        return;
+      }
+
+      await sendOtp("+91" + form.phone);
+
       setLoginOtpSent(true);
       setLoginResendTimer(60);
       setLoginOtp("");
@@ -393,6 +403,20 @@ export default function LoginPopup({ onClose, onLogin, headingText, onEmailVerif
     try {
       setIsLoading(true);
       setError("");
+      if (testNumbers.includes(form.phone)) {
+        setLoginOtpSent(true);
+        setLoginResendTimer(60);
+        setLoginOtp("");
+        return;
+      }
+      const otpLimitReached = await ApiService.checkIfOTPLimitReached({ update: true });
+      if (otpLimitReached) {
+        await AuthServices.sendOTPViaMsg91(form.phone);
+        setLoginOtpSent(true);
+        setLoginResendTimer(60);
+        setLoginOtp("");
+        return;
+      }
       await sendOtp("+91" + form.phone);
       setLoginResendTimer(60);
       setLoginOtp("");
@@ -411,8 +435,16 @@ export default function LoginPopup({ onClose, onLogin, headingText, onEmailVerif
   };
 
   const handleVerifyLoginOtp = async () => {
-    if (loginOtp.length !== 6) {
+    debugger;
+    const otpLimitReached = await ApiService.checkIfOTPLimitReached();
+
+    if (loginOtp.length !== 6 && !otpLimitReached) {
       setError("Please enter a valid 6-digit OTP");
+      return;
+    }
+
+    if (otpLimitReached && loginOtp.length !== 4) {
+      setError("Please enter a valid 4-digit OTP");
       return;
     }
 
@@ -420,7 +452,26 @@ export default function LoginPopup({ onClose, onLogin, headingText, onEmailVerif
       setIsLoading(true);
       setError("");
 
-      let token : string;
+      if (otpLimitReached && !testNumbers.includes(form.phone)) {
+        await AuthServices.verifyOTPViaMsg91AndSignIn(form.phone, loginOtp).then(response => {
+          if (response.token) {
+            const { user: msg91User, token: msg91Token } = response;
+            setLoginPhoneVerified(true);
+            setLoginOtp('');
+            localStorage.setItem('userToken', msg91Token as string);
+            onLogin(msg91User as User);
+            onClose();
+          } else {
+            throw new Error( 'Login failed after verification');
+          }
+        }).catch(err => {
+          console.error('Error verifying OTP via Msg91:', err);
+          setError(err.message || 'OTP verification failed. Please try again.');
+        });
+        return;
+      }
+
+      let token: string;
       if (testNumbers.includes(form.phone) && loginOtp === "000000") {
         token = "jhbdkbhbdbbb"; // fake token
       } else {

@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
 
 import ChatApiService from "@/utils/chats.api.utils";
-import { Chat, Message } from "@/types";
+import { Chat, Message, MessageSender } from "@/types";
 // import { StorageUtils } from "@/utils";
 
 import "../../../styles/chats/chats.css";
@@ -224,7 +224,7 @@ export default function ChatWindow({ chatId, currentUserId, chat }: Props) {
     const map: Record<string, { name: string; avatar?: string }> = {};
     if (!chat?.users) return map;
 
-    console.log("Building sender map for users:", chat.users);
+    // console.log("Building sender map for users:", chat.users);
 
     chat.users.forEach(u => {
       map[u.id] = {
@@ -233,7 +233,7 @@ export default function ChatWindow({ chatId, currentUserId, chat }: Props) {
       };
     });
 
-    console.log("Sender map:", map);
+    // console.log("Sender map:", map);
 
     return map;
   }, [chat]);
@@ -251,7 +251,10 @@ export default function ChatWindow({ chatId, currentUserId, chat }: Props) {
       if (saved && saved.id) {
         if (!lastMessageIds.current.has(saved.id)) {
           lastMessageIds.current.add(saved.id);
-          setMessages((s) => [...s, saved]);
+          // console.log("Message sent and saved:", saved);
+          const msgToMap = { ...saved, sender: (saved.sender as MessageSender).id }; // ensure sender is set for immediate UI update
+          setMessages((s) => [...s, msgToMap]);
+          // console.log("Message sent and added to UI:", msgToMap);
         } else {
           // socket already handled it — nothing to do (optional: update existing pending state)
           // console.debug("message already received via socket, skipping append", saved.id);
@@ -335,6 +338,8 @@ export default function ChatWindow({ chatId, currentUserId, chat }: Props) {
           {messages.map((m) => {
             const mine =
               m.sender === currentUserId;
+            // console.log("sender:", m.sender);
+            // console.log("currentUserId:", currentUserId);
             const system = m.type === "system";
             const bubbleCls = mine ? "myMessage" : system ? "systemMessage" : "otherPersonMessage";
             const containerCls = mine ? "flex justify-end" : system ? "flex justify-center" : "flex justify-start";
@@ -345,7 +350,7 @@ export default function ChatWindow({ chatId, currentUserId, chat }: Props) {
                 <div className={`${bubbleCls} ${maxW}`}>
                   {!mine && !system && chat?.isGroupChat && (
                     <div className="text-xs font-semibold text-secondary-1 mb-1">
-                      {senderMap[m.sender]?.name.split(" ")[0] || "Synctrip User"}
+                      {senderMap[m.sender as string]?.name.split(" ")[0] || "Synctrip User"}
                     </div>
                   )}
 
