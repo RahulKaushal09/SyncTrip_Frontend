@@ -354,7 +354,7 @@ const DownloadPopup = () => {
     }
 
     // Trigger first appearance
-    const timer = setTimeout(() => setIsVisible(true), 3000);
+    const timer = setTimeout(() => setIsVisible(true), 15000);
     return () => clearTimeout(timer);
   }, [isLoggedIn]);
 

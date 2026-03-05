@@ -28,40 +28,27 @@ navbar-toggler {
     align-items: center;
 }
 
-/* 2. The Moving Track */
 .announcement-track {
-    display: flex;
-    width: max-content;
     white-space: nowrap;
-    /* Increase to 15s or 20s. 2s is too fast to see the loop logic! */
-    animation: marquee 10s linear infinite;
+    animation: marquee 25s linear infinite;
     will-change: transform;
 }
 
-/* 3. The Content Blocks */
 .announcement-content {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    /* This padding creates the gap between the end of phrase 1 and start of phrase 2 */
+    display: inline-block;
     padding-right: 80px;
     color: var(--secondary-1);
     font-size: 14px;
     font-weight: 600;
-    /* Essential: prevents the blocks from shrinking */
-    flex-shrink: 0;
 }
 
-/* 4. The Infinite Loop Logic */
 @keyframes marquee {
     0% {
-        transform: translate3d(350%, 0, 0);
+        transform: translateX(100vw);
     }
 
     100% {
-        /* This moves exactly one full 'announcement-content' block width 
-           because we have two identical ones */
-        transform: translate3d(-100%, 0, 0);
+        transform: translateX(-100%);
     }
 }
 
@@ -185,6 +172,10 @@ navbar-toggler {
            because we have two identical ones */
             transform: translate3d(-100%, 0, 0);
         }
+    }
+
+    .announcement-track {
+        animation-duration: 15s;
     }
 }
 
