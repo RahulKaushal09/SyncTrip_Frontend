@@ -163,10 +163,10 @@ export default function TravelModePage() {
 
               <div className="flex flex-col gap-3">
                 <button
-                  onClick={() => router.push(`/userTrip/${tripId}/groups/${groupData?.groupTripId}`)}
+                  onClick={() => router.push(`/userTrip/${tripId}/groups/${groupData?.groupId}`)}
                   className="btn btn-primary !h-[56px] w-full !flex items-center justify-between px-6 hover:bg-secondary-5"
                 >
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3"> 
                     <Users size={18} />
                     <span className="b2">View Group Details</span>
                   </div>

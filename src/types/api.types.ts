@@ -82,7 +82,7 @@ export interface UserTrip {
 };
 export type groupContextTrip = {
     isInGroup: boolean,
-    groupTripId?: string,
+    groupId?: string,
     role?: string,
     groupStatus?: string,
     chatId?: string | null

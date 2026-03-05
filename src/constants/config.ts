@@ -24,7 +24,10 @@ export const STORAGE_KEYS = {
     THEME: 'theme',
     LANGUAGE: 'language',
     COMPLETE_PROFILE_STEP: 'completeProfileStep',
-    EMAIL_VERIFIED: 'isEmailVerified'
+    EMAIL_VERIFIED: 'isEmailVerified',
+    GUEST_STRIKES: 'guest_strikes',
+    LOGGED_IN_STRIKES: 'logged_in_strikes',
+    POPUP_CYCLE_COMPLETED: 'popup_cycle_completed'
 } as const;
 
 export const ROUTES = {

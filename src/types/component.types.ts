@@ -176,7 +176,7 @@ export interface Chat {
     matchId?: string;
     isMatchChat: boolean;
     isGroupChat: boolean;
-    groupTripId?: string;
+    groupId?: string;
     users: ChatUser[] | string[];
     latestMessage?: LatestMessage;
     latestMessageText?: string;

@@ -58,19 +58,19 @@ export class GroupApiServices {
     /* ---------- JOIN GROUP ---------- */
 
     static async joinGroupTrip(
-        groupTripId: UUID,
+        groupId: UUID,
         userTripId: UUID
     ): Promise<JoinGroupResponse> {
-        const res = await apiClient.post(`/groups/${groupTripId}/join`, { userTripId });
+        const res = await apiClient.post(`/groups/${groupId}/join`, { userTripId });
         return res.data;
     }
 
     /* ---------- GROUP DETAILS ---------- */
 
     static async getGroupDetails(
-        groupTripId: string
+        groupId: string
     ): Promise<GroupDetailsResponse> {
-        const res = await apiClient.get(`/groups/${groupTripId}`);
+        const res = await apiClient.get(`/groups/${groupId}`);
         return res.data;
     };
 

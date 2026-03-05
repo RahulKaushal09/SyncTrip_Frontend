@@ -24,8 +24,8 @@ export default function GroupTripOnMatchingCard({ trip }: Props) {
         }
     };
     const openGroupDetails = () => {
-        console.log('Navigating to group details for groupTripId:', groupContext.groupTripId);
-        router.push(`/userTrip/${trip.id}/groups/${groupContext.groupTripId}`);
+        console.log('Navigating to group details for groupId:', groupContext.groupId);
+        router.push(`/userTrip/${trip.id}/groups/${groupContext.groupId}`);
     }
     const openAllGroups = () => {
         router.push(`/userTrip/${trip.id}/groups`);

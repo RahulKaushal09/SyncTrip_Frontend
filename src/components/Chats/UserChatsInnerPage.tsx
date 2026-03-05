@@ -402,7 +402,7 @@ export default function ChatsPageInner() {
                 {/* Header: if chat window open -> show small ChatHeader (with back); else show trip selector */}
                 {chatId ? (
                     // ChatHeader should handle a null/undefined chat (showing loading UI)
-                    <ChatHeader chat={activeChat} onBack={onBackFromChat} />
+                    <ChatHeader tripId={tripId as string} chat={activeChat} onBack={onBackFromChat} />
                 ) : (
                     <MultipleTripSelectionHeader
                         tripId={tripId || undefined}

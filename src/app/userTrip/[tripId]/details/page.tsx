@@ -282,7 +282,7 @@ function UserTripDetailsPageContent() {
                     },
                     {
                         text: "View Group Details", onClick: () => {
-                            router.push(`/userTrip/${tripId}/groups/${groupContext.groupTripId}`);
+                            router.push(`/userTrip/${tripId}/groups/${groupContext.groupId}`);
                         }, styleClass: "btn btn-secondary"
                     },
                     ]);

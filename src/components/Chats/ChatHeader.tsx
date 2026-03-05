@@ -31,14 +31,18 @@ import { Users } from "lucide-react";
 import GumletImage from "../common/GumletImage";
 
 export default function ChatHeader({
+  tripId,
   chat,
   onBack,
 }: {
+  tripId: string;
   chat: Chat | null;
   onBack?: () => void;
 }) {
   const router = useRouter();
   const { user } = useLogin();
+
+  // console.log("Rendering ChatHeader with chat:", tripId);
 
   if (!chat) return null;
 
@@ -60,7 +64,7 @@ export default function ChatHeader({
     .filter(Boolean);
 
   return (
-    <div className="flex items-center gap-3 p-3 border-b bg-white">
+    <div onClick={() => router.push(`/userTrip/${tripId}/groups/${chat.groupId}`)} className="flex cursor-pointer items-center gap-3 p-3 border-b bg-white">
       {/* BACK */}
       <button onClick={onBack ?? router.back} className="p-2">
         <svg width="20" height="20" fill="currentColor">

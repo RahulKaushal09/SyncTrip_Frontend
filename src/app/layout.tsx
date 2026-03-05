@@ -82,28 +82,28 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <div className="App">
           {/* <LoaderProvider>
             <LoginProvider> */}
-              {/* You can add a global navbar or context providers here */}
-              {/* <NavbarWrapper /> */}
-              {/* <RouteChangeHandler /> */}
-              {/* <NavbarClient /> */}
-              {/* <ExploreNearby /> */}
-              {/* {<div className="announcement-bar" style={{ height: "25px", display: "none" }}>
+          {/* You can add a global navbar or context providers here */}
+          {/* <NavbarWrapper /> */}
+          {/* <RouteChangeHandler /> */}
+          {/* <NavbarClient /> */}
+          {/* <ExploreNearby /> */}
+          {/* {<div className="announcement-bar" style={{ height: "25px", display: "none" }}>
                 <div className="announcement-track">
                   <div className="announcement-content">
                     <span>SYNCTRIP APP IS LAUNCHING THIS MARCH!</span>
                   </div>
                 </div>
               </div>} */}
-              {/* <div style={{ height: "25px" }}></div> */}
-              {/* {children} */}
-              <DownloadPopup />
-              <ClientProviders>
-                <LayoutUIController>
-                  {children}
-                </LayoutUIController>
-              </ClientProviders>
-              {/* <Toaster position='top-right' /> */}
-            {/* </LoginProvider>
+          {/* <div style={{ height: "25px" }}></div> */}
+          {/* {children} */}
+          <ClientProviders>
+            <DownloadPopup />
+            <LayoutUIController>
+              {children}
+            </LayoutUIController>
+          </ClientProviders>
+          {/* <Toaster position='top-right' /> */}
+          {/* </LoginProvider>
           </LoaderProvider> */}
         </div>
         <Footer />
