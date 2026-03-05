@@ -12,15 +12,15 @@ export default function MoreLocationsUnlocking({ onNotify }: Props) {
     { city: "Leh-Ladakh", count: 1200 },
     { city: "Andaman", count: 400 },
     { city: "Jaipur", count: 600 },
-    { city: "Udaipur", count: 450 },
-    { city: "Shimla", count: 900 },
+    { city: "Udaipur", count: 1450 },
+    // { city: "Shimla", count: 900 },
     { city: "Darjeeling", count: 350 },
     { city: "Coorg", count: 300 },
     { city: "Pondicherry", count: 500 },
   ];
 
   // SVG circle config
-  const nextLaunchProgress = 66;
+  const nextLaunchProgress = 56;
   const size = 120;
   const stroke = 6;
   const radius = (size - stroke) / 2;
@@ -104,7 +104,7 @@ export default function MoreLocationsUnlocking({ onNotify }: Props) {
           </div>
           
           <div className="text-center">
-             <div className="text-lg font-serif font-semibold text-secondary-1">Next: Shimla</div>
+             <div className="text-lg font-serif font-semibold text-secondary-1">Next: Udaipur</div>
              <div className="text-sm text-primary-1/70 mt-1 font-medium">Estimated Launch: April 2026</div>
           </div>
         </div>
