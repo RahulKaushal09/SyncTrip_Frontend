@@ -284,10 +284,19 @@ const DownloadPopup = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [strikes, setStrikes] = useState(0);
   const [isLocked, setIsLocked] = useState(false);
+  const [isIOS, setIsIOS] = useState(true); // Default true to prevent hydration flicker
+  const [hasSeenIOSPopup, setHasSeenIOSPopup] = useState(false);
 
   const [variant, setVariant] = useState(0);
 
   useEffect(() => {
+    // 1. Device Detection
+    const userAgent = navigator.userAgent || navigator.vendor || (window as { opera?: unknown }).opera;
+    const checkIsIOS = /iPad|iPhone|iPod/.test(userAgent as string) && !(window as { MSStream?: unknown }).MSStream;
+
+    setIsIOS(checkIsIOS);
+
+    // 2. Check Local Storage
     const savedStrikes = localStorage.getItem("app_download_strikes");
     if (savedStrikes) {
       const count = parseInt(savedStrikes);
@@ -295,6 +304,25 @@ const DownloadPopup = () => {
       // if (count > STRIKE_LIMIT) lockExperience();
     }
 
+    const iosPopupSeen = localStorage.getItem("ios_popup_seen");
+    if (iosPopupSeen === "true") {
+      setHasSeenIOSPopup(true);
+    }
+
+    // 3. Logic for iOS Users
+    if (checkIsIOS) {
+      if (iosPopupSeen !== "true") {
+        // If they are on iOS and haven't seen it, force Variant 1 and show it
+        setVariant(1);
+        const timer = setTimeout(() => setIsVisible(true), 3000);
+        return () => clearTimeout(timer);
+      } else {
+        // If they are on iOS and HAVE seen it, do nothing (it will remain invisible)
+        return;
+      }
+    }
+
+    // 4. Logic for Android/Other Users
     const timer = setTimeout(() => setIsVisible(true), 3000);
     return () => clearTimeout(timer);
   }, []);
@@ -308,6 +336,15 @@ const DownloadPopup = () => {
   const handleClose = () => {
     if (isLocked) return;
 
+    // Handle closing for iOS
+    if (isIOS) {
+      setIsVisible(false);
+      setHasSeenIOSPopup(true);
+      localStorage.setItem("ios_popup_seen", "true");
+      return; // Stop here so it doesn't cycle or set a reappearance timer
+    }
+
+    // Handle closing for Android/Other (Cycle behavior)
     const newStrikes = strikes + 1;
     setStrikes(newStrikes);
     localStorage.setItem("app_download_strikes", newStrikes.toString());
@@ -329,6 +366,9 @@ const DownloadPopup = () => {
 
   // If hidden and not locked, render nothing
   if (!isVisible && !isLocked) return null;
+  
+  // Extra safety net: If it's iOS and they've already seen it, render nothing.
+  if (isIOS && hasSeenIOSPopup) return null;
 
   // Variant 4 (Toast) floats independently without the dark overlay
   if (variant === 4) {
