@@ -19,6 +19,7 @@ import ChoiceSection from "@/components/Home_new/ChoiceSection";
 // import DownloadPopup from "@/components/popups/DownloadAppPopup";
 import HomeWrapper from "@/components/Home_new/HomeWrapper";
 import dynamic from "next/dynamic";
+import HomeHeroSectionNew from "@/components/Home_new/NewHome";
 
 const Testimonials = dynamic(() =>
   import("@/components/Home_new/testimonialSection")
@@ -63,7 +64,6 @@ const SoftLoginTrigger = dynamic(() =>
 //     canonical: 'https://synctrip.in',
 //   },
 // };
-import HomeHeroSectionNew from "@/components/Home_new/NewHome";
 
 export const metadata: Metadata = {
   title: 'SyncTrip – Travel Planning & Solo Travel Groups in India',
@@ -205,7 +205,6 @@ export default async function Home() {
           }),
         }}
       />
-      {/* <DownloadPopup /> */}
       {/* <HomeWrapper version="v2" /> */}
       <HomeHeroSectionNew />
       <ChoiceSection />

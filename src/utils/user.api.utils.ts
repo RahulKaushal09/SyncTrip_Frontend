@@ -115,7 +115,7 @@ export class UserApiService {
         try {
             const formData = new FormData();
             formData.append('profilePhoto', file);
-            debugger;
+            // debugger;
             const response = await UserApiService.updateProfilePhoto(file);
     
             const newImageUrl = response.url;

@@ -7,9 +7,12 @@ import GroupTripImage from "../../assets/images/groupTripDetails.png";
 import GroupTripMembers from "../../assets/images/groupTripMembers.png";
 import AppBanner from "../../assets/images/appBanner.png";
 import "./downloadPopup.css";
+import PlayStoreWhite from "../../assets/icons/PlayStoreWhite.png";
+import PlayStore from "../../assets/icons/PlayStore.png";
 
-const STRIKE_LIMIT = 4;
-const REAPPEAR_DELAY = 5000;
+// const STRIKE_LIMIT = 4;
+const REAPPEAR_DELAY = 20000;
+const APP_DOWNLOAD_URL = "https://play.google.com/store/apps/details?id=com.synctrip";
 
 type PopupVariantProps = {
   isLocked: boolean;
@@ -50,8 +53,11 @@ const Variant0StackedCards = ({ isLocked, handleClose }: PopupVariantProps) => (
       </div>
 
       <div className="popup-cta-trap mt-6">
-        <button className="w-full btn btn-primary py-4 !flex items-center justify-center gap-2 hover:bg-primary-hover transition-colors">
-          <Download size={20} /> GET THE APP NOW
+        <button onClick={() => window.open(APP_DOWNLOAD_URL, "_blank")} className="w-full btn btn-primary py-4 !flex items-center justify-center gap-2 hover:bg-primary-hover transition-colors">
+          <div className="bg-white w-8 h-8 rounded-full flex items-center justify-center">
+            <Image className="mix-blend-multiply" width={30} height={30} src={PlayStoreWhite} alt="Playstore" />
+          </div>
+          Download the Android App
         </button>
         {!isLocked && (
           <button className="hidden-dismiss-link mt-1.5 block w-full text-center" onClick={handleClose}>
@@ -80,16 +86,19 @@ const Variant1CenteredModal = ({ isLocked, handleClose }: PopupVariantProps) => 
         Exclusive Access
       </div>
       <h2 className="text-2xl font-serif text-secondary-1 mb-1">
-        {isLocked ? "Connection Lost" : "Unlock the Full Itinerary"}
+        {isLocked ? "Connection Lost" : "Unlock the Full Features"}
       </h2>
       <p className="text-neutral-500 text-sm mb-6 leading-relaxed">
         {isLocked
           ? "Please download the app to securely resume your session and access member chats."
-          : "Web users only see partial details. Download the SyncTrip app to view maps, group chats, and live updates."}
+          : "Web users only see partial details. Download the SyncTrip app to view maps, group discussions, and live updates."}
       </p>
 
-      <button className="btn btn-secondary w-full !flex items-center justify-center gap-2 mx-auto hover:bg-secondary-hover transition-colors">
-        <Download size={18} /> Download App
+      <button onClick={() => window.open(APP_DOWNLOAD_URL, "_blank")} className="btn btn-secondary w-full !flex items-center justify-center gap-2 mx-auto hover:bg-secondary-hover transition-colors">
+        <div className="bg-white w-8 h-8 rounded-full flex items-center justify-center">
+          <Image className="mix-blend-multiply" width={32} height={32} src={PlayStore} alt="Playstore" />
+        </div>
+        Download App for Android
       </button>
 
       {!isLocked && (
@@ -120,7 +129,7 @@ const Variant2CompactSheet = ({ isLocked, handleClose }: PopupVariantProps) => (
           SyncTrip Mobile
         </div>
         <h2 className="text-xl sm:text-2xl font-sans font-semibold text-secondary-1 mb-1 leading-tight">
-          {isLocked ? "Session Locked" : "Don't travel blindly."}
+          {isLocked ? "Session Locked" : "Travel solo, but don't miss out!"}
         </h2>
         <p className="text-neutral-500 text-sm sm:text-base leading-relaxed mb-4 sm:mb-0">
           {isLocked
@@ -130,8 +139,11 @@ const Variant2CompactSheet = ({ isLocked, handleClose }: PopupVariantProps) => (
       </div>
 
       <div className="w-full sm:w-auto flex flex-col gap-1 shrink-0">
-        <button className="w-full sm:w-auto btn btn-primary py-3 px-8 rounded-xl font-bold !flex items-center justify-center gap-2 hover:bg-primary-hover transition-colors shadow-sm">
-          <Download size={18} /> GET APP
+        <button onClick={() => window.open(APP_DOWNLOAD_URL, "_blank")} className="w-full sm:w-auto btn btn-primary py-3 px-8 rounded-xl font-bold !flex items-center justify-center gap-2 hover:bg-primary-hover transition-colors shadow-sm">
+          <div className="bg-white w-8 h-8 rounded-full flex items-center justify-center">
+            <Image className="mix-blend-multiply" width={32} height={32} src={PlayStoreWhite} alt="Playstore" />
+          </div>
+          GET APP FOR ANDROID
         </button>
       </div>
     </div>
@@ -167,8 +179,11 @@ const Variant3SingleImageSheet = ({ isLocked, handleClose }: PopupVariantProps) 
       </div>
 
       <div className="popup-cta-trap mt-2">
-        <button className="w-full btn btn-primary py-4 rounded-xl font-bold !flex items-center justify-center gap-2 hover:bg-primary-hover transition-colors">
-          <Download size={20} /> GET THE APP NOW
+        <button onClick={() => window.open(APP_DOWNLOAD_URL, "_blank")} className="w-full btn btn-primary py-4 rounded-xl font-bold !flex items-center justify-center gap-2 hover:bg-primary-hover transition-colors">
+          <div className="bg-white w-8 h-8 rounded-full flex items-center justify-center">
+            <Image className="mix-blend-multiply" width={32} height={32} src={PlayStoreWhite} alt="Playstore" />
+          </div>
+          GET APP FOR ANDROID
         </button>
         {!isLocked && (
           <button className="hidden-dismiss-link mt-1 block w-full text-center" onClick={handleClose}>
@@ -247,8 +262,11 @@ const Variant4AppBannerToast = ({ isLocked, handleClose }: PopupVariantProps) =>
             : "Web users only see partial details. Download the SyncTrip app to view maps, group chats, and live updates."}
         </p>
 
-        <button className="w-full mb-3 btn btn-secondary py-3 rounded-full !flex items-center justify-center gap-2 transition-transform active:scale-95 shadow-md text-sm">
-          <Smartphone size={16} /> OPEN IN APP
+        <button onClick={() => window.open(APP_DOWNLOAD_URL, "_blank")} className="w-full mb-3 btn btn-secondary py-3 rounded-full !flex items-center justify-center gap-2 transition-transform active:scale-95 shadow-md text-sm">
+          <div className="bg-white w-8 h-8 rounded-full flex items-center justify-center">
+            <Image className="mix-blend-multiply" width={32} height={32} src={PlayStoreWhite} alt="Playstore" />
+          </div>
+          OPEN IN APP
         </button>
       </div>
 
@@ -267,7 +285,6 @@ const DownloadPopup = () => {
   const [strikes, setStrikes] = useState(0);
   const [isLocked, setIsLocked] = useState(false);
 
-  // Track which variation to show (0, 1, 2, 3, or 4)
   const [variant, setVariant] = useState(0);
 
   useEffect(() => {
@@ -305,9 +322,9 @@ const DownloadPopup = () => {
 
     // Trigger the reappearance delay
     setTimeout(() => {
-      if (newStrikes > STRIKE_LIMIT) lockExperience();
-      else setIsVisible(true);
-    }, newStrikes > STRIKE_LIMIT ? 500 : REAPPEAR_DELAY);
+      // if (newStrikes > STRIKE_LIMIT) lockExperience();
+      setIsVisible(true);
+    }, REAPPEAR_DELAY);
   };
 
   // If hidden and not locked, render nothing

@@ -700,7 +700,7 @@ export default function MatchingPage() {
                                     aria-label={`Profile ${current.userSnapshot.name}`}
                                     tabIndex={0}
                                 >
-                                    <img src={current.userSnapshot?.profile_picture?.[0]} alt={current.userSnapshot.name} />
+                                    <GumletImage containerClassName='h-full' src={current.userSnapshot?.profile_picture?.[0]} alt={current.userSnapshot.name} />
                                     <div className="MatchingCardMeta">
                                         <div className='MatchingCardBottom'>
                                             <div className="MatchingCardTitle">

@@ -20,6 +20,8 @@ import dynamic from 'next/dynamic';
 // import { LoaderProvider } from '@/components/providers/LoaderContext';
 import LayoutUIController from '@/components/Layout/LayoutUIController';
 import ClientProviders from '@/components/providers/ClientProviders';
+import DownloadPopup from '@/components/popups/DownloadAppPopup';
+
 
 const Footer = dynamic(() => import('@/components/Footer/Footer'));
 
@@ -94,6 +96,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               </div>} */}
               {/* <div style={{ height: "25px" }}></div> */}
               {/* {children} */}
+              <DownloadPopup />
               <ClientProviders>
                 <LayoutUIController>
                   {children}

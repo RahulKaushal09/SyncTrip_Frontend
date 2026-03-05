@@ -29,19 +29,13 @@ const DeleteAccount: React.FC = () => {
           
           <ol style={{ paddingLeft: '24px', margin: 0, lineHeight: '1.8', listStyle: 'decimal' }} className="r2 text-black">
             <li style={{ marginBottom: '16px' }}>
-              <strong>Download our App:</strong> If you haven&apos;t already, download the SyncTrip app on your mobile device and Log into the account that you want to delete.
+              <strong>Download our App:</strong> If you haven&apos;t already, <a className='!underline' href="https://play.google.com/store/apps/details?id=com.synctrip" target="_blank" rel="noopener noreferrer">download the SyncTrip app</a> on your mobile device and Log into the account that you want to delete.
             </li>
             <li style={{ marginBottom: '16px' }}>
-              <strong>Go to Profile:</strong> Navigate to the <strong>Profile</strong> section from the main menu.
+              <strong>Go to Profile:</strong> Navigate to the <strong>Edit Profile</strong> section from the main menu.
             </li>
             <li style={{ marginBottom: '16px' }}>
-              <strong>Open your Passport:</strong> Tap on your <strong>Passport</strong> to view your account details.
-            </li>
-            <li style={{ marginBottom: '16px' }}>
-              <strong>Scroll to More Actions:</strong> Scroll all the way down to find the <strong>More Actions</strong> section.
-            </li>
-            <li style={{ marginBottom: '16px' }}>
-              <strong>Delete Account:</strong> Choose <span className="text-error-1" style={{ fontWeight: 700 }}>&quot;Delete Account&quot;</span> and follow the final on-screen confirmation prompts. Your data will be deleted according to our <a className='!underline' href="/policies/privacy-policies">privacy policies</a>.
+              <strong>Delete Account:</strong> Scroll all the way down to find the <span className="text-error-1" style={{ fontWeight: 700 }}>&quot;Delete Account&quot;</span> option and follow the final on-screen confirmation prompts. Your data will be deleted according to our <a className='!underline' href="/policies/privacy-policies">privacy policies</a>.
             </li>
           </ol>
         </div>

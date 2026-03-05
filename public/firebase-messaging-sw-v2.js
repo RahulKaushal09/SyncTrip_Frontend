@@ -46,9 +46,9 @@ self.addEventListener("notificationclick", (event) => {
   }
 
   let targetUrl = "/notifications"; // fallback: go to notifications page
-  debugger;
+  // debugger;
   if (clickAction) {
-    debugger;
+    // debugger;
     switch (clickAction.type) {
       case "OPEN_CHAT":
         if (clickAction.payload.conversationId) {

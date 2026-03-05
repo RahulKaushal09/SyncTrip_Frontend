@@ -57,8 +57,6 @@ export class GroupApiServices {
 
     /* ---------- JOIN GROUP ---------- */
 
-
-
     static async joinGroupTrip(
         groupTripId: UUID,
         userTripId: UUID
