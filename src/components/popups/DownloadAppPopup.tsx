@@ -12,15 +12,22 @@ import PlayStore from "../../assets/icons/PlayStore.png";
 import { useLogin } from "../providers/LoginProvider";
 import { triggerLogin } from "@/utils";
 
-const REAPPEAR_DELAY = 20000;
-const STRIKE_LIMIT = 5;
+const REAPPEAR_DELAY = 22000;
 const APP_DOWNLOAD_URL = "https://play.google.com/store/apps/details?id=com.synctrip";
+
+// Limit rules
+const GUEST_LIMIT = 3;
+const ANDROID_LOGGED_IN_LIMIT = 2;
+const IOS_LOGGED_IN_LIMIT = 1;
 
 type PopupVariantProps = {
   isAuthLock: boolean;
   handleClose: () => void;
   handleLoginRedirect: () => void;
 };
+
+// Helper to get a random popup variant (0 to 4)
+const getRandomVariant = () => Math.floor(Math.random() * 5);
 
 // VARIANT 0: Original Bottom Sheet (Stacked Cards)
 const Variant0StackedCards = ({ isAuthLock, handleClose, handleLoginRedirect }: PopupVariantProps) => (
@@ -243,7 +250,7 @@ const Variant4AppBannerToast = ({ isAuthLock, handleClose }: PopupVariantProps) 
     }, 500);
   };
 
-  // Toast is never used for auth lock (we force Variant 1 instead for auth lock)
+  // Toast is never used for auth lock
   if (isAuthLock) return null;
 
   return (
@@ -306,13 +313,7 @@ const DownloadPopup = () => {
     const checkIsIOS = /iPad|iPhone|iPod/.test(userAgent as string) && !(window as { MSStream?: unknown }).MSStream;
     setIsIOS(checkIsIOS);
 
-    // 2. Logged In iOS users see nothing
-    if (isLoggedIn && checkIsIOS) {
-      setIsVisible(false); // Make sure it disappears instantly if they log in while seeing it
-      return;
-    }
-
-    // 3. Check Local Storage based on Auth State
+    // 2. Check Local Storage based on Auth State
     if (isLoggedIn) {
       // If user successfully logs in, immediately unlock any guest locks
       setIsAuthLock(false); 
@@ -320,26 +321,35 @@ const DownloadPopup = () => {
       const isComplete = localStorage.getItem("popup_cycle_completed") === "true";
       if (isComplete) {
         setCycleCompleted(true);
-        setIsVisible(false); // Hide if already completed
+        setIsVisible(false);
         return; 
       }
 
       const loggedInStrikes = parseInt(localStorage.getItem("logged_in_strikes") || "0");
+      const maxStrikes = checkIsIOS ? IOS_LOGGED_IN_LIMIT : ANDROID_LOGGED_IN_LIMIT;
+
+      if (loggedInStrikes >= maxStrikes) {
+        localStorage.setItem("popup_cycle_completed", "true");
+        setCycleCompleted(true);
+        setIsVisible(false);
+        return;
+      }
+
       setStrikes(loggedInStrikes);
-      setVariant(loggedInStrikes % 5);
+      setVariant(getRandomVariant()); // Pick a completely random popup
     } else {
       const guestStrikes = parseInt(localStorage.getItem("guest_strikes") || "0");
       setStrikes(guestStrikes);
 
       // If already at limit, lock immediately
-      if (guestStrikes >= STRIKE_LIMIT) {
+      if (guestStrikes >= GUEST_LIMIT) {
         setVariant(1); // Force centered modal for lock
         setIsAuthLock(true);
         setIsVisible(true);
         return;
       } else {
         setIsAuthLock(false);
-        setVariant(guestStrikes % 5);
+        setVariant(getRandomVariant()); // Pick a completely random popup
       }
     }
 
@@ -356,18 +366,18 @@ const DownloadPopup = () => {
     setIsVisible(false);
 
     if (isLoggedIn) {
-      // Logic for Logged-In Android Users
+      const maxStrikes = isIOS ? IOS_LOGGED_IN_LIMIT : ANDROID_LOGGED_IN_LIMIT;
       localStorage.setItem("logged_in_strikes", newStrikes.toString());
-      if (newStrikes >= 5) {
+      
+      if (newStrikes >= maxStrikes) {
         localStorage.setItem("popup_cycle_completed", "true");
         setCycleCompleted(true);
-        return; // Stop cycling
+        return; // Stop cycling, limit reached
       }
     } else {
-      // Logic for Logged-Out Users
       localStorage.setItem("guest_strikes", newStrikes.toString());
-      if (newStrikes >= STRIKE_LIMIT) {
-        // Prepare the auth lock screen
+      if (newStrikes >= GUEST_LIMIT) {
+        // Prepare the auth lock screen on the next cycle
         setTimeout(() => {
           setVariant(1); // Force centered modal for auth lock
           setIsAuthLock(true);
@@ -377,21 +387,20 @@ const DownloadPopup = () => {
       }
     }
 
-    // Cycle to next variant normally
+    // Assign a new random popup for the next appearance
     setTimeout(() => {
-      setVariant((prev) => (prev + 1) % 5);
+      setVariant(getRandomVariant());
     }, 500);
 
-    // Reappear delay
+    // Trigger Reappear delay
     setTimeout(() => {
       setIsVisible(true);
     }, REAPPEAR_DELAY);
   };
 
-  // If cycle is complete, or hidden, or locked out iOS user, render nothing
+  // If cycle is complete, or hidden, render nothing
   if (cycleCompleted) return null;
   if (!isVisible && !isAuthLock) return null;
-  if (isLoggedIn && isIOS) return null;
 
   // Render Toast uniquely
   if (variant === 4 && !isAuthLock) {
