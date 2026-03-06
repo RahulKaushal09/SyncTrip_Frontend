@@ -6,10 +6,11 @@ import { Location } from "@/types";
 import { ApiService } from "@/utils";
 import { LocationFields } from "@/constants";
 import { useEffect, useState } from "react";
+import GumletImage from "../common/GumletImage";
 
 const CACHE_KEY = "synctrip_top_locations";
 const CACHE_TTL = 1000 * 60 * 30; // 30 minutes
-export default  function ThreeLocationSelector({
+export default function ThreeLocationSelector({
     selectedLocationId,
     onSelect,
 }: {
@@ -29,7 +30,7 @@ export default  function ThreeLocationSelector({
 
 
     ];
-    useEffect(  () =>  {
+    useEffect(() => {
         const fetchTopLocations = async () => {
             try {
                 if (typeof window === "undefined") return null;
@@ -92,7 +93,8 @@ export default  function ThreeLocationSelector({
                     >
                         {/* Image */}
                         <div className="relative h-48 w-full">
-                            <Image
+                            <GumletImage
+                                containerClassName="h-full"
                                 src={loc.images?.[0] || "/placeholder.png"}
                                 alt={loc.title}
                                 fill
