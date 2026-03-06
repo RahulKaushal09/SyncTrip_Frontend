@@ -4,6 +4,7 @@ import React from 'react';
 import { MapPin, Calendar, Globe, Briefcase, Lock, SquarePen, MapPinned } from 'lucide-react';
 import { UserTrip } from '@/types';
 import { redirect } from 'next/navigation';
+import GumletImage from '../common/GumletImage';
 
 export default function TripCard ({ trip, isOwner, onClick }: { trip: UserTrip, isOwner: boolean, onClick: () => void }) {
     const privacyLabel = trip.privacy?.toLowerCase().includes('public') ? 'Public' : 'Private';
@@ -17,9 +18,10 @@ export default function TripCard ({ trip, isOwner, onClick }: { trip: UserTrip, 
             onClick={isOwner ? onClick : () => redirect(`/location/${trip?.locationId}`)}
             className="aspect-[4/3] rounded-2xl overflow-hidden relative group cursor-pointer hover:shadow-xl hover:-translate-y-1 transition-all duration-300 shadow-md"
         >
-            <img
+            <GumletImage
                 src={trip.image}
-                alt={trip.tripName}
+                containerClassName='h-full'
+                alt={trip.tripName as string}
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
                 loading="lazy"
             />
