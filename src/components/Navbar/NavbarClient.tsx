@@ -440,6 +440,7 @@ const NavbarClient = ({ }) => {
                     alt="Profile"
                     width={40}
                     height={40}
+                    containerClassName="!w-fit"
                     style={{
                       borderRadius: "50%",
                       objectFit: "cover",

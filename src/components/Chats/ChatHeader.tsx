@@ -63,8 +63,16 @@ export default function ChatHeader({
     .map((u) => (u as ChatUser).profile_picture?.[0])
     .filter(Boolean);
 
+  const handleChatNameClick = () => {
+    if (isGroup) {
+      router.push(`/userTrip/${tripId}/groups/${chat.groupId}`);
+    } else {
+      router.push(`/user/${(otherUser as ChatUser)?.id}`);
+    }
+  }
+
   return (
-    <div onClick={() => router.push(`/userTrip/${tripId}/groups/${chat.groupId}`)} className="flex cursor-pointer items-center gap-3 p-3 border-b bg-white">
+    <div className="flex cursor-pointer items-center gap-3 p-3 border-b bg-white">
       {/* BACK */}
       <button onClick={onBack ?? router.back} className="p-2">
         <svg width="20" height="20" fill="currentColor">
@@ -110,7 +118,7 @@ export default function ChatHeader({
       </div>
 
       {/* TITLE */}
-      <div className="flex flex-col">
+      <div onClick={handleChatNameClick} className="flex flex-col">
         <div className="font-semibold leading-tight">
           {isGroup
             ? chat.chatName || "Group Trip"
