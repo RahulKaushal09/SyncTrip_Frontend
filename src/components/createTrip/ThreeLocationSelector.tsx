@@ -48,7 +48,7 @@ export default  function ThreeLocationSelector({
                 }
 
                 // 3) Fetch fresh data
-                const res = await ApiService.fetchLocations(0, 3, LocationFieldsToFetch);
+                const res = await ApiService.fetchLocations(0, 4, LocationFieldsToFetch);
 
                 // 4) Save to cache
                 localStorage.setItem(
@@ -99,7 +99,7 @@ export default  function ThreeLocationSelector({
                                 className="object-cover group-hover:scale-105 transition-transform duration-500"
                             />
 
-                            {selectedLocationId === loc.id && (<span className="absolute top-3 left-3 bg-white/80 px-3 py-1 rounded-full text-xs font-semibold text-primary-1">
+                            {selectedLocationId === loc.id && (<span className="absolute top-3 left-3 bg-white/90 px-3 py-1 rounded-full text-xs font-semibold text-primary-1">
                                 Active Now
                             </span>)}
                         </div>
