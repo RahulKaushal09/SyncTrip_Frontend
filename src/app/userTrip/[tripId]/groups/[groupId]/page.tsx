@@ -17,7 +17,12 @@ export default function GroupDetailsPage() {
   const { tripId, groupId } = useParams() as { tripId: string; groupId: string };
   const router = useRouter();
   const { showLoader, hideLoader } = useLoader();
-
+  const { isLoggedIn } = useLogin();
+  useEffect(() => {
+    if (!isLoggedIn) {
+      router.replace(`/groups/${groupId}`);
+    }
+  }, [isLoggedIn, groupId, router]);
   const [group, setGroup] = useState<GroupDetails | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showFullList, setShowFullList] = useState(false);

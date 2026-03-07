@@ -77,11 +77,11 @@ export async function generateMetadata(
       url: `${process.env.NEXT_PUBLIC_BASE_URL}/groups/${slug}`,
       images: res.groupImageUrl
         ? [
-            {
-              url: res.groupImageUrl,
-              alt: res.groupName,
-            },
-          ]
+          {
+            url: res.groupImageUrl,
+            alt: res.groupName,
+          },
+        ]
         : undefined,
     },
     alternates: {

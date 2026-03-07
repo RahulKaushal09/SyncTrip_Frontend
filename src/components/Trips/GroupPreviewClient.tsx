@@ -17,7 +17,7 @@ export default function GroupPreviewPage({ group }: { group: GroupCard }) {
     const { isLoggedIn, user } = useLogin();
     const [isAdmin, setIsAdmin] = useState(group.createdBy === user?.id);
     const [showPopup, setShowPopup] = useState(false);
-
+    
     useEffect(() => {
         setIsAdmin(group.createdBy === user?.id);
     }, [user, group]);
