@@ -306,9 +306,24 @@ const DownloadPopup = () => {
   const [variant, setVariant] = useState(0);
   const [cycleCompleted, setCycleCompleted] = useState(false);
   const { isLoggedIn } = useLogin();
+  const POPUP_RESET_KEY = "popup_last_reset";
+
+  const resetPopupIfNeeded = () => {
+    const today = new Date().toDateString();
+    const lastReset = localStorage.getItem(POPUP_RESET_KEY);
+
+    if (lastReset !== today) {
+      localStorage.removeItem("logged_in_strikes");
+      localStorage.removeItem("guest_strikes");
+      localStorage.removeItem("popup_cycle_completed");
+
+      localStorage.setItem(POPUP_RESET_KEY, today);
+    }
+  };
 
   useEffect(() => {
     // 1. Device Detection
+    resetPopupIfNeeded();
     const userAgent = navigator.userAgent || navigator.vendor || (window as { opera?: unknown }).opera;
     const checkIsIOS = /iPad|iPhone|iPod/.test(userAgent as string) && !(window as { MSStream?: unknown }).MSStream;
     setIsIOS(checkIsIOS);
@@ -316,13 +331,13 @@ const DownloadPopup = () => {
     // 2. Check Local Storage based on Auth State
     if (isLoggedIn) {
       // If user successfully logs in, immediately unlock any guest locks
-      setIsAuthLock(false); 
-      
+      setIsAuthLock(false);
+
       const isComplete = localStorage.getItem("popup_cycle_completed") === "true";
       if (isComplete) {
         setCycleCompleted(true);
         setIsVisible(false);
-        return; 
+        return;
       }
 
       const loggedInStrikes = parseInt(localStorage.getItem("logged_in_strikes") || "0");
@@ -368,7 +383,7 @@ const DownloadPopup = () => {
     if (isLoggedIn) {
       const maxStrikes = isIOS ? IOS_LOGGED_IN_LIMIT : ANDROID_LOGGED_IN_LIMIT;
       localStorage.setItem("logged_in_strikes", newStrikes.toString());
-      
+
       if (newStrikes >= maxStrikes) {
         localStorage.setItem("popup_cycle_completed", "true");
         setCycleCompleted(true);

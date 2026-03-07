@@ -29,6 +29,14 @@ export default function CreateGroupPage() {
     const [tags, setTags] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
 
+    useEffect(() => {
+        document.title = "Start Travel Discussion | SyncTrip";
+
+        return () => {
+            document.title = "SyncTrip";
+        };
+    }, []);
+
     const toggleTag = (tag: string) => {
         if (tags.includes(tag)) {
             setTags(tags.filter(t => t !== tag));
@@ -87,9 +95,9 @@ export default function CreateGroupPage() {
                     setTags(userStyles);
                 }
 
-                if (user?.sex === 'Female') {
+                if (user?.sex?.toLowerCase() === 'female') {
                     setTypeOfGenderPreferenceJson(prev => prev.filter(t => t.value !== 'male'));
-                } else if (user?.sex === 'Male') {
+                } else if (user?.sex?.toLowerCase() === 'male') {
                     setTypeOfGenderPreferenceJson(prev => prev.filter(t => t.value !== 'female'));
                 }
             } catch (error) { }

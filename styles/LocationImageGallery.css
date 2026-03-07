@@ -98,51 +98,157 @@
     scrollbar-width: none;
 }
 
-/* Popup Styles (Desktop Only) */
+/* =========================================
+   Popup Styles (Desktop Only) - Mac Feel
+   ========================================= */
+
 .popup-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.8);
-    display: inline-block;
+    inset: 0; /* Shorthand for top:0, right:0, bottom:0, left:0 */
+    background: rgba(0, 0, 0, 0.75); /* Low opacity black */
+    backdrop-filter: blur(15px); /* Mac frosted glass effect */
+    -webkit-backdrop-filter: blur(15px); /* Safari support */
+    display: flex;
+    justify-content: center;
+    align-items: center;
     z-index: 1010;
 }
 
 .popup-content {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    position: relative;
-    max-width: 100%;
-    max-height: 100%;
-    overflow-y: auto;
-    margin: auto;
+    /* Full screen container, no white background */
+    background: transparent;
+    width: 100vw;
+    height: 100vh;
+    padding: 60px 40px 30px 40px; /* Breathing room around the edges */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
 }
 
+/* Sleek circular close button top right */
 .close-button {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 30px;
+    right: 40px;
     border: none;
-    background: none;
-    font-size: 30px;
-    cursor: pointer;
-}
-
-.popup-images {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 10px;
+    background: rgba(255, 255, 255, 0.1); 
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    font-size: 28px;
+    line-height: 1;
+    display: flex;
     justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+    z-index: 1011;
 }
 
-.popup-image {
-    height: 200px;
-    width: 200px;
+.close-button:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: scale(1.05);
+}
+
+/* Main Image Viewer */
+/* Main Image Viewer */
+.popup-main-image {
+    flex: 1;
+    width: 100%;
+    /* Restrict max dimensions to prevent pixelation */
+    max-width: 850px; 
+    max-height: 65vh; 
+    
+    position: relative;
+    /* Centers the image block in the available space */
+    margin: auto auto 60px auto; 
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* UI Navigation Arrows */
+.popup-nav-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    color: white;
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    font-size: 36px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: background 0.2s ease, transform 0.2s ease;
+    padding-bottom: 4px; /* Optically center the chevron text */
+}
+
+.popup-nav-button:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.popup-nav-button.left {
+    left: -70px; /* Pushes the button outside the image */
+}
+
+.popup-nav-button.right {
+    right: -70px; /* Pushes the button outside the image */
+}
+
+/* Thumbnail Row */
+.popup-thumbnails-row {
+    display: flex;
+    gap: 16px;
+    height: 110px;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 15px 10px; /* Padding ensures the scale transform isn't cut off */
+    scroll-behavior: smooth;
+    
+    /* Hide scrollbar */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.popup-thumbnails-row::-webkit-scrollbar {
+    display: none;
+}
+
+/* Individual Thumbnail */
+.popup-thumbnail {
+    position: relative;
+    flex: 0 0 130px; /* Fixed width, prevents shrinking */
+    height: 80px;
     border-radius: 8px;
-    object-fit: cover;
+    overflow: hidden;
+    cursor: pointer;
+    opacity: 0.4;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); /* Smooth Mac-like easing */
+}
+
+.popup-thumbnail:hover {
+    opacity: 0.7;
+}
+
+/* Active State */
+.popup-thumbnail.active {
+    opacity: 1;
+    transform: scale(1.1); /* Enlarges as requested */
+    border: 2px solid rgba(255, 255, 255, 0.9); /* Sharp white border */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6); /* Deep drop shadow */
+    z-index: 2;
 }
 
 /* Media Queries */

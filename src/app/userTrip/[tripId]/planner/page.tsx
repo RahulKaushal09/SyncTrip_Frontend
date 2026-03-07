@@ -259,6 +259,9 @@ function generateDays(start: string | Date, end: string | Date): DayPlan[] {
 // ---------------------------------------------
 
 export default function TripPlannerPage() {
+  useEffect(() => {
+    document.title = "Trip Planner | SyncTrip";
+  }, []);
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <TripPlannerPageContent />

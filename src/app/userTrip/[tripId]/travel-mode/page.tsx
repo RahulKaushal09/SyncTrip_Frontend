@@ -20,6 +20,10 @@ export default function TravelModePage() {
   const { showLoader } = useLoader();
 
   useEffect(() => {
+    document.title = "Select Travel Mode | SyncTrip";
+  }, [window]);
+
+  useEffect(() => {
     const checkPrivacy = async () => {
       try {
         const tripDetailsRes = await TripServices.fetchTripWithGroupDetails(tripId, [userTripFields.ID, userTripFields.PRIVACY, userTripFields.START_DATE, userTripFields.END_DATE, userTripFields.LOCATION_NAME, userTripFields.LOCATION_ID]);

@@ -97,6 +97,21 @@ function CreateTripContent() {
   const [isImageEditModalOpen, setIsImageEditModalOpen] = useState(false);
   // const [pendingStartMatching, setPendingStartMatching] = useState(false);
 
+  useEffect(() => {
+    const stepTitles: Record<number, string> = {
+      1: "Choose Location | Create Trip | SyncTrip",
+      2: "Select Dates | Create Trip | SyncTrip",
+      3: "Trip Privacy | Create Trip | SyncTrip",
+      4: "Review Trip Plan | Create Trip | SyncTrip",
+    };
+
+    document.title = stepTitles[step] || "Create Trip | SyncTrip";
+
+    return () => {
+      document.title = "Create Trip | SyncTrip";
+    };
+  }, [step, window]);
+
   const { showLoader, hideLoader } = useLoader();
   useEffect(() => {
     const parseLocationId = async () => {

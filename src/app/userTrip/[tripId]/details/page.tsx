@@ -323,6 +323,31 @@ function UserTripDetailsPageContent() {
         };
         load();
     }, [tripId]);
+
+    useEffect(() => {
+        if (!location) {
+            document.title = "Trip Details | SyncTrip";
+            return;
+        }
+
+        let title = `${location.title} Trip | SyncTrip`;
+
+        if (tripDetails?.startDate && tripDetails?.endDate) {
+            const options: Intl.DateTimeFormatOptions = { month: "short", day: "numeric" };
+
+            const start = new Date(tripDetails.startDate).toLocaleDateString(undefined, options);
+            const end = new Date(tripDetails.endDate).toLocaleDateString(undefined, options);
+
+            title = `${location.title} (${start} - ${end}) | SyncTrip`;
+        }
+
+        document.title = title;
+
+        return () => {
+            document.title = "SyncTrip";
+        };
+    }, [location, tripDetails]);
+
     // Top tab (About / Places / Stay / Restaurant)
     const [selectedKey, setSelectedKey] = useState<string>('about');
     const [isLoadingItinerary, setIsLoadingItinerary] = useState(false);

@@ -35,6 +35,10 @@ export default function AllTripsPage() {
   const router = useRouter();
   const { user } = useLogin(); // ⬅️ use context directly
 
+  useEffect(() => {
+    document.title = "My Trips | SyncTrip";
+  }, [window]);
+
   const [trips, setTrips] = useState<UserTrip[]>([]);
   const [filter, setFilter] = useState<FilterKey>("all");
   useEffect(() => {
@@ -119,7 +123,7 @@ export default function AllTripsPage() {
                   trip={trip}
                   onPressCard={() => openTripDetailsScreen(trip.id as string, trip.locationId as string)}
                   onPressEdit={() => openTripDetailsScreen(trip.id as string, trip.locationId as string)}
-                  // onPressDelete={() => deleteTrip(trip.id as string, trip.startDate as string)}
+                // onPressDelete={() => deleteTrip(trip.id as string, trip.startDate as string)}
                 />
               </div>
             ))

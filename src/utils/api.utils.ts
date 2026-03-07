@@ -23,7 +23,7 @@ export class ApiService {
 
     };
   }
-  private static async getAuthHeadersServer(token: string = ""): Promise<HeadersInit> {
+  static async getAuthHeadersServer(token: string = ""): Promise<HeadersInit> {
     return {
       'Content-Type': 'application/json',
       'Authorization': token ? `Bearer ${token}` : '',

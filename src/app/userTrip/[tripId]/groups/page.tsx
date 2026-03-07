@@ -50,6 +50,10 @@ export default function GroupsPage() {
         }
     };
 
+    useEffect(() => {
+        document.title = "Discover Groups | SyncTrip";
+    }, [window]);
+
     return (
         <div className="paddingTopAndSide bg-white">
             {/* Header */}

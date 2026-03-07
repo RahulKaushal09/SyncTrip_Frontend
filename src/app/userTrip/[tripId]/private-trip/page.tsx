@@ -30,6 +30,7 @@ export default function PrivateTripPage() {
     const { showLoader } = useLoader();
 
     useEffect(() => {
+        document.title = "Private Trip | SyncTrip";
         const checkPrivacy = async () => {
             try {
                 const tripDetails = await TripServices.fetchTripDetails(tripId, [userTripFields.ID, userTripFields.PRIVACY]);

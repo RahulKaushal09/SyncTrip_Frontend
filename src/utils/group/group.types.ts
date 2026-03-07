@@ -11,6 +11,14 @@ export interface GroupCard {
   maxMembers: number;
   tags: string[];
   createdBy: UUID;
+  locationName?: string;
+  month?: string;
+  description?: string;
+  seo?: {
+    seo_title?: string,
+    seo_description?: string,
+    seo_keywords?: string[],
+  }
 }
 
 export interface GroupPermissions {
@@ -23,15 +31,15 @@ export interface GroupMemberDetails {
   name: string;
   profile_picture: string | null;
   dateOfBirth?: string | null;
-  age?: number | null; 
-  sex?: string | null;  
+  age?: number | null;
+  sex?: string | null;
   rating?: number | null;
 }
 
 export interface GroupMember {
   userId: UUID;
-    role: 'admin' | 'member';
-    userDetails: GroupMemberDetails;
+  role: 'admin' | 'member';
+  userDetails: GroupMemberDetails;
 }
 
 /* ---------- Group Details ---------- */
@@ -45,6 +53,7 @@ export interface GroupDetails {
   locationId: UUID;
   locationName: string;
   month: string;
+  createdBy?: UUID;
   genderPreference: GenderPreference;
   membersCount: number;
   maxMembers: number;
@@ -54,7 +63,7 @@ export interface GroupDetails {
   isMember: boolean;
   isAdmin: boolean;
   chatId?: UUID;
-//   userTripId?: UUID;
+  //   userTripId?: UUID;
   permissions: GroupPermissions;
 }
 

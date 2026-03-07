@@ -5,6 +5,9 @@ import {
     CreateGroupPayload
 } from "./group.types";
 import { Chat, UUID } from "@/types";
+import { API_CONFIG } from "@/constants/config";
+import { ApiService } from "../api.utils";
+import { CookieUtils } from "../cookie.utils";
 
 interface GroupInt {
     createdAt: string;
@@ -81,5 +84,14 @@ export class GroupApiServices {
         return res.data.groups;
     };
 
+    /* ---------- GROUP PREVIEW ---------- */
+    static async getGroupPreview(groupId: string, token: string): Promise<GroupCard> {
+        const res = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/groups/${groupId}/seo-preview`, {
+            method: 'GET',
+            headers: await ApiService.getAuthHeadersServer(token),
+        });
+        const data: GroupCard = (await res.json()).groupPreview;
+        return data;
+    }
 }
 

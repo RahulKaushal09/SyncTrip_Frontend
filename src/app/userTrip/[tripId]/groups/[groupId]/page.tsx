@@ -2,13 +2,15 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { Users, Star, Crown, MessageCircle, ArrowLeft, ShieldCheck, MapPin, ChevronDown, ChevronUp, UserCircle } from 'lucide-react';
+import { Users, Star, Crown, MessageCircle, ArrowLeft, ShieldCheck, Share2, MapPin, ChevronDown, ChevronUp, UserCircle } from 'lucide-react';
 import { GroupDetails } from '@/utils/group/group.types';
 import { GroupApiServices, GroupDetailsResponse } from '@/utils/group/group.api';
 import { useLoader } from '@/components/providers/LoaderContext';
 import Image from 'next/image';
 import Link from 'next/link';
 import GumletImage from '@/components/common/GumletImage';
+import { useLogin } from '@/components/providers/LoginProvider';
+import toast from 'react-hot-toast';
 // import { CommonServices } from '@/utils';
 
 export default function GroupDetailsPage() {
@@ -23,6 +25,19 @@ export default function GroupDetailsPage() {
   const MAX_VISIBLE = 3;
   const visibleMembers = group && group.members.slice(0, MAX_VISIBLE);
   const remainingCount = group && group.members.length - MAX_VISIBLE;
+
+  useEffect(() => {
+    if (!group) {
+      document.title = "Group Details | SyncTrip";
+      return;
+    }
+
+    document.title = `${group.groupName} | Travel Group | SyncTrip`;
+
+    return () => {
+      document.title = "SyncTrip";
+    };
+  }, [group]);
 
   useEffect(() => {
     showLoader();
@@ -56,18 +71,60 @@ export default function GroupDetailsPage() {
     }
 
   }
+
+  const generateGroupSlug = (groupId: string, locationName: string, groupName: string, month: string): string => {
+    const date = new Date(month + "-01");
+    const slug = `${groupName}-in-${locationName}-${date.toLocaleString('default', { month: 'long' })}_${groupId}`;
+    return slug.toLowerCase().replace(/\s+/g, '-');
+  }
+
+  const handleShare = async () => {
+    const shareData = {
+      title: group?.groupName || 'Check out this group on SyncTrip',
+      text: `Join the ${group?.groupName} trip!`,
+      url: `${process.env.NEXT_PUBLIC_DOMAIN_BASE_URL}/groups/${generateGroupSlug(group.id, group.locationName, group.groupName, group.month)}`,
+    };
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (error) {
+        console.log('Error sharing:', error);
+      }
+    } else {
+      // Fallback for browsers that don't support Web Share API (like desktop Chrome)
+      try {
+        await navigator.clipboard.writeText(shareData.url);
+        toast.success('Link copied to clipboard!'); // You can replace this with your custom toast/snackbar
+      } catch (error) {
+        console.log('Failed to copy:', error);
+      }
+    }
+  };
+
   return (
     <div style={{
       width: "56rem"
     }} className="paddingTopAndSide  mx-auto !pb-32">
-      {/* Navigation */}
-      <button
-        onClick={() => router.back()}
-        className="flex items-center gap-2 text-neutral-2 hover:text-secondary-1 mb-6 transition-colors b3 uppercase tracking-wider"
-      >
-        <ArrowLeft size={16} />
-        Back
-      </button>
+      {/* Navigation & Actions */}
+      <div className="flex items-center justify-between mb-6">
+        <button
+          onClick={() => router.back()}
+          className="flex items-center gap-2 text-neutral-2 hover:text-secondary-1 transition-colors b3 uppercase tracking-wider"
+        >
+          <ArrowLeft size={16} />
+          Back
+        </button>
+
+        <button
+          onClick={handleShare}
+          className="flex items-center gap-2 text-neutral-2 hover:text-secondary-1 transition-colors bg-white border border-neutral-5 shadow-sm px-3 py-1.5 rounded-full s1 font-bold"
+          aria-label="Share group"
+        >
+          <Share2 size={16} />
+          Share
+        </button>
+      </div>
 
       {/* Hero Header Section */}
       <div className="m-animate play m-slide-up relative aspect-[16/10] w-full rounded-[32px] overflow-hidden mb-8 shadow-md border border-neutral-5">

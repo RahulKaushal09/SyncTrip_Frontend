@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import Image from 'next/image';
+// import Image from 'next/image';
 
 import '../../../styles/LocationImageGallery.css';
 import GumletImage from '../common/GumletImage';
@@ -13,11 +13,43 @@ interface Props {
 
 const LocationImageGallery: React.FC<Props> = ({ locationImages, locationName }) => {
     const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const [selectedPopupIndex, setSelectedPopupIndex] = useState(0);
+
     const [isMobile, setIsMobile] = useState(false);
     const carouselRef = useRef<HTMLDivElement | null>(null);
     const [isUserInteracting, setIsUserInteracting] = useState(false);
 
-    // Set initial mobile state and handle resize
+    // Lock background scrolling when the popup is open
+    useEffect(() => {
+        if (isPopupOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, [isPopupOpen]);
+
+    // NEW: Keyboard Arrow & Escape Key Navigation
+    useEffect(() => {
+        if (!isPopupOpen) return;
+
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') {
+                closePopup();
+            } else if (e.key === 'ArrowRight') {
+                handleNextImage();
+            } else if (e.key === 'ArrowLeft') {
+                handlePrevImage();
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [isPopupOpen, locationImages.length]);
+
     useEffect(() => {
         const handleResize = () => setIsMobile(window.innerWidth <= 768);
         handleResize();
@@ -25,20 +57,15 @@ const LocationImageGallery: React.FC<Props> = ({ locationImages, locationName })
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    // Auto-scroll for mobile carousel (One image at a time)
     useEffect(() => {
         if (!isMobile || !carouselRef.current || isUserInteracting || locationImages.length <= 1) return;
 
         const carousel = carouselRef.current;
-
         const interval = setInterval(() => {
-            const width = carousel.offsetWidth; // Width of exactly one image container
-
-            // If we are at the last image, snap back to the beginning
+            const width = carousel.offsetWidth;
             if (carousel.scrollLeft + width >= carousel.scrollWidth - 10) {
                 carousel.scrollTo({ left: 0, behavior: 'smooth' });
             } else {
-                // Otherwise scroll exactly one image width to the right
                 carousel.scrollBy({ left: width, behavior: 'smooth' });
             }
         }, 3000);
@@ -51,20 +78,29 @@ const LocationImageGallery: React.FC<Props> = ({ locationImages, locationName })
         setTimeout(() => setIsUserInteracting(false), 3000);
     };
 
-    const handleMoreImagesClick = () => setIsPopupOpen(true);
+    const openPopupWithImage = (index: number) => {
+        setSelectedPopupIndex(index);
+        setIsPopupOpen(true);
+    };
+
     const closePopup = () => setIsPopupOpen(false);
 
-    // Fallback if no images are provided
+    // NEW: Helper functions for arrows
+    const handleNextImage = () => {
+        setSelectedPopupIndex((prev) => (prev + 1) % locationImages.length);
+    };
+
+    const handlePrevImage = () => {
+        setSelectedPopupIndex((prev) => (prev === 0 ? locationImages.length - 1 : prev - 1));
+    };
+
     if (!locationImages || locationImages.length === 0) return null;
 
     return (
-        /* UI CHANGE: Wrapped the return in a React Fragment `<>...</>` to decouple the popup from the animated wrapper */
         <>
             <div className="location-gallery m-animate m-slide-up" style={{ animationDelay: '0.1s', marginBottom: '30px' }}>
                 {isMobile ? (
-                    /* =========================================
-                       📱 MOBILE LAYOUT: Full-Width Auto Scroll
-                       ========================================= */
+                    /* Mobile Layout */
                     <div
                         ref={carouselRef}
                         onTouchStart={handleInteractionStart}
@@ -79,7 +115,6 @@ const LocationImageGallery: React.FC<Props> = ({ locationImages, locationName })
                             scrollbarWidth: 'none',
                             WebkitOverflowScrolling: 'touch',
                             borderRadius: '16px',
-                            // Hide scrollbar for Chrome/Safari
                             msOverflowStyle: 'none'
                         }}
                     >
@@ -106,9 +141,7 @@ const LocationImageGallery: React.FC<Props> = ({ locationImages, locationName })
                         ))}
                     </div>
                 ) : (
-                    /* =========================================
-                       💻 DESKTOP LAYOUT: Compact Bento Grid
-                       ========================================= */
+                    /* Desktop Layout */
                     <div
                         style={{
                             display: 'grid',
@@ -120,39 +153,33 @@ const LocationImageGallery: React.FC<Props> = ({ locationImages, locationName })
                             position: 'relative'
                         }}
                     >
-                        {/* Main Large Image */}
                         <div
                             className="hov-lift"
                             style={{ gridColumn: 'span 2', gridRow: 'span 2', position: 'relative', cursor: 'pointer' }}
-                            onClick={() => setIsPopupOpen(true)}
+                            onClick={() => openPopupWithImage(0)}
                         >
                             <div className='w-full h-full'>
                                 <GumletImage containerClassName='h-full' src={locationImages[0]} fill style={{ objectFit: 'cover' }} alt={locationName} priority />
                             </div>
-                            {/* <Image src={locationImages[0]} fill style={{ objectFit: 'cover' }} alt={locationName} priority /> */}
                         </div>
 
-                        {/* Small Sub Images (Indexes 1, 2, 3) */}
                         {locationImages.slice(1, 4).map((image, index) => (
                             <div
                                 key={index}
                                 className="hov-lift"
                                 style={{ position: 'relative', cursor: 'pointer' }}
-                                onClick={() => setIsPopupOpen(true)}
+                                onClick={() => openPopupWithImage(index + 1)}
                             >
                                 <GumletImage containerClassName='h-full' src={image} fill style={{ objectFit: 'cover' }} alt={`${locationName} view ${index + 1}`} />
-                                {/* <Image src={image} fill style={{ objectFit: 'cover' }} alt={`${locationName} view ${index + 1}`} /> */}
                             </div>
                         ))}
 
-                        {/* 5th Image with Classic +X Overlay */}
                         {locationImages.length > 4 && (
                             <div
                                 className="hov-lift"
                                 style={{ position: 'relative', cursor: 'pointer' }}
-                                onClick={handleMoreImagesClick}
+                                onClick={() => openPopupWithImage(4)}
                             >
-                                {/* <Image src={locationImages[4]} fill style={{ objectFit: 'cover' }} alt={`${locationName} view 5`} /> */}
                                 <GumletImage containerClassName='h-full' src={locationImages[4]} fill style={{ objectFit: 'cover' }} alt={`${locationName} view 5`} />
 
                                 <div style={{
@@ -171,28 +198,57 @@ const LocationImageGallery: React.FC<Props> = ({ locationImages, locationName })
                 )}
             </div>
 
-            {/* =========================================
-               🎥 ORIGINAL FULL-SCREEN GRID POPUP 
-               ========================================= */}
-            {/* UI CHANGE: Moved outside the main animated div so `position: fixed` works perfectly */}
+            {/* POPUP */}
             {!isMobile && isPopupOpen && (
                 <div className="popup-overlay" onClick={closePopup}>
                     <div className="popup-content" onClick={(e) => e.stopPropagation()}>
-                        <button className="close-button" onClick={closePopup}>
-                            ×
-                        </button>
-                        <div className="popup-images">
+                        <button className="close-button" onClick={closePopup}>×</button>
+
+                        {/* Main Enlarged Image */}
+                        <div className="popup-main-image">
+                            {/* NEW: Left Arrow Button */}
+                            <button 
+                                className="popup-nav-button left" 
+                                onClick={(e) => { e.stopPropagation(); handlePrevImage(); }}
+                                aria-label="Previous Image"
+                            >
+                                ‹
+                            </button>
+
+                            <GumletImage
+                                containerClassName="h-full w-full relative"
+                                src={locationImages[selectedPopupIndex]}
+                                fill
+                                style={{ objectFit: 'contain' }}
+                                alt={`Main view of ${locationName}`}
+                            />
+
+                            {/* NEW: Right Arrow Button */}
+                            <button 
+                                className="popup-nav-button right" 
+                                onClick={(e) => { e.stopPropagation(); handleNextImage(); }}
+                                aria-label="Next Image"
+                            >
+                                ›
+                            </button>
+                        </div>
+
+                        {/* Scrollable Thumbnails Row */}
+                        <div className="popup-thumbnails-row">
                             {locationImages.map((image, index) => (
-                                <GumletImage
+                                <div
                                     key={index}
-                                    src={image}
-                                    width={200}
-                                    height={200}
-                                    alt={`Attraction in ${locationName} - SyncTrip`}
-                                    className="popup-image"
-                                    // Added objectFit: 'cover' here so the 200x200 squares don't distort the image
-                                    style={{ height: '200px', width: '200px', objectFit: 'cover' }}
-                                />
+                                    className={`popup-thumbnail ${index === selectedPopupIndex ? 'active' : ''}`}
+                                    onClick={() => setSelectedPopupIndex(index)}
+                                >
+                                    <GumletImage
+                                        containerClassName="h-full w-full relative"
+                                        src={image}
+                                        fill
+                                        style={{ objectFit: 'cover' }}
+                                        alt={`Thumbnail ${index + 1}`}
+                                    />
+                                </div>
                             ))}
                         </div>
                     </div>
