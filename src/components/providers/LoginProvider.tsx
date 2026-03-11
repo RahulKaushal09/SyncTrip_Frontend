@@ -29,6 +29,7 @@ interface LoginContextType {
     lastStepOfCompleteProfile: number;
     isEmailVerified: boolean;
     registerFcmTokenForUser: (u: User | null) => Promise<void>;
+    isLoginPopupOpen?: boolean;
 }
 
 const LoginContext = createContext<LoginContextType | undefined>(undefined);
@@ -146,6 +147,7 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
 
             // --- CASE 2: User NOT logged in → Show login popup ---
             setShowLogin(true);
+
         },
         []
     );
@@ -328,7 +330,8 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
         updateLastStepOfCompleteProfile,
         lastStepOfCompleteProfile,
         isEmailVerified,
-        registerFcmTokenForUser
+        registerFcmTokenForUser,
+        isLoginPopupOpen: showLogin,
     };
 
     return (
