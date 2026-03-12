@@ -429,9 +429,9 @@ export type FetchChatsParams = {
 export type FetchChatsResponse = Chat[];
 
 export interface FetchChatByIdResponse extends Chat {
-    tripId: string; // only in GET /api/chats/:chatId
+    tripId: string; // only in GET /chats/:chatId
     Chat: Chat,
-    messages: Message[]; // only in GET /api/chats/:chatId
+    messages: Message[]; // only in GET /chats/:chatId
 }
 
 export type FetchMessagesResponse = Message[];

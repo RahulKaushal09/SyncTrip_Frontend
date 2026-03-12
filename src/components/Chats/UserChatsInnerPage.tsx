@@ -81,7 +81,7 @@ export default function ChatsPageInner() {
                 }
             } else {
                 // fallback to raw fetch
-                const r = await fetch("/api/chats/unread-count");
+                const r = await fetch("/chats/unread-count");
                 const data = await r.json();
                 setUnreadByTrip(data?.byTrip || {});
             }

@@ -11,8 +11,11 @@ import PlayStoreWhite from "../../assets/icons/PlayStoreWhite.png";
 import PlayStore from "../../assets/icons/PlayStore.png";
 import { useLogin } from "../providers/LoginProvider";
 import { triggerLogin } from "@/utils";
+import { usePathname } from "next/navigation";
 
 const REAPPEAR_DELAY = 22000;
+const INITIAL_DELAY_GUEST = 15000;
+const INITIAL_DELAY_LOGGED_IN = 30000;
 const APP_DOWNLOAD_URL = "https://play.google.com/store/apps/details?id=com.synctrip";
 
 // Limit rules
@@ -305,8 +308,32 @@ const DownloadPopup = () => {
   const [isIOS, setIsIOS] = useState(true);
   const [variant, setVariant] = useState(0);
   const [cycleCompleted, setCycleCompleted] = useState(false);
-  const { isLoggedIn } = useLogin();
+  const { isLoggedIn, isLoginPopupOpen } = useLogin();
   const POPUP_RESET_KEY = "popup_last_reset";
+  const pathname = usePathname();
+  const shouldBlockPopup = isLoginPopupOpen || pathname.includes("/create/trip") || pathname.includes("careers/linkedin/march-2026") || cycleCompleted;
+
+  // console.log("should block popup?", shouldBlockPopup);
+
+  useEffect(() => {
+    if (isVisible) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isVisible]);
+
+  useEffect(() => {
+    if (isAuthLock) {
+      document.body.classList.add("popup-locked");
+    } else {
+      document.body.classList.remove("popup-locked");
+    }
+  }, [isAuthLock]);
 
   const resetPopupIfNeeded = () => {
     const today = new Date().toDateString();
@@ -322,26 +349,48 @@ const DownloadPopup = () => {
   };
 
   useEffect(() => {
+
+    // ❗ If login popup is open, do not show download popups
+    if (shouldBlockPopup) {
+      setIsVisible(false);
+      return;
+    }
+
     // 1. Device Detection
     resetPopupIfNeeded();
-    const userAgent = navigator.userAgent || navigator.vendor || (window as { opera?: unknown }).opera;
-    const checkIsIOS = /iPad|iPhone|iPod/.test(userAgent as string) && !(window as { MSStream?: unknown }).MSStream;
+
+    const userAgent =
+      navigator.userAgent ||
+      navigator.vendor ||
+      (window as { opera?: unknown }).opera;
+
+    const checkIsIOS =
+      /iPad|iPhone|iPod/.test(userAgent as string) &&
+      !(window as { MSStream?: unknown }).MSStream;
+
     setIsIOS(checkIsIOS);
 
     // 2. Check Local Storage based on Auth State
     if (isLoggedIn) {
-      // If user successfully logs in, immediately unlock any guest locks
+
       setIsAuthLock(false);
 
-      const isComplete = localStorage.getItem("popup_cycle_completed") === "true";
+      const isComplete =
+        localStorage.getItem("popup_cycle_completed") === "true";
+
       if (isComplete) {
         setCycleCompleted(true);
         setIsVisible(false);
         return;
       }
 
-      const loggedInStrikes = parseInt(localStorage.getItem("logged_in_strikes") || "0");
-      const maxStrikes = checkIsIOS ? IOS_LOGGED_IN_LIMIT : ANDROID_LOGGED_IN_LIMIT;
+      const loggedInStrikes = parseInt(
+        localStorage.getItem("logged_in_strikes") || "0"
+      );
+
+      const maxStrikes = checkIsIOS
+        ? IOS_LOGGED_IN_LIMIT
+        : ANDROID_LOGGED_IN_LIMIT;
 
       if (loggedInStrikes >= maxStrikes) {
         localStorage.setItem("popup_cycle_completed", "true");
@@ -351,27 +400,41 @@ const DownloadPopup = () => {
       }
 
       setStrikes(loggedInStrikes);
-      setVariant(getRandomVariant()); // Pick a completely random popup
+      setVariant(getRandomVariant());
+
     } else {
-      const guestStrikes = parseInt(localStorage.getItem("guest_strikes") || "0");
+
+      const guestStrikes = parseInt(
+        localStorage.getItem("guest_strikes") || "0"
+      );
+
       setStrikes(guestStrikes);
 
-      // If already at limit, lock immediately
       if (guestStrikes >= GUEST_LIMIT) {
-        setVariant(1); // Force centered modal for lock
+        setVariant(1);
         setIsAuthLock(true);
         setIsVisible(true);
         return;
       } else {
         setIsAuthLock(false);
-        setVariant(getRandomVariant()); // Pick a completely random popup
+        setVariant(getRandomVariant());
       }
     }
 
-    // Trigger first appearance
-    const timer = setTimeout(() => setIsVisible(true), 15000);
+    // ⏱ Different delay depending on login state
+    const delay = isLoggedIn
+      ? INITIAL_DELAY_LOGGED_IN
+      : INITIAL_DELAY_GUEST;
+
+    const timer = setTimeout(() => {
+      if (!shouldBlockPopup) {
+        setIsVisible(true);
+      }
+    }, delay);
+
     return () => clearTimeout(timer);
-  }, [isLoggedIn]);
+
+  }, [isLoggedIn, shouldBlockPopup]);
 
   const handleClose = () => {
     if (isAuthLock) return; // Prevent closing if locked
@@ -414,6 +477,9 @@ const DownloadPopup = () => {
   };
 
   // If cycle is complete, or hidden, render nothing
+  // ❗ Never show if login popup is open
+  if (shouldBlockPopup) return null;
+
   if (cycleCompleted) return null;
   if (!isVisible && !isAuthLock) return null;
 

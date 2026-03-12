@@ -25,7 +25,7 @@ export class UserApiService {
         if (!token) {
             return [];
         }
-        const wishlistResponse = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/users/getWishlist`, {
+        const wishlistResponse = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/users/getWishlist`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -110,7 +110,6 @@ export class UserApiService {
         }
     }
 
-
     static UpdateProfileImageOfUser = async (file: File) => {
         try {
             const formData = new FormData();
@@ -135,6 +134,18 @@ export class UserApiService {
         }
     };
     
+    static async submitAssessment(formData: string): Promise<{ success: boolean; message?: string }> {
+        try {
+            const res = await apiClient.post("/users/career/user-submission", formData);
+            return { success: true, message: res?.data?.message };
+        } catch (err) {
+            console.error("Error submitting assessment:", err);
+            return {
+                success: false,
+                message: "Failed to submit assessment. Please try again later.",
+            };
+        }
+    };
 }
 
 
