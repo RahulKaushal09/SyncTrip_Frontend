@@ -25,7 +25,7 @@ export class UserApiService {
         if (!token) {
             return [];
         }
-        const wishlistResponse = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/users/getWishlist`, {
+        const wishlistResponse = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/users/getWishlist`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

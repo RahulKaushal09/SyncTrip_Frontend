@@ -86,7 +86,7 @@ export class GroupApiServices {
 
     /* ---------- GROUP PREVIEW ---------- */
     static async getGroupPreview(groupId: string, token: string): Promise<GroupCard> {
-        const res = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/groups/${groupId}/seo-preview`, {
+        const res = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/groups/${groupId}/seo-preview`, {
             method: 'GET',
             headers: await ApiService.getAuthHeadersServer(token),
         });

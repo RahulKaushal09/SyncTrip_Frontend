@@ -21,7 +21,7 @@ export class BlogsApiServices {
         });
 
         const allBlogsResponse = await fetch(
-            `${API_CONFIG.BACKEND_BASE_URL}/api/blogs/all?${queryParams.toString()}`,
+            `${API_CONFIG.BACKEND_BASE_URL}/blogs/all?${queryParams.toString()}`,
             
             {
                 next: { revalidate: 7200 }, // ✅ cache for 2 hours
@@ -44,7 +44,7 @@ export class BlogsApiServices {
         return allBlogsData.blogs;
     }
     static async fetchAllBlogs(): Promise<BlogPost[]> {
-        const allBlogsResponse = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/blogs/all`, {
+        const allBlogsResponse = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/blogs/all`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ limit: 100 }),
@@ -61,7 +61,7 @@ export class BlogsApiServices {
         return allBlogsData.blogs;
     } // being used - 27/01/2026
     static async fetchBlogBySlug(blogSlug: string): Promise<BlogPost> {
-        const blogResponse = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/blogs/${blogSlug}`, {
+        const blogResponse = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/blogs/${blogSlug}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -79,7 +79,7 @@ export class BlogsApiServices {
     } // being used - 27/01/2026
     static async createNewBlog(blogData: addBlogRequestSchema): Promise<BlogPost> {
         try {
-            const createBlogResponse = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/blogs/create`, {
+            const createBlogResponse = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/blogs/create`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

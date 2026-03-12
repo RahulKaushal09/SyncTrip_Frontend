@@ -53,7 +53,7 @@ const CultureFestivalsCard: React.FC<CultureFestivalsCardProps> = ({ data, type 
                                     {data.images.map((image, index) => (
                                         <div key={index} className="cf-carousel-slide">
                                             <GumletImage
-                                                src={image.image_url || '/api/placeholder/300/200'}
+                                                src={image.image_url}
                                                 alt={`${data.name} - Image ${index + 1}`}
                                                 className="cf-image"
                                                 width={300}
@@ -95,7 +95,7 @@ const CultureFestivalsCard: React.FC<CultureFestivalsCardProps> = ({ data, type 
                             </div>
                         ) : (
                             <GumletImage
-                                src={data.images?.[0]?.image_url || '/api/placeholder/300/200'}
+                                src={data.images?.[0]?.image_url}
                                 alt={data.name}
                                 className="cf-image cf-single-image"
                                 width={300}

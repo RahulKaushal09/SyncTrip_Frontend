@@ -6,7 +6,7 @@ import apiClient from './apiClient';
 
 export class TripsApiService {
     static async fetchAllTrips(token: string = ""): Promise<getAllTripsResponseSchema> {
-        const allTripsResponse = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/trips/getAllTripsDynamicFields`, {
+        const allTripsResponse = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/trips/getAllTripsDynamicFields`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ limit: 100 }),
@@ -22,7 +22,7 @@ export class TripsApiService {
         return allTripsData;
     }
     static async fetchAllHostedTrips(): Promise<HostedTrip[]> {
-        const allTripsResponse = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/hostedTrips`,{
+        const allTripsResponse = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/hostedTrips`,{
             cache: 'no-store',
   next: { revalidate: 0 },
             method: 'GET',
@@ -36,7 +36,7 @@ export class TripsApiService {
         return allTripsData;
     }
     static async fetchTripById(tripId: string, token: string = ""): Promise<TripDetailsResponse> {
-        const tripResponse = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/trips/${tripId}`, {
+        const tripResponse = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/trips/${tripId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -50,7 +50,7 @@ export class TripsApiService {
         return tripDetailsResponse;
     }
     static async fetchHostedTripById(tripId: string, token: string = ""): Promise<HostedTrip> {
-        const tripResponse = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/hostedTrips/${tripId}`, {
+        const tripResponse = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/hostedTrips/${tripId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -65,7 +65,7 @@ export class TripsApiService {
     }
     static async joinHostedTrip(tripId: string): Promise<{ success: boolean; message: string }> {
         // const cookieStore = cookies();
-        const tripResponse = await apiClient.post(`${API_CONFIG.BACKEND_BASE_URL}/api/hostedTrips/${tripId}/join`);
+        const tripResponse = await apiClient.post(`${API_CONFIG.BACKEND_BASE_URL}/hostedTrips/${tripId}/join`);
         if (!tripResponse) {
             throw new Error('Failed to join the hosted trip');
         }
@@ -75,7 +75,7 @@ export class TripsApiService {
     static async fetchEnrolledTrips(token: string = ""): Promise<Trip[]> {
         if (!token) return [];
         console.log('Fetching enrolled trips...', token);
-        const enrolledTripsResponse = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/trips/en/enrolled`, {
+        const enrolledTripsResponse = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/trips/en/enrolled`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

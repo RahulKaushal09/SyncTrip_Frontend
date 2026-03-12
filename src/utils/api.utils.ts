@@ -42,7 +42,7 @@ export class ApiService {
     if (!token) return null;
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/api/users/getUserWithSpecificFields`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/users/getUserWithSpecificFields`, {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${token}`,
@@ -62,7 +62,7 @@ export class ApiService {
   } // check
   static async checkUserExistsWithPhoneNumber(phone: string): Promise<boolean> {
     try {
-      const response = await apiClient.post(`${API_CONFIG.BACKEND_BASE_URL}/api/users/checkUserExists`, {
+      const response = await apiClient.post(`${API_CONFIG.BACKEND_BASE_URL}/users/checkUserExists`, {
         phone,
       });
 
@@ -79,7 +79,7 @@ export class ApiService {
   } // check
   static async checkUserExistsWithMail(email: string): Promise<boolean> {
     try {
-      const response = await apiClient.post(`${API_CONFIG.BACKEND_BASE_URL}/api/users/checkUserExists`, {
+      const response = await apiClient.post(`${API_CONFIG.BACKEND_BASE_URL}/users/checkUserExists`, {
         email,
       });
 
@@ -96,9 +96,9 @@ export class ApiService {
   }
   /**
    * Send user feedback to backend.
-   * - If isLoggedIn is true, it will try to hit /api/feedback/submit (protected)
+   * - If isLoggedIn is true, it will try to hit /feedback/submit (protected)
    *   and automatically include Authorization header if token exists in localStorage.
-   * - Otherwise it will hit /api/feedback/public-submit.
+   * - Otherwise it will hit /feedback/public-submit.
    *
    * @param {Object} payload
    *  - feedbackText (string) - required
@@ -120,7 +120,7 @@ export class ApiService {
     userEmail?: string;
     userId?: string; // optional if you want to send along, but backend reads req.user from token
   }, isLoggedIn: boolean) {
-    const endpoint = isLoggedIn ? "/api/feedback/submit" : "/api/feedback/public-submit";
+    const endpoint = isLoggedIn ? "/feedback/submit" : "/feedback/public-submit";
     const url = `${API_CONFIG.BACKEND_BASE_URL}${endpoint}`;
 
     try {
@@ -153,7 +153,7 @@ export class ApiService {
       const cityObj = indianCities.find(city => city.locationName === defaultCityName);
       if (cityObj) {
         const response = await fetch(
-          `${API_CONFIG.BACKEND_BASE_URL}/api/events/getEventsForLocation`,
+          `${API_CONFIG.BACKEND_BASE_URL}/events/getEventsForLocation`,
           {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -202,7 +202,7 @@ export class ApiService {
       }
 
       const response = await fetch(
-        `${API_CONFIG.BACKEND_BASE_URL}/api/events/getAllLocationsWithCode`,
+        `${API_CONFIG.BACKEND_BASE_URL}/events/getAllLocationsWithCode`,
         {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' },
@@ -230,7 +230,7 @@ export class ApiService {
     if (city) {
       try {
         const res = await fetch(
-          `${API_CONFIG.BACKEND_BASE_URL}/api/events/getEventsForLocation`,
+          `${API_CONFIG.BACKEND_BASE_URL}/events/getEventsForLocation`,
           {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -254,7 +254,7 @@ export class ApiService {
   static async fetchLocations(skip: number = 0, limit: number = 1000, fields: LocationField[], token: string = ""): Promise<{ locations: Location[] }> {
     try {
       const response = await fetch(
-        `${API_CONFIG.BACKEND_BASE_URL}/api/locations/getAllLocationsDynamicByFields`,
+        `${API_CONFIG.BACKEND_BASE_URL}/locations/getAllLocationsDynamicByFields`,
         {
           method: 'POST',
           headers: await this.getAuthHeadersServer(token),
@@ -276,7 +276,7 @@ export class ApiService {
     }
     try {
       const response = await fetch(
-        `${API_CONFIG.BACKEND_BASE_URL}/api/locations/getAllLocationsDynamicByFields`,
+        `${API_CONFIG.BACKEND_BASE_URL}/locations/getAllLocationsDynamicByFields`,
         {
           method: 'POST',
           headers: this.getAuthHeaders(),
@@ -304,7 +304,7 @@ export class ApiService {
 
     try {
       const response = await fetch(
-        `${API_CONFIG.BACKEND_BASE_URL}/api/locations/getAllLocationsDynamicByFields`,
+        `${API_CONFIG.BACKEND_BASE_URL}/locations/getAllLocationsDynamicByFields`,
         {
           method: 'POST',
           headers,
@@ -327,7 +327,7 @@ export class ApiService {
     if (!ids || ids.length === 0) return [];
     try {
       const response = await fetch(
-        `${API_CONFIG.BACKEND_BASE_URL}/api/locations/getLocationsByIds`,
+        `${API_CONFIG.BACKEND_BASE_URL}/locations/getLocationsByIds`,
         {
           method: 'POST',
           headers: await this.getAuthHeadersServer(token),
@@ -363,7 +363,7 @@ export class ApiService {
 
   static async checkIfOTPLimitReached({update} : {update?: boolean} = {}): Promise<boolean> {
     try {
-      const res = await apiClient.get(`${API_CONFIG.BACKEND_BASE_URL}/api/auth/checkIfOTPLimitReached`, { params: { update } });
+      const res = await apiClient.get(`${API_CONFIG.BACKEND_BASE_URL}/auth/checkIfOTPLimitReached`, { params: { update } });
       return res.data.limitReached || false;
     } catch (error) {
       console.error('Error checking OTP limit:', error);
@@ -372,7 +372,7 @@ export class ApiService {
   }
 
   static async login(credentials: { email: string; password: string }): Promise<CompleteProfileApiResponse> {
-    const response = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/users/login`, {
+    const response = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/users/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(credentials),
@@ -380,7 +380,7 @@ export class ApiService {
     return this.handleResponse(response);
   }
   static async LoginWithPhoneNumber(firebaseToken: string, phone: string): Promise<CompleteProfileApiResponse> {
-    const response = await apiClient.post(`${API_CONFIG.BACKEND_BASE_URL}/api/auth/loginWithPhone`, {
+    const response = await apiClient.post(`${API_CONFIG.BACKEND_BASE_URL}/auth/loginWithPhone`, {
       firebaseToken,
       phone
     });
@@ -394,7 +394,7 @@ export class ApiService {
     sex: string;
     firebaseToken: string;
   }): Promise<CompleteProfileApiResponse> {
-    const response = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/users/basicRegistration`, {
+    const response = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/users/basicRegistration`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(userData),
@@ -402,7 +402,7 @@ export class ApiService {
     return this.handleResponse(response);
   }
   static async googleLogin(token: string): Promise<GoogleLoginResponse> {
-    const response = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/auth/google-login`, {
+    const response = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/auth/google-login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ token }),
@@ -411,7 +411,7 @@ export class ApiService {
     return this.handleResponse(response);
   }
   // static async completeProfile(formData: FormData): Promise<CompleteProfileApiResponse> {
-  //   const response = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/auth/complete-profile`, {
+  //   const response = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/auth/complete-profile`, {
   //     method: 'POST',
   //     body: formData,
   //     headers: {
@@ -421,11 +421,11 @@ export class ApiService {
   //   return this.handleResponse(response);
   // } 
   static async completeProfile(formData: FormData): Promise<CompleteProfileApiResponse> {
-    const response = await apiClient.post(`${API_CONFIG.BACKEND_BASE_URL}/api/auth/complete-profile`, formData);
+    const response = await apiClient.post(`${API_CONFIG.BACKEND_BASE_URL}/auth/complete-profile`, formData);
     return response.data;
   }
   static async addPhoneNumber(userId: string, phone: string): Promise<CompleteProfileApiResponse> {
-    const response = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/auth/google-complete`, {
+    const response = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/auth/google-complete`, {
       method: 'POST',
       headers: this.getAuthHeaders(),
       body: JSON.stringify({ userId, phone }),
@@ -433,7 +433,7 @@ export class ApiService {
     return this.handleResponse(response);
   }
   static async verifyAndAddPhoneNumber(firebaseToken: string, phone: string): Promise<CompleteProfileApiResponse> {
-    const response = await apiClient.post(`${API_CONFIG.BACKEND_BASE_URL}/api/auth/verifyAndAddPhone`, {
+    const response = await apiClient.post(`${API_CONFIG.BACKEND_BASE_URL}/auth/verifyAndAddPhone`, {
       firebaseToken,
       phone
     });
@@ -476,7 +476,7 @@ export class ApiService {
     }
 
     try {
-      const response = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/miscellanous/wishlist`, {
+      const response = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/miscellanous/wishlist`, {
         method: 'POST',
         headers: this.getAuthHeaders(),
         body: JSON.stringify(body),
@@ -496,7 +496,7 @@ export class ApiService {
   }
   static async fetchLocationById(id: string): Promise<Location | null> {
     try {
-      const response = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/locations/${id}`, {
+      const response = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/locations/${id}`, {
         method: 'GET',
         headers: this.getAuthHeaders(),
       });
@@ -514,7 +514,7 @@ export class ApiService {
   }
   static async fetchLocationByIdServer(id: string, token: string = ""): Promise<Location | null> {
     try {
-      const response = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/locations/${id}`, {
+      const response = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/locations/${id}`, {
         method: 'GET',
         headers: await this.getAuthHeadersServer(token),
       });
@@ -528,7 +528,7 @@ export class ApiService {
   static async fetchLocationByIdServerWithSpecificFields(id: string, fields: string[], token: string = ""): Promise<Location | null> {
     try {
 
-      const response = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/locations/specificFields/${id}`, {
+      const response = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/locations/specificFields/${id}`, {
         method: 'POST',
         headers: await this.getAuthHeadersServer(token),
         body: JSON.stringify({ fields }),
@@ -544,7 +544,7 @@ export class ApiService {
   static async getPlacesByIds(ids: string[], token: string = ""): Promise<PlacesToVisit[]> {
     if (!ids || ids.length === 0) return [];
     try {
-      const response = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/places/getPlacesByIds`, {
+      const response = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/places/getPlacesByIds`, {
         method: 'POST',
         headers: await this.getAuthHeadersServer(token),
         body: JSON.stringify({ placeIds: ids }),
@@ -561,7 +561,7 @@ export class ApiService {
   }
   static async fetchNearbyEntities(latitude: number, longitude: number, radius: number): Promise<exploreNearByApiResponse> {
     const userToken = localStorage.getItem('userToken');
-    const res = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/nearby/getNearbyEntities`,
+    const res = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/nearby/getNearbyEntities`,
       {
         method: 'POST',
         headers: {
@@ -585,7 +585,7 @@ export class ApiService {
   };
   static async fetchNearbyLocations(latitude: number, longitude: number, radius: number): Promise<exploreNearByApiResponse> {
     const userToken = localStorage.getItem('userToken');
-    const res = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/api/nearby/getNearbyLocations`,
+    const res = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/nearby/getNearbyLocations`,
       {
         method: 'POST',
         headers: {

@@ -40,7 +40,7 @@ export class AuthServices {
     //     if (!token) return null;
 
     //     try {
-    //         const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/api/users/getUserWithSpecificFields`, {
+    //         const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/users/getUserWithSpecificFields`, {
     //             method: "POST",
     //             headers: {
     //                 "Authorization": `Bearer ${token}`,

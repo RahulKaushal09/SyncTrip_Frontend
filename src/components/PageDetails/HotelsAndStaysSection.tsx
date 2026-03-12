@@ -266,7 +266,7 @@ const HotelsAndStaysSection: React.FC<HotelsAndStaysSectionProps> = ({
             try {
                 setLoading(true); // Set loading true before fetching
                 const userToken = localStorage.getItem('userToken');
-                const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/api/hotels/getHotelsByIds`, {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/hotels/getHotelsByIds`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

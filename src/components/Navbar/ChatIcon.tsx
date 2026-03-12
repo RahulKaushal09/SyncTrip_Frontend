@@ -50,7 +50,7 @@ export default function ChatIcon({ className = "", currentUserId, onClickOpen, i
         setUnreadCount(unread);
       } else {
         // fallback to hitting a REST API route (example)
-        const r = await fetch("/api/chats/unread-count");
+        const r = await fetch("/chats/unread-count");
         const data = await r.json();
         if (!mountedRef.current) return;
         setUnreadCount(data?.count || 0);

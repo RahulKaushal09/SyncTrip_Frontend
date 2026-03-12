@@ -210,7 +210,7 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
                 } else {
                     // fallback - use fetch and attach Authorization
                     const auth = StorageUtils.getToken();
-                    await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL || ""}/api/notifications/save-token`, {
+                    await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL || ""}/notifications/save-token`, {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",

@@ -38,6 +38,12 @@ const InstructionsPage: React.FC = () => {
   const handleBeginAssessment = () => {
     const now = new Date();
 
+    if (!user?.profileCompleted) {
+      triggerLogin();
+      toast.error("Please complete your profile before starting the assessment.");
+      return;
+    }
+
     if (now < START_TIME) {
       toast.error(
         `Assessment will start on ${START_TIME.toLocaleString()}.`

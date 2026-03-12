@@ -56,7 +56,7 @@ const HiringForm: React.FC = () => {
     const now = new Date();
     if (now < START_TIME) {
       router.push("/careers/linkedin/march-2026/instructions");
-      toast.error("The behavioral evaluation will open on March 11th at 10 AM IST. Please check back then!");
+      toast.error("The behavioral evaluation will open on March 14th at 10 AM IST. Please check back then!");
       return;
     }
 

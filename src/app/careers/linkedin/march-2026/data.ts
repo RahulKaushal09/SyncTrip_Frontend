@@ -1,5 +1,5 @@
-export const START_TIME = new Date("2026-03-10T10:00:00+05:30"); // 13 March 10 AM IST
-export const END_TIME = new Date("2026-03-14T10:00:00+05:30"); // 14 March 10 AM IST
+export const START_TIME = new Date("2026-03-14T10:00:00+05:30"); // 14 March 10 AM IST
+export const END_TIME = new Date("2026-03-15T17:00:00+05:30");   // 15 March 5 PM IST
 
 interface Question {
   id: number;
