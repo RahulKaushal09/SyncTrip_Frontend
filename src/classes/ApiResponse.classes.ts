@@ -3,6 +3,7 @@ import { User, UserWishList } from "@/types/user.types";
 export interface GoogleLoginResponse {
     token: string;
     user: User;
+    refreshToken?: string;
 }
 export interface getLocationResponseSchema {
     locations: Location[];
@@ -43,6 +44,7 @@ export interface CompleteProfileApiResponse {
     user: User;
     token?: string;
     error?: string;
+    refreshToken?: string;
 }
 export interface ApiResponse<T = unknown> {
     success: boolean;

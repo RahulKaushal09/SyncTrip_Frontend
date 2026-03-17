@@ -20,6 +20,7 @@ import ChoiceSection from "@/components/Home_new/ChoiceSection";
 import HomeWrapper from "@/components/Home_new/HomeWrapper";
 import dynamic from "next/dynamic";
 import HomeHeroSectionNew from "@/components/Home_new/NewHome";
+import AppFeatures from "@/components/Home_new/AppFeatures";
 
 const Testimonials = dynamic(() =>
   import("@/components/Home_new/testimonialSection")
@@ -208,9 +209,10 @@ export default async function Home() {
       {/* <HomeWrapper version="v2" /> */}
       <HomeHeroSectionNew />
       <ChoiceSection />
+      <AppFeatures />
       {/* <HomeWrapper version="v1" /> */}
       <FeaturesSection />
-      <ActiveDestinations />
+      {/* <ActiveDestinations /> */}
       {/* <ExploreNearbySection /> */}
       {/* <HowItWorksSectionHome /> */}
       <SoftLoginTrigger>

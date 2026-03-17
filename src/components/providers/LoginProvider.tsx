@@ -165,7 +165,7 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
         }
         StorageUtils.clearUserData();
         setUser(null);
-        window.location.reload();
+        window.location.href = '/';
     }, []);
 
     // -------------- Real-time Ban/Logout Socket Logic --------------

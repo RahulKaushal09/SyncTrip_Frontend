@@ -75,7 +75,7 @@ export class StorageUtils {
     // }
 
     static getToken(): string | null {
-        const token = localStorage.getItem(STORAGE_KEYS.TOKEN);
+        const token = localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
         if (!token) {
             console.warn("No token found in localStorage");
         }
@@ -95,5 +95,6 @@ export class StorageUtils {
         this.removeItem(STORAGE_KEYS.POPUP_CYCLE_COMPLETED);
         Cookies.remove(STORAGE_KEYS.TOKEN);
         Cookies.remove(STORAGE_KEYS.USER_INFO);
+        Cookies.remove(STORAGE_KEYS.REFRESH_TOKEN);
     }
 }

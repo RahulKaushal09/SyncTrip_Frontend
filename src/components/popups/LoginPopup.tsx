@@ -460,7 +460,7 @@ export default function LoginPopup({ onClose, onLogin, headingText, onEmailVerif
             onLogin(msg91User as User);
             onClose();
           } else {
-            throw new Error( 'Login failed after verification');
+            throw new Error('Login failed after verification');
           }
         }).catch(err => {
           console.error('Error verifying OTP via Msg91:', err);
@@ -484,8 +484,8 @@ export default function LoginPopup({ onClose, onLogin, headingText, onEmailVerif
       const response = await ApiService.LoginWithPhoneNumber(token, form.phone);
 
       if (response?.token?.trim()) {
-        const { user, token: userToken } = response;
-        localStorage.setItem('userToken', userToken);
+        const { user, token: userToken, refreshToken } = response;
+        localStorage.setItem('accessToken', userToken);
         onLogin(user);
         onClose();
       } else {
@@ -602,6 +602,7 @@ export default function LoginPopup({ onClose, onLogin, headingText, onEmailVerif
       if (response?.token?.trim()) {
         const { user, token } = response;
         localStorage.setItem('userToken', token);
+
         document.cookie = `userToken=${token}; path=/; max-age=604800; SameSite=Strict; Secure`;
         const safeUser = { id: user.id, name: user.name, profile_picture: user.profile_picture };
         document.cookie = `userInfo=${encodeURIComponent(JSON.stringify(safeUser))}; path=/; max-age=604800; SameSite=Lax`;
@@ -645,7 +646,7 @@ export default function LoginPopup({ onClose, onLogin, headingText, onEmailVerif
 
       if (response && user) {
         if (userToken) {
-          localStorage.setItem('userToken', userToken);
+          localStorage.setItem('userToken', userToken);       // ← rename from userToken
         }
         onLogin(user);
         onClose();
@@ -655,8 +656,6 @@ export default function LoginPopup({ onClose, onLogin, headingText, onEmailVerif
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message || 'Google login failed. Please try again.');
-      } else {
-        console.error('Google login error:', err);
       }
     } finally {
       setIsLoading(false);

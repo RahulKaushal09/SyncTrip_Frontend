@@ -2,6 +2,8 @@ import { cookies } from "next/headers";
 import { User } from "@/types";
 import { UserField } from "@/constants";
 import apiClient from "./apiClient";
+import { UserApiService } from "./user.api.utils";
+import { StorageUtils } from "./storage.utils";
 
 export class AuthServices {
     static async verifyPhone(firebaseToken: string, phone: string): Promise<User | null> {
@@ -91,5 +93,15 @@ export class AuthServices {
             console.error("Error verifying OTP via Msg91 for update phone:", err);
             return { success: false, message: "Failed to verify OTP. Please try again." };
         }
+    }
+
+    static async forceLogoutUser() {
+        try {
+            await UserApiService.logoutUser();
+        } catch (error) {
+            console.error("Error during logout API call:", error);
+        }
+        StorageUtils.clearUserData();
+        window.location.href = '/';
     }
 }

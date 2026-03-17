@@ -77,6 +77,13 @@ const TripCard: React.FC<Props> = ({ trip, onPressCard, onPressChats, onPressMat
             >
               <Pencil size={18} color="var(--primary-1)" />
             </button>
+            {/* <button
+              onClick={(e) => { e.stopPropagation(); onPressDelete?.(); }}
+              aria-label="Delete trip"
+              style={cardStyles.iconButton}
+            >
+              <Trash size={18} color="var(--primary-1)" />
+            </button> */}
           </div>
         </div>
 

@@ -49,7 +49,7 @@
 .floatingChat2 {
   position: absolute;
   top: 20%;
-  left: 8%;
+  left: 4%;
   z-index: 1;
   pointer-events: none;
   animation: bounce 6s ease-in-out infinite;
@@ -60,7 +60,7 @@
   position: absolute;
   bottom: 0;
   top: 23%;
-  right: 10%;
+  right: 5%;
   z-index: 1;
   pointer-events: none;
   animation: bounce 6s ease-in-out infinite;
@@ -72,7 +72,7 @@
   /* font-black */
   text-align: center;
   color: #fff;
-  font-size: 3rem;
+  font-size: 4rem;
   line-height: 1.2;
 }
 
@@ -80,7 +80,7 @@
   font-weight: 900;
   text-align: center;
   color: var(--primary-1);
-  font-size: 3rem;
+  font-size: 3.5rem;
   line-height: 1.2;
   margin-top: -1rem;
   /* -mt-6 */
@@ -91,8 +91,9 @@
   margin-top: -0.5rem;
   text-align: center;
   line-height: 1.5;
-  font-weight: 600;
-  font-size: 1rem;
+  font-weight: 500;
+  font-size: 1.2rem;
+  letter-spacing: 0.05em;
 }
 
 /* --- Buttons --- */
@@ -212,6 +213,15 @@
   height: auto;
   right: 4%;
   bottom: -6%;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(20px);
+  }
 }
 
 /* =========================================

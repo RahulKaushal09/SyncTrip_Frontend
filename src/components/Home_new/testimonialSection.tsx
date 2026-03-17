@@ -5,6 +5,71 @@ import "../../../styles/home/testimonials.css"; // Regular CSS file
 // import { UsersRound } from "lucide-react";
 import { UsersRound, Globe, CheckCircle,MapPlus } from "lucide-react";
 // import { FeaturesSection } from "./whyChooseSyncTrip";
+const playstoreTestimonials = [
+  {
+    name: "Rudra",
+    trip: "Rishikesh Yoga Retreat (North)",
+    text:
+      "I was hesitant about solo travel until I discovered SyncTrip. Now I've explored the Himalayas and made amazing friends along the way!",
+    avatar: "avatar-1",
+  },
+  {
+    name: "Priya Sharma",
+    role: "Adventure Seeker • 12 trips",
+    trip: "Kerala Backwaters (South)",
+    text:
+      "The collaborative planning feature helped our group save on costs and plan the perfect houseboat trip through Kerala’s beautiful backwaters.",
+    avatar: "avatar-2",
+  },
+  {
+    name: "Rahul Mehta",
+    role: "Culture Explorer • 20 trips",
+    trip: "Jaipur Heritage Walk (West)",
+    text:
+      "Thanks to SyncTrip’s safety and verification system, I feel confident meeting new travel buddies while exploring Rajasthan’s rich culture.",
+    avatar: "avatar-3",
+  },
+  {
+    name: "Neha Das",
+    role: "Nature Lover • 15 trips",
+    trip: "Sundarbans Mangrove Tour (East)",
+    text:
+      "Exploring the Sundarbans with SyncTrip was unforgettable! The group was friendly and the wildlife sightings were amazing.",
+    avatar: "avatar-4",
+  },
+  {
+    name: "Shivangi",
+    role: "Thrill Seeker • 10 trips",
+    trip: "Goa Beach Festival (West)",
+    text:
+      "The beach festivals and parties in Goa were incredible! SyncTrip made it easy to connect with fellow travelers and enjoy the vibe.",
+    avatar: "avatar-5",
+  },
+  {
+    name: "Anjali Reddy",
+    role: "Spiritual Seeker • 14 trips",
+    trip: "Tirupati Temple Visit (South)",
+    text:
+      "Visiting Tirupati with a group from SyncTrip was peaceful and well organized. The planning tools really helped coordinate timings.",
+    avatar: "avatar-6",
+  },
+  {
+    name: "Vikram Chauhan",
+    role: "Explorer • 16 trips",
+    trip: "Manali Adventure Trek (Himalayas)",
+    text:
+      "The Manali trek was challenging but rewarding. Thanks to SyncTrip, I found reliable trekking partners and safety was a priority.",
+    avatar: "avatar-7",
+  },
+  {
+    name: "Sana Malik",
+    role: "Photographer • 18 trips",
+    trip: "Udaipur Lakes Tour (West)",
+    text:
+      "The serene lakes and palaces of Udaipur were breathtaking. SyncTrip helped me find fellow photographers to share the experience.",
+    avatar: "avatar-8",
+  },
+];
 const testimonials = [
   {
     name: "Aarav Singh",
@@ -174,7 +239,7 @@ const Testimonials: React.FC = () => {
         </section>
        
         {/* Trust Indicators */}
-        <div className="trust-indicators">
+        {/* <div className="trust-indicators">
           <div className="row g-3">
             {[
               { text: "100% Verified Profiles", iconClass: "trust-verified" },
@@ -190,7 +255,7 @@ const Testimonials: React.FC = () => {
               </div>
             ))}
           </div>
-        </div>
+        </div> */}
     </section>
   );
 };

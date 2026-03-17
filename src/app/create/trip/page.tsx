@@ -19,7 +19,7 @@ import { useLogin } from '@/components/providers/LoginProvider';
 import { tripPrivacyOptions } from '@/constants';
 import ImageUploadModal from '@/components/Profile/ImageUpload';
 
-const TOTAL_STEPS = 4;
+const TOTAL_STEPS = 6;
 const MAX_TRIP_DAYS = 15;
 
 // const formatISODateOnly = (d: Date) => d.toISOString().split('T')[0];
@@ -201,9 +201,9 @@ function CreateTripContent() {
   const canGoNext =
     (step === 1 && !!selectedLocation) ||
     (step === 2 && !!startDate && !!endDate && isRangeWithinLimit(startDate, endDate)) ||
-    // (step === 3 && selectedPreferences.length > 0) ||
-    // (step === 4 && !!selectedBudget) ||
-    (step === 3 && !!selectedPrivacy) ||
+    (step === 3 && selectedPreferences.length > 0) ||
+    (step === 4 && !!selectedBudget) ||
+    (step === 5 && !!selectedPrivacy) ||
     step === TOTAL_STEPS;
 
 
@@ -253,7 +253,7 @@ function CreateTripContent() {
       const isPrivate = (selectedPrivacy || '').toLowerCase().includes('invite');
       const targetPath = isPrivate
         ? `/userTrip/${tripId}/private-trip`
-        : `/userTrip/${tripId}/travel-mode`;
+        : `/userTrip/${tripId}/download-app`;
 
       router.replace(targetPath);
 
@@ -589,13 +589,13 @@ function CreateTripContent() {
             onDatesSelected={handleDatesSelected}
           />
         );
-      // case 3:
-      //   return <Step3Preferences selectedPreferences={selectedPreferences} setPreferences={setSelectedPreferences} />;
-      // case 4:
-      //   return <Step4Budget selectedBudget={selectedBudget} setSelectedBudget={setSelectedBudget} />;
       case 3:
-        return <Step5Privacy selectedPrivacy={selectedPrivacy} setSelectedPrivacy={setSelectedPrivacy} />;
+        return <Step3Preferences selectedPreferences={selectedPreferences} setPreferences={setSelectedPreferences} />;
       case 4:
+        return <Step4Budget selectedBudget={selectedBudget} setSelectedBudget={setSelectedBudget} />;
+      case 5:
+        return <Step5Privacy selectedPrivacy={selectedPrivacy} setSelectedPrivacy={setSelectedPrivacy} />;
+      case 6:
         return <Step6Review />;
       default:
         return (
