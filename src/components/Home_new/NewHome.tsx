@@ -50,8 +50,8 @@ const HomeHeroSectionNew = () => {
                             <span>Join 10,000+ Happy Indian Travelers</span>
                         </div>
 
-                        <h1 className="heroTitleMain">{screenWidth && screenWidth > 900 ? "Connect with Like-Minded Travel Friends." : "Stop Planning Solo."}</h1>
-                        <h1 className="heroTitleSub">{screenWidth && screenWidth > 900 ? "Plan Unforgettable Journeys." : "Start Exploring Together."}</h1>
+                        <h1 className="heroTitleMain">{screenWidth && screenWidth > 900 ? "Any Plan. Any Time." : "Stop Planning Solo."}</h1>
+                        <h1 className="heroTitleSub">{screenWidth && screenWidth > 900 ? "Connect for trips, rides, and events." : "Start Exploring Together."}</h1>
 
                         <p className="heroDescription">
                             Lead your trip, set your vibe, connect with verified explorers!

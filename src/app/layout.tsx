@@ -97,7 +97,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           {/* <div style={{ height: "25px" }}></div> */}
           {/* {children} */}
           <ClientProviders>
-            <DownloadPopup />
+            {/* <DownloadPopup /> */}
             <LayoutUIController>
               {children}
             </LayoutUIController>
