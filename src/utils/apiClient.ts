@@ -15,6 +15,7 @@ const apiClient = axios.create({
 apiClient.interceptors.request.use(
     (config) => {
         const token = StorageUtils.getToken();
+        const refreshToken = localStorage.getItem(STORAGE_KEYS.REFRESH_TOKEN);
 
         if (token) {
             config.headers = config.headers || {};
@@ -22,8 +23,18 @@ apiClient.interceptors.request.use(
             config.withCredentials = true;
         }
 
+        if (refreshToken) {
+            config.headers = config.headers || {};
+            config.headers['x-refresh-token'] = refreshToken;
+        }
+        // if (token) {
+        //     config.headers = config.headers || {};
+        //     config.headers['Authorization'] = `Bearer ${token}`;
+        //     config.withCredentials = true;
+        // }
+
         // 🔥 KEY FIX
-        if (config.data instanceof FormData) {
+        if (typeof FormData !== 'undefined' && config.data instanceof FormData) {
             delete config.headers?.['Content-Type'];
         } else {
             config.headers = config.headers || {};
@@ -56,12 +67,28 @@ apiClient.interceptors.response.use(
 
     (response: AxiosResponse) => {
         // console.log('Response Interceptor: Received response...', response.headers);
-        const newToken = response.headers['x-new-access-token'];
-        // console.log('Response Interceptor: Checking for new token in headers...', { newToken });
-        if (newToken) {
-            localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, newToken);
-            apiClient.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
+        // const newToken = response.headers['x-new-access-token'];
+        const newAccessToken =
+            response.headers['x-new-access-token'] ||
+            response.headers['X-New-Access-Token'];
+
+        const newRefreshToken =
+            response.headers['x-refresh-token'] ||
+            response.headers['X-Refresh-Token'];
+
+        if (newAccessToken) {
+            localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, newAccessToken);
+            apiClient.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
         }
+
+        if (newRefreshToken) {
+            localStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, newRefreshToken);
+        }
+        // console.log('Response Interceptor: Checking for new token in headers...', { newToken });
+        // if (newToken) {
+        //     localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, newToken);
+        //     apiClient.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
+        // }
         return response;
     },
     async (error) => {
@@ -75,7 +102,9 @@ apiClient.interceptors.response.use(
         // ── Banned or force logged out ──
         const case1 = status === 403 && code === 'ACCOUNT_BANNED';
         const case2 = status === 401 && code === 'SESSION_NOT_FOUND';
-        if ((case1 || case2) && !isLoggingOut) {
+        const case3 = status === 401 && code === 'INVALID_TOKEN';
+
+        if ((case1 || case2 || case3) && !isLoggingOut) {
             isLoggingOut = true;
             toast.error('Your account has been logged out.');
             StorageUtils.clearUserData();
