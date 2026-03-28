@@ -130,7 +130,7 @@ const IntroVisual = () => {
         <div className={styles.introAvatar}>A</div>
         <div className={styles.introContent}>
           <div className={styles.introName}>Aryan S.</div>
-          <div className={styles.introMsg}>"Hey! Saw you're into morning rides — heading to Kasauli Sunday, wanna join?"</div>
+          <div className={styles.introMsg}>&quot;Hey! Saw you&apos;re into morning rides — heading to Kasauli Sunday, wanna join?&quot;</div>
         </div>
       </div>
 
@@ -224,7 +224,7 @@ const BentoFeatures = () => {
             <div className={styles.cardInfo}>
               <span className={`${styles.cardAccent} ${styles.accentPrimary}`}>Explore</span>
               <h3 className={styles.cardTitle}>Plans Nearby, Right Now</h3>
-              <p className={styles.cardDesc}>See what's happening around you in real-time. Tap to ping and join instantly.</p>
+              <p className={styles.cardDesc}>See what&apos;s happening around you in real-time. Tap to ping and join instantly.</p>
             </div>
             <div className={styles.visualContainer}>
               <RadarVisual />
