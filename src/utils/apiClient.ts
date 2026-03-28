@@ -77,7 +77,7 @@ apiClient.interceptors.response.use(
             response.headers['X-Refresh-Token'];
 
         if (newAccessToken) {
-            localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, newAccessToken);
+            localStorage.setItem(STORAGE_KEYS.TOKEN, newAccessToken);
             apiClient.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
         }
 

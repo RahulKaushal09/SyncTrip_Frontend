@@ -73,6 +73,8 @@ export interface UserTrip {
     privacy?: string;    // Privacy setting ("Public", "Friends", "Only Me", etc.)
     // activities?: TripActivity[]; // List of activities planned for the trip
     image?: string;    // URL of the main image for the trip
+    tripImage?: string; // URL of the main image for the trip (new field, to replace 'image')
+    tripImageUrl?: string; // this is used in create trip flow to handle both preset and custom images without breaking existing code
     rating?: number;   // Average rating (e.g., 4.5)
     avatars?: string[]; // URLs of user avatars who joined the trip
     activities?: UserTripActivity[]; // List of activities planned for the trip

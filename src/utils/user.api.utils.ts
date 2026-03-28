@@ -7,9 +7,9 @@ import apiClient from './apiClient';
 // import { cookies } from 'next/headers';
 
 export class UserApiService {
-    static async getUserViewAndTripCount(): Promise<{ tripCount: number, viewCount: number }> {
+    static async getUserTripViewActivityCount(): Promise<{ tripCount: number, viewCount: number }> {
         try {
-            const res = await apiClient.get('/users/getUserTripCountAndViewCount');
+            const res = await apiClient.get('/users/getUserTripViewActivityCount');
             return res.data || { tripCount: 0, viewCount: 0 };
         } catch (error) {
             console.error("Error fetching user view and trip count:", error);
@@ -91,7 +91,7 @@ export class UserApiService {
             const formData = new FormData();
             formData.append("profilePhoto", file);
 
-            const response = await apiClient.post("/users/update-profile-photo",
+            const response = await apiClient.post("/users/update-profile-photo-web",
                 formData,
                 {
                     headers: {

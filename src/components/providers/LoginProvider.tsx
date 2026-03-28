@@ -30,6 +30,7 @@ interface LoginContextType {
     isEmailVerified: boolean;
     registerFcmTokenForUser: (u: User | null) => Promise<void>;
     isLoginPopupOpen?: boolean;
+    isCompleteProfilePopupOpen?: boolean;
 }
 
 const LoginContext = createContext<LoginContextType | undefined>(undefined);
@@ -332,6 +333,7 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
         isEmailVerified,
         registerFcmTokenForUser,
         isLoginPopupOpen: showLogin,
+        isCompleteProfilePopupOpen: (showFullProfile || showPhoneNumber) && !!user,
     };
 
     return (

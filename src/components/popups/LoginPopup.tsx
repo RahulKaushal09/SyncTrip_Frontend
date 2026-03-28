@@ -485,7 +485,7 @@ export default function LoginPopup({ onClose, onLogin, headingText, onEmailVerif
 
       if (response?.token?.trim()) {
         const { user, token: userToken, refreshToken } = response;
-        localStorage.setItem('accessToken', userToken);
+        localStorage.setItem('userToken', userToken);
         onLogin(user);
         onClose();
       } else {

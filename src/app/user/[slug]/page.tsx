@@ -140,7 +140,7 @@ export default function UserProfilePage() {
     const fetchCounts = async () => {
       try {
         const { viewCount, tripCount } =
-          await UserApiService.getUserViewAndTripCount();
+          await UserApiService.getUserTripViewActivityCount();
 
         setProfileUser(prev =>
           prev
@@ -352,7 +352,7 @@ export default function UserProfilePage() {
                     </div>
 
                     {/* Pencil / Camera Icon Overlay */}
-                    {isOwner && profileUser.profileCompleted && (
+                    {/* {isOwner && profileUser.profileCompleted && (
                       <button
                         onClick={() => setIsImageEditModalOpen(true)}
                         className="absolute bottom-0 right-0 p-1.5 bg-[var(--primary-1)] hover:bg-[var(--primary-hover)] text-white rounded-full border-2 border-white shadow-lg transition-all transform hover:scale-110 active:scale-95 z-10"
@@ -360,7 +360,7 @@ export default function UserProfilePage() {
                       >
                         <Camera size={14} strokeWidth={2.5} />
                       </button>
-                    )}
+                    )} */}
                   </div>
 
                   {isOwner && profileUser.profileCompleted && (

@@ -308,10 +308,10 @@ const DownloadPopup = () => {
   const [isIOS, setIsIOS] = useState(true);
   const [variant, setVariant] = useState(0);
   const [cycleCompleted, setCycleCompleted] = useState(false);
-  const { isLoggedIn, isLoginPopupOpen } = useLogin();
+  const { isLoggedIn, isLoginPopupOpen, isCompleteProfilePopupOpen } = useLogin();
   const POPUP_RESET_KEY = "popup_last_reset";
   const pathname = usePathname();
-  const shouldBlockPopup = isLoginPopupOpen || pathname.includes("/create/trip") || pathname.includes("careers/linkedin/march-2026") || cycleCompleted;
+  const shouldBlockPopup = isLoginPopupOpen || isCompleteProfilePopupOpen || pathname.includes("/create/trip") || pathname.includes("careers/linkedin/march-2026") || cycleCompleted;
 
   // console.log("should block popup?", shouldBlockPopup);
 

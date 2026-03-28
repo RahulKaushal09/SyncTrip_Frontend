@@ -10,7 +10,7 @@ import ProgressBar from '@/components/common/progressBar';
 import Step3Preferences from '@/components/createTrip/Step3Preferences';
 import Step4Budget from '@/components/createTrip/Step4Budget';
 import Step5Privacy from '@/components/createTrip/Step5Privacy';
-import { Pencil, MapPin, Calendar, Star, CreditCard, Lock, ArrowRight } from "lucide-react";
+import { Pencil, MapPin, Calendar, Star, CreditCard, Lock, ArrowRight, ImageIcon } from "lucide-react";
 import TripServices from '@/utils/trip.utils';
 import { useLoader } from '@/components/providers/LoaderContext';
 import { toast } from 'react-hot-toast';
@@ -18,8 +18,9 @@ import ThreeLocationSelector from '@/components/createTrip/ThreeLocationSelector
 import { useLogin } from '@/components/providers/LoginProvider';
 import { tripPrivacyOptions } from '@/constants';
 import ImageUploadModal from '@/components/Profile/ImageUpload';
+import StepTripDetails from '@/components/createTrip/StepTripDetails';
 
-const TOTAL_STEPS = 6;
+const TOTAL_STEPS = 7;
 const MAX_TRIP_DAYS = 15;
 
 // const formatISODateOnly = (d: Date) => d.toISOString().split('T')[0];
@@ -95,14 +96,17 @@ function CreateTripContent() {
   const [selectedPrivacy, setSelectedPrivacy] = useState<string>('');
   const [showPrivacyConfirm, setShowPrivacyConfirm] = useState(false);
   const [isImageEditModalOpen, setIsImageEditModalOpen] = useState(false);
+  const [tripName, setTripName] = useState<string>('');
+  const [tripImage, setTripImage] = useState<string | File | null>(null);
   // const [pendingStartMatching, setPendingStartMatching] = useState(false);
 
   useEffect(() => {
     const stepTitles: Record<number, string> = {
       1: "Choose Location | Create Trip | SyncTrip",
-      2: "Select Dates | Create Trip | SyncTrip",
-      3: "Trip Privacy | Create Trip | SyncTrip",
-      4: "Review Trip Plan | Create Trip | SyncTrip",
+      2: "Upload Cover Photo & Name Trip | Create Trip | SyncTrip",
+      3: "Select Dates | Create Trip | SyncTrip",
+      4: "Trip Privacy | Create Trip | SyncTrip",
+      5: "Review Trip Plan | Create Trip | SyncTrip",
     };
 
     document.title = stepTitles[step] || "Create Trip | SyncTrip";
@@ -200,15 +204,106 @@ function CreateTripContent() {
 
   const canGoNext =
     (step === 1 && !!selectedLocation) ||
-    (step === 2 && !!startDate && !!endDate && isRangeWithinLimit(startDate, endDate)) ||
-    (step === 3 && selectedPreferences.length > 0) ||
-    (step === 4 && !!selectedBudget) ||
-    (step === 5 && !!selectedPrivacy) ||
+    (step === 2 && !!tripName && !!tripImage) || // NEW STEP 2
+    (step === 3 && !!startDate && !!endDate && isRangeWithinLimit(startDate, endDate)) || // Was step 2
+    (step === 4 && selectedPreferences.length > 0) || // Was step 3
+    (step === 5 && !!selectedBudget) || // Was step 4
+    (step === 6 && !!selectedPrivacy) || // Was step 5
     step === TOTAL_STEPS;
 
 
-
   const [isPublishing, setIsPublishing] = useState(false);
+  // const publishTripAndContinue = useCallback(async () => {
+  //   if (isPublishing) return;
+
+  //   setIsPublishing(true);
+  //   showLoader();
+
+  //   try {
+  //     if (!startDate || !endDate) {
+  //       toast.error('Please select trip dates');
+  //       return;
+  //     }
+
+  //     if (!isRangeWithinLimit(startDate, endDate)) {
+  //       toast.error(`Trip cannot exceed ${MAX_TRIP_DAYS} days`);
+  //       return;
+  //     }
+
+  //     const formData = new FormData();
+
+  //     formData.append('locationId', selectedLocation?.id ?? '');
+  //     formData.append('locationName', selectedLocation?.title ?? '');
+  //     formData.append('tripName', tripName);
+  //     formData.append('startDate', formatLocalDateOnly(startDate));
+  //     formData.append('endDate', formatLocalDateOnly(endDate));
+  //     formData.append('budget', selectedBudget);
+  //     formData.append('privacy', selectedPrivacy);
+  //     formData.append('interests', JSON.stringify(selectedPreferences));
+
+  //     // const payload: UserTrip = {
+  //     //   tripName: tripName, // ADDED
+  //     //   tripImageUrl: typeof tripImage === 'string' ? tripImage : '', // Handle custom file upload logic here
+  //     //   locationId: selectedLocation?.id ?? '',
+  //     //   locationName: selectedLocation?.title ?? '',
+  //     //   startDate: formatLocalDateOnly(startDate),
+  //     //   endDate: formatLocalDateOnly(endDate),
+  //     //   budget: selectedBudget,
+  //     //   interests: selectedPreferences,
+  //     //   privacy: selectedPrivacy,
+  //     // };
+
+  //     if (tripImage instanceof File) {
+  //       // This is what your backend will read as req.file! 
+  //       // Ensure 'tripImage' matches the field name in your backend (e.g., upload.single('tripImage'))
+  //       formData.append('tripImage', tripImage); 
+  //     } else if (typeof tripImage === 'string') {
+  //       // If it's a preset photo, send it as a string URL
+  //       formData.append('tripImageUrl', tripImage);
+  //     }
+
+  //     const res = await ApiService.saveTripDetails(formData);
+
+  //     if (res.requireProfilePic) {
+  //       setIsImageEditModalOpen(true);
+  //       return;
+  //     }
+
+  //     if (!res?.id) {
+  //       toast.error('Failed to create trip');
+  //       return;
+  //     }
+
+  //     const tripId = res.id;
+
+  //     const isPrivate = (selectedPrivacy || '').toLowerCase().includes('invite');
+  //     const targetPath = isPrivate
+  //       ? `/userTrip/${tripId}/private-trip`
+  //       : `/userTrip/${tripId}/download-app`;
+
+  //     router.replace(targetPath);
+
+  //     // toast.success('Trip created!');
+  //     // router.replace(`/userTrip/${tripId}/travel-mode`);
+
+  //   } catch (err) {
+  //     console.error(err);
+  //     hideLoader();
+  //     toast.error('Something went wrong');
+  //   } finally {
+  //     hideLoader();
+  //     setIsPublishing(false);
+  //   }
+  // }, [
+  //   selectedLocation,
+  //   startDate,
+  //   endDate,
+  //   selectedBudget,
+  //   selectedPreferences,
+  //   selectedPrivacy,
+  //   isPublishing
+  // ]);
+
   const publishTripAndContinue = useCallback(async () => {
     if (isPublishing) return;
 
@@ -218,27 +313,47 @@ function CreateTripContent() {
     try {
       if (!startDate || !endDate) {
         toast.error('Please select trip dates');
+        hideLoader();
+        setIsPublishing(false);
         return;
       }
 
       if (!isRangeWithinLimit(startDate, endDate)) {
         toast.error(`Trip cannot exceed ${MAX_TRIP_DAYS} days`);
+        hideLoader();
+        setIsPublishing(false);
         return;
       }
 
-      const payload: UserTrip = {
-        locationId: selectedLocation?.id ?? '',
-        locationName: selectedLocation?.title ?? '',
-        startDate: formatLocalDateOnly(startDate),
-        endDate: formatLocalDateOnly(endDate),
-        budget: selectedBudget,
-        interests: selectedPreferences,
-        privacy: selectedPrivacy,
-      };
+      // 1. Initialize FormData instead of a standard JSON object
+      const formData = new FormData();
 
-      const res = await ApiService.saveTripDetails(payload);
+      // 2. Append all standard string fields
+      formData.append('locationId', selectedLocation?.id ?? '');
+      formData.append('locationName', selectedLocation?.title ?? '');
+      formData.append('tripName', tripName);
+      formData.append('startDate', formatLocalDateOnly(startDate));
+      formData.append('endDate', formatLocalDateOnly(endDate));
+      formData.append('budget', selectedBudget);
+      formData.append('privacy', selectedPrivacy);
 
-      if (res.requireProfilePic) {
+      // Note: FormData only accepts strings or files. 
+      // Array data like interests must be stringified!
+      formData.append('interests', JSON.stringify(selectedPreferences));
+
+      // 3. Handle the Image File vs Preset Image URL
+      if (tripImage instanceof File) {
+        // This is a custom upload! Your backend multer will read this as req.file
+        formData.append('file', tripImage);
+      } else if (typeof tripImage === 'string') {
+        // This is a preset image. Send it as a standard string.
+        formData.append('tripImageUrl', tripImage);
+      }
+
+      // 4. Send it to your ApiService
+      const res = await ApiService.saveTripDetails(formData);
+
+      if (res?.requireProfilePic) {
         setIsImageEditModalOpen(true);
         return;
       }
@@ -257,12 +372,8 @@ function CreateTripContent() {
 
       router.replace(targetPath);
 
-      // toast.success('Trip created!');
-      // router.replace(`/userTrip/${tripId}/travel-mode`);
-
     } catch (err) {
       console.error(err);
-      hideLoader();
       toast.error('Something went wrong');
     } finally {
       hideLoader();
@@ -270,6 +381,8 @@ function CreateTripContent() {
     }
   }, [
     selectedLocation,
+    tripName,        // <-- Make sure tripName is in dependencies
+    tripImage,       // <-- Make sure tripImage is in dependencies
     startDate,
     endDate,
     selectedBudget,
@@ -277,6 +390,7 @@ function CreateTripContent() {
     selectedPrivacy,
     isPublishing
   ]);
+
   // const publishTripAndNavigate = useCallback(
   //   async (manual: boolean) => {
 
@@ -411,10 +525,13 @@ function CreateTripContent() {
     );
   }, [step, editingFromModify, router]);
 
-  // --- Step 6: Modify / Review Component ---
+  // --- Step 7: Modify / Review Component (Formerly Step 6) ---
   const Step6Review: React.FC = () => {
     const dateRange =
       startDate && endDate ? CommonServices.formatRange(startDate.toISOString(), endDate.toISOString()) : '—';
+
+    // Generate a temporary URL for the review screen if the image is a File
+    const reviewImageUrl = tripImage instanceof File ? URL.createObjectURL(tripImage) : tripImage;
 
     const Card: React.FC<{
       icon: React.ReactNode;
@@ -441,7 +558,12 @@ function CreateTripContent() {
                   )}
                 </div>
               ) : (
-                <div className="text-sm text-gray-500 truncate mt-2">{value}</div>
+                // This checks if value is a string or a ReactNode (like our image thumbnail)
+                typeof value === 'string' ? (
+                  <div className="text-sm text-gray-500 truncate mt-2">{value}</div>
+                ) : (
+                  value
+                )
               )}
             </div>
           </div>
@@ -471,6 +593,7 @@ function CreateTripContent() {
         <h2 className="DescriptionHeading">
           <strong>Modify Plan</strong>
         </h2>
+
         <Card
           icon={<MapPin size={18} />}
           label="Location"
@@ -478,11 +601,36 @@ function CreateTripContent() {
           onEdit={() => goEdit(1)}
         />
 
+        {/* NEW: Trip Details Card (Name & Image) */}
+        <Card
+          icon={<ImageIcon size={18} />}
+          label="Trip Name & Cover"
+          value={
+            <div className="flex items-center gap-3 mt-3">
+              {reviewImageUrl ? (
+                <img
+                  src={reviewImageUrl}
+                  alt="Trip Cover"
+                  className="w-14 h-10 rounded object-cover border border-gray-200"
+                />
+              ) : (
+                <div className="w-14 h-10 rounded bg-gray-100 flex items-center justify-center border border-gray-200">
+                  <ImageIcon size={14} className="text-gray-400" />
+                </div>
+              )}
+              <span className="text-sm text-gray-600 font-medium truncate">
+                {tripName || 'No name set'}
+              </span>
+            </div>
+          }
+          onEdit={() => goEdit(2)} // Goes to Step 2
+        />
+
         <Card
           icon={<Calendar size={18} />}
           label="Dates"
           value={dateRange}
-          onEdit={() => goEdit(2)}
+          onEdit={() => goEdit(3)} // Shifted from 2 to 3
         />
 
         {/* <Card
@@ -490,7 +638,7 @@ function CreateTripContent() {
           label="Interests"
           value={selectedPreferences.length ? selectedPreferences.join(', ') : '—'}
           pill
-          onEdit={() => goEdit(3)}
+          onEdit={() => goEdit(4)} // Shifted to 4
         />
 
         <Card
@@ -498,7 +646,7 @@ function CreateTripContent() {
           label="Budget"
           value={selectedBudget || '—'}
           pill
-          onEdit={() => goEdit(4)}
+          onEdit={() => goEdit(5)} // Shifted to 5
         /> */}
 
         <Card
@@ -506,66 +654,26 @@ function CreateTripContent() {
           label="Privacy"
           value={selectedPrivacy || '—'}
           pill
-          onEdit={() => goEdit(3)}
+          onEdit={() => goEdit(6)} // Note: Shifted to 6, assuming Privacy is now step 6
         />
 
         <div className="mt-6">
           <div className="flex flex-col gap-3">
-            {/* <button
-              onClick={() => publishTripAndContinue()}
-              className="w-full btn btn-primary-border"
-            >
-              Make Your Plan Solo
-            </button>
-
-           
             <button
               onClick={() => {
-                // if trip is currently invite only, show the popup
-                if ((selectedPrivacy || "").toLowerCase().includes("invite")) {
-                  setPendingStartMatching(true);
-                  setShowPrivacyConfirm(true);
-                  return;
-                }
-                // otherwise go ahead
-                publishTripAndContinue();
-              }}
-              className="w-full btn btn-matching-color"
-            >
-              Find Travel Companions
-            </button> */}
-            {/* <button
-              onClick={() => {
-                if ((selectedPrivacy || '').toLowerCase().includes('invite')) {
-                  // setPendingStartMatching(true);
-                  setShowPrivacyConfirm(true);
-                  return;
-                }
-                publishTripAndContinue();
-              }}
-              className="w-full btn btn-primary"
-            >
-              Continue
-            </button> */}
-            <button
-              onClick={() => {
-                // If you want to ALWAYS show the nudge for private trips:
                 if (selectedPrivacy && tripPrivacyOptions.PRIVATE === selectedPrivacy.toLowerCase()) {
                   setShowPrivacyConfirm(true);
                   return;
                 }
-                // If it's public, go straight to /travel-mode
                 publishTripAndContinue();
               }}
               className="w-full btn btn-primary"
             >
               Continue
             </button>
-
           </div>
         </div>
       </div>
-
     );
   };
 
@@ -581,7 +689,9 @@ function CreateTripContent() {
           goNext();
         }} />;
       // return <Step1Location initialSelectedLocation={selectedLocation} onSelect={handleLocationSelect} />;
-      case 2:
+      case 2: // NEW STEP
+        return <StepTripDetails locationName={selectedLocation?.title} locationId={selectedLocation?.id} tripName={tripName} setTripName={setTripName} tripImage={tripImage} setTripImage={setTripImage} />;
+      case 3:
         return (
           <Step2SelectDates
             startDatePreTrip={startDate?.toISOString()}
@@ -589,13 +699,13 @@ function CreateTripContent() {
             onDatesSelected={handleDatesSelected}
           />
         );
-      case 3:
-        return <Step3Preferences selectedPreferences={selectedPreferences} setPreferences={setSelectedPreferences} />;
       case 4:
-        return <Step4Budget selectedBudget={selectedBudget} setSelectedBudget={setSelectedBudget} />;
+        return <Step3Preferences selectedPreferences={selectedPreferences} setPreferences={setSelectedPreferences} />;
       case 5:
-        return <Step5Privacy selectedPrivacy={selectedPrivacy} setSelectedPrivacy={setSelectedPrivacy} />;
+        return <Step4Budget selectedBudget={selectedBudget} setSelectedBudget={setSelectedBudget} />;
       case 6:
+        return <Step5Privacy selectedPrivacy={selectedPrivacy} setSelectedPrivacy={setSelectedPrivacy} />;
+      case 7:
         return <Step6Review />;
       default:
         return (

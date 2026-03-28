@@ -21,6 +21,11 @@ import HomeWrapper from "@/components/Home_new/HomeWrapper";
 import dynamic from "next/dynamic";
 import HomeHeroSectionNew from "@/components/Home_new/NewHome";
 import AppFeatures from "@/components/Home_new/AppFeatures";
+import CommunityShowcase from "@/components/Home_new/CommunityShowcase";
+import FeatureHighlight from "@/components/Home_new/FeatureHighlight";
+// import PhotoStack from "@/components/Home_new/FeatureScroll";
+import FeatureScroll from "@/components/Home_new/FeatureScroll";
+import SyncTripPromo from "@/components/AppPushingComponents/SyncTripPromo";
 
 const Testimonials = dynamic(() =>
   import("@/components/Home_new/testimonialSection")
@@ -209,7 +214,10 @@ export default async function Home() {
       {/* <HomeWrapper version="v2" /> */}
       <HomeHeroSectionNew />
       <ChoiceSection />
+      <CommunityShowcase />
       <AppFeatures />
+      <FeatureScroll />
+      {/* <FeatureHighlight /> */}
       {/* <HomeWrapper version="v1" /> */}
       <FeaturesSection />
       {/* <ActiveDestinations /> */}
@@ -218,7 +226,8 @@ export default async function Home() {
       <SoftLoginTrigger>
         <Testimonials />
       </SoftLoginTrigger>
-      <BlogsHomePage posts={enriched} categories={categories} />
+      {/* <BlogsHomePage posts={enriched} categories={categories} /> */}
+      <SyncTripPromo />
     </>
   );
 }

@@ -361,7 +361,7 @@ export class ApiService {
     });
   }
 
-  static async checkIfOTPLimitReached({update} : {update?: boolean} = {}): Promise<boolean> {
+  static async checkIfOTPLimitReached({ update }: { update?: boolean } = {}): Promise<boolean> {
     try {
       const res = await apiClient.get(`${API_CONFIG.BACKEND_BASE_URL}/auth/checkIfOTPLimitReached`, { params: { update } });
       return res.data.limitReached || false;
@@ -439,9 +439,9 @@ export class ApiService {
     });
     return response.data;
   }
-  static async saveTripDetails(tripDetails: UserTrip) {
+  static async saveTripDetails(tripDetails: FormData) {
     try {
-      const res = await apiClient.post(`/app/createUserTripWithDetails`, tripDetails);
+      const res = await apiClient.post(`/app/createUserTripWithDetails_v2`, tripDetails);
       console.log('Trip details saved successfully:', res);
       if (res.status === 409) {
         toast.success("You Already have a trip planned for this location!");
@@ -608,4 +608,18 @@ export class ApiService {
 
     return response;
   };
+  static async getBestLocationsForTrip(): Promise<{ id: string, photos: string[] }[]> {
+    try {
+      const response = await apiClient.post(`${API_CONFIG.BACKEND_BASE_URL}/app/getBestLocationsForTrip`, {
+        fields: ["id", "photos"]
+      });
+      if (!response) {
+        throw new Error('Failed to fetch best locations for trip');
+      }
+      return response.data.locations || [];
+    } catch (error) {
+      console.error('Failed to fetch best locations for trip:', error);
+      return [];
+    }
+  }
 }

@@ -181,7 +181,7 @@ export default function ChatsPageInner() {
     /* ------------- Load chats for a trip -------------- */
     const loadChatsForTrip = async (forTripId?: string | null) => {
         try {
-            const data = await ChatApiService.fetchChats(forTripId || undefined);
+            const data = await ChatApiService.fetchChats(undefined);
             if (!mountedRef.current) return;
             setChats(Array.isArray(data) ? data : []);
         } catch (err) {

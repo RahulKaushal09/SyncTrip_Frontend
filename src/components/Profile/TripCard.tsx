@@ -19,7 +19,7 @@ export default function TripCard ({ trip, isOwner, onClick }: { trip: UserTrip, 
             className="aspect-[4/3] rounded-2xl overflow-hidden relative group cursor-pointer hover:shadow-xl hover:-translate-y-1 transition-all duration-300 shadow-md"
         >
             <GumletImage
-                src={trip.image}
+                src={trip.image || trip.tripImage}
                 containerClassName='h-full'
                 alt={trip.tripName as string}
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
