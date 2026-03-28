@@ -2,6 +2,12 @@
 
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import styles from "./FeatureScroll.module.css";
+import { useRouter } from "next/navigation";
+
+import ridersImage from "@/assets/images/ridersImage.png";
+import sportsImage from "@/assets/images/sportsImage.png";
+import outingImage from "@/assets/images/outingImage.png";
+import moviesImage from "@/assets/images/moviesImage.png";
 
 const features = [
   {
@@ -15,7 +21,7 @@ const features = [
     ],
     tag: "Most Active",
     btnText: "Explore Rider Groups",
-    imageUrl: "https://images.unsplash.com/photo-1558981806-ec527fa84c39?q=80&w=600&auto=format&fit=crop",
+    imageUrl: ridersImage.src,
     caption: "Weekend Riders • 120+ members",
     accent: "#3b82f6",
     styleVars: { "--rot": "-4deg", "--x": "0px", "--y": "0px", "--tape-rot": "-2deg", zIndex: 1 }
@@ -31,8 +37,8 @@ const features = [
     ],
     tag: "New",
     btnText: "Join Film Groups",
-    imageUrl: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=600&auto=format&fit=crop",
-    caption: "Indie Film Club • 80+ members",
+    imageUrl: moviesImage.src,
+    caption: "Bollywood Film Club • 80+ members",
     accent: "#f59e0b",
     styleVars: { "--rot": "3deg", "--x": "12px", "--y": "25px", "--tape-rot": "4deg", zIndex: 2 }
   },
@@ -47,8 +53,8 @@ const features = [
     ],
     tag: "Trending",
     btnText: "Find Your Team",
-    imageUrl: "https://images.unsplash.com/photo-1526232761682-d26e03ac148e?q=80&w=600&auto=format&fit=crop",
-    caption: "Turf Squad • 60+ players",
+    imageUrl: sportsImage.src,
+    caption: "Sport Squad • 60+ players",
     accent: "#10b981",
     styleVars: { "--rot": "-2deg", "--x": "-8px", "--y": "50px", "--tape-rot": "-5deg", zIndex: 3 }
   },
@@ -63,7 +69,7 @@ const features = [
     ],
     tag: "Editor's Pick",
     btnText: "Discover Circles",
-    imageUrl: "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?q=80&w=600&auto=format&fit=crop",
+    imageUrl: outingImage.src,
     caption: "City Vibes • 95+ members",
     accent: "#ec4899",
     styleVars: { "--rot": "5deg", "--x": "20px", "--y": "75px", "--tape-rot": "2deg", zIndex: 4 }
@@ -73,6 +79,7 @@ const features = [
 const FeatureScroll = () => {
   const [desktopIndex, setDesktopIndex] = useState(0);
   const [mobileIndex, setMobileIndex] = useState(0);
+  const router = useRouter();
 
   const textRefs = useRef<(HTMLDivElement | null)[]>([]);
   const mobileImageRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -185,7 +192,7 @@ const FeatureScroll = () => {
                   ))}
                 </ul>
 
-                <button className={styles.actionBtn}>
+                <button onClick={() => router.push("https://play.google.com/store/apps/details?id=com.synctrip")} className={styles.actionBtn}>
                   {feature.btnText}
                   <span className={styles.btnArrow}>→</span>
                 </button>

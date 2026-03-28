@@ -199,7 +199,7 @@ const AppDownloadStack = () => {
               </div>
             </div>
             <h2 className="text-3xl lg:text-6xl font-extrabold leading-[1.05] tracking-tight text-white">
-              100+ travelers <br />
+              2000+ travelers <br />
               <span className="text-primary-1">already exploring.</span>
             </h2>
             <div className="flex flex-col gap-6 lg:gap-10 w-full">
@@ -239,7 +239,6 @@ const AppDownloadStack = () => {
         rounded-[2rem] lg:rounded-t-[3rem]
         lg:rounded-b-none lg:border-b-0
         lg:min-h-[calc(100dvh-10rem)] lg:sticky lg:top-40
-        border border-black/5
         bg-[#F4FAFF] text-secondary-1
         z-[40] overflow-hidden group
       ">
@@ -262,7 +261,7 @@ const AppDownloadStack = () => {
               <p className="text-base lg:text-xl text-neutral-600 max-w-md m-0 mx-auto lg:mx-0 font-light leading-relaxed">
                 Free to download. No subscription. Just trips, companions, and memories waiting to be made.
               </p>
-              <StoreBadge isDark={true} href="https://play.google.com" />
+              <StoreBadge isDark={true} href="https://play.google.com/store/apps/details?id=com.synctrip" />
             </div>
           </div>
 
