@@ -91,3 +91,59 @@ export type UUID = string;
 export type GenderPreference = "male" | "female" | "mixed";
 
 export type GroupStatus = "open" | "closed";
+
+export interface RidePlan {
+    id: string;
+    title: string;
+    locationName: string | null;
+    scheduleDate: string | null;
+    totalDays: number | null;
+    rideImage: string;
+    membersCount: number | null;
+    maxMembers: number | null;
+    startLocationName: string | null;
+    bikeCC: string | null;
+}
+
+export interface MoviePlan {
+    id: string;
+    title: string;
+    movieImage: string;
+    locationName: string | null;
+    scheduleDate: string | null;
+    scheduleTime: string | null;
+    maxMembers: number | null;
+    membersCount: number | null;
+    venueName: string | null;
+    distance: number | null;
+    genderPreference: GenderPreference | null;
+}
+
+export interface SportsPlan {
+    id: string;
+    sportType: string;
+    locationName: string | null;
+    scheduleDate: string | null;
+    scheduleTime: string | null;
+    maxMembers: number | null;
+    membersCount: number | null;
+    venueName: string | null;
+    genderPreference: GenderPreference | null;
+}
+
+export interface HangoutPlan {
+    id: string;
+    outingType: string;
+    locationName: string | null;
+    scheduleDate: string | null;
+    scheduleTime: string | null;
+    maxMembers: number | null;
+    membersCount: number | null;
+    venueName: string | null;
+    isLocationFlexible: boolean;
+}
+
+export const LOCATIONS = [
+  "Chandigarh", "Delhi", "Bangalore", "Mumbai", "Pune", 
+  "Hyderabad", "Chennai", "Kolkata", "Ahmedabad", "Jaipur"
+];

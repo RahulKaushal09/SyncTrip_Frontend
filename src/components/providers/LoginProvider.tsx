@@ -141,6 +141,11 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
                     return;
                 }
 
+                if ((existingUser.profileCompletionLevel ?? 0) < 4) {
+                    setShowFullProfile(true);
+                    return;
+                }
+
                 // Stage 3: Everything complete
                 callback?.(existingUser, false);
                 return;
@@ -251,6 +256,8 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
         if (requiresPhone) {
             setShowFullProfile(true);
         } else if (!(user as User).profileCompleted) {
+            setShowFullProfile(true);
+        } else if ((user.profileCompletionLevel ?? 0) < 4) {
             setShowFullProfile(true);
         }
         else {

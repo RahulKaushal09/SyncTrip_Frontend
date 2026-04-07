@@ -8,21 +8,21 @@ import { FeaturesSection } from "@/components/Home_new/whyChooseSyncTrip";
 // import { HowItWorksSectionHome } from "@/components/Home_new/howItWorksHomeSection";
 // import SoftLoginTrigger from "@/components/Auth/SoftLoginTrigger";
 
-import { getThemeClass } from "@/utils/getThemeClassForBlogs";
-import { BlogsApiServices } from "@/utils/blogs.api.utils";
-import { BlogPost } from "@/types";
+// import { getThemeClass } from "@/utils/getThemeClassForBlogs";
+// import { BlogsApiServices } from "@/utils/blogs.api.utils";
+// import { BlogPost } from "@/types";
 import { Metadata } from "next";
 import Script from "next/script";
-import ActiveDestinations from "@/components/Home_new/ActiveDestinations";
+// import ActiveDestinations from "@/components/Home_new/ActiveDestinations";
 import ChoiceSection from "@/components/Home_new/ChoiceSection";
 // import { usePathname } from "next/navigation";
 // import DownloadPopup from "@/components/popups/DownloadAppPopup";
-import HomeWrapper from "@/components/Home_new/HomeWrapper";
+// import HomeWrapper from "@/components/Home_new/HomeWrapper";
 import dynamic from "next/dynamic";
 import HomeHeroSectionNew from "@/components/Home_new/NewHome";
 import AppFeatures from "@/components/Home_new/AppFeatures";
 import CommunityShowcase from "@/components/Home_new/CommunityShowcase";
-import FeatureHighlight from "@/components/Home_new/FeatureHighlight";
+// import FeatureHighlight from "@/components/Home_new/FeatureHighlight";
 // import PhotoStack from "@/components/Home_new/FeatureScroll";
 import FeatureScroll from "@/components/Home_new/FeatureScroll";
 import SyncTripPromo from "@/components/AppPushingComponents/SyncTripPromo";
@@ -30,9 +30,9 @@ import SyncTripPromo from "@/components/AppPushingComponents/SyncTripPromo";
 const Testimonials = dynamic(() =>
   import("@/components/Home_new/testimonialSection")
 );
-const BlogsHomePage = dynamic(() =>
-  import("@/components/Home_new/homeBlogsSection")
-);
+// const BlogsHomePage = dynamic(() =>
+//   import("@/components/Home_new/homeBlogsSection")
+// );
 const SoftLoginTrigger = dynamic(() =>
   import("@/components/Auth/SoftLoginTrigger")
 );
@@ -140,31 +140,31 @@ export const metadata: Metadata = {
 //   },
 // };
 export default async function Home() {
-  const data = await BlogsApiServices.fetchAllBlogs();
-  const limitedData = data.slice(0, 8);
-  const enriched = limitedData.map((post: BlogPost) => ({
-    ...post,
-    themeClass: getThemeClass(post.filterTags?.[0] || ""),
-    liked: false,
-    // likes: Math.floor(Math.random() * 900) + 100,
-    // comments: Math.floor(Math.random() * 50) + 5,
-    // shares: Math.floor(Math.random() * 20) + 2
-  }));
-  const uniqueTags = Array.from(
-    new Set(
-      enriched
-        .map((p) => p.filterTags?.[0])
-        .filter((tag): tag is string => Boolean(tag && tag.trim()))
-    )
-  );
+  // const data = await BlogsApiServices.fetchAllBlogs();
+  // const limitedData = data.slice(0, 8);
+  // const enriched = limitedData.map((post: BlogPost) => ({
+  //   ...post,
+  //   themeClass: getThemeClass(post.filterTags?.[0] || ""),
+  //   liked: false,
+  //   // likes: Math.floor(Math.random() * 900) + 100,
+  //   // comments: Math.floor(Math.random() * 50) + 5,
+  //   // shares: Math.floor(Math.random() * 20) + 2
+  // }));
+  // const uniqueTags = Array.from(
+  //   new Set(
+  //     enriched
+  //       .map((p) => p.filterTags?.[0])
+  //       .filter((tag): tag is string => Boolean(tag && tag.trim()))
+  //   )
+  // );
 
-  const categories = [
-    { key: "all", label: "All Content" },
-    ...uniqueTags.map((tag) => ({
-      key: tag.toLowerCase().replace(/\s+/g, "-"),
-      label: tag
-    }))
-  ];
+  // const categories = [
+  //   { key: "all", label: "All Content" },
+  //   ...uniqueTags.map((tag) => ({
+  //     key: tag.toLowerCase().replace(/\s+/g, "-"),
+  //     label: tag
+  //   }))
+  // ];
 
   return (
     <>

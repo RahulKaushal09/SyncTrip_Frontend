@@ -4,7 +4,7 @@
 
 import { API_CONFIG, LocationField, STORAGE_KEYS, UserField } from '../constants';
 import { StorageUtils } from './storage.utils';
-import { ApiResponse, IndianCity, Location, PlacesToVisit, User, UserTrip } from '../types';
+import { ApiResponse, HangoutPlan, IndianCity, Location, MoviePlan, PlacesToVisit, RidePlan, SportsPlan, User, UserTrip } from '../types';
 import { triggerLogin } from './login.utils';
 import { GoogleLoginResponse, CompleteProfileApiResponse, getLocationResponseSchema, exploreNearByApiResponse } from '@/classes/ApiResponse.classes';
 import { wishlistRequestSchema } from '@/classes/ApiRequest.classes';
@@ -621,5 +621,59 @@ export class ApiService {
       console.error('Failed to fetch best locations for trip:', error);
       return [];
     }
+  };
+  
+  static async getRidePlans(): Promise<RidePlan[]> {
+    try {
+      const response = await apiClient.get(`${API_CONFIG.BACKEND_BASE_URL}/riders/plans`);
+      if (!response) {
+        throw new Error('Failed to fetch ride plans');
+      }
+      return response.data.data.groups || [];
+    } catch (error) {
+      console.error('Failed to fetch ride plans:', error);
+      return [];
+    }
+  };
+
+  static async getHangoutPlans(): Promise<HangoutPlan[]> {
+    try {
+      const response = await apiClient.get(`${API_CONFIG.BACKEND_BASE_URL}/outing/plans`);
+      if (!response) {
+        throw new Error('Failed to fetch hangout plans');
+      }
+      return response.data.data.groups || [];
+    } catch (error) {
+      console.error('Failed to fetch hangout plans:', error);
+      return [];
+    }
+  };
+
+  static async getMoviesPlans(): Promise<MoviePlan[]> {
+    try {
+      const response = await apiClient.get(`${API_CONFIG.BACKEND_BASE_URL}/movies/plans`);
+      if (!response) {
+        throw new Error('Failed to fetch movie plans');
+      }
+      return response.data.data.groups || [];
+    } catch (error) {
+      console.error('Failed to fetch movie plans:', error);
+      return [];
+    }
   }
+
+  static async getSportsPlans(): Promise<SportsPlan[]> {
+    try {
+      const response = await apiClient.get(`${API_CONFIG.BACKEND_BASE_URL}/sports/plans`);
+      if (!response) {
+        throw new Error('Failed to fetch sports plans');
+      }
+      return response.data.data.groups || [];
+    } catch (error) {
+      console.error('Failed to fetch sports plans:', error);
+      return [];
+    }
+  }
+
+
 }

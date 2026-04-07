@@ -199,7 +199,7 @@ const AppDownloadStack = () => {
               </div>
             </div>
             <h2 className="text-3xl lg:text-6xl font-extrabold leading-[1.05] tracking-tight text-white">
-              2000+ travelers <br />
+              5000+ travelers <br />
               <span className="text-primary-1">already exploring.</span>
             </h2>
             <div className="flex flex-col gap-6 lg:gap-10 w-full">

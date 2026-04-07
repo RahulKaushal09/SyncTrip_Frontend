@@ -1,0 +1,180 @@
+/* DownloadAppModal.css */
+
+.dam-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 300;
+  padding: 20px;
+  animation: dam-fade .18s ease;
+}
+
+.dam-box {
+  position: relative;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 36px 28px 28px;
+  width: 100%;
+  max-width: 360px;
+  text-align: center;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.14);
+  animation: dam-up .24s cubic-bezier(.175, .885, .32, 1.275);
+}
+
+/* Close button */
+.dam-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: #f4f4f4;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #777;
+  cursor: pointer;
+  transition: background .15s;
+}
+
+.dam-close:hover { background: #e8e8e8; color: #111; }
+
+/* Icon */
+.dam-icon-wrap {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #111;
+}
+
+.dam-icon-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  background: #f0f0f0;
+  z-index: 0;
+}
+
+.dam-icon-wrap svg {
+  position: relative;
+  z-index: 1;
+}
+
+/* Copy */
+.dam-title {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #111;
+  margin: 0 0 8px;
+  letter-spacing: -0.2px;
+  line-height: 1.2;
+}
+
+.dam-sub {
+  font-size: 0.845rem;
+  color: #666;
+  line-height: 1.55;
+  margin: 0 0 24px;
+}
+
+/* Store buttons */
+.dam-stores {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.dam-store-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 18px;
+  border-radius: 13px;
+  text-decoration: none;
+  transition: transform .15s ease, box-shadow .15s ease;
+  text-align: left;
+}
+
+.dam-store-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0,0,0,.12);
+}
+
+.dam-apple {
+  background: #111;
+  color: #fff;
+}
+
+.dam-google {
+  background: #fff;
+  color: #111;
+  border: 1.5px solid #e8e8e8;
+}
+
+.dam-store-icon {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.dam-store-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.dam-store-label {
+  font-size: 0.65rem;
+  font-weight: 500;
+  opacity: 0.75;
+  letter-spacing: 0.2px;
+}
+
+.dam-store-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+}
+
+/* Dismiss */
+.dam-dismiss {
+  margin-top: 18px;
+  background: none;
+  border: none;
+  font-size: 0.8rem;
+  color: #aaa;
+  cursor: pointer;
+  padding: 4px 8px;
+  transition: color .15s;
+  font-family: inherit;
+}
+
+.dam-dismiss:hover { color: #555; }
+
+/* Animations */
+@keyframes dam-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes dam-up {
+  from { transform: translateY(20px) scale(0.97); opacity: 0; }
+  to   { transform: translateY(0)    scale(1);    opacity: 1; }
+}
+
+/* Mobile */
+@media (max-width: 420px) {
+  .dam-box { padding: 30px 20px 22px; border-radius: 16px; }
+  .dam-title { font-size: 1.1rem; }
+}

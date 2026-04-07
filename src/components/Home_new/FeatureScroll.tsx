@@ -192,7 +192,7 @@ const FeatureScroll = () => {
                   ))}
                 </ul>
 
-                <button onClick={() => router.push("https://play.google.com/store/apps/details?id=com.synctrip")} className={styles.actionBtn}>
+                <button onClick={() => router.push("/explore/plans")} className={styles.actionBtn}>
                   {feature.btnText}
                   <span className={styles.btnArrow}>→</span>
                 </button>

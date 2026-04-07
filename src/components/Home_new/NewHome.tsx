@@ -47,7 +47,7 @@ const HomeHeroSectionNew = () => {
                     <div className="heroContent">
                         <div className="heroBadge">
                             <Sparkles className="heroSparkle" />
-                            <span>Join 10,000+ Happy Indian Travelers</span>
+                            <span>Join 5000+ Happy Indian Travelers</span>
                         </div>
 
                         <h1 className="heroTitleMain">{screenWidth && screenWidth > 900 ? "Any Plan. Any Time." : "Stop Planning Solo."}</h1>

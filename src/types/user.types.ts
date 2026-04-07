@@ -38,6 +38,7 @@ export interface User {
     };
     viewCount?: number;
     fcmToken?: string;
+    profileCompletionLevel?: number; // 0 to 4
 }
 // below is used in profile page
 export interface ExtendedUser extends User {

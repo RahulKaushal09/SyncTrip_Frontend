@@ -116,6 +116,29 @@
     transform: translateY(-3px);
 }
 
+/* --- App Store Button --- */
+.app-buttons {
+    display: flex;
+    justify-content: center;
+    margin: 10px 0;
+}
+
+.playstore-btn {
+    display: inline-block;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.playstore-btn:hover {
+    transform: translateY(-3px);
+    opacity: 0.9;
+}
+
+.playstore-img {
+    width: 150px; /* Adjust based on your image's dimensions */
+    height: auto;
+    display: block;
+}
+
 /* --- Copyright Bar --- */
 .footer-bottom {
     border-top: 1px solid #1a1a1a; /* Subtle divider */
@@ -163,38 +186,8 @@
     .social-icons {
         justify-content: flex-start; /* Align start on desktop */
     }
-}
 
-
-/* --- Original Commented Code Support (Do Not Edit) --- */
-.app-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin: 10px 0;
-}
-
-.buttonGetApp {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    background-color: #65CAD3;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-@media (max-width: 768px) {
-    .buttonGetApp {
-        width: 80%;
-        margin: auto;
-    }
-}
-
-@media (min-width: 768px) {
     .app-buttons {
-        flex-direction: row;
-        justify-content: center;
+        justify-content: flex-start; /* Align start on desktop */
     }
 }

@@ -5,10 +5,11 @@ import SyncTripLogoText from "../../assets/images/logoWeb.png";
 import SyncTripLogo from "../../assets/images/logo_main_withoutBG.png"
 import { usePathname } from 'next/navigation';
 import { Facebook, Instagram } from 'lucide-react';
+import GetItOnPlaystore from "../../assets/icons/GetOnPlayStore.png";
 
 const Footer = () => {
     const pathname = usePathname();
-    const shouldHideFooter = pathname.includes('/chats') || pathname.includes('/groups') || pathname.includes('/create') ||(pathname.includes('userTrip/') && pathname.includes('/travel-mode')) ||(pathname.includes('userTrip/') && pathname.includes('/groups'))||(pathname.includes('userTrip/') && pathname.includes('/planner')) || (pathname.includes('userTrip/') && pathname.includes('/matching')) || pathname.includes('/careers/linkedin/march-2026');
+    const shouldHideFooter = pathname.includes('/chats') || pathname.includes('/groups') || pathname.includes('/create') ||(pathname.includes('userTrip/') && pathname.includes('/travel-mode')) ||(pathname.includes('userTrip/') && pathname.includes('/groups'))||(pathname.includes('userTrip/') && pathname.includes('/planner')) || (pathname.includes('userTrip/') && pathname.includes('/matching')) || pathname.includes('/careers/linkedin/march-2026') || pathname.includes('/explore/plans');
 
     const companyLinks = [
         { name: 'About', url: '/about' },
@@ -101,39 +102,31 @@ const Footer = () => {
                         </a>
                     </div>
 
-                    {/* <h3 className="footerTextColorNormal" style={{ fontSize: "1.55rem" }}>
-                        Discover our app
+                    {/* App Button */}
+                    <h3 className="footer-title" style={{ marginTop: "30px", marginBottom: "15px" }}>
+                        Get the App
                     </h3>
-
                     <div className="app-buttons">
                         <a
-                            href="https://play.google.com/store/apps/details?id=com.synctrip.app" // replace with actual Play Store link
-                            className='buttonGetApp'
+                            href="https://play.google.com/store/apps/details?id=com.synctrip" // replace with actual Play Store link
+                            className="playstore-btn"
                             target="_blank"
                             rel="noopener noreferrer"
                             aria-label="Get it on Google Play"
                         >
-                            <FaGooglePlay style={{ marginRight: "10px", width: "40px", height: "40px" }} />
-                            <p style={{ marginBottom: 0 }}>Get it on Google Play</p>
+                            <img 
+                                src={GetItOnPlaystore.src} 
+                                alt="Get it on Google Play" 
+                                className="playstore-img"
+                            />
                         </a>
-                        <a
-                            href="https://apps.apple.com/us/app/synctrip/id1234567890" // replace with actual App Store link
-                            className='buttonGetApp'
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label="Available on the App Store"
-                        >
-                            <FaApple style={{ marginRight: "10px", width: "40px", height: "40px" }} />
-                            <p style={{ marginBottom: 0 }}>Available on the App Store</p>
-                        </a>
-                    </div> 
-                    */}
+                    </div>
                 </div>
             </div>
 
             <div className="footer-bottom">
                 <p className="copyright">
-                    © 2025 Synctrip. All rights reserved.
+                    © 2026 Synctrip. All rights reserved.
                 </p>
             </div>
         </footer>
