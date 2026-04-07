@@ -1,0 +1,17 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "QR5MJ236TD.com.synctrip",
+        "paths": [
+          "/invite/*",
+          "/trip/*",
+          "/chat/*",
+          "/user/*",
+          "/location/*"
+        ]
+      }
+    ]
+  }
+}
