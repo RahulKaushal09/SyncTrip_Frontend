@@ -3,7 +3,26 @@
 import React, { useEffect, useRef, useState } from "react";
 import Image, { ImageProps } from "next/image";
 import ImageNotFound from "../../assets/images/ImageNotFound.png";
-import { set } from "lodash";
+
+function normalizeUrl(url: string) {
+    if (!url) return "";
+
+    // Fix missing slash after protocol
+    if (url.startsWith("https:/") && !url.startsWith("https://")) {
+        return url.replace("https:/", "https://");
+    }
+
+    if (url.startsWith("http:/") && !url.startsWith("http://")) {
+        return url.replace("http:/", "http://");
+    }
+
+    return url;
+}
+function extractHostname(url: string) {
+    if (!url) return "";
+    if (typeof url !== "string") return "";
+    return url.replace(/^https?:\/\//, "").split("/")[0];
+}
 
 const GUMLET_HOST = "synctrip.gumlet.io";
 
@@ -12,15 +31,6 @@ const ORIGIN_HOSTS = [
     "www.synctrip.in",
     "synctrip-image-storage.s3.amazonaws.com",
 ];
-
-function extractHostname(url: string) {
-    if (!url) return "";
-    try {
-        return new URL(url).hostname;
-    } catch {
-        return "";
-    }
-}
 
 // 1. ADD CUSTOM PROPS HERE
 interface GumletImageProps extends Omit<ImageProps, "src"> {
@@ -46,16 +56,18 @@ export default function GumletImage({
             return;
         }
 
-        const hostname = extractHostname(src);
+        const cleanSrc = normalizeUrl(src);
+
+        const hostname = extractHostname(cleanSrc);
         const matchedHost = ORIGIN_HOSTS.find((h) => hostname === h);
 
-        let updatedUrl = src;
+        let updatedUrl = cleanSrc;
 
         if (matchedHost) {
             updatedUrl =
                 matchedHost !== ORIGIN_HOSTS[2]
-                    ? src.replace(`${matchedHost}/AllImages`, GUMLET_HOST)
-                    : src.replace(matchedHost, GUMLET_HOST);
+                    ? cleanSrc.replace(`${matchedHost}/AllImages`, GUMLET_HOST)
+                    : cleanSrc.replace(matchedHost, GUMLET_HOST);
         }
 
         const updateSize = () => {
@@ -95,13 +107,13 @@ export default function GumletImage({
     }, [src]);
 
     const { width, height, ...otherProps } = rest;
-    if (!finalUrl) return(
+    if (!finalUrl) return (
         <div
             ref={containerRef}
             className={containerClassName}
             style={{ width: "100%", position: "relative", ...containerStyle }}
         >
-            
+
         </div>
     );
 

@@ -3,8 +3,23 @@
 import Image from "next/image";
 import { useMemo } from "react";
 
+function normalizeUrl(url: string) {
+    if (!url) return "";
+
+    // Fix missing slash after protocol
+    if (url.startsWith("https:/") && !url.startsWith("https://")) {
+        return url.replace("https:/", "https://");
+    }
+
+    if (url.startsWith("http:/") && !url.startsWith("http://")) {
+        return url.replace("http:/", "http://");
+    }
+
+    return url;
+}
 function extractHostname(url: string) {
     if (!url) return "";
+    if (typeof url !== "string") return "";
     return url.replace(/^https?:\/\//, "").split("/")[0];
 }
 
@@ -37,7 +52,7 @@ export default function GumletBackgroundImage({
     const optimizedSrc = useMemo(() => {
         if (!src) return "";
 
-        let uri = src;
+        let uri = normalizeUrl(src);
         const hostname = extractHostname(uri);
         const matchedHost = ORIGIN_HOSTS.find((h) => hostname === h);
 
