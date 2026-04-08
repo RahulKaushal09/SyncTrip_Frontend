@@ -437,7 +437,7 @@
 
 .chips { display: flex; flex-wrap: wrap; gap: 8px; }
 
-.chip {
+/* .chip {
   background: var(--bg-muted);
   border: 1.5px solid var(--border);
   border-radius: 100px;
@@ -450,8 +450,8 @@
   transition: all .15s;
 }
 
-.chip:hover { border-color: var(--text-muted); }
-.chip.active { background: var(--text-main); color: #fff; border-color: var(--text-main); }
+.chip:hover { border-color: var(--text-muted); } */
+.chip.active { background: var(--secondary-1); color: #fff; border-color: var(--text-main); }
 
 /* ─── Animations ────────────────────────────── */
 @keyframes fadein { from { opacity:0 } to { opacity:1 } }
