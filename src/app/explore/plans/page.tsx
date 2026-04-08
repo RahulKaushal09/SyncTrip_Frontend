@@ -9,6 +9,7 @@ import './activities.css';
 import { SportsPlan, MoviePlan, HangoutPlan, RidePlan, LOCATIONS } from "../../../types/common.types";
 import { ApiService } from '@/utils';
 import { DownloadAppModal } from '@/components/Download App/DownloadAppModal';
+import GumletImage from '@/components/common/GumletImage';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -16,8 +17,8 @@ const fmt = (iso: string | null) => {
   if (!iso) return { day: '–', month: 'TBA', weekday: '' };
   const d = new Date(iso);
   return {
-    day:     d.getDate(),
-    month:   d.toLocaleDateString('en-US', { month: 'short' }).toUpperCase(),
+    day: d.getDate(),
+    month: d.toLocaleDateString('en-US', { month: 'short' }).toUpperCase(),
     weekday: d.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase(),
   };
 };
@@ -27,7 +28,7 @@ const fmt = (iso: string | null) => {
 const DateBadge: React.FC<{ iso: string | null }> = ({ iso }) => {
   const { day, month } = fmt(iso);
   return (
-    <div className="img-date-badge">
+    <div className="img-date-badge" style={{ zIndex: 100 }}>
       <span className="badge-month">{month}</span>
       <span className="badge-day">{day}</span>
     </div>
@@ -38,7 +39,16 @@ const DateBadge: React.FC<{ iso: string | null }> = ({ iso }) => {
 
 const RideCard: React.FC<{ data: RidePlan }> = ({ data }) => (
   <div className="plan-card">
-    <div className="card-thumb" style={{ backgroundImage: `url(${data.rideImage})` }}>
+    <div className="card-thumb" style={{ position: 'relative', overflow: 'hidden' }}>
+      {data.rideImage && (
+        <GumletImage
+          src={data.rideImage}
+          containerClassName='h-full'
+          alt={data.title}
+          fill
+          style={{ objectFit: 'cover', zIndex: 0 }}
+        />
+      )}
       <DateBadge iso={data.scheduleDate} />
     </div>
     <div className="card-body">
@@ -47,13 +57,13 @@ const RideCard: React.FC<{ data: RidePlan }> = ({ data }) => (
         <MapPin size={12} /> {data.startLocationName || 'Location TBD'}
       </p>
       <div className="card-tags">
-        {data.locationName && <span className="tag"><MapPin size={11}/> {data.locationName}</span>}
-        {data.totalDays     && <span className="tag"><Clock size={11}/> {data.totalDays}d</span>}
-        {data.bikeCC        && <span className="tag"><Bike size={11}/> {data.bikeCC}</span>}
+        {data.locationName && <span className="tag"><MapPin size={11} /> {data.locationName}</span>}
+        {data.totalDays && <span className="tag"><Clock size={11} /> {data.totalDays}d</span>}
+        {data.bikeCC && <span className="tag"><Bike size={11} /> {data.bikeCC}</span>}
       </div>
       <div className="card-footer">
         <span className="members-pill" style={{ color: 'var(--primary)' }}>
-          <Users size={13}/> {data.membersCount ?? 0} / {data.maxMembers ?? '–'} joined
+          <Users size={13} /> {data.membersCount ?? 0} / {data.maxMembers ?? '–'} joined
         </span>
       </div>
     </div>
@@ -64,21 +74,30 @@ const MovieCard: React.FC<{ data: MoviePlan }> = ({ data }) => {
   const pct = Math.min(((data.membersCount ?? 0) / (data.maxMembers ?? 1)) * 100, 100);
   return (
     <div className="plan-card">
-      <div className="card-thumb" style={{ backgroundImage: `url(${data.movieImage})` }}>
+      <div className="card-thumb" style={{ position: 'relative', overflow: 'hidden' }}>
+        {data.movieImage && (
+          <GumletImage
+            src={data.movieImage}
+            containerClassName='h-full'
+            alt={data.title}
+            fill
+            style={{ objectFit: 'cover', zIndex: 0 }}
+          />
+        )}
         <DateBadge iso={data.scheduleDate} />
         {data.scheduleTime && (
-          <div className="card-scrim">
-            <Clock size={11}/> {data.scheduleTime}
+          <div className="card-scrim" style={{ position: 'relative', zIndex: 10 }}>
+            <Clock size={11} /> {data.scheduleTime}
           </div>
         )}
       </div>
       <div className="card-body">
         <h3 className="card-name">{data.title}</h3>
         <p className="card-venue">
-          <Ticket size={12}/> {data.venueName || 'Venue TBD'}
+          <Ticket size={12} /> {data.venueName || 'Venue TBD'}
         </p>
         <div className="card-tags">
-          {data.locationName && <span className="tag"><MapPin size={11}/> {data.locationName}</span>}
+          {data.locationName && <span className="tag"><MapPin size={11} /> {data.locationName}</span>}
           {data.distance != null && <span className="tag">{data.distance} km</span>}
         </div>
         <div className="progress-wrap">
@@ -106,14 +125,14 @@ const SportCard: React.FC<{ data: SportsPlan }> = ({ data }) => (
     <div className="card-body">
       <h3 className="card-name">{data.sportType.toUpperCase()} Match</h3>
       <p className="card-venue">
-        <MapPin size={12}/> {data.venueName || 'Venue TBD'}
+        <MapPin size={12} /> {data.venueName || 'Venue TBD'}
       </p>
       <div className="card-tags">
-        {data.scheduleTime && <span className="tag"><Clock size={11}/> {data.scheduleTime}</span>}
+        {data.scheduleTime && <span className="tag"><Clock size={11} /> {data.scheduleTime}</span>}
       </div>
       <div className="card-footer">
         <span className="members-pill" style={{ color: 'var(--green)' }}>
-          <Users size={13}/> {data.membersCount ?? 0} / {data.maxMembers ?? '–'} joined
+          <Users size={13} /> {data.membersCount ?? 0} / {data.maxMembers ?? '–'} joined
         </span>
       </div>
     </div>
@@ -131,14 +150,14 @@ const HangoutCard: React.FC<{ data: HangoutPlan }> = ({ data }) => (
     <div className="card-body">
       <h3 className="card-name">{data.outingType.split(' ').map((s: string) => s.charAt(0).toUpperCase() + s.slice(1)).join(' ')} Hangout</h3>
       <p className="card-venue">
-        <MapPin size={12}/> {data.venueName || 'Venue TBD'}
+        <MapPin size={12} /> {data.venueName || 'Venue TBD'}
       </p>
       <div className="card-tags">
-        {data.scheduleTime && <span className="tag"><Clock size={11}/> {data.scheduleTime}</span>}
+        {data.scheduleTime && <span className="tag"><Clock size={11} /> {data.scheduleTime}</span>}
       </div>
       <div className="card-footer">
         <span className="members-pill" style={{ color: 'var(--amber)' }}>
-          <Users size={13}/> {data.membersCount ?? 0} / {data.maxMembers ?? '–'} joined
+          <Users size={13} /> {data.membersCount ?? 0} / {data.maxMembers ?? '–'} joined
         </span>
       </div>
     </div>
@@ -148,11 +167,11 @@ const HangoutCard: React.FC<{ data: HangoutPlan }> = ({ data }) => (
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function ExploreActivities() {
-  const [loc, setLoc]           = useState<string | null>(null);
-  const [modal, setModal]       = useState(false);
-  const [rides, setRides]       = useState<RidePlan[]>([]);
-  const [movies, setMovies]     = useState<MoviePlan[]>([]);
-  const [sports, setSports]     = useState<SportsPlan[]>([]);
+  const [loc, setLoc] = useState<string | null>(null);
+  const [modal, setModal] = useState(false);
+  const [rides, setRides] = useState<RidePlan[]>([]);
+  const [movies, setMovies] = useState<MoviePlan[]>([]);
+  const [sports, setSports] = useState<SportsPlan[]>([]);
   const [hangouts, setHangouts] = useState<HangoutPlan[]>([]);
   const [showDownload, setShowDownload] = useState(false);
 
@@ -181,42 +200,42 @@ export default function ExploreActivities() {
     {
       key: 'rides',
       label: 'Upcoming Rides',
-      icon: <Bike size={13}/>,
+      icon: <Bike size={13} />,
       color: 'var(--primary)',
       bg: 'var(--primary-bg)',
       cat: 'rides',
       items: filter(rides),
-      render: (d: RidePlan) => <RideCard key={d.id} data={d}/>,
+      render: (d: RidePlan) => <RideCard key={d.id} data={d} />,
     },
     {
       key: 'movies',
       label: 'Movie Plans',
-      icon: <Ticket size={13}/>,
+      icon: <Ticket size={13} />,
       color: 'var(--red)',
       bg: 'var(--red-bg)',
       cat: 'movies',
       items: filter(movies),
-      render: (d: MoviePlan) => <MovieCard key={d.id} data={d}/>,
+      render: (d: MoviePlan) => <MovieCard key={d.id} data={d} />,
     },
     {
       key: 'sports',
       label: 'Sports Matches',
-      icon: <Trophy size={13}/>,
+      icon: <Trophy size={13} />,
       color: 'var(--green)',
       bg: 'var(--green-bg)',
       cat: 'sports',
       items: filter(sports),
-      render: (d: SportsPlan) => <SportCard key={d.id} data={d}/>,
+      render: (d: SportsPlan) => <SportCard key={d.id} data={d} />,
     },
     {
       key: 'hangouts',
       label: 'Casual Hangouts',
-      icon: <Coffee size={13}/>,
+      icon: <Coffee size={13} />,
       color: 'var(--amber)',
       bg: 'var(--amber-bg)',
       cat: 'hangouts',
       items: filter(hangouts),
-      render: (d: HangoutPlan) => <HangoutCard key={d.id} data={d}/>,
+      render: (d: HangoutPlan) => <HangoutCard key={d.id} data={d} />,
     },
   ] as const;
 
@@ -233,9 +252,9 @@ export default function ExploreActivities() {
           <p className="page-subtitle">Find your next adventure and crew</p>
         </div>
         <button className="location-btn" onClick={() => setModal(true)}>
-          <MapPin size={16}/>
+          <MapPin size={16} />
           {loc || 'All Locations'}
-          <ChevronRight size={15} style={{ color: 'var(--text-muted)' }}/>
+          <ChevronRight size={15} style={{ color: 'var(--text-muted)' }} />
         </button>
       </div>
 
@@ -259,7 +278,7 @@ export default function ExploreActivities() {
                 <div className="section-rule" />
                 {sec.items.length > 3 && (
                   <a href={mkLink(sec.cat)} className="see-more-btn">
-                    See all <ArrowRight size={13}/>
+                    See all <ArrowRight size={13} />
                   </a>
                 )}
               </div>
@@ -280,7 +299,7 @@ export default function ExploreActivities() {
             <div className="modal-head">
               <h3>Select City</h3>
               <button className="close-btn" onClick={() => setModal(false)}>
-                <X size={16}/>
+                <X size={16} />
               </button>
             </div>
             <div className="chips">
