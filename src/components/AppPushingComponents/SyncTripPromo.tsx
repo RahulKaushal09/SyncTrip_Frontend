@@ -1,7 +1,8 @@
 import React from "react";
 import d1 from "../../assets/images/di1.png";
 import d2 from "../../assets/images/di4.png";
-import PlaystoreBtn from "../../assets/icons/GetOnPlayStore.png";
+import PlaystoreBtn from "../../assets/icons/GetOnPlayStoreSVG.svg";
+import AppstoreBtn from "../../assets/icons/GetOnAppStore.svg";
 
 const SyncTripPromo = () => {
   return (
@@ -120,15 +121,25 @@ const SyncTripPromo = () => {
             </p>
 
             {/* CTA */}
-            <div className="mt-4 pb-8 md:pb-0">
+            <div className="mt-4 pb-8 flex gap-6 md:pb-0">
               <a
-                href="#"
+                href="https://play.google.com/store/apps/details?id=com.synctrip" 
                 className="inline-block transition-transform duration-300 hover:-translate-y-1 hover:scale-105 active:scale-95 drop-shadow-[0_6px_16px_rgba(0,0,0,0.2)]"
               >
                 <img
                   src={PlaystoreBtn.src}
                   alt="Get it on Google Play"
-                  className="h-16 md:h-20 w-auto object-contain"
+                  className="h-8 md:h-12 w-auto object-contain"
+                />
+              </a>
+              <a
+                href="https://apps.apple.com/app/synctrip/id6761762665"
+                className="inline-block transition-transform duration-300 hover:-translate-y-1 hover:scale-105 active:scale-95 drop-shadow-[0_6px_16px_rgba(0,0,0,0.2)]"
+              >
+                <img
+                  src={AppstoreBtn.src}
+                  alt="Get it on App Store"
+                  className="h-8 md:h-12 w-auto object-contain"
                 />
               </a>
             </div>

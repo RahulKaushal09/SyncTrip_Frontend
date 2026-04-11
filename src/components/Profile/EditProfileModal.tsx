@@ -143,6 +143,10 @@ export default function EditProfileModal({
     }, [isOpen]);
 
     const handleSubmit = (e: React.FormEvent) => {
+        if (!formData.name || formData.name.trim() === '' || formData.name.length < 2) {
+            alert('Full Name is required.');
+            return;
+        }
         e.preventDefault();
         onSave(formData as ExtendedUser);
         onClose();
@@ -167,19 +171,25 @@ export default function EditProfileModal({
                 </div>
 
                 <form onSubmit={handleSubmit} className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="md:col-span-2">
+                        <label className="block text-sm font-medium text-[var(--secondary-1)] mb-1">Full Name</label>
+                        <div className="relative">
+                            <input
+                                type="text"
+                                value={formData.name || ''}
+                                onChange={(e) => setFormData({
+                                    ...formData,
+                                    name: e.target.value
+                                })}
+                                className="w-full !px-4 py-2 border border-[var(--neutral-4)] rounded-xl focus:ring-2 focus:ring-[var(--primary-1)] outline-none transition-all"
+                                placeholder="Enter your full name"
+                            />
+                        </div>
+                    </div>
                     {/* --- Read Only Fields --- */}
                     <div className="md:col-span-2 grid grid-cols-1 bg-gray-100 md:grid-cols-2 gap-6 p-4 bg-[var(--neutral-5)]/30 rounded-xl border border-[var(--neutral-5)]">
                         <div className="md:col-span-2">
                             <span className="text-xs font-bold text-[var(--primary-hover)] uppercase tracking-wider mb-2 block">Identity Details (Locked)</span>
-                        </div>
-                        <div className="md:col-span-2">
-                            <label className="block text-sm font-medium text-[var(--neutral-1)] mb-1">Full Name</label>
-                            <input
-                                type="text"
-                                value={formData.name || ''}
-                                disabled
-                                className="w-full px-3 py-2 border border-[var(--neutral-4)] rounded-lg bg-[var(--neutral-5)]/50 text-[var(--secondary-1)] font-medium cursor-not-allowed"
-                            />
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-[var(--neutral-1)] mb-1">Date of Birth</label>
@@ -233,7 +243,7 @@ export default function EditProfileModal({
                                     bio: e.target.value
                                 })}
                                 className="w-full !px-4 py-2 border border-[var(--neutral-4)] rounded-xl focus:ring-2 focus:ring-[var(--primary-1)] outline-none transition-all"
-                                placeholder="username"
+                                placeholder="Tell us something about you!"
                             />
                         </div>
                     </div>

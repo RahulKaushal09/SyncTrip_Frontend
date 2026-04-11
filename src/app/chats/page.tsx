@@ -13,7 +13,7 @@ export default function ChatsPage() {
 
   return (
     <Suspense fallback={<div>Loading chats...</div>}>
-      <ChatsPageInner />
+      <ChatLocked />
     </Suspense>
   );
 }

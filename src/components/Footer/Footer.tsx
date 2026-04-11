@@ -5,7 +5,8 @@ import SyncTripLogoText from "../../assets/images/logoWeb.png";
 import SyncTripLogo from "../../assets/images/logo_main_withoutBG.png"
 import { usePathname } from 'next/navigation';
 import { Facebook, Instagram } from 'lucide-react';
-import GetItOnPlaystore from "../../assets/icons/GetOnPlayStore.png";
+import GetItOnPlaystore from "../../assets/icons/GetOnPlayStoreSVG.svg";
+import GetItOnAppStore from "../../assets/icons/GetOnAppStore.svg";
 
 const Footer = () => {
     const pathname = usePathname();
@@ -106,7 +107,7 @@ const Footer = () => {
                     <h3 className="footer-title" style={{ marginTop: "30px", marginBottom: "15px" }}>
                         Get the App
                     </h3>
-                    <div className="app-buttons">
+                    <div className="app-buttons gap-3">
                         <a
                             href="https://play.google.com/store/apps/details?id=com.synctrip" // replace with actual Play Store link
                             className="playstore-btn"
@@ -118,6 +119,19 @@ const Footer = () => {
                                 src={GetItOnPlaystore.src} 
                                 alt="Get it on Google Play" 
                                 className="playstore-img"
+                            />
+                        </a>
+                        <a
+                            href="https://apps.apple.com/app/synctrip/id6761762665" // replace with actual App Store link
+                            className="playstore-btn select-none"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="Get it on App Store"
+                        >
+                            <img 
+                                src={GetItOnAppStore.src} 
+                                alt="Get it on App Store" 
+                                className="appstore-img"
                             />
                         </a>
                     </div>

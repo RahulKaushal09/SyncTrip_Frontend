@@ -185,6 +185,10 @@ export default function UserProfilePage() {
       const payload: Partial<ExtendedUser> = {};
 
       // Social medias
+      if (updatedFormData?.name !== undefined) {
+        payload.name = updatedFormData.name;
+      }
+
       if (updatedFormData.socialMedias?.instagram !== undefined) {
         payload.socialMedias = {
           instagram: updatedFormData.socialMedias.instagram,
