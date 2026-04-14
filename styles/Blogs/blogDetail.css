@@ -140,3 +140,18 @@
 .loading-lines>div:nth-child(3) {
     width: 50%;
 }
+
+.blog-detail-wrapper {
+    background-color: #ffffff;
+    min-height: 100vh;
+}
+
+.editorial-blog-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 6rem;
+    padding-top: 0;
+}
+
+/* Hide the old CTA styles if they are still hanging around */
+.cta-section, .cta-box { display: none !important; }

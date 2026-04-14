@@ -4,9 +4,10 @@ import "../../../styles/Footer.css";
 import SyncTripLogoText from "../../assets/images/logoWeb.png";
 import SyncTripLogo from "../../assets/images/logo_main_withoutBG.png"
 import { usePathname } from 'next/navigation';
-import { Facebook, Instagram } from 'lucide-react';
+import { Facebook, Instagram, Linkedin } from 'lucide-react';
 import GetItOnPlaystore from "../../assets/icons/GetOnPlayStoreSVG.svg";
 import GetItOnAppStore from "../../assets/icons/GetOnAppStore.svg";
+import { APP_LINKS } from '@/constants';
 
 const Footer = () => {
     const pathname = usePathname();
@@ -101,6 +102,15 @@ const Footer = () => {
                         >
                             <Instagram size={20} strokeWidth={1.5} />
                         </a>
+                        <a
+                            href="https://www.linkedin.com/company/synctrip"
+                            className="social-icon"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="LinkedIn"
+                        >
+                            <Linkedin size={20} strokeWidth={1.5} />
+                        </a>
                     </div>
 
                     {/* App Button */}
@@ -109,7 +119,7 @@ const Footer = () => {
                     </h3>
                     <div className="app-buttons gap-3">
                         <a
-                            href="https://play.google.com/store/apps/details?id=com.synctrip" // replace with actual Play Store link
+                            href={APP_LINKS.PLAY_STORE} // replace with actual Play Store link
                             className="playstore-btn"
                             target="_blank"
                             rel="noopener noreferrer"
@@ -122,7 +132,7 @@ const Footer = () => {
                             />
                         </a>
                         <a
-                            href="https://apps.apple.com/app/synctrip/id6761762665" // replace with actual App Store link
+                            href={APP_LINKS.APP_STORE} // replace with actual App Store link
                             className="playstore-btn select-none"
                             target="_blank"
                             rel="noopener noreferrer"

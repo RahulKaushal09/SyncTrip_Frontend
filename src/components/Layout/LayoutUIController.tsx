@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import NavbarClient from "@/components/Navbar/NavbarClient";
 import { useRouter } from "next/navigation";
+import path from "path";
 
 export default function LayoutUIController({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -12,7 +13,7 @@ export default function LayoutUIController({ children }: { children: React.React
     (pathname.includes("userTrip/") && pathname.includes("/planner")) ||
     (pathname.includes("userTrip/") && pathname.includes("/matching")) ||
     pathname.includes("/chats") || 
-    pathname.includes("/careers/linkedin/march-2026/assessment");
+    pathname.includes("/careers/linkedin/march-2026/assessment") || /^\/blogs\/.+/.test(pathname);
 
   return (
     <>

@@ -1,4 +1,4 @@
-import { Hotel, Location } from "@/types";
+import { ExplorePageData, Hotel, Location } from "@/types";
 import apiClient from "./apiClient";
 import { LocationFields } from "@/constants/enums";
 
@@ -106,6 +106,24 @@ export class LocationServices {
         } catch (error) {
             console.error("Error fetching enrolled users for every location:", error);
             throw error;
+        }
+    }
+    static async getDataForExplorePage(): Promise<ExplorePageData> {
+        try {
+            const res = await apiClient.get(`/locations/getExploreDataForWebHomePage`);
+            return res.data;
+        } catch (error) {
+            console.error("Error fetching locations for explore page:", error);
+            throw error;
+        }
+    }
+    static async searchLocationsForExplore(query: { term: string, state: string }, page = 1): Promise<Location[]> {
+        try {
+            const res = await apiClient.post(`/locations/home/search`, { ...query, page });
+            return res.data || [];
+        } catch (err) {
+            console.error("Error searching locations for explore page:", err);
+            throw err;
         }
     }
 };

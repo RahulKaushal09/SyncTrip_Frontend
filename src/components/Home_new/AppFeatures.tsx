@@ -67,7 +67,7 @@ const CirclesBg = ({ isDark }: { isDark: boolean }) => (
 
 const AppDownloadStack = () => {
   return (
-    <section id="app-download" className="w-full relative bg-gradient-to-b from-white to-[var(--primary-5)] flex flex-col gap-8 lg:gap-16 py-8 lg:py-16">
+    <section id="app-download" className="w-full relative bg-gradient-to-bl from-[#F6F9FB] via-[#F2FAFF] to-[#F6F9FB] flex flex-col gap-8 lg:gap-16 pt-8 lg:pt-16">
       
       {/* ==========================================
           SLIDE 1: Now on Mobile

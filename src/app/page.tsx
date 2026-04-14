@@ -26,6 +26,12 @@ import CommunityShowcase from "@/components/Home_new/CommunityShowcase";
 // import PhotoStack from "@/components/Home_new/FeatureScroll";
 import FeatureScroll from "@/components/Home_new/FeatureScroll";
 import SyncTripPromo from "@/components/AppPushingComponents/SyncTripPromo";
+import ChoiceFeatureSectionV2 from "@/components/Home_new/ChoiceSection_v2";
+import ChoiceFeatureSectionV3 from "@/components/Home_new/ChoiceSection_v3";
+import CommunityShowcaseV2 from "@/components/Home_new/CommunityShowcase_v2";
+import InfiniteTripMarquee from "@/components/Home_new/InfinteTripMarquee";
+import TestimonialsV2 from "@/components/Home_new/Testimonials_V2";
+import CommunityBento from "@/components/Home_new/CommunityBento";
 
 const Testimonials = dynamic(() =>
   import("@/components/Home_new/testimonialSection")
@@ -213,19 +219,25 @@ export default async function Home() {
       />
       {/* <HomeWrapper version="v2" /> */}
       <HomeHeroSectionNew />
-      <ChoiceSection />
-      <CommunityShowcase />
+      {/* <ChoiceSection /> */}
+      <ChoiceFeatureSectionV2 />
+      <InfiniteTripMarquee />
+      {/* <ChoiceFeatureSectionV3 /> */}
+      {/* <CommunityShowcase /> */}
+      <CommunityShowcaseV2 />
       <AppFeatures />
-      <FeatureScroll />
+      <CommunityBento />
+      {/* <FeatureScroll /> */}
       {/* <FeatureHighlight /> */}
       {/* <HomeWrapper version="v1" /> */}
-      <FeaturesSection />
       {/* <ActiveDestinations /> */}
       {/* <ExploreNearbySection /> */}
       {/* <HowItWorksSectionHome /> */}
-      <SoftLoginTrigger>
-        <Testimonials />
-      </SoftLoginTrigger>
+      {/* <SoftLoginTrigger> */}
+      {/* <Testimonials /> */}
+      <TestimonialsV2 />
+      <FeaturesSection />
+      {/* </SoftLoginTrigger> */}
       {/* <BlogsHomePage posts={enriched} categories={categories} /> */}
       <SyncTripPromo />
     </>

@@ -85,3 +85,108 @@
         scrollbar-width: none;
     }
 }
+
+
+/* ── SECTION WRAPPER ─────────────────────────────────────────────── */
+/* .editorial-categories-section {
+    padding: 2rem 0;
+    background-color: #F8FAFC; Matches the main background
+    border-bottom: 1px solid #e2e8f0;
+} */
+
+.editorial-categories-container {
+    max-width: 1600px;
+    margin: 0 auto;
+    /* Edge fade effect for scrollable areas */
+    -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
+    mask-image: linear-gradient(to right, black 85%, transparent 100%);
+}
+
+/* ── SCROLL TRACK ────────────────────────────────────────────────── */
+.editorial-categories-track {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 1.5rem;
+    
+    /* Horizontal scrolling setup */
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+}
+
+.editorial-categories-track::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+}
+
+/* ── BUTTONS ─────────────────────────────────────────────────────── */
+.editorial-category-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.25rem;
+    background-color: #ffffff;
+    color: #475569;
+    border: 1px solid #e2e8f0;
+    border-radius: 100px;
+    font-family: system-ui, -apple-system, sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    flex-shrink: 0; /* Prevents squishing on mobile */
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.editorial-category-btn:hover {
+    transform: translateY(-2px);
+    border-color: #cbd5e1;
+    color: #0f172a;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.05);
+}
+
+/* Active State (Dark Premium Look) */
+.editorial-category-btn.active {
+    background-color: #0f172a;
+    color: #ffffff;
+    border-color: #0f172a;
+    /* box-shadow: 0 4px 15px rgba(15, 23, 42, 0.2); */
+}
+
+/* ── BADGES ──────────────────────────────────────────────────────── */
+.cat-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f1f5f9;
+    color: #64748b;
+    padding: 2px 8px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    border-radius: 100px;
+    transition: all 0.3s ease;
+}
+
+/* Invert badge colors when the button is active */
+.editorial-category-btn.active .cat-badge {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+}
+
+/* ── DESKTOP ADJUSTMENTS ─────────────────────────────────────────── */
+@media (min-width: 768px) {
+    .editorial-categories-track {
+        padding: 0.5rem 0; /* Remove side padding on desktop since it aligns with grid */
+    }
+    
+    .editorial-categories-container {
+        padding: 0 1.5rem;
+        -webkit-mask-image: none; /* Remove fade effect on desktop */
+        mask-image: none;
+    }
+    
+    .editorial-categories-btn {
+        font-size: 0.95rem;
+    }
+}

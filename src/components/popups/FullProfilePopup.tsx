@@ -85,7 +85,7 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
                 setIsLoading(false);
                 return;
             }
-            const otpLimitReached = await ApiService.checkIfOTPLimitReached({update: true});
+            const otpLimitReached = await ApiService.checkIfOTPLimitReached({ update: true });
             if (otpLimitReached) {
                 await AuthServices.sendOTPViaMsg91(form.phone as string);
                 setOtpSent(true);

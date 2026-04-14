@@ -4,6 +4,8 @@ import HomeContent from '@/components/Home/HomeContent';
 import { ApiService } from '@/utils/api.utils';
 import { Events, Location } from '@/types';
 import { LocationFields, locationsJsonLd, homeJsonLd } from '@/constants';
+import HomeContentV2 from '@/components/Home/HomeContentV2';
+import { LocationServices } from '@/utils/location.utils';
 // import FestivalsEvents from '@/components/EventsForBooking/FestivalsEvents';
 // import HomeClientSection from '@/components/Home/HomeClientSection';
 // import ExploreNearby from '@/components/Explore/ExploreNearby';
@@ -147,9 +149,9 @@ export const metadata: Metadata = {
     locale: 'en_US',
     images: [
       {
-      url: 'https://synctrip.in/logo_main_withoutBG.png',
-      width: 1200,
-      height: 630,
+        url: 'https://synctrip.in/logo_main_withoutBG.png',
+        width: 1200,
+        height: 630,
         alt: 'SyncTrip Logo',
       },
     ],
@@ -194,7 +196,7 @@ export default async function Home() {
 
     // const cookieStore = await cookies();
     // const tokenCookie = cookieStore.get('userToken')?.value || '';
-    initialLocations = (await ApiService.fetchLocations(0, 20, fieldsToFetchForHome)).locations || [];
+    // initialLocations = (await LocationServices.searchLocationsForExplore("")) || [];
 
     // const eventsData = await ApiService.getServerSidePropsForEvents();
     // initialEvents = eventsData.initialEvents || [];
@@ -214,10 +216,11 @@ export default async function Home() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(homeJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(locationsJsonLd(initialLocations.slice(0, 10))) }} />
       {/* <ExploreNearby/> */}
-      <HomeContent
+      {/* <HomeContent
         initialLocations={initialLocations}
         initialHasMore={initialLocations.length >= 12}
-      />
+      /> */}
+      <HomeContentV2 />
       {/* <div className="HomePage paddingSectionLeftRight"> */}
       {/* <FestivalsEvents
           initialEvents={initialEvents}

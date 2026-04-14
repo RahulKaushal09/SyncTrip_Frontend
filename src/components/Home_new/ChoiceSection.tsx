@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 import { Compass, ArrowRight, ShieldCheck, MapPin, Zap } from "lucide-react";
-import { ROUTES } from "@/constants";
+import { APP_LINKS, ROUTES } from "@/constants";
 import { useRouter } from "next/navigation";
 import { triggerLogin } from "@/utils";
 import { useLoader } from "../providers/LoaderContext";
@@ -101,7 +101,7 @@ const ChoiceFeatureSection = () => {
               {/* Lazy Loaded Demo */}
               <div
                 onClick={() => triggerLogin(() => redirectToUrl(ROUTES.CREATE_TRIP))}
-                className="relative z-10 scale-90 md:scale-100 transition-all duration-1000"
+                className="relative z-10 scale-90 transition-all duration-1000"
               >
                 {isVisible ? (
                   <SwipeDemo />
@@ -152,7 +152,7 @@ const ChoiceFeatureSection = () => {
             {/* CTA & Profile Initials Stack */}
             <div className="flex flex-col sm:flex-row items-center gap-8 pt-4 justify-center">
               <button
-                onClick={() => triggerLogin(() => redirectToUrl(ROUTES.CREATE_TRIP))}
+                onClick={() => redirectToUrl(APP_LINKS.PLAY_STORE)}
                 className="w-full sm:w-auto px-8 py-3 bg-secondary-1 text-white rounded-xl font-bold flex items-center justify-center gap-3 hover:bg-[#0d344b] hover:shadow-2xl hover:-translate-y-1 transition-all group"
               >
                 Get Started

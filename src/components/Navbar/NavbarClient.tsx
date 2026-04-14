@@ -221,7 +221,7 @@ const NavbarClient = ({ }) => {
             </button>}
           {/* <div className={`collapse navbar-collapse justify-content-end ${mobileNavOpen ? 'show' : ''}`} id="navbarNav"> */}
 
-          <div className="collapse navbar-collapse justify-content-end" id="navbarNav" >
+          <div className="collapse navbar-collapse justify-content-center" id="navbarNav" >
             <ul className="navbar-nav ul-withNoListStyle" style={{ alignItems: "center", gap: "20px" }}>
               {isLoggedIn &&
                 <li className="nav-item"
@@ -244,7 +244,7 @@ const NavbarClient = ({ }) => {
                 </li>
 
               }
-              <li className="nav-item"
+              <li className="nav-item ml-16"
                 onClick={() => {
                   if (!isActive(ROUTES.EXPLORE)) {
                     redirectBtnClick(ROUTES.EXPLORE);
@@ -259,7 +259,25 @@ const NavbarClient = ({ }) => {
               // style={{ cursor: "pointer" }}
               >
                 <span style={{ color: (!isSticky && isHomePage) ? "white" : "" }} className="nav-link">
-                  Explore
+                  Explore Locations
+                </span>
+              </li>
+              <li className="nav-item"
+                onClick={() => {
+                  if (!isActive(ROUTES.PLANS)) {
+                    redirectBtnClick(ROUTES.PLANS);
+                  }
+                }}
+                style={{
+                  cursor: isActive(ROUTES.PLANS) ? "default" : "pointer",
+                  pointerEvents: isActive(ROUTES.PLANS) ? "none" : "auto",
+                  borderBottom: isActive(ROUTES.PLANS) ? "2px solid var(--secondary-1)" : "",
+                }}
+              // onClick={() => redirectBtnClick(ROUTES.EXPLORE)}
+              // style={{ cursor: "pointer" }}
+              >
+                <span style={{ color: (!isSticky && isHomePage) ? "white" : "" }} className="nav-link">
+                  Plans
                 </span>
               </li>
               {/* <li className="nav-item"
@@ -308,7 +326,18 @@ const NavbarClient = ({ }) => {
                   {isLoggedIn ? 'Feedback' : 'Contact'}
                 </span>
               </li>
-              <li className="nav-item dropdown">
+              <li className="nav-item"
+                onClick={() => {
+                  if (!isActive(ROUTES.BLOGS)) {
+                    redirectBtnClick(ROUTES.BLOGS);
+                  }
+                }}
+                style={{ cursor: "pointer" }}>
+                <span style={{ color: (!isSticky && isHomePage) ? "white" : "" }} className="nav-link">
+                  Blogs
+                </span>
+              </li>
+              {/* <li className="nav-item dropdown">
                 {LoadingUser ? (
                   <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px" }}>
                     <div
@@ -322,7 +351,7 @@ const NavbarClient = ({ }) => {
                         animation: 'skeleton-loading 1.5s infinite'
                       }}
                     />
-                    {/* User name or login/register button skeleton */}
+                    
                     <div
                       className="skeleton skeleton-button"
                       style={{
@@ -340,7 +369,7 @@ const NavbarClient = ({ }) => {
                 ) :
                   !LoadingUser && user ? (
                     <div className="flex items-center gap-4">
-                      {/* Notification Icon */}
+                      
                       {isLoggedIn && <NotificationBell iconColor={isHomePage && !isSticky ? "#ffffff" : "#000000"} />}
 
                       {isLoggedIn && <ChatIcon iconColor={isHomePage && !isSticky ? "#ffffff" : "#000000"} />}
@@ -408,9 +437,17 @@ const NavbarClient = ({ }) => {
                   ) : (
                     <button className="btn btn-primary ms-2" onClick={handleLoginClick}>Login / Register</button>
                   )}
-              </li>
+              </li> */}
             </ul>
           </div>
+
+          {!ismobile && (
+            <button className="btn-download-premium ms-2">
+              <span className="btn-download-shine"></span>
+              <span style={{ position: "relative", zIndex: 1 }}>Download Now!</span>
+              {/* <Sparkles className="btn-download-icon" size={16} style={{ position: "relative", zIndex: 1 }} /> */}
+            </button>
+          )}
         </div>
 
 
@@ -633,11 +670,17 @@ const NavbarClient = ({ }) => {
                 <span className="nav-link">Logout</span>
               </li>
             ) : (
-              <li className="nav-item" onClick={() => { handleLoginClick(); closeDrawer(); }}>
-                <button className="btn btn-primary mt-2" style={{ width: "100%" }}>
-                  Login / Register
+              <li className="nav-item">
+                <button className="btn-download-premium mt-2" style={{ width: "100%" }}>
+                  <span className="btn-download-shine"></span>
+                  <span style={{ position: "relative", zIndex: 1 }}>Download App</span>
                 </button>
               </li>
+              // <li className="nav-item" onClick={() => { handleLoginClick(); closeDrawer(); }}>
+              //   <button className="btn btn-primary mt-2" style={{ width: "100%" }}>
+              //     Login / Register
+              //   </button>
+              // </li>
             )}
 
 

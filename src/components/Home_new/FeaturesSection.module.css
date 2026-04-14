@@ -1,0 +1,170 @@
+/* --- Base Animations --- */
+.animateIn {
+  animation: fadeInSection 0.8s ease-out forwards;
+}
+
+@keyframes fadeInSection {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Strict Desktop Grid --- */
+@media (min-width: 768px) {
+  .strictGrid {
+    /* Locks rows to exactly 260px tall so they never squash */
+    grid-template-rows: repeat(2, 260px); 
+  }
+}
+
+/* --- Premium Bento Card Styling --- */
+.card {
+  position: relative;
+  border-radius: 1.5rem; 
+  padding: 1.75rem; /* Restored breathing room */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  cursor: default;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+              box-shadow 0.4s ease, 
+              border-color 0.4s ease;
+  
+  opacity: 0;
+  transform: translateY(15px);
+  animation: popInCard 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+@keyframes popInCard {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.spotlight {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.blob {
+  position: absolute;
+  bottom: -20px;
+  right: -20px;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  opacity: 0.08;
+  filter: blur(35px);
+  pointer-events: none;
+  transition: all 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 0;
+}
+
+.iconWrap {
+  padding: 0.75rem;
+  border-radius: 1rem;
+  width: fit-content;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+}
+
+.card:hover .iconWrap {
+  transform: scale(1.05) rotate(-3deg);
+}
+
+/* --- Custom Icon Micro-Animations --- */
+.iconFloat { animation: float 2s ease-in-out infinite; }
+.iconWiggle { animation: wiggle 0.5s ease-in-out infinite alternate; }
+.iconTick { animation: tickDrop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+.iconBounce { animation: pinBounce 0.6s cubic-bezier(0.28, 0.84, 0.42, 1) infinite alternate; }
+.iconPulse { animation: heartBeat 1s infinite; }
+.iconFlash { animation: flash 1.5s infinite; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+@keyframes wiggle {
+  0% { transform: rotate(-8deg); }
+  100% { transform: rotate(8deg); }
+}
+@keyframes tickDrop {
+  0% { transform: scale(0.8) rotate(-15deg); opacity: 0; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+@keyframes pinBounce {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-4px); }
+}
+@keyframes heartBeat {
+  0% { transform: scale(1); }
+  15% { transform: scale(1.15); }
+  30% { transform: scale(1); }
+  45% { transform: scale(1.15); }
+  60%, 100% { transform: scale(1); }
+}
+@keyframes flash {
+  0%, 50%, 100% { opacity: 1; transform: scale(1); }
+  25% { opacity: 0.5; transform: scale(0.9); }
+  75% { opacity: 0.8; transform: scale(1.1) rotate(10deg); }
+}
+
+/* --- Interactive Liquid CTA Button --- */
+.ctaButton {
+  position: relative;
+  overflow: hidden;
+  padding: 1rem 2.25rem;
+  background-color: #0A192F; 
+  color: white;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 1.05rem;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 8px 20px rgba(10, 25, 47, 0.15);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.ctaButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 25px rgba(10, 25, 47, 0.25);
+  background-color: #1583b7;
+}
+
+.ctaButton:active {
+  transform: translateY(1px);
+}
+
+.ctaIcon {
+  transition: transform 0.3s ease;
+}
+
+.ctaButton:hover .ctaIcon {
+  transform: translateX(4px);
+}
+
+.ctaShine {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(to right, transparent, rgba(255,255,255,0.2), transparent);
+  transform: skewX(-20deg);
+  transition: all 0.5s ease;
+}
+
+.ctaButton:hover .ctaShine {
+  left: 200%;
+  transition: left 0.6s ease;
+}

@@ -111,7 +111,7 @@
 
 /* Hover Effect: Background becomes Cyan, icon white, lifts up */
 .social-icon:hover {
-    background-color: #00bcd4;
+    background-color: var(--primary-1);
     color: #fff;
     transform: translateY(-3px);
 }

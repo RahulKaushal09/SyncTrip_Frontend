@@ -8,6 +8,7 @@ import ridersImage from "@/assets/images/ridersImage.png";
 import sportsImage from "@/assets/images/sportsImage.png";
 import outingImage from "@/assets/images/outingImage.png";
 import moviesImage from "@/assets/images/moviesImage.png";
+import { Users } from "lucide-react";
 
 const features = [
   {
@@ -27,28 +28,12 @@ const features = [
     styleVars: { "--rot": "-4deg", "--x": "0px", "--y": "0px", "--tape-rot": "-2deg", zIndex: 1 }
   },
   {
-    id: "movies",
-    kicker: "Film Circles",
-    title: "Watch with people who get it.",
-    bullets: [
-      { icon: "🎬", text: "Join communities built around film tastes" },
-      { icon: "💬", text: "Discuss, review, and share recommendations" },
-      { icon: "🍿", text: "Plan screenings together, not alone" },
-    ],
-    tag: "New",
-    btnText: "Join Film Groups",
-    imageUrl: moviesImage.src,
-    caption: "Bollywood Film Club • 80+ members",
-    accent: "#f59e0b",
-    styleVars: { "--rot": "3deg", "--x": "12px", "--y": "25px", "--tape-rot": "4deg", zIndex: 2 }
-  },
-  {
     id: "sports",
     kicker: "Sports Communities",
     title: "Build your squad.",
     bullets: [
       { icon: "⚽", text: "Join teams and groups by skill level" },
-      { icon: "📅", text: "Organize matches and practice sessions" },
+      { icon: "📅", text: "Organize matches and turf sessions" },
       { icon: "🏆", text: "Grow together, compete together" },
     ],
     tag: "Trending",
@@ -56,23 +41,39 @@ const features = [
     imageUrl: sportsImage.src,
     caption: "Sport Squad • 60+ players",
     accent: "#10b981",
-    styleVars: { "--rot": "-2deg", "--x": "-8px", "--y": "50px", "--tape-rot": "-5deg", zIndex: 3 }
+    styleVars: { "--rot": "-2deg", "--x": "-8px", "--y": "25px", "--tape-rot": "-5deg", zIndex: 2 }
   },
   {
     id: "outing",
     kicker: "Social Circles",
     title: "Meet your kind of people.",
     bullets: [
-      { icon: "☕", text: "Join small groups for chill hangouts" },
-      { icon: "🎵", text: "Find people for gigs, cafes & city walks" },
-      { icon: "🌆", text: "Turn casual plans into lasting friendships" },
+      { icon: "☕", text: "Join small groups for chill weekend hangouts" },
+      { icon: "🌆", text: "Find people for gigs, cafes & city walks" },
+      { icon: "🤝", text: "Turn casual plans into lasting friendships" },
     ],
     tag: "Editor's Pick",
     btnText: "Discover Circles",
     imageUrl: outingImage.src,
     caption: "City Vibes • 95+ members",
     accent: "#ec4899",
-    styleVars: { "--rot": "5deg", "--x": "20px", "--y": "75px", "--tape-rot": "2deg", zIndex: 4 }
+    styleVars: { "--rot": "5deg", "--x": "12px", "--y": "50px", "--tape-rot": "2deg", zIndex: 3 }
+  },
+  {
+    id: "movies",
+    kicker: "Film Circles",
+    title: "Watch with people who get it.",
+    bullets: [
+      { icon: "🎬", text: "Join communities built around film tastes" },
+      { icon: "💬", text: "Discuss, review, and share recommendations" },
+      { icon: "🍿", text: "Plan theater screenings together, not alone" },
+    ],
+    tag: "New",
+    btnText: "Join Film Groups",
+    imageUrl: moviesImage.src,
+    caption: "Bollywood Film Club • 80+ members",
+    accent: "#f59e0b",
+    styleVars: { "--rot": "3deg", "--x": "20px", "--y": "75px", "--tape-rot": "4deg", zIndex: 4 }
   }
 ];
 
@@ -85,7 +86,7 @@ const FeatureScroll = () => {
   const mobileImageRefs = useRef<(HTMLDivElement | null)[]>([]);
   const mobileTrackRef = useRef<HTMLDivElement | null>(null);
 
-  // Desktop Observer: Triggers when text blocks scroll into view
+  // Desktop Observer
   useEffect(() => {
     const observerOptions = {
       root: null,
@@ -107,12 +108,12 @@ const FeatureScroll = () => {
     return () => observer.disconnect();
   }, []);
 
-  // Mobile Observer: Triggers when horizontal image carousel snaps into view
+  // Mobile Observer
   useEffect(() => {
     const observerOptions = {
       root: mobileTrackRef.current,
       rootMargin: "0px",
-      threshold: 0.6 // Trigger when at least 60% of the card is visible
+      threshold: 0.6
     };
     const observerCallback = (entries: IntersectionObserverEntry[]) => {
       entries.forEach((entry) => {
@@ -127,7 +128,6 @@ const FeatureScroll = () => {
     return () => observer.disconnect();
   }, []);
 
-  // Scroll to specific mobile slide when clicking dots
   const scrollToMobileSlide = useCallback((index: number) => {
     const track = mobileTrackRef.current;
     const slide = mobileImageRefs.current[index];
@@ -141,10 +141,23 @@ const FeatureScroll = () => {
 
   return (
     <section className={styles.section}>
+      
+      {/* ── CLEAR SECTION HEADER ── */}
+      <div className={styles.globalHeader}>
+        <div className={styles.kickerBadge}>
+          <Users size={14} className={styles.kickerIcon} />
+          <span>FIND YOUR CREW</span>
+        </div>
+        <h2 className={styles.mainTitle}>
+          Do more of what you love!
+        </h2>
+        <p className={styles.mainSubtitle}>
+          Whether it&apos;s a weekend bike ride, a Sunday turf match, or catching the latest movie - SyncTrip connects you with locals who share your exact vibe.
+        </p>
+      </div>
 
       {/* ── DESKTOP LAYOUT (Vertical Scroll) ── */}
       <div className={styles.desktopContainer}>
-
         {/* Left: Sticky Photo Stack */}
         <div className={styles.visualColumn}>
           <div className={styles.stackWrapper}>
@@ -200,68 +213,6 @@ const FeatureScroll = () => {
             );
           })}
         </div>
-      </div>
-
-      {/* ── MOBILE LAYOUT (App-Like Horizontal Snap Carousel) ── */}
-      <div className={styles.mobileContainer}>
-
-        {/* Horizontal Scroll Track */}
-        <div className={styles.mobileImageTrack} ref={mobileTrackRef}>
-          {features.map((feature, index) => (
-            <div
-              key={`mob-img-${feature.id}`}
-              ref={(el) => { mobileImageRefs.current[index] = el; }}
-              className={styles.mobileImageSlide}
-            >
-              <div className={styles.mobilePhotoWrapper}>
-                <img src={feature.imageUrl} alt={feature.title} className={styles.mobilePhoto} />
-                {feature.caption && <div className={styles.mobileCaption}>{feature.caption}</div>}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Interactive Pagination Dots */}
-        <div className={styles.mobileDots}>
-          {features.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => scrollToMobileSlide(i)}
-              className={`${styles.dot} ${i === mobileIndex ? styles.dotActive : ""}`}
-              style={{ "--accent": features[i].accent } as React.CSSProperties}
-              aria-label={`Go to slide ${i + 1}`}
-            />
-          ))}
-        </div>
-
-        {/* Animated Text Block (Uses `key` to re-trigger CSS animations on change) */}
-        <div className={styles.mobileTextWrapper}>
-          <div key={mobileIndex} className={styles.mobileTextAnim}>
-            <div className={styles.tagRow}>
-              <span className={styles.kicker} style={{ "--accent": activeMobileFeature.accent } as React.CSSProperties}>
-                {activeMobileFeature.kicker}
-              </span>
-              <span className={styles.tag}>{activeMobileFeature.tag}</span>
-            </div>
-
-            <h3 className={styles.mobileTitle}>{activeMobileFeature.title}</h3>
-
-            <ul className={styles.bulletList}>
-              {activeMobileFeature.bullets.map((b, i) => (
-                <li key={i} className={styles.bulletItem} style={{ "--delay": `${i * 0.05}s` } as React.CSSProperties}>
-                  <span className={styles.bulletIcon}>{b.icon}</span>
-                  <span className={styles.bulletText}>{b.text}</span>
-                </li>
-              ))}
-            </ul>
-
-            <button className={styles.actionBtn} style={{ "--accent": activeMobileFeature.accent } as React.CSSProperties}>
-              {activeMobileFeature.btnText}
-              <span className={styles.btnArrow}>→</span>
-            </button>
-          </div>
-        </div>
-
       </div>
     </section>
   );

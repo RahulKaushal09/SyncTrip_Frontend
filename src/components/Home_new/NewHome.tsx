@@ -7,9 +7,12 @@ import { Compass, PlaneIcon, Sparkles } from 'lucide-react'
 import { triggerLogin } from '@/utils';
 import { useLoader } from '../providers/LoaderContext';
 import { useRouter } from 'next/navigation';
-import { ROUTES } from '@/constants';
+import { APP_LINKS, ROUTES } from '@/constants';
 import GumletImage from '../common/GumletImage';
 import GumletBackgroundImage from '../common/GumletBackgroundImage';
+
+import DownloadPlaystore from '@/assets/icons/GetOnPlayStoreSVG.svg';
+import DownloadAppstore from '@/assets/icons/GetOnAppStore.svg';
 
 const HomeHeroSectionNew = () => {
     const [screenWidth, setScreenWidth] = useState<number | null>(null);
@@ -66,7 +69,7 @@ const HomeHeroSectionNew = () => {
                         </span>
 
                         <div className="heroActions">
-                            <button
+                            {/* <button
                                 onClick={() => triggerLogin(() => redirectToUrl(ROUTES.CREATE_TRIP))}
                                 className="btn btn-primary hover:scale-105 transition-transform duration-200 !flex items-center justify-center">
                                 <PlaneIcon className="w-5 h-5 mr-2" />
@@ -77,7 +80,9 @@ const HomeHeroSectionNew = () => {
                                 className="btn border text-white border-white !flex items-center justify-center hover:scale-105 transition-transform duration-400">
                                 <Compass className="w-5 h-5 mr-2" />
                                 Explore Locations
-                            </button>
+                            </button> */}
+                            <Image onClick={() => router.push(APP_LINKS.PLAY_STORE)} className="hover:scale-105 duration-200 cursor-pointer" priority src={DownloadPlaystore} alt="Hero Vector Top" width={180} height={120} />
+                            <Image onClick={() => router.push(APP_LINKS.APP_STORE)} className="hover:scale-105 duration-200 cursor-pointer" priority src={DownloadAppstore} alt="Hero Vector Top" width={180} height={120} />
                         </div>
                     </div>
 

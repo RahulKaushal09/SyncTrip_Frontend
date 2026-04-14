@@ -1,0 +1,329 @@
+/* ── Section & Header ────────────────────────────────────────────── */
+.section {
+  position: relative;
+  font-family: system-ui, -apple-system, sans-serif;
+  padding: 5rem 1.5rem 8rem;
+  overflow: hidden;
+  background-color: #F4FAFF;
+}
+
+.globalHeader {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+  padding-bottom: 4rem;
+}
+
+.kickerBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #e0f2fe;
+  color: #0284c7;
+  padding: 6px 14px;
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  margin-bottom: 1.5rem;
+}
+
+.mainTitle {
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  font-weight: 900;
+  color: #0f172a;
+  line-height: 1.1;
+  margin: 0 0 1rem;
+  letter-spacing: -0.03em;
+}
+
+.highlight {
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+  background-image: linear-gradient(135deg, #3b82f6 0%, #10b981 100%);
+}
+
+.mainSubtitle {
+  font-size: 1.15rem;
+  color: #64748b;
+  line-height: 1.6;
+  font-weight: 500;
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+/* ── Bento Grid Layout ───────────────────────────────────────────── */
+.bentoGrid {
+  max-width: 1300px;
+  margin: 0 auto;
+  display: grid;
+  /* 4 columns for desktop */
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 280px;
+  gap: 1.5rem;
+}
+
+/* Precise grid mapping to form the perfect rectangle */
+.tallCard {
+  grid-column: 1 / 2;
+  grid-row: 1 / 3; /* Spans 2 rows */
+}
+
+.squareCard {
+  grid-column: auto;
+  grid-row: span 1;
+}
+
+.wideCard {
+  grid-column: span 2;
+  grid-row: span 1;
+}
+
+/* ── Card Styling & Interactions ─────────────────────────────────── */
+.bentoCard {
+  position: relative;
+  border-radius: 24px;
+  overflow: hidden;
+  cursor: pointer;
+  background: #0f172a;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+}
+
+.bentoCard:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.15);
+}
+
+.imageWrapper {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.bgImage {
+  object-fit: cover;
+  transition: transform 0.8s ease;
+}
+
+.bentoCard:hover .bgImage {
+  transform: scale(1.08); /* Slow, premium zoom on hover */
+}
+
+.scrim {
+  position: absolute;
+  inset: 0;
+  /* Dark gradient that is heavier at the bottom for text readability */
+  background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%);
+  transition: background 0.4s ease;
+}
+
+.bentoCard:hover .scrim {
+  background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0.2) 100%);
+}
+
+.cardContent {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 2rem;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tag {
+  width: fit-content;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 6px 12px;
+  border-radius: 100px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  margin-bottom: 4px;
+}
+
+.cardTitle {
+  margin: 0;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.cardDesc {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ── Specialized Open Communities Card ───────────────────────────── */
+.chatCard {
+  background: linear-gradient(135deg, #0d344b 0%, #1583b7 100%);
+}
+
+.chatBackground {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.floatingBubble {
+  position: absolute;
+  color: rgba(255, 255, 255, 0.1);
+  animation: floatUp 8s infinite linear;
+}
+
+.bubble1 { top: 60%; left: 10%; width: 80px; height: 80px; animation-duration: 12s; }
+.bubble2 { top: 80%; left: 80%; width: 60px; height: 60px; animation-duration: 9s; animation-delay: 2s; }
+.bubble3 { top: 30%; left: 50%; width: 120px; height: 120px; animation-duration: 15s; animation-delay: 5s; color: rgba(255, 255, 255, 0.05); }
+
+@keyframes floatUp {
+  0% { transform: translateY(50px) rotate(0deg); opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { transform: translateY(-150px) rotate(20deg); opacity: 0; }
+}
+
+.chatHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.liveIndicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.liveDot {
+  width: 8px;
+  height: 8px;
+  background-color: #10b981;
+  border-radius: 50%;
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
+  animation: pulseLive 2s infinite;
+}
+
+@keyframes pulseLive {
+  0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+  70% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+.secureIcon {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.chatTitle {
+  margin: 0;
+  color: white;
+  font-size: 1.8rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.chatDesc {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 1rem;
+  line-height: 1.5;
+  max-width: 90%;
+}
+
+.exploreBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  color: #4bbef5;
+  font-weight: 700;
+  font-size: 0.9rem;
+  transition: transform 0.2s ease;
+}
+
+.chatCard:hover .exploreBtn {
+  transform: translateX(4px);
+}
+
+/* ── Responsiveness ──────────────────────────────────────────────── */
+
+/* Tablets (iPad) */
+@media (max-width: 1024px) {
+  .bentoGrid {
+    grid-template-columns: repeat(2, 1fr); /* Switch to 2 columns */
+    grid-auto-rows: 250px;
+  }
+  
+  .tallCard {
+    grid-column: span 1;
+    grid-row: span 2;
+  }
+  
+  .wideCard {
+    grid-column: span 2;
+    grid-row: span 1;
+  }
+  
+  .squareCard {
+    grid-column: span 1;
+    grid-row: span 1;
+  }
+}
+
+/* Mobile Phones */
+@media (max-width: 768px) {
+  .section {
+    padding: 4rem 1rem;
+  }
+
+  .mainTitle {
+    font-size: 2.2rem;
+  }
+
+  .bentoGrid {
+    grid-template-columns: 1fr; /* Switch to single column */
+    grid-auto-rows: 240px; /* Uniform height for mobile */
+  }
+  
+  /* Reset all cards to span 1 column, 1 row on mobile */
+  .tallCard, .wideCard, .squareCard {
+    grid-column: 1 / -1;
+    grid-row: span 1;
+  }
+  
+  .cardContent {
+    padding: 1.5rem;
+  }
+
+  .chatTitle {
+    font-size: 1.5rem;
+  }
+  
+  .chatDesc {
+    max-width: 100%;
+    font-size: 0.9rem;
+  }
+}

@@ -71,6 +71,17 @@ export interface Events {
 //     loading?: boolean;
 //     initialValues?: Record<string, unknown>;
 // }
+// 🔹 Single section (like "Popular in Delhi")
+export interface ExploreSectionBlock {
+    state?: string;
+    title?: string;
+    locations?: Location[];
+}
+
+// 🔹 Full explore page response
+export interface ExplorePageData {
+    locations: ExploreSectionBlock[];
+}
 
 
 export interface TrendingLocationData {

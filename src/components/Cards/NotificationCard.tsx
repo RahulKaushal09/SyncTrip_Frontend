@@ -3,9 +3,17 @@
 import React from "react";
 import Link from "next/link";
 import GumletImage from "../common/GumletImage";
+import SyncTripLogo from "../../assets/images/logo_main_withoutBG.png"
+import { useLogin } from "../providers/LoginProvider";
 
 export default function NotificationCard({ notif }) {
-  const { id, actor, title, message, createdAt, clickAction } = notif;
+  const { id, title, message, createdAt, clickAction } = notif;
+  let actor = notif.actor;
+  const { user } = useLogin();
+
+  if (!actor?.avatar) {
+    actor = { avatar: SyncTripLogo.src };
+  }
 
   const timeAgo = new Date(createdAt).toLocaleString();
 
@@ -23,6 +31,10 @@ export default function NotificationCard({ notif }) {
   // }
   if (clickAction?.type === "OPEN_TRIP") {
     href = `/userTrip/${clickAction.payload.tripId}/details`;
+  }
+
+  if (clickAction?.type === "WELCOME_FIRST_NOTIFICATION") {
+    href = `/user/${clickAction?.payload?.userId || user?.id}`
   }
 
   return (

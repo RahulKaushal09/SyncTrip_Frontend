@@ -1,172 +1,382 @@
-.blogContent-article {
-    max-width: 48rem !important;
+/* ── BULLETPROOF SPLIT-SCREEN LAYOUT ── */
+.editorial-layout {
+    display: flex;
+    flex-direction: column;
+    /* Stacks on mobile */
+    gap: 3rem;
+    width: 100%;
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 1rem;
+    padding: 0rem 1.5rem 2rem 1.5rem;
 }
 
-.blogContent-hero {
-    position: relative;
-    height: 24rem;
-    border-radius: 1rem;
-    overflow: hidden;
+@media (min-width: 1024px) {
+    .editorial-layout {
+        flex-direction: row;
+        /* Side-by-side on desktop */
+        align-items: flex-start;
+        /* CRITICAL: Allows sidebar to be sticky without stretching */
+        gap: 4rem;
+        padding: 4rem 1.5rem;
+    }
+}
+
+/* ── LEFT SIDEBAR (STICKY) ── */
+/* ── BACK BUTTON ── */
+.editorial-back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: none;
+    color: #64748b;
+    font-family: system-ui, -apple-system, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    padding: 0;
+    margin-bottom: 2.5rem;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.editorial-back-btn:hover {
+    color: #0f172a;
+    transform: translateX(-6px);
+    /* Smooth slide-left micro-interaction */
+}
+.editorial-sidebar {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+@media (min-width: 1024px) {
+    .editorial-sidebar {
+        width: 35%;
+        /* Fixed width ratio for sidebar */
+        flex: 0 0 35%;
+        position: sticky;
+        top: 100px;
+        /* Accounts for your fixed navbar */
+        /* Height max-content is required for sticky to work inside a flex container */
+        height: max-content;
+        max-height: calc(100vh - 120px);
+        overflow-y: auto;
+        /* Hide scrollbar */
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    .editorial-sidebar::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+/* ── RIGHT MAIN CONTENT ── */
+.editorial-main-content {
+    width: 100%;
+    min-width: 0;
+    /* CRITICAL: Prevents large images from blowing out the flex layout */
+}
+
+@media (min-width: 1024px) {
+    .editorial-main-content {
+        width: 65%;
+        flex: 1;
+    }
+}
+
+/* ── SIDEBAR ELEMENTS ── */
+.editorial-category {
+    display: inline-block;
+    color: #1583b7;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: 1rem;
+}
+
+.editorial-title {
+    font-family: system-ui, -apple-system, sans-serif;
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    font-weight: 900;
+    color: #0f172a;
+    line-height: 1.15;
+    margin: 0 0 1.5rem 0;
+    letter-spacing: -0.02em;
+}
+
+.editorial-meta {
+    display: flex;
+    gap: 0.75rem;
+    padding-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #64748b;
+}
+
+.meta-icon {
+    color: #94a3b8;
+}
+
+.editorial-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
     margin-bottom: 2rem;
 }
 
-.blogContent-hero-image {
+.tag-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background-color: #f8fafc;
+    color: #475569;
+    font-size: 0.75rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    font-weight: 700;
+    border: 1px solid #e2e8f0;
+}
+
+.editorial-share-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 1rem;
+    background-color: white;
+    border: 1px solid #cbd5e1;
+    color: #0f172a;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 1rem;
+}
+
+.editorial-share-btn:hover {
+    background-color: #f8fafc;
+    border-color: #94a3b8;
+}
+
+/* ── PROMO CARD ── */
+.app-promo-card {
+    background: linear-gradient(135deg, #0d344b 0%, #1583b7 100%);
+    border-radius: 16px;
+    padding: 1.5rem;
+    color: white;
+    box-shadow: 0 10px 25px rgba(21, 131, 183, 0.2);
+    position: relative;
+    overflow: hidden;
+    margin-top: 1rem;
+}
+
+.promo-glow {
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 150px;
+    height: 150px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.promo-icon-wrap {
+    width: 48px;
+    height: 48px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(4px);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.promo-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    margin: 0 0 0.5rem 0;
+    font-family: system-ui, -apple-system, sans-serif;
+}
+
+.promo-desc {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.5;
+    margin: 0 0 1.5rem 0;
+}
+
+.promo-btn-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.promo-store-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: rgba(0, 0, 0, 0.3);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 0.75rem;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.promo-store-btn:hover {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.desktop-promo {
+    display: none;
+}
+
+.mobile-promo {
+    display: block;
+    margin-top: 3rem;
+}
+
+@media (min-width: 1024px) {
+    .desktop-promo {
+        display: block;
+    }
+
+    .mobile-promo {
+        display: none;
+    }
+
+    .promo-btn-group {
+        flex-direction: row;
+    }
+
+    .promo-store-btn {
+        flex: 1;
+    }
+}
+
+/* ── HERO IMAGE ── */
+.editorial-hero {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 2.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    background: #f1f5f9;
+}
+
+.editorial-hero-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.blogContent-hero-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
+/* ── TYPOGRAPHY FOR RAW BLOG HTML ── */
+.editorial-body-text {
+    font-size: 1.125rem;
+    color: #334155;
+    line-height: 1.85;
+    font-family: 'Georgia', serif;
 }
 
-.blogContent-category-badge {
-    position: absolute;
-    bottom: 1.5rem;
-    left: 1.5rem;
-    background-color: var(--primary-1);
-    color: white;
-    padding: 0.4rem 0.9rem;
-    font-size: 12px;
-    font-weight: 500;
-    border-radius: 999px;
+.editorial-body-text h2 {
+    font-family: system-ui, -apple-system, sans-serif;
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 3rem 0 1.25rem;
+    letter-spacing: -0.01em;
 }
 
-.blogContent-header {
-    margin-bottom: 2rem;
-}
-
-.blogContent-title {
-    font-size: 2rem;
+.editorial-body-text h3 {
+    font-family: system-ui, -apple-system, sans-serif;
+    font-size: 1.4rem;
     font-weight: 700;
-    margin-bottom: 1rem;
-    color: #111;
-    line-height: 1.4;
+    color: #0f172a;
+    margin: 2.5rem 0 1rem;
 }
 
-.blogContent-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.2rem;
-    font-size: 0.9rem;
-    color: #666;
+.editorial-body-text p {
     margin-bottom: 1.5rem;
 }
 
-.blogContent-meta-item {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
+.editorial-body-text img {
+    width: 100%;
+    max-height: 500px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin: 2.5rem 0;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
-.blogContent-icon {
-    width: 1rem;
-    height: 1rem;
-}
-
-.blogContent-icon-small {
-    width: 0.75rem;
-    height: 0.75rem;
-    margin-right: 0.3rem;
-}
-
-.blogContent-share-btn {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    background: none;
-    border: none;
-    color: #666;
-    cursor: pointer;
-    transition: color 0.3s;
-}
-
-.blogContent-share-btn:hover {
-    color: #0070f3;
-}
-
-.blogContent-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-bottom: 1.5rem;
-}
-
-.blogContent-tag {
-    display: inline-flex;
-    align-items: center;
-    background-color: #f3f3f3;
-    color: #333;
-    font-size: 0.75rem;
-    padding: 0.4rem 0.7rem;
-    border-radius: 999px;
+.editorial-body-text blockquote {
+    font-family: system-ui, -apple-system, sans-serif;
+    font-size: 1.25rem;
+    font-style: italic;
     font-weight: 500;
+    color: #0f172a;
+    border-left: 4px solid #1583b7;
+    padding: 1.5rem 2rem;
+    margin: 3rem 0;
+    background: #f8fafc;
+    border-radius: 0 12px 12px 0;
 }
 
-.blogContent-body {
-    font-size: 1rem;
-    color: #444;
-    line-height: 1.75;
-}
-
-/* Add styles for HTML elements inside blog content */
-.blogContent-body h2,
-.blogContent-body h3,
-.blogContent-body h4 {
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-    font-weight: bold;
-    color: #222;
-}
-
-.blogContent-body p {
-    margin-bottom: 1.25rem;
-    color: #555;
-}
-
-.blogContent-body a {
-    color: #0070f3;
+.editorial-body-text a {
+    color: #1583b7;
     text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s ease;
+    font-weight: 600;
 }
 
-.blogContent-body a:hover {
-    text-decoration: underline;
+.editorial-body-text a:hover {
+    border-bottom-color: #1583b7;
 }
 
-.blogContent-body ul,
-.blogContent-body ol {
+.editorial-body-text ul,
+.editorial-body-text ol {
+    margin-bottom: 1.5rem;
     padding-left: 1.5rem;
-    margin-bottom: 1.25rem;
 }
 
-.blogContent-body blockquote {
-    margin: 1.5rem 0;
-    padding: 1rem 1.5rem;
-    background-color: #f0f4ff;
-    border-left: 4px solid #0070f3;
-    font-style: normal;
-    border-radius: 0 8px 8px 0;
+.editorial-body-text li {
+    margin-bottom: 0.75rem;
 }
 
-/* Responsive */
-@media (min-width: 768px) {
-    .blogContent-title {
-        font-size: 2.5rem;
-    }
-}
-
-
-@media (max-width:768px) {
-    .blog-container {
-        padding: 0 0px;
+@media (max-width: 768px) {
+    .editorial-body-text {
+        font-size: 1.05rem;
     }
 
-    .blogContent-article {
-        padding: 0px !important;
+    .editorial-body-text h2 {
+        font-size: 1.5rem;
     }
 
+    .editorial-body-text blockquote {
+        padding: 1rem 1.25rem;
+        font-size: 1.1rem;
+    }
 }

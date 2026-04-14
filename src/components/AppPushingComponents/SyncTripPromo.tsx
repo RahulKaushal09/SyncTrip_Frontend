@@ -3,6 +3,7 @@ import d1 from "../../assets/images/di1.png";
 import d2 from "../../assets/images/di4.png";
 import PlaystoreBtn from "../../assets/icons/GetOnPlayStoreSVG.svg";
 import AppstoreBtn from "../../assets/icons/GetOnAppStore.svg";
+import { APP_LINKS } from "@/constants";
 
 const SyncTripPromo = () => {
   return (
@@ -123,7 +124,7 @@ const SyncTripPromo = () => {
             {/* CTA */}
             <div className="mt-4 pb-8 flex gap-6 md:pb-0">
               <a
-                href="https://play.google.com/store/apps/details?id=com.synctrip" 
+                href={APP_LINKS.PLAY_STORE} 
                 className="inline-block transition-transform duration-300 hover:-translate-y-1 hover:scale-105 active:scale-95 drop-shadow-[0_6px_16px_rgba(0,0,0,0.2)]"
               >
                 <img
@@ -133,7 +134,7 @@ const SyncTripPromo = () => {
                 />
               </a>
               <a
-                href="https://apps.apple.com/app/synctrip/id6761762665"
+                href={APP_LINKS.APP_STORE}
                 className="inline-block transition-transform duration-300 hover:-translate-y-1 hover:scale-105 active:scale-95 drop-shadow-[0_6px_16px_rgba(0,0,0,0.2)]"
               >
                 <img

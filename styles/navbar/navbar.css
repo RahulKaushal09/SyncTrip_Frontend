@@ -74,7 +74,7 @@ navbar-toggler {
     z-index: 1000;
     position: fixed;
     /* Changed: top is now handled via inline style or 
-       updated here to match announcement height */
+        updated here to match announcement height */
     top: 25px;
     left: 0;
     right: 0;
@@ -155,7 +155,7 @@ navbar-toggler {
 
         100% {
             /* This moves exactly one full 'announcement-content' block width 
-           because we have two identical ones */
+            because we have two identical ones */
             transform: translate3d(-100%, 0, 0);
         }
     }
@@ -169,7 +169,7 @@ navbar-toggler {
 
         100% {
             /* This moves exactly one full 'announcement-content' block width 
-           because we have two identical ones */
+            because we have two identical ones */
             transform: translate3d(-100%, 0, 0);
         }
     }
@@ -241,4 +241,70 @@ navbar-toggler {
     background: #60a5fa;
     /* subtle blue */
     box-shadow: 0 0 4px rgba(96, 165, 250, 0.5);
+}
+
+/* ==============================================================
+   NEW PREMIUM DOWNLOAD BUTTON STYLES 
+   ============================================================== */
+.btn-download-premium {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0.6rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #ffffff;
+    background: var(--primary-1);
+    border: none;
+    outline: none;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* Subtle breathing glow to catch the eye continuously */
+    animation: btnBreatheGlow 3s infinite alternate;
+}
+
+.btn-download-premium:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(21, 131, 183, 0.5);
+    color: #ffffff;
+}
+
+.btn-download-premium:active {
+    transform: translateY(1px) scale(0.98);
+}
+
+/* The sweeping shine effect */
+.btn-download-shine {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transform: skewX(-20deg);
+    /* Runs a quick shine every 4 seconds to catch peripheral vision */
+    animation: btnPeriodicShine 4s infinite;
+}
+
+.btn-download-icon {
+    animation: btnFloatSparkle 2s ease-in-out infinite;
+}
+
+@keyframes btnBreatheGlow {
+    0% { box-shadow: 0 4px 15px rgba(21, 131, 183, 0.2); }
+    100% { box-shadow: 0 4px 20px rgba(21, 131, 183, 0.6); }
+}
+
+@keyframes btnPeriodicShine {
+    0%, 80% { left: -100%; }
+    100% { left: 200%; }
+}
+
+@keyframes btnFloatSparkle {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    50% { transform: scale(1.2) rotate(15deg); color: #FDE047; } /* Slight yellow tint */
 }

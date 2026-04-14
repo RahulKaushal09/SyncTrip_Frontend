@@ -1,83 +1,125 @@
 "use client";
 import { BlogPost } from "@/types";
-import "../../../styles/Blogs/blogContent.css";
-import { ICONS_CLASS } from "@/utils/icon.utils";
-import Icon from "../Icons/Icons";
+import "../../../styles/Blogs/blogContent.css"; 
+import { Calendar, Clock, User, Share2, Tag, Smartphone, Play, Apple, ArrowLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { APP_LINKS } from "@/constants";
+
 interface BlogContentProps {
     blog: BlogPost;
 }
 
 const BlogContent = ({ blog }: BlogContentProps) => {
+    const router = useRouter();
+
     const handleShare = () => {
         if (navigator.share) {
             navigator.share({
                 title: blog.title,
-                text: blog.seo.seo_description,
+                text: blog.seo?.seo_description || "",
                 url: window.location.href,
             });
         } else {
             navigator.clipboard.writeText(window.location.href);
+            alert("Link copied to clipboard!");
         }
     };
 
     return (
-        <article className="blogContent-article">
-            {/* Hero Image */}
-            <div className="blogContent-hero">
-                <img
-                    src={blog.featuredImage}
-                    alt={blog.title}
-                    className="blogContent-hero-image"
-                />
-                <div className="blogContent-hero-overlay" />
-                <div className="blogContent-category-badge select-none">{blog.category}</div>
-            </div>
+        <article className="editorial-layout">
+            
+            {/* ── LEFT SIDEBAR (Sticky on Desktop) ── */}
+            <aside className="editorial-sidebar">
+                
+                {/* Back Button */}
+                <button onClick={() => router.push('/blogs')} className="editorial-back-btn">
+                    <ArrowLeft size={16} />
+                    <span>Back to Blogs</span>
+                </button>
 
-            {/* Article Header */}
-            <header className="blogContent-header">
-                <h1 className="blogContent-title">{blog.title}</h1>
+                {/* Category & Title */}
+                <div className="sidebar-header">
+                    <span className="editorial-category">{blog.category}</span>
+                    <h1 className="editorial-title">{blog.title}</h1>
+                </div>
 
-                <div className="blogContent-meta">
-                    <div className="blogContent-meta-item select-none">
-                        <Icon name={ICONS_CLASS.personIcon.iconName} alt={ICONS_CLASS.personIcon.alt} className="blogContent-icon" />
+                {/* Meta Info */}
+                <div className="editorial-meta">
+                    <div className="meta-item">
+                        <User size={16} className="meta-icon" />
                         <span>{blog.author}</span>
                     </div>
-                    <div className="blogContent-meta-item select-none">
-                        <Icon name={ICONS_CLASS.calendarIcon.iconName} alt={ICONS_CLASS.calendarIcon.alt} className="blogContent-icon" />
+                    <div className="meta-item">
+                        <Calendar size={16} className="meta-icon" />
                         <span>
                             {new Date(blog.createdAt).toLocaleDateString("en-US", {
                                 year: "numeric",
-                                month: "long",
+                                month: "short",
                                 day: "numeric",
                             })}
                         </span>
                     </div>
-                    <div className="blogContent-meta-item select-none">
-                        <Icon name={ICONS_CLASS.clockIcon.iconName} alt={ICONS_CLASS.clockIcon.alt} className="blogContent-icon" />
-                        <span>{blog.readTime}</span>
+                    <div className="meta-item">
+                        <Clock size={16} className="meta-icon" />
+                        <span>{blog.readTime} min read</span>
                     </div>
-                    <button onClick={handleShare} className="blogContent-share-btn select-none">
-                        <Icon name={ICONS_CLASS.shareIcon.iconName} alt={ICONS_CLASS.shareIcon.alt} className="blogContent-icon" />
-                        <span>Share</span>
-                    </button>
                 </div>
 
                 {/* Tags */}
-                <div className="blogContent-tags select-none">
-                    {blog.filterTags.map((tag, index) => (
-                        <span key={index} className="blogContent-tag">
-                            <Icon name={ICONS_CLASS.tagsIcon.iconName} alt={ICONS_CLASS.tagsIcon.alt} className="blogContent-icon-small" />
-                            {tag}
-                        </span>
-                    ))}
-                </div>
-            </header>
+                {blog.filterTags && blog.filterTags.length > 0 && (
+                    <div className="editorial-tags">
+                        {blog.filterTags.map((tag, index) => (
+                            <span key={index} className="tag-pill">
+                                <Tag size={12} className="meta-icon" /> {tag}
+                            </span>
+                        ))}
+                    </div>
+                )}
 
-            {/* Article Content */}
-            <div
-                className="blogContent-body"
-                dangerouslySetInnerHTML={{ __html: blog.content }}
-            />
+                {/* Share Action */}
+                <button onClick={handleShare} className="editorial-share-btn">
+                    <Share2 size={16} />
+                    <span>Share Article</span>
+                </button>
+
+                {/* SyncTrip App Promo Card (Desktop Only) */}
+                <button onClick={() => router.push('/invite/synctrip/app')} className="btn btn-primary">
+                    Download SyncTrip App
+                </button>
+
+            </aside>
+
+            {/* ── RIGHT CONTENT (Scrollable) ── */}
+            <main className="editorial-main-content">
+                
+                {/* Hero Image */}
+                <div className="editorial-hero">
+                    <img
+                        src={blog.featuredImage}
+                        alt={blog.title}
+                        className="editorial-hero-image"
+                        loading="eager"
+                    />
+                </div>
+
+                {/* Rich Text Body */}
+                <div
+                    className="editorial-body-text"
+                    dangerouslySetInnerHTML={{ __html: blog.content }}
+                />
+                
+                {/* Mobile Promo Card (Shows at the bottom on phones) */}
+                <div className="app-promo-card mobile-promo">
+                    <h4 className="promo-title">Ready for your next trip?</h4>
+                    <p className="promo-desc">Download SyncTrip to connect with verified travelers.</p>
+                    <div className="promo-btn-group">
+                        <button onClick={() => router.push(APP_LINKS?.PLAY_STORE || "#")} className="promo-store-btn">
+                            <Play size={14} fill="currentColor" /> Download App
+                        </button>
+                    </div>
+                </div>
+
+            </main>
         </article>
     );
 };
