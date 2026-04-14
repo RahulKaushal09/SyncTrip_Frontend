@@ -46,6 +46,7 @@ const RideCard: React.FC<{ data: RidePlan }> = ({ data }) => (
           containerClassName='h-full'
           alt={data.title}
           fill
+          fetchPriority="high"
           style={{ objectFit: 'cover', zIndex: 0 }}
         />
       )}
@@ -81,6 +82,7 @@ const MovieCard: React.FC<{ data: MoviePlan }> = ({ data }) => {
             containerClassName='h-full'
             alt={data.title}
             fill
+            fetchPriority="high"
             style={{ objectFit: 'cover', zIndex: 0 }}
           />
         )}

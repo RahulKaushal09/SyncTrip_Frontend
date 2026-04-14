@@ -1,9 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,400&display=swap');
 
 /* ─── Variables ─────────────────────────────── */
 :root {
-  --font-ui:      'Outfit', system-ui, sans-serif;
-  --font-display: 'Fraunces', Georgia, serif;
 
   --white:        #ffffff;
   --bg-main:      #ffffff;
@@ -39,7 +36,6 @@
 
 /* ─── Page Shell ────────────────────────────── */
 .activities-page-wrapper {
-  font-family: var(--font-ui);
   background: var(--bg-main);
   min-height: 100vh;
   max-width: 1180px;
@@ -60,7 +56,6 @@
 }
 
 .page-title {
-  font-family: var(--font-display);
   font-size: 2.5rem;
   font-weight: 700;
   margin: 0 0 4px;
@@ -83,7 +78,6 @@
   border: 1.5px solid var(--border);
   padding: 9px 16px;
   border-radius: 100px;
-  font-family: var(--font-ui);
   font-weight: 600;
   font-size: 0.85rem;
   color: var(--text-main);

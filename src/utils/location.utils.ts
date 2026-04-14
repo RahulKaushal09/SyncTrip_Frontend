@@ -108,22 +108,26 @@ export class LocationServices {
             throw error;
         }
     }
+    static async searchLocationsForExplore(
+        query: { term: string; state: string },
+        page = 1
+    ): Promise<{ data: Location[]; total: number; page: number; hasMore: boolean }> {
+        try {
+            const res = await apiClient.post(`/locations/home/search`, { ...query, page });
+            return res.data || { data: [], total: 0, page: 1, hasMore: false };
+        } catch (err) {
+            console.error("Error searching locations for explore page:", err);
+            throw err;
+        }
+    }
+
     static async getDataForExplorePage(): Promise<ExplorePageData> {
         try {
-            const res = await apiClient.get(`/locations/getExploreDataForWebHomePage`);
+            const res = await apiClient.get(`/locations/getExploreDataForHomePage`);
             return res.data;
         } catch (error) {
             console.error("Error fetching locations for explore page:", error);
             throw error;
-        }
-    }
-    static async searchLocationsForExplore(query: { term: string, state: string }, page = 1): Promise<Location[]> {
-        try {
-            const res = await apiClient.post(`/locations/home/search`, { ...query, page });
-            return res.data || [];
-        } catch (err) {
-            console.error("Error searching locations for explore page:", err);
-            throw err;
         }
     }
 };

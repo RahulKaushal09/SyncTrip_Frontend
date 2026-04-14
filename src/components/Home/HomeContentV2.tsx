@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import "../../../styles/home/home.css";
 import { ExplorePageData, Location } from "@/types";
 import dynamic from "next/dynamic";
@@ -11,36 +11,93 @@ const ExploreSection = dynamic(
     { ssr: true }
 );
 
+const PAGE_SIZE = 8;
+
 export default function HomeContentV2() {
     const [locations, setLocations] = useState<Location[]>([]);
-    const [currPage, setPage] = useState(1);
+    const [page, setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(false);
+    const [totalCount, setTotalCount] = useState(0);
     const [explorePageData, setExplorePageData] = useState<ExplorePageData>();
-
-    const [searchTerm, setSearchTerm] = useState<{ term: string, state: string }>({ term: "", state: "" });
+    const [searchTerm, setSearchTerm] = useState<{ term: string; state: string }>({ term: "", state: "" });
     const [isLoading, setIsLoading] = useState(false);
+    const [isLoadingMore, setIsLoadingMore] = useState(false);
 
-    // ✅ SEARCH HANDLER
-    const handleSearchFromExplore = async (query: { term: string, state: string }, page = currPage) => {
-        setSearchTerm(query);
+    // Use a ref to track the latest search term to avoid stale closure issues
+    const latestSearchRef = useRef<{ term: string; state: string }>({ term: "", state: "" });
+
+    /**
+     * Core fetch function.
+     * @param query   - The search filters
+     * @param pageNum - The page to fetch
+     * @param append  - If true, append results (pagination). If false, replace (new search).
+     */
+    const fetchLocations = useCallback(async (
+        query: { term: string; state: string },
+        pageNum: number,
+        append: boolean
+    ) => {
+        const isInitialLoad = !query.term && !query.state && pageNum === 1;
+
+        if (append) {
+            setIsLoadingMore(true);
+        } else {
+            setIsLoading(true);
+        }
 
         try {
-            setIsLoading(true);
+            const response = await LocationServices.searchLocationsForExplore(query, pageNum);
 
-            const response = await LocationServices.searchLocationsForExplore(query, page);
-            setPage(page+1); // Update current page for pagination
+            // Guard against stale responses: if the search term has changed since
+            // this request was fired, discard the response.
+            if (
+                latestSearchRef.current.term !== query.term ||
+                latestSearchRef.current.state !== query.state
+            ) {
+                return;
+            }
 
-            console.log("Search response in HomeContentV2:", response);
+            const items: Location[] = response.data || [];
+            const total: number = response.total ?? items.length;
+            const currentTotal = append ? locations.length + items.length : items.length;
 
-            setLocations(response || []);
+            setLocations(prev => append ? [...prev, ...items] : items);
+            setPage(pageNum + 1);
+            setTotalCount(total);
+            setHasMore(currentTotal < total);
         } catch (err) {
             console.error("Search failed:", err);
         } finally {
             setIsLoading(false);
+            setIsLoadingMore(false);
         }
-    };
+    }, [locations.length]);
 
-    // ✅ INITIAL LOAD (ONLY ONCE)
+    /**
+     * Called by the SearchWidget when the user submits a new search.
+     * Always resets pagination to page 1 and replaces results.
+     */
+    const handleSearch = useCallback((query: { term: string; state: string }) => {
+        latestSearchRef.current = query;
+        setSearchTerm(query);
+        setLocations([]);
+        setPage(1);
+        setHasMore(false);
+        fetchLocations(query, 1, false);
+    }, [fetchLocations]);
+
+    /**
+     * Called by "View More" button. Appends next page of results
+     * for the CURRENT search term.
+     */
+    const handleShowMore = useCallback(() => {
+        fetchLocations(latestSearchRef.current, page, true);
+    }, [fetchLocations, page]);
+
+    // Initial load on mount — fetch first page with empty filters
     useEffect(() => {
+        fetchLocations({ term: "", state: "" }, 1, false);
+
         const fetchExplorePageData = async () => {
             try {
                 const data = await LocationServices.getDataForExplorePage();
@@ -49,22 +106,22 @@ export default function HomeContentV2() {
                 console.error("Error fetching explore page data:", error);
             }
         };
-
         fetchExplorePageData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
         <main className="min-h-screen HomePage paddingSectionLeftRight">
             <ExploreSection
                 explorePageData={explorePageData}
-                locations={locations || []}
-                onSearch={handleSearchFromExplore}
-                showMoreButtonToShow={true}
-                handleShowMoreClick={() => {
-                    handleSearchFromExplore(searchTerm, currPage);
-                }}
+                locations={locations}
+                onSearch={handleSearch}
+                showMoreButtonToShow={hasMore}
+                handleShowMoreClick={handleShowMore}
                 hasMoreBtn={true}
                 isLoading={isLoading}
+                isLoadingMore={isLoadingMore}
+                totalCount={totalCount}
                 searchTerm={searchTerm}
             />
         </main>

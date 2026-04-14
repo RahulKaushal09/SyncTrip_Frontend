@@ -79,6 +79,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/manifest.json" />
+        <link rel="preconnect" href="https://synctrip.gumlet.io" />
         <div className="App">
           {/* <LoaderProvider>
             <LoginProvider> */}

@@ -93,9 +93,9 @@ const LocationImageGallery: React.FC<Props> = ({ locationImages, locationName })
     useEffect(() => {
         if (!isPopupOpen) return;
         const handleKeyDown = (e: KeyboardEvent) => {
-            if (e.key === 'Escape')          closePopup();
+            if (e.key === 'Escape') closePopup();
             else if (e.key === 'ArrowRight') handleNextImage();
-            else if (e.key === 'ArrowLeft')  handlePrevImage();
+            else if (e.key === 'ArrowLeft') handlePrevImage();
         };
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
@@ -123,7 +123,7 @@ const LocationImageGallery: React.FC<Props> = ({ locationImages, locationName })
     }, [isMobile, isUserInteracting, locationImages]);
 
     const handleInteractionStart = () => setIsUserInteracting(true);
-    const handleInteractionEnd  = () => setTimeout(() => setIsUserInteracting(false), 3000);
+    const handleInteractionEnd = () => setTimeout(() => setIsUserInteracting(false), 3000);
 
     const openPopupWithImage = (index: number) => {
         setSelectedPopupIndex(index);
