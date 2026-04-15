@@ -224,7 +224,7 @@ const NavbarClient = ({ }) => {
 
           <div className="collapse navbar-collapse justify-content-center" id="navbarNav" >
             <ul className="navbar-nav ul-withNoListStyle" style={{ alignItems: "center", gap: "20px" }}>
-              {isLoggedIn &&
+              {/* {isLoggedIn &&
                 <li className="nav-item"
                   onClick={() => {
                     if (!isActive(ROUTES.USER_TRIPS)) {
@@ -244,7 +244,7 @@ const NavbarClient = ({ }) => {
                   </span>
                 </li>
 
-              }
+              } */}
               <li className="nav-item ml-16"
                 onClick={() => {
                   if (!isActive(ROUTES.EXPLORE)) {
@@ -299,7 +299,7 @@ const NavbarClient = ({ }) => {
                 Blogs
               </span>
             </li> */}
-              {pageType == PageTypeEnum.HOSTED_TRIPS ? (
+              {/* {pageType == PageTypeEnum.HOSTED_TRIPS ? (
                 (isLoggedIn &&
 
                   <li className="nav-item"
@@ -319,7 +319,7 @@ const NavbarClient = ({ }) => {
                       Create Trip
                     </span>
                   </li>
-                )) : ""}
+                )) : ""} */}
               <li className="nav-item"
                 onClick={() => setFeedbackFormOpen(true)}
                 style={{ cursor: "pointer" }}>
@@ -479,7 +479,7 @@ const NavbarClient = ({ }) => {
                         <img src={SyncTripLogo} alt="SyncTrip" style={{ width: "100%", }} />
                     </a>
                     </div> */}
-            {user ? (
+            {/* {user ? (
               <>
                 <Link
                   href={`/user/${user.id}`}
@@ -533,19 +533,24 @@ const NavbarClient = ({ }) => {
               </>
             ) : (
               <div>
-                {/* <a className="navbar-brand" href="/" style={{ display: 'inline-block', color: '#65CAD3', fontSize: "30px", fontWeight: "700", width: "100px" }}> */}
                 <Link href="/" onClick={() => redirectBtnClick("/")} className="navbar-brand" style={{ display: 'inline-block', color: '#65CAD3', fontSize: "30px", fontWeight: "700", width: "100px" }}>
                   <Image src={SyncTripLogo} alt="SyncTrip" style={{ width: "100%" }} />
-                  {/* <img src={SyncTripLogo.src} alt="SyncTrip" style={{ width: "100%", }} /> */}
                 </Link>
               </div>
-            )}
+            )} */}
+            <div>
+              {/* <a className="navbar-brand" href="/" style={{ display: 'inline-block', color: '#65CAD3', fontSize: "30px", fontWeight: "700", width: "100px" }}> */}
+              <Link href="/" onClick={() => redirectBtnClick("/")} className="navbar-brand" style={{ display: 'inline-block', color: '#65CAD3', fontSize: "30px", fontWeight: "700", width: "100px" }}>
+                <Image src={SyncTripLogo} alt="SyncTrip" style={{ width: "100%" }} />
+                {/* <img src={SyncTripLogo.src} alt="SyncTrip" style={{ width: "100%", }} /> */}
+              </Link>
+            </div>
             <div className="drawer-header">
               <span className="drawer-close" onClick={closeDrawer}>&times;</span>
             </div>
           </div>
           <ul className="navbar-nav ul-withNoListStyle" style={{ alignItems: "flex-start", padding: "1rem" }}>
-            {isLoggedIn &&
+            {/* {isLoggedIn &&
 
               <li className="nav-item"
                 onClick={() => {
@@ -563,7 +568,7 @@ const NavbarClient = ({ }) => {
               >
                 <span className="nav-link">My Trips</span>
               </li>
-            }
+            } */}
             <li className="nav-item"
               onClick={() => {
                 if (!isActive(ROUTES.EXPLORE)) {
@@ -616,7 +621,7 @@ const NavbarClient = ({ }) => {
             >
               <span className="nav-link">Blogs</span>
             </li>
-            {isLoggedIn &&
+            {/* {isLoggedIn &&
 
               <li className="nav-item"
                 onClick={() => {
@@ -634,7 +639,7 @@ const NavbarClient = ({ }) => {
               >
                 <span className="nav-link">Create Trip</span>
               </li>
-            }
+            } */}
             {/* {pageType == PageTypeEnum.TRIP ? (
             <li className="nav-item"
               onClick={() => {
@@ -680,7 +685,7 @@ const NavbarClient = ({ }) => {
               </span>
             </li>
 
-            {user ? (
+            {/* {user ? (
               // <li className="nav-item" onClick={() => { window.location.href = "/profile"; closeDrawer(); }}>
               //     <span className="nav-link">Profile</span>
               // </li>
@@ -699,7 +704,13 @@ const NavbarClient = ({ }) => {
               //     Login / Register
               //   </button>
               // </li>
-            )}
+            )} */}
+            <li className="nav-item">
+              <button onClick={redirectToStore} className="btn-download-premium mt-2" style={{ width: "100%" }}>
+                <span className="btn-download-shine"></span>
+                <span style={{ position: "relative", zIndex: 1 }}>Download App</span>
+              </button>
+            </li>
 
 
           </ul>
