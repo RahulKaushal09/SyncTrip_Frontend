@@ -257,7 +257,7 @@ const NavbarClient = ({ }) => {
                   borderBottom: isActive(ROUTES.EXPLORE) ? "2px solid var(--secondary-1)" : "",
                 }}
               // onClick={() => redirectBtnClick(ROUTES.EXPLORE)}
-              // style={{ cursor: "pointer" }}
+              // style={{ cursor: "pointe r" }}
               >
                 <span style={{ color: (!isSticky && isHomePage) ? "white" : "" }} className="nav-link">
                   Explore
