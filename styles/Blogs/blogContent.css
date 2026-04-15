@@ -2,20 +2,20 @@
 .editorial-layout {
     display: flex;
     flex-direction: column;
-    /* Stacks on mobile */
-    gap: 3rem;
+    /* Tighter stack on mobile */
+    gap: 1.5rem; 
     width: 100%;
-    max-width: 1200px;
+    /* max-width: 1200px; */
     margin: 0 auto;
-    padding: 0rem 1.5rem 2rem 1.5rem;
+    /* Slightly less side padding on mobile for more content room */
+    /* padding: 0rem 1rem 2rem 1rem;  */
 }
 
 @media (min-width: 1024px) {
     .editorial-layout {
         flex-direction: row;
-        /* Side-by-side on desktop */
         align-items: flex-start;
-        /* CRITICAL: Allows sidebar to be sticky without stretching */
+        /* Restore large gap for desktop */
         gap: 4rem;
         padding: 4rem 1.5rem;
     }
@@ -37,15 +37,15 @@
     letter-spacing: 0.1em;
     cursor: pointer;
     padding: 0;
-    margin-bottom: 2.5rem;
+    margin-bottom: 1.5rem; /* Reduced for mobile */
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .editorial-back-btn:hover {
     color: #0f172a;
     transform: translateX(-6px);
-    /* Smooth slide-left micro-interaction */
 }
+
 .editorial-sidebar {
     width: 100%;
     display: flex;
@@ -53,18 +53,18 @@
 }
 
 @media (min-width: 1024px) {
+    .editorial-back-btn {
+        margin-bottom: 2.5rem; /* Restored for desktop */
+    }
+    
     .editorial-sidebar {
         width: 35%;
-        /* Fixed width ratio for sidebar */
         flex: 0 0 35%;
         position: sticky;
         top: 100px;
-        /* Accounts for your fixed navbar */
-        /* Height max-content is required for sticky to work inside a flex container */
         height: max-content;
         max-height: calc(100vh - 120px);
         overflow-y: auto;
-        /* Hide scrollbar */
         -ms-overflow-style: none;
         scrollbar-width: none;
     }
@@ -78,7 +78,6 @@
 .editorial-main-content {
     width: 100%;
     min-width: 0;
-    /* CRITICAL: Prevents large images from blowing out the flex layout */
 }
 
 @media (min-width: 1024px) {
@@ -96,32 +95,35 @@
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.15em;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
 }
 
 .editorial-title {
     font-family: system-ui, -apple-system, sans-serif;
-    font-size: clamp(2rem, 4vw, 2.75rem);
+    /* Lowered the minimum from 2rem to 1.4rem for mobile phones */
+    font-size: clamp(1.4rem, 6vw, 2.75rem);
     font-weight: 900;
     color: #0f172a;
     line-height: 1.15;
-    margin: 0 0 1.5rem 0;
+    margin: 0 0 1rem 0;
     letter-spacing: -0.02em;
 }
 
 .editorial-meta {
     display: flex;
-    gap: 0.75rem;
-    padding-bottom: 1.5rem;
-    margin-bottom: 1.5rem;
+    /* Allows wrapping on tiny screens */
+    flex-wrap: wrap; 
+    gap: 0.75rem 1rem;
+    padding-bottom: 1rem;
+    margin-bottom: 1.25rem;
     border-bottom: 1px solid #f1f5f9;
 }
 
 .meta-item {
     display: flex;
     align-items: center;
-    gap: 12px;
-    font-size: 0.9rem;
+    gap: 8px;
+    font-size: 0.85rem;
     font-weight: 500;
     color: #64748b;
 }
@@ -134,7 +136,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
 }
 
 .tag-pill {
@@ -255,36 +257,35 @@
 
 .mobile-promo {
     display: block;
-    margin-top: 3rem;
+    margin-top: 2rem;
 }
 
 @media (min-width: 1024px) {
-    .desktop-promo {
-        display: block;
-    }
-
-    .mobile-promo {
-        display: none;
-    }
-
-    .promo-btn-group {
-        flex-direction: row;
-    }
-
-    .promo-store-btn {
-        flex: 1;
-    }
+    .desktop-promo { display: block; }
+    .mobile-promo { display: none; }
+    .promo-btn-group { flex-direction: row; }
+    .promo-store-btn { flex: 1; }
+    .editorial-title { margin: 0 0 1.5rem 0; }
+    .editorial-meta { padding-bottom: 1.5rem; margin-bottom: 1.5rem; }
+    .editorial-tags { margin-bottom: 2rem; }
 }
 
 /* ── HERO IMAGE ── */
 .editorial-hero {
     width: 100%;
     aspect-ratio: 16 / 9;
-    border-radius: 16px;
+    border-radius: 12px;
     overflow: hidden;
-    margin-bottom: 2.5rem;
+    margin-bottom: 1.5rem; /* Reduced for mobile */
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
     background: #f1f5f9;
+}
+
+@media (min-width: 1024px) {
+    .editorial-hero {
+        border-radius: 16px;
+        margin-bottom: 2.5rem;
+    }
 }
 
 .editorial-hero-image {
@@ -366,17 +367,35 @@
     margin-bottom: 0.75rem;
 }
 
+/* ── MOBILE TEXT OVERRIDES ── */
 @media (max-width: 768px) {
     .editorial-body-text {
-        font-size: 1.05rem;
+        font-size: 1rem; /* Better scale for mobile */
+        line-height: 1.7; /* Slightly tighter */
+    }
+
+    .editorial-body-text p {
+        margin-bottom: 1.25rem;
     }
 
     .editorial-body-text h2 {
-        font-size: 1.5rem;
+        font-size: 1.3rem; /* Down from 1.75rem */
+        margin: 2rem 0 1rem; /* Tighter margins */
+    }
+
+    .editorial-body-text h3 {
+        font-size: 1.15rem; /* Down from 1.4rem */
+        margin: 1.5rem 0 0.75rem;
     }
 
     .editorial-body-text blockquote {
         padding: 1rem 1.25rem;
-        font-size: 1.1rem;
+        font-size: 1.05rem; /* Down from 1.25rem */
+        margin: 1.5rem 0;
+        border-left-width: 3px;
+    }
+    
+    .editorial-body-text img {
+        margin: 1.5rem 0; /* Less gap above and below images */
     }
 }

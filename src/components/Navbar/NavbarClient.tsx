@@ -22,13 +22,14 @@ import ChatIcon from "./ChatIcon";
 import path from "path";
 import { Rocket, Sparkles } from "lucide-react";
 import GumletImage from "../common/GumletImage";
+import { redirectToStore } from "@/utils/redirectToStore";
 
 const NavbarClient = ({ }) => {
   const [LoadingUser, setLoadingUser] = useState(true);
   const { user, isLoggedIn, logout, openLogin } = useLogin(); // ⬅️ use context directly
   const pathname = usePathname();
   const shouldHideNavbar = (pathname.includes('userTrip/') && pathname.includes('/planner')) || (pathname.includes('userTrip/') && pathname.includes('/matching')) || pathname.includes('/chats') || pathname.includes('/careers/linkedin/march-2026/assessment');
-  const isHomePage = pathname === '/';
+  const isHomePage = pathname === '/' || pathname === '/blogs';
 
   // const cookie = Cookies.get('userInfo');
   // const [user, setUser] = useState<User | null>(() => {
@@ -259,7 +260,7 @@ const NavbarClient = ({ }) => {
               // style={{ cursor: "pointer" }}
               >
                 <span style={{ color: (!isSticky && isHomePage) ? "white" : "" }} className="nav-link">
-                  Explore Locations
+                  Explore
                 </span>
               </li>
               <li className="nav-item"
@@ -442,7 +443,7 @@ const NavbarClient = ({ }) => {
           </div>
 
           {!ismobile && (
-            <button className="btn-download-premium ms-2">
+            <button onClick={redirectToStore} className="btn-download-premium ms-2">
               <span className="btn-download-shine"></span>
               <span style={{ position: "relative", zIndex: 1 }}>Download Now!</span>
               {/* <Sparkles className="btn-download-icon" size={16} style={{ position: "relative", zIndex: 1 }} /> */}
@@ -580,24 +581,41 @@ const NavbarClient = ({ }) => {
             >
               <span className="nav-link">Explore</span>
             </li>
-            {/* <li className="nav-item"
-            onClick={() => {
-              if (!isActive(ROUTES.BLOGS)) {
-                redirectBtnClick(ROUTES.BLOGS);
-                closeDrawer();
-              }
-            }}
-            style={{
-              cursor: isActive(ROUTES.BLOGS) ? "default" : "pointer",
-              pointerEvents: isActive(ROUTES.BLOGS) ? "none" : "auto",
-              borderBottom: isActive(ROUTES.BLOGS) ? "2px solid var(--secondary-1)" : "",
-            }}
-          //  onClick={() => { redirectBtnClick(ROUTES.BLOGS); closeDrawer();
+            <li className="nav-item"
+              onClick={() => {
+                if (!isActive(ROUTES.PLANS)) {
+                  redirectBtnClick(ROUTES.PLANS);
+                  closeDrawer();
 
-          //   }}
-          >
-            <span className="nav-link">Blogs</span>
-          </li> */}
+                }
+              }}
+              style={{
+                cursor: isActive(ROUTES.PLANS) ? "default" : "pointer",
+                pointerEvents: isActive(ROUTES.PLANS) ? "none" : "auto",
+                borderBottom: isActive(ROUTES.PLANS) ? "2px solid var(--secondary-1)" : "",
+              }}
+            // onClick={() => { redirectBtnClick(ROUTES.EXPLORE); closeDrawer(); }}
+            >
+              <span className="nav-link">Plans</span>
+            </li>
+            <li className="nav-item"
+              onClick={() => {
+                if (!isActive(ROUTES.BLOGS)) {
+                  redirectBtnClick(ROUTES.BLOGS);
+                  closeDrawer();
+                }
+              }}
+              style={{
+                cursor: isActive(ROUTES.BLOGS) ? "default" : "pointer",
+                pointerEvents: isActive(ROUTES.BLOGS) ? "none" : "auto",
+                borderBottom: isActive(ROUTES.BLOGS) ? "2px solid var(--secondary-1)" : "",
+              }}
+            //  onClick={() => { redirectBtnClick(ROUTES.BLOGS); closeDrawer();
+
+            //   }}
+            >
+              <span className="nav-link">Blogs</span>
+            </li>
             {isLoggedIn &&
 
               <li className="nav-item"
@@ -671,7 +689,7 @@ const NavbarClient = ({ }) => {
               </li>
             ) : (
               <li className="nav-item">
-                <button className="btn-download-premium mt-2" style={{ width: "100%" }}>
+                <button onClick={redirectToStore} className="btn-download-premium mt-2" style={{ width: "100%" }}>
                   <span className="btn-download-shine"></span>
                   <span style={{ position: "relative", zIndex: 1 }}>Download App</span>
                 </button>

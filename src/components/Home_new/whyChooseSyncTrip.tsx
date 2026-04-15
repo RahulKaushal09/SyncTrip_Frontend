@@ -7,6 +7,7 @@ import { triggerLogin } from "@/utils";
 import { ROUTES } from "@/constants/config";
 import { useLoader } from "../providers/LoaderContext";
 import { useRouter } from "next/navigation";
+import { redirectToStore } from "@/utils/redirectToStore";
 
 // Define the feature data structure
 type Feature = {
@@ -116,7 +117,7 @@ const FeatureCard = ({ feature, index }: { feature: Feature; index: number }) =>
     <div
       ref={cardRef}
       className={`${styles.card} ${feature.gridClass} group`}
-      style={{ 
+      style={{
         background: feature.bgColor,
         animationDelay: `${index * 80}ms`
       }}
@@ -124,9 +125,9 @@ const FeatureCard = ({ feature, index }: { feature: Feature; index: number }) =>
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div 
+      <div
         className={styles.spotlight}
-        style={{ 
+        style={{
           opacity: isHovered ? 1 : 0,
           background: `radial-gradient(400px circle at ${mousePos.x}px ${mousePos.y}px, ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.03)'}, transparent 40%)`
         }}
@@ -138,16 +139,16 @@ const FeatureCard = ({ feature, index }: { feature: Feature; index: number }) =>
       />
 
       <div className="relative z-10 flex flex-col h-full justify-between">
-        <div 
-          className={`${styles.iconWrap} group-hover:shadow-md`} 
+        <div
+          className={`${styles.iconWrap} group-hover:shadow-md`}
           style={{ backgroundColor: feature.large ? (isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.05)") : "white" }}
         >
-          <IconComponent 
-            className={`w-6 h-6 md:w-7 md:h-7 group-hover:${feature.iconAnimClass} transition-all duration-300`} 
-            style={{ color: feature.color }} 
+          <IconComponent
+            className={`w-6 h-6 md:w-7 md:h-7 group-hover:${feature.iconAnimClass} transition-all duration-300`}
+            style={{ color: feature.color }}
           />
         </div>
-        
+
         <div className="mt-4">
           <h3 className={`font-extrabold mb-2 ${feature.large ? "text-xl md:text-2xl" : "text-lg md:text-xl"} ${feature.textColor} tracking-tight leading-tight transition-transform duration-300 group-hover:translate-x-1`}>
             {feature.title}
@@ -188,8 +189,8 @@ export function FeaturesSection() {
   }, []);
 
   return (
-    <section 
-      id="features" 
+    <section
+      id="features"
       ref={sectionRef}
       className={`w-full max-w-7xl mx-auto px-4 py-12 flex flex-col justify-center min-h-[90vh] ${isVisible ? styles.animateIn : 'opacity-0'}`}
     >
@@ -217,7 +218,7 @@ export function FeaturesSection() {
 
       <div className="mt-10 flex justify-center">
         <button
-          onClick={() => { triggerLogin(() => redirectToUrl(ROUTES.EXPLORE)); }}
+          onClick={redirectToStore}
           className={styles.ctaButton}
         >
           <span className={styles.ctaShine} />

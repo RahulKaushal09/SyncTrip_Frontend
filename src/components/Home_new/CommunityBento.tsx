@@ -12,6 +12,7 @@ import sportsImage from "@/assets/images/sportsImage.png";
 import outingImage from "@/assets/images/outingImage.png";
 import moviesImage from "@/assets/images/moviesImage.png";
 import { APP_LINKS, ROUTES } from "@/constants";
+import { redirectToStore } from "@/utils/redirectToStore";
 
 const CommunityBento = () => {
   const router = useRouter();
@@ -34,7 +35,7 @@ const CommunityBento = () => {
 
       {/* ── BENTO GRID ── */}
       <div className={styles.bentoGrid}>
-        
+
         {/* Box 1: Rides (Tall - Spans 2 Rows) */}
         <div className={`${styles.bentoCard} ${styles.tallCard}`} onClick={() => router.push(ROUTES.PLANS)}>
           <div className={styles.imageWrapper}>
@@ -86,19 +87,19 @@ const CommunityBento = () => {
         </div>
 
         {/* Box 5: Open Communities (Wide - Specialized Dark Card) */}
-        <div className={`${styles.bentoCard} ${styles.wideCard} ${styles.chatCard}`} onClick={() => router.push(APP_LINKS.PLAY_STORE)}>
+        <div className={`${styles.bentoCard} ${styles.wideCard} ${styles.chatCard}`} onClick={redirectToStore}>
           {/* Animated Background Elements */}
           <div className={styles.chatBackground}>
             <MessageCircle className={`${styles.floatingBubble} ${styles.bubble1}`} />
             <MessageCircle className={`${styles.floatingBubble} ${styles.bubble2}`} />
             <MessageCircle className={`${styles.floatingBubble} ${styles.bubble3}`} />
           </div>
-          
+
           <div className={styles.cardContent}>
             <div className={styles.chatHeader}>
               <div className={styles.liveIndicator}>
                 <span className={styles.liveDot}></span>
-                NOW LIVE 
+                NOW LIVE
               </div>
               <Shield size={20} className={styles.secureIcon} />
             </div>

@@ -123,7 +123,7 @@ export class LocationServices {
 
     static async getDataForExplorePage(): Promise<ExplorePageData> {
         try {
-            const res = await apiClient.get(`/locations/getExploreDataForHomePage`);
+            const res = await apiClient.get(`/locations/getExploreDataForHomePage?platform=web`);
             return res.data;
         } catch (error) {
             console.error("Error fetching locations for explore page:", error);

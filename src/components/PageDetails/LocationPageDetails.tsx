@@ -183,8 +183,8 @@ const LocationPageDetails = ({ uuid, locationData }: { uuid: string; locationDat
                         parentType="location"
                     />
                     <CultureFestivalsSection data={locationData?.cultures as Culture[]} heading={`Local Cultures of ${locationData?.title}`} type="culture" />
-                    <PlanTripDates pageType={pageType as string} ctaAction={ctaAction}
-                        EnrollInTrip={() => { }} locationId={locationData?.id} />
+                    {/* <PlanTripDates pageType={pageType as string} ctaAction={ctaAction}
+                        EnrollInTrip={() => { }} locationId={locationData?.id} /> */}
                     <CultureFestivalsSection data={locationData?.festivals as Festival[]} heading={`Festivals of ${locationData?.title}`} type="festival" />
                     {/* <LocationMapSection
                         latitude={locationData?.fullDetails?.coordinates?.lat as number}

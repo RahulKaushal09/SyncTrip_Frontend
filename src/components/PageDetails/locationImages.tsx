@@ -27,7 +27,7 @@ function useAdjacentPreloader(images: string[], currentIndex: number) {
     useEffect(() => {
         if (!images.length) return;
         // Aggressively preload: current ±2 so fast clickers never wait
-        [-2, -1, 0, 1, 2].forEach((offset) => {
+        [-1, 0, 1].forEach((offset) => {
             const i = (currentIndex + offset + images.length) % images.length;
             preloadImage(images[i]);
         });
@@ -102,9 +102,18 @@ const LocationImageGallery: React.FC<Props> = ({ locationImages, locationName })
     }, [isPopupOpen, handleNextImage, handlePrevImage, closePopup]);
 
     useEffect(() => {
-        const handleResize = () => setIsMobile(window.innerWidth <= 768);
+        let timeout: NodeJS.Timeout;
+
+        const handleResize = () => {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+                setIsMobile(window.innerWidth <= 768);
+            }, 150);
+        };
+
         handleResize();
         window.addEventListener('resize', handleResize);
+
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
@@ -225,6 +234,7 @@ const LocationImageGallery: React.FC<Props> = ({ locationImages, locationName })
                                     fill
                                     style={{ objectFit: 'cover' }}
                                     alt={`${locationName} view ${index + 1}`}
+                                    priority={index === 0}
                                 />
                             </div>
                         ))}

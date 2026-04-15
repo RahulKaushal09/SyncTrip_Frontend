@@ -190,25 +190,25 @@ const HotelCard: React.FC<HotelCardProps> = ({
     return (
         <div
             className="hotel-card"
-            onClick={() => {
-                const link = hotel?.hotel_link;
-                if (link && !link.includes('https://www.holidify.com/')) {
-                    window.location.href = link;
-                } else {
-                    toast.error('This hotel is not available for booking at the moment. Please try again later.');
-                }
-            }}
+            // onClick={() => {
+            //     const link = hotel?.hotel_link;
+            //     if (link && !link.includes('https://www.holidify.com/')) {
+            //         window.location.href = link;
+            //     } else {
+            //         toast.error('This hotel is not available for booking at the moment. Please try again later.');
+            //     }
+            // }}
             style={{ cursor: 'pointer' }}
         >
             <div className="top-rated">Top Rated</div>
-            <HeartIcon
+            {/* <HeartIcon
                 id={cardId}
                 isWishlisted={hotel.isWishlisted as boolean}
                 parentId={parentId}
                 parentType={parentType}
                 name={hotel.hotel_name}
                 type={typeOfWhishlistCardEnum}
-            />
+            /> */}
             <HotelImageCarousel images={hotel.hotel_images} locationName={locationName} />
             <div className="card-content-hotel" style={{ position: hotel.hotel_images.length == 0 ? "absolute" : "relative", bottom: hotel.hotel_images.length == 0 ? "0" : "" }}>
                 <div className="rating-hotel">

@@ -4,8 +4,8 @@ import React from "react";
 import Image from "next/image";
 import { Calendar, User, MapPin } from "lucide-react";
 import styles from "./InfiniteTripMarquee.module.css";
-import { APP_LINKS, TRIPS_HOME } from "@/constants";
-import { useRouter } from "next/navigation";
+import { TRIPS_HOME } from "@/constants";
+import { redirectToStore } from "@/utils/redirectToStore";
 
 // 1. Data Types
 type TripData = {
@@ -39,10 +39,10 @@ const formatDates = (start: string, end: string) => {
 
 // Subtle colors for the minimal budget indicator dots
 const budgetColor: Record<string, string> = {
-  Economic:   "#3b82f6", // Blue
+  Economic: "#3b82f6", // Blue
   Affordable: "#10b981", // Green
-  Flexible:   "#f59e0b", // Orange
-  Luxury:     "#a855f7", // Purple
+  Flexible: "#f59e0b", // Orange
+  Luxury: "#a855f7", // Purple
 };
 
 // (Your TRIPS data array remains identical here)
@@ -54,7 +54,7 @@ const TripCard = ({ data }: { data: TripData }) => {
   const color = budgetColor[tripSnapshot.budget] ?? "#ffffff";
 
   return (
-    <article 
+    <article
       className={styles.card}
       // Explicit styles to prevent Next.js Image fill bugs
       style={{ position: 'relative', width: '300px', height: '320px', flexShrink: 0, overflow: 'hidden', borderRadius: '16px' }}
@@ -111,7 +111,6 @@ const TripCard = ({ data }: { data: TripData }) => {
 export default function InfiniteTripMarquee() {
   // Duplicate array to create the seamless infinite scroll
   const row1 = [...TRIPS, ...TRIPS, ...TRIPS];
-  const router = useRouter();
 
   return (
     <section className={`${styles.section} bg-gradient-to-bl from-[#c2e3f7] via-[#F2FAFF] to-[#c2e3f7]`} aria-label="Live trips on SyncTrip">
@@ -120,7 +119,7 @@ export default function InfiniteTripMarquee() {
       <div className={styles.fadeRight} aria-hidden="true" /> */}
 
       {/* Scrolling Track */}
-      <div onClick={() => router.push(APP_LINKS.PLAY_STORE)} className={styles.trackWrap}>
+      <div onClick={redirectToStore} className={styles.trackWrap}>
         <div className={styles.track}>
           {row1.map((trip, idx) => (
             <TripCard key={`r1-${trip.id}-${idx}`} data={trip} />

@@ -10,6 +10,7 @@ import app_image_4 from '@/assets/images/download-popup/app_image_4.png';
 import app_image_5 from '@/assets/images/download-popup/app_image_5.png';
 import app_image_6 from '@/assets/images/download-popup/app_image_6.png';
 import app_image_7 from '@/assets/images/download-popup/app_image_7.png';
+import { redirectToStore } from '@/utils/redirectToStore';
 
 const APP_IMAGES = [
     app_image_1.src,
@@ -195,7 +196,7 @@ export const DownloadAppModal: React.FC<Props> = ({ isOpen, onClose }) => {
                 {/* Actions */}
                 <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                     <button
-                        onClick={() => window.open("https://play.google.com/store/apps/details?id=com.synctrip", "_blank")}
+                        onClick={redirectToStore}
                         className="app-btn-primary"
                         style={{
                             background: 'black', border: 'none',

@@ -124,7 +124,7 @@ const CommunityShowcase = () => {
 
         <div className={`${styles.liveChip} m-float`}>
           <span className={styles.liveDot} aria-hidden="true" />
-          <span className="b3">4 New plans nearby</span>
+          <span className="b3">7+ New plans nearby</span>
         </div>
       </div>
     </section>

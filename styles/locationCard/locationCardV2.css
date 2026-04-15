@@ -12,14 +12,16 @@
    Skeleton Loading State
 ========================================= */
 @keyframes lc-pulse {
-    50% { opacity: .5; }
+    50% {
+        opacity: .5;
+    }
 }
 
 .lc-skeleton {
     position: relative;
     /* Mobile First Dimensions */
     height: 280px;
-    width: 72vw; 
+    width: 72vw;
     min-width: 72vw;
     border-radius: 20px;
     overflow: hidden;
@@ -60,7 +62,7 @@
     position: relative;
     /* Mobile First Dimensions */
     height: 280px;
-    width: 72vw; 
+    width: 72vw;
     min-width: 72vw;
     border-radius: 20px;
     overflow: hidden;
@@ -70,36 +72,45 @@
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     transition: var(--lc-transition);
     /* Fix for Safari border-radius overflow bug */
-    transform: translateZ(0); 
+    transform: translateZ(0);
 }
 
 /* Desktop Hover Lift */
 @media (hover: hover) {
     .lc-card:hover {
-        transform: translateY(-4px);
+        /* transform: translateY(-4px); */
         box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
     }
 }
 
 /* Responsive Grid/Carousel Widths & Heights */
 @media (min-width: 640px) {
-    .lc-skeleton, .lc-card { 
+
+    .lc-skeleton,
+    .lc-card {
         height: 320px;
-        width: calc((100% - 20px) / 2); 
-        min-width: calc((100% - 20px) / 2); 
+        width: calc((100% - 20px) / 2);
+        min-width: calc((100% - 20px) / 2);
     }
 }
+
 @media (min-width: 768px) {
-    .lc-skeleton, .lc-card { 
-        width: calc((100% - 40px) / 3); 
-        min-width: calc((100% - 40px) / 3); 
+
+    .lc-skeleton,
+    .lc-card {
+        width: calc((100% - 40px) / 3);
+        min-width: calc((100% - 40px) / 3);
     }
 }
+
 @media (min-width: 1024px) {
-    .lc-skeleton, .lc-card { 
-        height: 360px; /* Full height on desktop */
-        width: calc((100% - 60px) / 4); 
-        min-width: calc((100% - 60px) / 4); 
+
+    .lc-skeleton,
+    .lc-card {
+        height: 360px;
+        /* Full height on desktop */
+        width: calc((100% - 60px) / 4);
+        min-width: calc((100% - 60px) / 4);
     }
 }
 
@@ -110,7 +121,8 @@
     position: absolute;
     inset: 0;
     z-index: 0;
-    background-color: #e2e8f0; /* Fallback color */
+    background-color: #e2e8f0;
+    /* Fallback color */
 }
 
 .lc-image {
@@ -128,12 +140,10 @@
     position: absolute;
     inset: 0;
     /* Smoother, richer gradient for premium text legibility */
-    background: linear-gradient(
-        to top, 
-        rgba(0,0,0,0.9) 0%, 
-        rgba(0,0,0,0.5) 35%, 
-        transparent 100%
-    );
+    background: linear-gradient(to top,
+            rgba(0, 0, 0, 0.9) 0%,
+            rgba(0, 0, 0, 0.5) 35%,
+            transparent 100%);
     z-index: 10;
     pointer-events: none;
 }
@@ -146,7 +156,8 @@
     bottom: 0;
     left: 0;
     right: 0;
-    padding: 1rem; /* Compact padding for mobile */
+    padding: 1rem;
+    /* Compact padding for mobile */
     z-index: 20;
     display: flex;
     flex-direction: column;
@@ -155,7 +166,8 @@
 
 @media (min-width: 1024px) {
     .lc-content {
-        padding: 1.25rem; /* Larger padding for desktop */
+        padding: 1.25rem;
+        /* Larger padding for desktop */
         gap: 0.5rem;
     }
 }
@@ -173,7 +185,8 @@
     gap: 0.25rem;
 }
 
-.lc-rating-text, .lc-places-text {
+.lc-rating-text,
+.lc-places-text {
     color: rgba(255, 255, 255, 0.95);
     font-size: 0.75rem;
     font-weight: 700;
@@ -190,7 +203,8 @@
 }
 
 .lc-title {
-    font-size: 1.125rem; /* 18px on mobile */
+    font-size: 1.125rem;
+    /* 18px on mobile */
     font-weight: 800;
     color: var(--lc-text-main);
     margin: 0;
@@ -202,7 +216,8 @@
 }
 
 .lc-subtitle {
-    font-size: 0.875rem; /* 14px on mobile */
+    font-size: 0.875rem;
+    /* 14px on mobile */
     font-weight: 500;
     color: rgba(255, 255, 255, 0.85);
     margin: 0;
@@ -216,11 +231,21 @@
 
 /* Scale up fonts for larger screens */
 @media (min-width: 768px) {
-    .lc-title { font-size: 1.25rem; }
-    .lc-subtitle { font-size: 0.9375rem; }
+    .lc-title {
+        font-size: 1.25rem;
+    }
+
+    .lc-subtitle {
+        font-size: 0.9375rem;
+    }
 }
 
 @media (min-width: 1024px) {
-    .lc-title { font-size: 1.375rem; }
-    .lc-subtitle { font-size: 1rem; }
+    .lc-title {
+        font-size: 1.375rem;
+    }
+
+    .lc-subtitle {
+        font-size: 1rem;
+    }
 }

@@ -7,6 +7,7 @@ import { APP_LINKS, ROUTES } from "@/constants";
 import { useRouter } from "next/navigation";
 import { triggerLogin } from "@/utils";
 import { useLoader } from "../providers/LoaderContext";
+import { redirectToStore } from "@/utils/redirectToStore";
 
 const SwipeDemo = dynamic(() => import("./SwipeDemo"), {
   ssr: false,
@@ -87,11 +88,11 @@ const ChoiceFeatureSectionV2 = () => {
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 lg:gap-16 items-center">
-          
+
           {/* LEFT: Phone Demo (5 cols) */}
           <div className="lg:col-span-5 flex justify-center lg:justify-end relative">
             <div className="relative min-h-[600px] flex items-center justify-center w-full max-w-[320px]">
-              
+
               {/* Floating Badges */}
               <div className={`absolute -right-6 top-16 hidden xl:flex items-center gap-3 bg-white/95 backdrop-blur-sm p-2.5 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-white z-20 transition-all duration-1000 delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'} animate-float`}>
                 <div className="bg-green-100 p-2 rounded-xl">
@@ -128,7 +129,7 @@ const ChoiceFeatureSectionV2 = () => {
 
           {/* RIGHT: Content (7 cols) */}
           <div className="lg:col-span-7 space-y-8 text-center lg:text-left mt-12 lg:mt-0">
-            
+
             {/* Pill tag */}
             <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-blue-100 shadow-sm transition-all duration-700 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
               <Zap size={14} className="text-[#4bbef5] fill-[#4bbef5] animate-pulse" />
@@ -191,7 +192,7 @@ const ChoiceFeatureSectionV2 = () => {
             {/* CTA + Social proof */}
             <div className={`flex flex-col sm:flex-row items-center gap-6 pt-4 justify-center transition-all duration-700 delay-400 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
               <button
-                onClick={() => redirectToUrl(APP_LINKS.PLAY_STORE)}
+                onClick={redirectToStore}
                 aria-label="Download SyncTrip on Google Play"
                 className="relative overflow-hidden w-full sm:w-auto px-8 py-3.5 bg-secondary-1 text-white rounded-xl font-bold flex items-center justify-center gap-3 hover:bg-[#0d344b] hover:shadow-[0_8px_25px_rgba(21,131,183,0.3)] hover:-translate-y-0.5 transition-all group"
               >

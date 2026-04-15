@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { useLoader } from '../providers/LoaderContext';
 import GumletImage from '../common/GumletImage';
+import { redirectToStore } from '@/utils/redirectToStore';
 
 interface AddLocationCardProps {
     locationId?: string;
@@ -123,7 +124,7 @@ const AddLocationCard: React.FC<AddLocationCardProps> = ({
 
     useEffect(() => {
         if (pageType === PageTypeEnum.LOCATION) {
-            setBtn2Text('Create a Trip');
+            setBtn2Text('Plan Trip on App');
         } else if (pageType === PageTypeEnum.TRIP) {
             setBtn2Text(alreadyEnrolled ? 'Trip Updates' : 'Join Trip');
         }
@@ -276,7 +277,7 @@ const AddLocationCard: React.FC<AddLocationCardProps> = ({
                 <div className="location-card-buttons" ref={btnReference} style={{ marginTop: '16px' }}>
                     <button
                         className="btn !flex justify-center items-center gap-1 btn-primary hov-lift"
-                        onClick={btn2CTA}
+                        onClick={redirectToStore}
                         style={{ width: '100%', ...btnsStyle }}
                     >
                         {btn2Text} <ArrowRight />

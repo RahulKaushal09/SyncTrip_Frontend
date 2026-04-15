@@ -3,7 +3,7 @@ import React from 'react';
 import "../../../styles/Footer.css";
 import SyncTripLogoText from "../../assets/images/logoWeb.png";
 import SyncTripLogo from "../../assets/images/logo_main_withoutBG.png"
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Facebook, Instagram, Linkedin } from 'lucide-react';
 import GetItOnPlaystore from "../../assets/icons/GetOnPlayStoreSVG.svg";
 import GetItOnAppStore from "../../assets/icons/GetOnAppStore.svg";
@@ -11,12 +11,14 @@ import { APP_LINKS } from '@/constants';
 
 const Footer = () => {
     const pathname = usePathname();
-    const shouldHideFooter = pathname.includes('/chats') || pathname.includes('/groups') || pathname.includes('/create') ||(pathname.includes('userTrip/') && pathname.includes('/travel-mode')) ||(pathname.includes('userTrip/') && pathname.includes('/groups'))||(pathname.includes('userTrip/') && pathname.includes('/planner')) || (pathname.includes('userTrip/') && pathname.includes('/matching')) || pathname.includes('/careers/linkedin/march-2026') || pathname.includes('/explore/plans');
+    const router = useRouter();
+    const shouldHideFooter = pathname.includes('/chats') || pathname.includes('/groups') || pathname.includes('/create') || (pathname.includes('userTrip/') && pathname.includes('/travel-mode')) || (pathname.includes('userTrip/') && pathname.includes('/groups')) || (pathname.includes('userTrip/') && pathname.includes('/planner')) || (pathname.includes('userTrip/') && pathname.includes('/matching')) || pathname.includes('/careers/linkedin/march-2026') || pathname.includes('/explore/plans');
 
     const companyLinks = [
         { name: 'About', url: '/about' },
-        { name: 'How It Works', url: '/how-it-works' },
+        // { name: 'Explore', url: '/explore' },
         { name: 'Blog', url: '/blogs' },
+        // { name: 'Plans', url: '/explore/plans' },
     ];
 
     const contactLinks = [
@@ -30,7 +32,7 @@ const Footer = () => {
             <div className="footer-content">
                 {/* Brand Section */}
                 <div className="footer-section brand-section">
-                    <div className='footer-logo'>
+                    <div onClick={() => router.push('/')} className='footer-logo'>
                         <img
                             src={SyncTripLogo.src}
                             alt="SyncTrip Icon"
@@ -125,9 +127,9 @@ const Footer = () => {
                             rel="noopener noreferrer"
                             aria-label="Get it on Google Play"
                         >
-                            <img 
-                                src={GetItOnPlaystore.src} 
-                                alt="Get it on Google Play" 
+                            <img
+                                src={GetItOnPlaystore.src}
+                                alt="Get it on Google Play"
                                 className="playstore-img"
                             />
                         </a>
@@ -138,9 +140,9 @@ const Footer = () => {
                             rel="noopener noreferrer"
                             aria-label="Get it on App Store"
                         >
-                            <img 
-                                src={GetItOnAppStore.src} 
-                                alt="Get it on App Store" 
+                            <img
+                                src={GetItOnAppStore.src}
+                                alt="Get it on App Store"
                                 className="appstore-img"
                             />
                         </a>

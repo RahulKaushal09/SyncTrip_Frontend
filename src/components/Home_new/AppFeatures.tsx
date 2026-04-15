@@ -9,25 +9,30 @@ import displayImg3 from "@/assets/images/di3.png";
 import displayImg4 from "@/assets/images/di4.png";
 
 import PlayStoreImg from "@/assets/icons/PlayStoreWhite.png";
+import { Download } from "lucide-react";
+import { redirectToStore } from "@/utils/redirectToStore";
 
 // ─── SUB-COMPONENTS ───────────────────────────────────────────────────────────
 
 const StoreBadge = ({ href, isDark }: { href?: string; isDark: boolean }) => (
-  <a
-    href={href ?? "https://play.google.com/store/apps/details?id=com.synctrip"}
+  <div
+    onClick={redirectToStore}
     className={`
-      group flex items-center border border-[#0f2439] justify-center gap-2 h-[54px] px-8 rounded-2xl font-bold transition-all duration-300 hover:-translate-y-1 hover:shadow-xl active:scale-95 w-fit mx-auto lg:mx-0
-      ${isDark 
-        ? "bg-white text-secondary-1 hover:bg-gray-50 hover:shadow-white/10" 
+      group cursor-pointer flex items-center border border-[#0f2439] justify-center gap-2 h-[54px] px-8 rounded-2xl font-bold transition-all duration-300 hover:-translate-y-1 hover:shadow-xl active:scale-95 w-fit mx-auto lg:mx-0
+      ${isDark
+        ? "bg-white text-secondary-1 hover:bg-gray-50 hover:shadow-white/10"
         : "bg-secondary-1 text-white hover:bg-[#0f2439] hover:shadow-secondary-1/20"
       }
     `}
   >
-    <img src={PlayStoreImg.src} alt="Google Play" className="h-10" />
+    {/* <img src={PlayStoreImg.src} alt="Google Play" className="h-10" /> */}
+    <Download color="black" />
     <span style={{
       color: isDark ? "black" : "white"
-    }} className="text-base lg:text-lg tracking-wide">Get it on Google Play</span>
-  </a>
+    }} className="text-base lg:text-lg tracking-wide">
+      Download Now
+    </span>
+  </div>
 );
 
 const FeatureRow = ({ text, isDark }: { text: string; isDark: boolean }) => (
@@ -68,7 +73,7 @@ const CirclesBg = ({ isDark }: { isDark: boolean }) => (
 const AppDownloadStack = () => {
   return (
     <section id="app-download" className="w-full relative bg-gradient-to-bl from-[#F6F9FB] via-[#F2FAFF] to-[#F6F9FB] flex flex-col gap-8 lg:gap-16 pt-8 lg:pt-16">
-      
+
       {/* ==========================================
           SLIDE 1: Now on Mobile
           ========================================== */}
@@ -85,7 +90,7 @@ const AppDownloadStack = () => {
       ">
         <CirclesBg isDark={true} />
         <div className="w-full px-6 lg:px-16 flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-20 py-10 lg:py-0">
-          
+
           <div className="w-full flex-1 flex flex-col gap-5 lg:gap-8 text-center lg:text-left z-10">
             <div className="flex justify-center ">
               <div className="inline-flex items-center px-5 py-2 rounded-full border backdrop-blur-md bg-white/10 border-white/20 shadow-[0_0_15px_rgba(255,255,255,0.05)]">
@@ -138,7 +143,7 @@ const AppDownloadStack = () => {
       ">
         <CirclesBg isDark={false} />
         <div className="w-full px-6 lg:px-16 flex flex-col lg:flex-row-reverse items-center justify-center gap-8 lg:gap-20 py-10 lg:py-0">
-          
+
           <div className="w-full flex-1 flex flex-col gap-5 lg:gap-8 text-center lg:text-left z-10">
             <div className="flex justify-center">
               <div className="inline-flex items-center px-5 py-2 rounded-full border backdrop-blur-md bg-white/80 border-primary-3/30 shadow-sm">
@@ -189,7 +194,7 @@ const AppDownloadStack = () => {
       ">
         <CirclesBg isDark={true} />
         <div className="w-full px-6 lg:px-16 flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-20 py-10 lg:py-0">
-          
+
           <div className="w-full flex-1 flex flex-col gap-5 lg:gap-8 text-center lg:text-left z-10">
             <div className="flex justify-center ">
               <div className="inline-flex items-center px-5 py-2 rounded-full border backdrop-blur-md bg-white/10 border-white/20 shadow-[0_0_15px_rgba(255,255,255,0.05)]">
@@ -205,7 +210,7 @@ const AppDownloadStack = () => {
             <div className="flex flex-col gap-6 lg:gap-10 w-full">
               <div className="grid grid-cols-3 lg:flex lg:gap-6 gap-3">
                 <Stat num="4.9★" label="Rating" isDark={true} />
-                <Stat num="500+"  label="Trips" isDark={true} />
+                <Stat num="500+" label="Trips" isDark={true} />
                 <Stat num="100%" label="Verified" isDark={true} />
               </div>
               <p className="text-base lg:text-xl text-white/70 max-w-md m-0 mx-auto lg:mx-0 font-light leading-relaxed">
@@ -244,7 +249,7 @@ const AppDownloadStack = () => {
       ">
         <CirclesBg isDark={false} />
         <div className="w-full px-6 lg:px-16 flex flex-col lg:flex-row-reverse items-center justify-center gap-8 lg:gap-20 py-10 lg:py-0">
-          
+
           <div className="w-full flex-1 flex flex-col gap-5 lg:gap-8 text-center lg:text-left z-10">
             <div className="flex justify-center ">
               <div className="inline-flex items-center px-5 py-2 rounded-full border backdrop-blur-md bg-white/80 border-primary-3/30 shadow-sm">

@@ -8,6 +8,7 @@ import syncTripApp from '../../assets/images/syncTripMobile.png';
 import '../../../styles/appPushing.css';
 import { triggerLogin } from '@/utils';
 import { Apple, Download } from 'lucide-react';
+import { redirectToStore } from '@/utils/redirectToStore';
 
 interface SyncTripAppPushingSectionProps {
     showWork?: boolean;
@@ -107,7 +108,7 @@ const SyncTripAppPushingSection = ({ showWork }: SyncTripAppPushingSectionProps)
                         </p>
                         <p className="text-muted mb-6">Download the App today and get early access to our app!</p>
                         <div className='flex gap-3 items-center mb-5'>
-                            <button className='btn !flex gap-2 items-center btn-dark'>
+                            <button onClick={redirectToStore} className='btn !flex gap-2 items-center btn-dark'>
                                 <Download />
                                 Download the App
                             </button>

@@ -174,21 +174,21 @@ export const metadata: Metadata = {
 };
 
 
-const fieldsToFetchForHome = [
-  LocationFields.TITLE,
-  LocationFields.RATING,
-  LocationFields.IMAGES,
-  LocationFields.BEST_TIME,
-  LocationFields.PLACES_NUMBER_TO_VISIT,
-  LocationFields.ID,
-];
+// const fieldsToFetchForHome = [
+//   LocationFields.TITLE,
+//   LocationFields.RATING,
+//   LocationFields.IMAGES,
+//   LocationFields.BEST_TIME,
+//   LocationFields.PLACES_NUMBER_TO_VISIT,
+//   LocationFields.ID,
+// ];
 
 // Set revalidation time for ISR (1 hour)
 export const revalidate = 3600;
 
 export default async function Home() {
   // Data fetching with error handling
-  let initialLocations: Location[] = [];
+  // const initialLocations: Location[] = [];
   // let initialEvents: Events[] = [];
   // let initialLocation: string = 'India';
 
@@ -206,15 +206,15 @@ export default async function Home() {
     console.error('Error fetching data for Home page:', error);
   }
 
-  const randomLocations = [...initialLocations]
-    .sort(() => 0.5 - Math.random())
-    .slice(0, 8);
+  // const randomLocations = [...initialLocations]
+  //   .sort(() => 0.5 - Math.random())
+  //   .slice(0, 8);
 
   return (
     <>
       {/* JSON-LD structured data */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(homeJsonLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(locationsJsonLd(initialLocations.slice(0, 10))) }} />
+      {/* <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(locationsJsonLd(initialLocations.slice(0, 10))) }} /> */}
       {/* <ExploreNearby/> */}
       {/* <HomeContent
         initialLocations={initialLocations}

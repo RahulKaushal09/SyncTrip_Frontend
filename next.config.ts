@@ -47,6 +47,16 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: 'synctrip.gumlet.io', pathname: '/**' },
     ],
   },
+
+  async redirects() {
+    return [
+      {
+        source: "/(chats|user|create|userTrip|userTrips|trips|notifications|how-it-works)/:path*",
+        destination: '/',
+        permanent: false,
+      },
+    ]
+  }
 };
 
 module.exports = withBundleAnalyzer(nextConfig);

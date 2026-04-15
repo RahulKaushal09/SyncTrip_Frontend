@@ -185,7 +185,7 @@ const LocationCard: React.FC<LocationCardProps> = ({
                     )}
                 </Carousel>
 
-                {showWishlistIcon && cardId && (
+                {/* {showWishlistIcon && cardId && (
                     <HeartIcon
                         id={cardId}
                         parentId={whishlistParentId}
@@ -194,7 +194,7 @@ const LocationCard: React.FC<LocationCardProps> = ({
                         type={typeOfWhishlistCardEnum}
                         isWishlisted={isWishlisted}
                     />
-                )}
+                )} */}
             </div>
 
             <div className="card-content" style={{ cursor: 'pointer' }}>

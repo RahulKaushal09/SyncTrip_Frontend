@@ -1,9 +1,10 @@
 "use client";
 import { BlogPost } from "@/types";
-import "../../../styles/Blogs/blogContent.css"; 
+import "../../../styles/Blogs/blogContent.css";
 import { Calendar, Clock, User, Share2, Tag, Smartphone, Play, Apple, ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { APP_LINKS } from "@/constants";
+import { redirectToStore } from "@/utils/redirectToStore";
 
 interface BlogContentProps {
     blog: BlogPost;
@@ -27,10 +28,10 @@ const BlogContent = ({ blog }: BlogContentProps) => {
 
     return (
         <article className="editorial-layout">
-            
+
             {/* ── LEFT SIDEBAR (Sticky on Desktop) ── */}
             <aside className="editorial-sidebar">
-                
+
                 {/* Back Button */}
                 <button onClick={() => router.push('/blogs')} className="editorial-back-btn">
                     <ArrowLeft size={16} />
@@ -83,15 +84,15 @@ const BlogContent = ({ blog }: BlogContentProps) => {
                 </button>
 
                 {/* SyncTrip App Promo Card (Desktop Only) */}
-                <button onClick={() => router.push('/invite/synctrip/app')} className="btn btn-primary">
+                {/* <button onClick={redirectToStore} className="btn btn-primary">
                     Download SyncTrip App
-                </button>
+                </button> */}
 
             </aside>
 
             {/* ── RIGHT CONTENT (Scrollable) ── */}
             <main className="editorial-main-content">
-                
+
                 {/* Hero Image */}
                 <div className="editorial-hero">
                     <img
@@ -107,17 +108,10 @@ const BlogContent = ({ blog }: BlogContentProps) => {
                     className="editorial-body-text"
                     dangerouslySetInnerHTML={{ __html: blog.content }}
                 />
-                
-                {/* Mobile Promo Card (Shows at the bottom on phones) */}
-                <div className="app-promo-card mobile-promo">
-                    <h4 className="promo-title">Ready for your next trip?</h4>
-                    <p className="promo-desc">Download SyncTrip to connect with verified travelers.</p>
-                    <div className="promo-btn-group">
-                        <button onClick={() => router.push(APP_LINKS?.PLAY_STORE || "#")} className="promo-store-btn">
-                            <Play size={14} fill="currentColor" /> Download App
-                        </button>
-                    </div>
-                </div>
+
+                <button onClick={redirectToStore} className="btn btn-primary !w-full !text-xl">
+                    Download SyncTrip App 
+                </button>
 
             </main>
         </article>
