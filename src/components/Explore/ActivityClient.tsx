@@ -1,14 +1,15 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import {
     MapPin, Clock, Users, Ticket, Trophy, Coffee, Bike, ChevronRight, X, ArrowRight
 } from 'lucide-react';
 import '../../../styles/activities.css';
 import { SportsPlan, MoviePlan, HangoutPlan, RidePlan, LOCATIONS } from "../../types/common.types";
-import { ApiService } from '@/utils'; // Verify this import path is correct for your setup
+import { ApiService } from '@/utils';
 import { DownloadAppModal } from '@/components/Download App/DownloadAppModal';
 import GumletImage from '@/components/common/GumletImage';
+import { useSearchParams } from 'next/navigation';
 
 // ─── Helpers & Micro-Components ───────────────────────────────────────────────
 
@@ -165,12 +166,14 @@ const HangoutCard: React.FC<{ data: HangoutPlan }> = ({ data }) => (
 
 // ─── Main Client Component ──────────────────────────────────────────
 
-export default function ExploreActivities() {
+function ActivitiesInner() {
     // UI State
     const [loc, setLoc] = useState<string | null>(null);
     const [modal, setModal] = useState(false);
     const [showDownload, setShowDownload] = useState(false);
     const [loading, setLoading] = useState(true);
+    const searchParams = useSearchParams();
+    const cat = searchParams.get('cat');
 
     // Data State
     const [rides, setRides] = useState<RidePlan[]>([]);
@@ -181,12 +184,11 @@ export default function ExploreActivities() {
     useEffect(() => {
         (async () => {
             try {
-                // Catching individual errors prevents one failing API from breaking the whole page
                 const [r, m, s, h] = await Promise.all([
-                    ApiService.getRidePlans().catch(() => []),
-                    ApiService.getMoviesPlans().catch(() => []),
-                    ApiService.getSportsPlans().catch(() => []),
-                    ApiService.getHangoutPlans().catch(() => []),
+                    (!cat || cat === 'rides') ? ApiService.getRidePlans().catch(() => []) : Promise.resolve([]),
+                    (!cat || cat === 'movies') ? ApiService.getMoviesPlans().catch(() => []) : Promise.resolve([]),
+                    (!cat || cat === 'sports') ? ApiService.getSportsPlans().catch(() => []) : Promise.resolve([]),
+                    (!cat || cat === 'hangouts') ? ApiService.getHangoutPlans().catch(() => []) : Promise.resolve([]),
                 ]);
                 setRides(r); setMovies(m); setSports(s); setHangouts(h);
             } catch (e) {
@@ -195,13 +197,13 @@ export default function ExploreActivities() {
                 setLoading(false);
             }
         })();
-    }, []);
+    }, [cat]);
 
     const filter = <T extends { locationName?: string | null }>(list: T[]) =>
         loc ? list.filter(d => d.locationName === loc) : list;
 
-    const mkLink = (cat: string) =>
-        `/explore/plans?cat=${cat}${loc ? `&location=${loc}` : ''}`;
+    const mkLink = (c: string) =>
+        `/explore/plans?cat=${c}${loc ? `&location=${loc}` : ''}`;
 
     const sections = [
         {
@@ -246,7 +248,7 @@ export default function ExploreActivities() {
         },
     ] as const;
 
-    const visible = sections.filter(s => s.items.length > 0);
+    const visible = sections.filter(s => s.items.length > 0 && (cat ? s.cat === cat : true));
 
     return (
         <div className="activities-page-wrapper">
@@ -254,7 +256,7 @@ export default function ExploreActivities() {
 
             {/* Header */}
             <div className="page-header">
-                <div>
+                <div className='cursor-pointer' onClick={() => window.location.href = "/explore/plans"}>
                     <h1 className="page-title">Explore Activities</h1>
                     <p className="page-subtitle">Find your next adventure and crew</p>
                 </div>
@@ -275,7 +277,7 @@ export default function ExploreActivities() {
                     </div>
                 ) : (
                     visible.map(sec => (
-                        <section onClick={() => setShowDownload(true)} key={sec.key} className="activity-section">
+                        <section key={sec.key} className="activity-section">
                             <div className="section-header">
                                 <span
                                     className="section-label-pill"
@@ -284,15 +286,17 @@ export default function ExploreActivities() {
                                     {sec.icon} {sec.label}
                                 </span>
                                 <div className="section-rule" />
-                                {sec.items.length > 3 && (
+                                {/* Only show "See all" on the homepage (no cat), and only if there are more than 3 items */}
+                                {!cat && sec.items.length > 3 && (
                                     <a href={mkLink(sec.cat)} className="see-more-btn">
                                         See all <ArrowRight size={13} />
                                     </a>
                                 )}
                             </div>
 
-                            <div className="activity-grid">
-                                {sec.items.slice(0, 3).map(item => sec.render(item as never))}
+                            <div onClick={() => setShowDownload(true)} className="activity-grid">
+                                {/* Show all items on category page, preview 3 on homepage */}
+                                {(cat ? sec.items : sec.items.slice(0, 3)).map(item => sec.render(item as never))}
                             </div>
                         </section>
                     ))
@@ -330,5 +334,13 @@ export default function ExploreActivities() {
                 </div>
             )}
         </div>
+    );
+}
+
+export default function ExploreActivities() {
+    return (
+        <Suspense fallback={<div className="empty-state">Loading...</div>}>
+            <ActivitiesInner />
+        </Suspense>
     );
 }
