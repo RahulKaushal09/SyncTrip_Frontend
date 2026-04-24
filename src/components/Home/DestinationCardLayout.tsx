@@ -14,12 +14,12 @@ const DestinationCardLayout: React.FC<DestinationCardLayoutProps> = ({ cards }) 
     const [positions, setPositions] = useState([0, 1, 2]);
 
     const rotateLeft = () => {
-        console.log('Rotating left');
+        // console.log('Rotating left');
         setPositions(prev => [prev[1], prev[2], prev[0]]);
     };
 
     const rotateRight = () => {
-        console.log('Rotating right');
+        // console.log('Rotating right');
         setPositions(prev => [prev[2], prev[0], prev[1]]);
     };
 
