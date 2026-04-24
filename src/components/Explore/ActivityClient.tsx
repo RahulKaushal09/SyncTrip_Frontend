@@ -166,22 +166,41 @@ const HangoutCard: React.FC<{ data: HangoutPlan }> = ({ data }) => (
 
 // ─── Main Client Component ──────────────────────────────────────────
 
-function ActivitiesInner() {
+interface ActivitiesClientProps {
+    initialRides?: RidePlan[];
+    initialMovies?: MoviePlan[];
+    initialSports?: SportsPlan[];
+    initialHangouts?: HangoutPlan[];
+    initialCat?: string;
+}
+
+export default function ActivitiesInner({
+    initialRides = [],
+    initialMovies = [],
+    initialSports = [],
+    initialHangouts = [],
+    initialCat = '',
+}: ActivitiesClientProps) {
     // UI State
     const [loc, setLoc] = useState<string | null>(null);
     const [modal, setModal] = useState(false);
     const [showDownload, setShowDownload] = useState(false);
-    const [loading, setLoading] = useState(true);
-    const searchParams = useSearchParams();
-    const cat = searchParams.get('cat');
+    const cat = initialCat;
 
     // Data State
-    const [rides, setRides] = useState<RidePlan[]>([]);
-    const [movies, setMovies] = useState<MoviePlan[]>([]);
-    const [sports, setSports] = useState<SportsPlan[]>([]);
-    const [hangouts, setHangouts] = useState<HangoutPlan[]>([]);
+    const [rides, setRides] = useState<RidePlan[]>(initialRides);
+    const [movies, setMovies] = useState<MoviePlan[]>(initialMovies);
+    const [sports, setSports] = useState<SportsPlan[]>(initialSports);
+    const [hangouts, setHangouts] = useState<HangoutPlan[]>(initialHangouts);
+
+    const hasInitialData = initialRides.length > 0 || initialMovies.length > 0
+        || initialSports.length > 0 || initialHangouts.length > 0;
+
+    const [loading, setLoading] = useState(!hasInitialData);
 
     useEffect(() => {
+        if (hasInitialData && !cat) return;
+
         (async () => {
             try {
                 const [r, m, s, h] = await Promise.all([
@@ -334,13 +353,5 @@ function ActivitiesInner() {
                 </div>
             )}
         </div>
-    );
-}
-
-export default function ExploreActivities() {
-    return (
-        <Suspense fallback={<div className="empty-state">Loading...</div>}>
-            <ActivitiesInner />
-        </Suspense>
     );
 }

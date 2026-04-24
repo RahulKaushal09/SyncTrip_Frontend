@@ -42,7 +42,7 @@ const HomeHeroSectionNew = () => {
             position: "relative",
         }}>
             <GumletBackgroundImage
-                src={"https://synctrip.in/AllImages/compressed/Images/HomePageBg.png"}
+                src={"https://synctrip.gumlet.io/compressed/Images/HomePageBg.png"}
                 priority={true}
                 className="homeHeroSection h-[100vh] customPaddingHome"
             >
@@ -61,11 +61,11 @@ const HomeHeroSectionNew = () => {
                         </p>
 
                         <span className='floatingChat1'>
-                            <GumletImage src={"https://synctrip.in/AllImages/compressed/Images/ChatHomePage1.png"} alt='ChatBubble1' width={200} height={120} />
+                            <GumletImage src={"https://synctrip.gumlet.io/compressed/Images/ChatHomePage1.png"} alt='ChatBubble1' width={200} height={120} />
                         </span>
 
                         <span className='floatingChat2'>
-                            <GumletImage src={"https://synctrip.in/AllImages/compressed/Images/ChatHomePage2.png"} alt='ChatBubble2' width={200} height={120} />
+                            <GumletImage src={"https://synctrip.gumlet.io/compressed/Images/ChatHomePage2.png"} alt='ChatBubble2' width={200} height={120} />
                         </span>
 
                         <div className="heroActions">
@@ -90,37 +90,37 @@ const HomeHeroSectionNew = () => {
                         <div className="floatingImg floatingImg2">
                             <GumletImage containerStyle={{
                                 height: '416px',
-                            }} src={"https://synctrip.in/AllImages/compressed/Images/FloatingImg1.png"} alt="Floating Image 1" fill />
+                            }} src={"https://synctrip.gumlet.io/compressed/Images/FloatingImg1.png"} alt="Floating Image 1" fill />
                         </div>
                         <div className="floatingImg floatingImg4">
                             <GumletImage containerStyle={{
                                 height: '300px',
-                            }} src={"https://synctrip.in/AllImages/compressed/Images/FloatingImg3.png"} alt="Floating Image 3" fill />
+                            }} src={"https://synctrip.gumlet.io/compressed/Images/FloatingImg3.png"} alt="Floating Image 3" fill />
                         </div>
                         <div className="floatingImg floatingImg5">
                             <GumletImage containerStyle={{
                                 height: '250px',
-                            }} src={"https://synctrip.in/AllImages/compressed/Images/FloatingImg4.png"} alt="Floating Image 4" fill />
+                            }} src={"https://synctrip.gumlet.io/compressed/Images/FloatingImg4.png"} alt="Floating Image 4" fill />
                         </div>
                         <div className="floatingImg floatingImg3">
                             <GumletImage containerStyle={{
                                 height: '360px',
-                            }} src={"https://synctrip.in/AllImages/compressed/Images/FloatingImg2.png"} alt="Floating Image 2" fill />
+                            }} src={"https://synctrip.gumlet.io/compressed/Images/FloatingImg2.png"} alt="Floating Image 2" fill />
                         </div>
                         <div className="floatingImg floatingImg1">
                             <GumletImage containerStyle={{
                                 height: '300px',
-                            }} src={"https://synctrip.in/AllImages/compressed/Images/FloatingImg5.png"} alt="Floating Image 5" fill />
+                            }} src={"https://synctrip.gumlet.io/compressed/Images/FloatingImg5.png"} alt="Floating Image 5" fill />
                         </div>
                         <div className="floatingImg floatingImg7">
                             <GumletImage containerStyle={{
                                 height: '416px',
-                            }} src={"https://synctrip.in/AllImages/compressed/Images/FloatingImg7.png"} alt="Floating Image 7" fill />
+                            }} src={"https://synctrip.gumlet.io/compressed/Images/FloatingImg7.png"} alt="Floating Image 7" fill />
                         </div>
                         <div className="floatingImg floatingImg6">
                             <GumletImage containerStyle={{
                                 height: '416px',
-                            }} src={"https://synctrip.in/AllImages/compressed/Images/FloatingImg6.png"} alt="Floating Image 6" fill />
+                            }} src={"https://synctrip.gumlet.io/compressed/Images/FloatingImg6.png"} alt="Floating Image 6" fill />
                         </div>
                     </div>
                 </section>

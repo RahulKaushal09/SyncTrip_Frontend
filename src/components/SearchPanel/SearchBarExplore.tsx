@@ -96,7 +96,7 @@ const CustomDropdown: React.FC<DropdownProps> = ({
     };
 
     return (
-        <div className="sw-input-row" ref={ref} style={{ height: '100%' }}>
+        <div className="sw-input-row" ref={ref}>
             <div className="sw-input-row" style={{ cursor: 'pointer' }} onClick={open}>
                 <span className="sw-input" style={{ color: value ? 'var(--sw-text-main)' : 'var(--sw-text-muted)' }}>
                     {value || placeholder}

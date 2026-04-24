@@ -4,7 +4,7 @@
 
 import { API_CONFIG, LocationField, STORAGE_KEYS, UserField } from '../constants';
 import { StorageUtils } from './storage.utils';
-import { ApiResponse, HangoutPlan, IndianCity, Location, MoviePlan, PlacesToVisit, RidePlan, SportsPlan, User, UserTrip } from '../types';
+import { ApiResponse, HangoutPlan, IndianCity, Location, MoviePlan, PlacesToVisit, PlanPreview, RidePlan, SportsPlan, User, UserTrip, UserTripPreview } from '../types';
 import { triggerLogin } from './login.utils';
 import { GoogleLoginResponse, CompleteProfileApiResponse, getLocationResponseSchema, exploreNearByApiResponse } from '@/classes/ApiResponse.classes';
 import { wishlistRequestSchema } from '@/classes/ApiRequest.classes';
@@ -622,7 +622,7 @@ export class ApiService {
       return [];
     }
   };
-  
+
   static async getRidePlans(): Promise<RidePlan[]> {
     try {
       const response = await apiClient.get(`${API_CONFIG.BACKEND_BASE_URL}/riders/plans`);
@@ -675,5 +675,127 @@ export class ApiService {
     }
   }
 
+  static async getRidePlansSSR(): Promise<RidePlan[]> {
+    try {
+      // const response = await apiClient.get(`${API_CONFIG.BACKEND_BASE_URL}/riders/plans`);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/riders/plans`);
+      const jsonRes = await response.json();
+      if (!jsonRes) {
+        throw new Error('Failed to fetch ride plans');
+      }
+
+      return jsonRes.data.groups || [];
+    } catch (error) {
+      console.error('Failed to fetch ride plans:', error);
+      return [];
+    }
+  };
+
+  static async getHangoutPlansSSR(): Promise<HangoutPlan[]> {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/outing/plans`);
+      const jsonRes = await response.json();
+      if (!jsonRes) {
+        throw new Error('Failed to fetch hangout plans');
+      }
+      return jsonRes.data.groups || [];
+    } catch (error) {
+      console.error('Failed to fetch hangout plans:', error);
+      return [];
+    }
+  };
+
+  static async getMoviesPlansSSR(): Promise<MoviePlan[]> {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/movies/plans`);
+      const jsonRes = await response.json();
+      if (!jsonRes) {
+        throw new Error('Failed to fetch movie plans');
+      }
+      return jsonRes.data.groups || [];
+    } catch (error) {
+      console.error('Failed to fetch movie plans:', error);
+      return [];
+    }
+  }
+
+  static async getSportsPlansSSR(): Promise<SportsPlan[]> {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/sports/plans`);
+      const jsonRes = await response.json();
+      if (!jsonRes) {
+        throw new Error('Failed to fetch sports plans');
+      }
+      return jsonRes.data.groups || [];
+    } catch (error) {
+      console.error('Failed to fetch sports plans:', error);
+      return [];
+    }
+  }
+
+  static async fetchTripPreviewById(tripId: string): Promise<UserTripPreview | null> {
+    const tripResponse = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/trips/getTripDetailsOfUserByIdForPreviewWeb/${tripId}`, {
+      method: 'GET',
+    });
+
+    if (!tripResponse.ok) {
+      return null;
+    }
+
+    const tripData: UserTripPreview = await tripResponse.json();
+    return tripData;
+  }
+
+  static async fetchRidePreviewById(groupId: string): Promise<PlanPreview> {
+    const response = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/riders/plans/${groupId}/preview`, {
+      method: 'GET',
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch ride preview: ${response.statusText}`);
+    }
+
+    const rideData = await response.json();
+    return rideData.data as PlanPreview;
+  }
+
+  static async fetchSportPreviewById(groupId: string): Promise<PlanPreview> {
+    const response = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/sports/plans/${groupId}/preview`, {
+      method: 'GET',
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch sports preview: ${response.statusText}`);
+    }
+
+    const sportData = await response.json();
+    return sportData.data as PlanPreview;
+  }
+
+  static async fetchMoviePreviewById(groupId: string): Promise<PlanPreview> {
+    const response = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/movies/plans/${groupId}/preview`, {
+      method: 'GET',
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch movie preview: ${response.statusText}`);
+    }
+
+    const movieData = await response.json();
+    return movieData.data as PlanPreview;
+  }
+
+  static async fetchHangoutPreviewById(groupId: string): Promise<PlanPreview> {
+    const response = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/outing/plans/${groupId}/preview`, {
+      method: 'GET',
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch hangout preview: ${response.statusText}`);
+    }
+
+    const hangoutData = await response.json();
+    return hangoutData.data as PlanPreview;
+  }
 
 }

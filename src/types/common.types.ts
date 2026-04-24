@@ -143,7 +143,21 @@ export interface HangoutPlan {
     isLocationFlexible: boolean;
 }
 
+export interface PlanPreview {
+    id: string;
+    title: string;
+    image: string | null;
+    locationName: string | null;
+    scheduleDate: string | null;
+    scheduleTime: string | null;
+    venueName: string | null;
+    membersCount: number | null;
+    maxMembers: number | null;
+    description: string | null;
+    genderPreference: string;
+}
+
 export const LOCATIONS = [
-  "Chandigarh", "Delhi", "Bangalore", "Mumbai", "Pune", 
-  "Hyderabad", "Chennai", "Kolkata", "Ahmedabad", "Jaipur"
+    "Chandigarh", "Delhi", "Bangalore", "Mumbai", "Pune",
+    "Hyderabad", "Chennai", "Kolkata", "Ahmedabad", "Jaipur"
 ];

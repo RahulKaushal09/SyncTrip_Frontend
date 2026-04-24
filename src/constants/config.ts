@@ -88,11 +88,10 @@ export const GROUP_LIMITS = {
 
 export const TRIPS_HOME = [
   {
-    _id: "69dcb5c5cb4e9fc170e33a40",
-    id: "cb649a25-cd13-4622-9331-f86f46f6be26",
+    id: "1",
     locationName: "Rishikesh",
     tripSnapshot: {
-      tripImage: "https://synctrip.in/AllImages/compressed/Location/Rishikesh/photos/24_dest_wiki_13641.jpg",
+      tripImage: "https://synctrip.gumlet.io/compressed/Location/Rishikesh/photos/24_dest_wiki_13641.jpg",
       tripName: "Epic Weekend Chandrashila Trek",
       startDate: "2026-05-01T00:00:00.000Z",
       endDate: "2026-05-03T00:00:00.000Z",
@@ -102,11 +101,10 @@ export const TRIPS_HOME = [
     userSnapshot: { name: "Rahul G.", age: 27 },
   },
   {
-    _id: "69dc9cd9cb4e9fc170e33a23",
-    id: "89a33a3d-1251-4130-aec7-4a8dccbc1890",
+    id: "2",
     locationName: "Manali",
     tripSnapshot: {
-      tripImage: "https://synctrip.in/AllImages/compressed/Location/Manali/photos/51_shutterstock_633164246_20190904103856_20190904103926.jpg",
+      tripImage: "https://synctrip.gumlet.io/compressed/Location/Manali/photos/51_shutterstock_633164246_20190904103856_20190904103926.jpg",
       tripName: "Into the Wild: Spiti Valley",
       startDate: "2026-05-25T00:00:00.000Z",
       endDate: "2026-05-31T00:00:00.000Z",
@@ -116,11 +114,10 @@ export const TRIPS_HOME = [
     userSnapshot: { name: "Karan J.", age: 24 },
   },
   {
-    _id: "69dc8aedcb4e9fc170e339fa",
-    id: "ad8707db-44c6-4b72-ba33-92b0422a8455",
+    id: "3",
     locationName: "Goa",
     tripSnapshot: {
-      tripImage: "https://synctrip.in/AllImages/compressed/Location/Goa/photos/28_dest_wiki_5241.jpg",
+      tripImage: "https://synctrip.gumlet.io/compressed/Location/Goa/photos/28_dest_wiki_5241.jpg",
       tripName: "Sun, Sand & Sea Escape",
       startDate: "2026-04-14T00:00:00.000Z",
       endDate: "2026-04-16T00:00:00.000Z",
@@ -130,11 +127,10 @@ export const TRIPS_HOME = [
     userSnapshot: { name: "Mihir", age: 26 },
   },
   {
-    _id: "69dc8655cb4e9fc170e339f7",
-    id: "e03b023e-c946-4118-84f8-b0daa33ffdb0",
+    id: "4",
     locationName: "Rishikesh",
     tripSnapshot: {
-      tripImage: "https://synctrip.in/AllImages/compressed/Location/Rishikesh/photos/0_RISHIKESH.jpg",
+      tripImage: "https://synctrip.gumlet.io/compressed/Location/Rishikesh/photos/0_RISHIKESH.jpg",
       tripName: "River Rafting & Yoga Retreat",
       startDate: "2026-05-03T00:00:00.000Z",
       endDate: "2026-05-05T00:00:00.000Z",
@@ -144,11 +140,10 @@ export const TRIPS_HOME = [
     userSnapshot: { name: "Sahil S.", age: 19 },
   },
   {
-    _id: "69dbc2c2cb4e9fc170e339bb",
-    id: "d2307a1c-ba0e-405b-b893-6c0469037de5",
+    id: "5",
     locationName: "Goa",
     tripSnapshot: {
-      tripImage: "https://synctrip.in/AllImages/compressed/Location/Goa/photos/3_shutterstock_1122030473_20191021122828.jpg",
+      tripImage: "https://synctrip.gumlet.io/compressed/Location/Goa/photos/3_shutterstock_1122030473_20191021122828.jpg",
       tripName: "Tropical Escape & Chill",
       startDate: "2026-04-26T00:00:00.000Z",
       endDate: "2026-04-30T00:00:00.000Z",
@@ -158,11 +153,10 @@ export const TRIPS_HOME = [
     userSnapshot: { name: "Kunal", age: 26 },
   },
   {
-    _id: "69dbb603cb4e9fc170e339b9",
-    id: "ad4b0402-5f40-40c3-a565-2f8376683297",
+    id: "6",
     locationName: "Manali",
     tripSnapshot: {
-      tripImage: "https://synctrip.in/AllImages/compressed/Location/Manali/photos/45_10479609393_1c882d0f36_b_20190207103501.jpg",
+      tripImage: "https://synctrip.gumlet.io/compressed/Location/Manali/photos/45_10479609393_1c882d0f36_b_20190207103501.jpg",
       tripName: "Snowy Retreat in Manali",
       startDate: "2026-05-01T00:00:00.000Z",
       endDate: "2026-05-04T00:00:00.000Z",
@@ -172,11 +166,10 @@ export const TRIPS_HOME = [
     userSnapshot: { name: "Sneha", age: 27 },
   },
   {
-    _id: "69db8613cb4e9fc170e33953",
-    id: "e44bb629-542e-4500-9701-4eeabe6f315c",
+    id: "7",
     locationName: "Goa",
     tripSnapshot: {
-      tripImage: "https://synctrip.in/AllImages/compressed/Location/Goa/photos/46_3195.jpg",
+      tripImage: "https://synctrip.gumlet.io/compressed/Location/Goa/photos/46_3195.jpg",
       tripName: "Discovering the Secrets of the Sea",
       startDate: "2026-06-05T00:00:00.000Z",
       endDate: "2026-06-09T00:00:00.000Z",
@@ -186,11 +179,10 @@ export const TRIPS_HOME = [
     userSnapshot: { name: "Pranav", age: 19 },
   },
   {
-    _id: "69db7838cb4e9fc170e3394c",
-    id: "f88dc974-bafb-441a-8691-859cf41e27ce",
+    id: "8",
     locationName: "Rishikesh",
     tripSnapshot: {
-      tripImage: "https://synctrip.in/AllImages/compressed/Location/Rishikesh/photos/23_3755.jpg",
+      tripImage: "https://synctrip.gumlet.io/compressed/Location/Rishikesh/photos/23_3755.jpg",
       tripName: "Spiritual Awakening Backpacking",
       startDate: "2026-05-02T00:00:00.000Z",
       endDate: "2026-05-03T00:00:00.000Z",
@@ -200,11 +192,10 @@ export const TRIPS_HOME = [
     userSnapshot: { name: "Uday S.", age: 22 },
   },
   {
-    _id: "69db3d0dcb4e9fc170e3391f",
-    id: "d7a4b1f3-82e8-4ea0-881b-b4577b69ffb1",
+    id: "9",
     locationName: "Goa",
     tripSnapshot: {
-      tripImage: "https://synctrip.in/AllImages/compressed/Location/Goa/photos/14_5679.jpg",
+      tripImage: "https://synctrip.gumlet.io/compressed/Location/Goa/photos/14_5679.jpg",
       tripName: "Luxury North Goa Experience",
       startDate: "2026-04-17T00:00:00.000Z",
       endDate: "2026-04-20T00:00:00.000Z",
@@ -214,11 +205,10 @@ export const TRIPS_HOME = [
     userSnapshot: { name: "Manish", age: 26 },
   },
   {
-    _id: "69da82a5cb4e9fc170e338c7",
-    id: "1533a929-e8d4-4c92-86c2-decdd6b50ecc",
+    id: "10",
     locationName: "Goa",
     tripSnapshot: {
-      tripImage: "https://synctrip.in/AllImages/compressed/Location/Goa/photos/30_3202.jpg",
+      tripImage: "https://synctrip.gumlet.io/compressed/Location/Goa/photos/30_3202.jpg",
       tripName: "Finding Peace by the Beach",
       startDate: "2026-04-30T00:00:00.000Z",
       endDate: "2026-05-05T00:00:00.000Z",
@@ -228,11 +218,10 @@ export const TRIPS_HOME = [
     userSnapshot: { name: "Aman K.", age: 30 },
   },
   {
-    _id: "69da313ecb4e9fc170e33894",
-    id: "57019a6b-1663-4db4-8061-3510b2b77a78",
+    id: "11",
     locationName: "Manali",
     tripSnapshot: {
-      tripImage: "https://synctrip.in/AllImages/compressed/Location/Manali/photos/9_28022192021_b8e82eb874_b_20190320141704.jpg",
+      tripImage: "https://synctrip.gumlet.io/compressed/Location/Manali/photos/9_28022192021_b8e82eb874_b_20190320141704.jpg",
       tripName: "High Altitude Adventures",
       startDate: "2026-04-24T00:00:00.000Z",
       endDate: "2026-04-30T00:00:00.000Z",
@@ -242,11 +231,10 @@ export const TRIPS_HOME = [
     userSnapshot: { name: "Prateek", age: 34 },
   },
   {
-    _id: "69d9ec9ccb4e9fc170e33852",
-    id: "ea53e820-5d95-4b14-9140-e39e83f3c7f8",
+    id: "12",
     locationName: "Goa",
     tripSnapshot: {
-      tripImage: "https://synctrip.in/AllImages/compressed/Location/Goa/photos/9_3201.jpg",
+      tripImage: "https://synctrip.gumlet.io/compressed/Location/Goa/photos/9_3201.jpg",
       tripName: "Cross-Country Road Trip",
       startDate: "2026-05-07T00:00:00.000Z",
       endDate: "2026-05-12T00:00:00.000Z",
@@ -256,11 +244,10 @@ export const TRIPS_HOME = [
     userSnapshot: { name: "Sameer", age: 26 },
   },
   {
-    _id: "69d9b0b9cb4e9fc170e33845",
-    id: "7236ac21-5952-44d2-91df-663a5838233c",
+    id: "13",
     locationName: "Rishikesh",
     tripSnapshot: {
-      tripImage: "https://synctrip.in/AllImages/compressed/Location/Rishikesh/photos/7_541954932_d9a3b67806_o_20190408175523_20190408175539_20190803125513.jpg",
+      tripImage: "https://synctrip.gumlet.io/compressed/Location/Rishikesh/photos/7_541954932_d9a3b67806_o_20190408175523_20190408175539_20190803125513.jpg",
       tripName: "Mystic Himalayan Journey",
       startDate: "2026-04-13T00:00:00.000Z",
       endDate: "2026-04-18T00:00:00.000Z",
@@ -270,11 +257,10 @@ export const TRIPS_HOME = [
     userSnapshot: { name: "Jatin", age: 33 },
   },
   {
-    _id: "69d90d21cb4e9fc170e33821",
-    id: "d4df0329-3341-46b2-baff-f41123f75b80",
+    id: "14",
     locationName: "Goa",
     tripSnapshot: {
-      tripImage: "https://synctrip.in/AllImages/compressed/Location/Goa/photos/41_Palolem_sunset_20190312153725.jpg",
+      tripImage: "https://synctrip.gumlet.io/compressed/Location/Goa/photos/41_Palolem_sunset_20190312153725.jpg",
       tripName: "Ultimate Goa Sunset Chase",
       startDate: "2026-04-30T00:00:00.000Z",
       endDate: "2026-05-04T00:00:00.000Z",
@@ -284,11 +270,10 @@ export const TRIPS_HOME = [
     userSnapshot: { name: "Nakul", age: 29 },
   },
   {
-    _id: "69d90030cb4e9fc170e3381e",
-    id: "b2a88cc5-cc25-4ec7-ba8e-c21a4d41876e",
+    id: "15",
     locationName: "Goa",
     tripSnapshot: {
-      tripImage: "https://synctrip.in/AllImages/compressed/Location/Goa/photos/30_3202.jpg",
+      tripImage: "https://synctrip.gumlet.io/compressed/Location/Goa/photos/30_3202.jpg",
       tripName: "Making Connections at Morjim",
       startDate: "2026-04-11T00:00:00.000Z",
       endDate: "2026-04-15T00:00:00.000Z",

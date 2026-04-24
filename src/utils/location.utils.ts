@@ -92,7 +92,6 @@ export class LocationServices {
     static async getUsersPlanningTripsToLocation(locationId: string) {
         try {
             const res = await apiClient.get(`/locations/enrolledUsers/${locationId}`);
-            console.log('API response for users planning trips to location:', res);
             return res.data;
         } catch (error) {
             console.error("Error fetching users planning trips to location:", error);
@@ -120,11 +119,41 @@ export class LocationServices {
             throw err;
         }
     }
+    static async searchLocationsForExploreSSR(
+        query: { term: string; state: string },
+        page = 1
+    ): Promise<{ data: Location[]; total: number; page: number; hasMore: boolean }> {
+        try {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/locations/home/search`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ ...query, page })
+            });
+            const data = await res.json();
+            return data || { data: [], total: 0, page: 1, hasMore: false };
+        } catch (err) {
+            console.error("Error searching locations for explore page:", err);
+            throw err;
+        }
+    }
 
     static async getDataForExplorePage(): Promise<ExplorePageData> {
         try {
             const res = await apiClient.get(`/locations/getExploreDataForHomePage?platform=web`);
             return res.data;
+        } catch (error) {
+            console.error("Error fetching locations for explore page:", error);
+            throw error;
+        }
+    }
+
+    static async getDataForExplorePageSSR(): Promise<ExplorePageData> {
+        try {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/locations/getExploreDataForHomePage?platform=web`);
+            const data = await res.json();
+            return data;
         } catch (error) {
             console.error("Error fetching locations for explore page:", error);
             throw error;

@@ -38,7 +38,7 @@ const SwipeDemo: React.FC = () => {
                     <div style={fullAbsoluteStyle}>
                         <GumletImage
                             containerStyle={{ objectFit: 'cover', height: '100%' }}
-                            src={"https://synctrip.in/AllImages/compressed/Images/GeneralScreenLayout.png"}
+                            src={"https://synctrip.gumlet.io/compressed/Images/GeneralScreenLayout.png"}
                             alt="App Layout"
                             loading='lazy'
                             fill
@@ -59,7 +59,7 @@ const SwipeDemo: React.FC = () => {
                             <GumletImage containerStyle={{
                                 ...cardImgStyle,
                                 height: '100%',
-                            }} width={558} height={920} src={"https://synctrip.in/AllImages/compressed/Images/PriyaSharmaProfileCard.png"} loading='lazy' alt="Priya Profile" />
+                            }} width={558} height={920} src={"https://synctrip.gumlet.io/compressed/Images/PriyaSharmaProfileCard.png"} loading='lazy' alt="Priya Profile" />
                         </div>
 
                         {/* ANANYA CARD: The one that gets swiped */}
@@ -74,7 +74,7 @@ const SwipeDemo: React.FC = () => {
                             <GumletImage containerStyle={{
                                 ...cardImgStyle,
                                 height: '100%',
-                            }} width={553} height={920} loading='lazy' src={"https://synctrip.in/AllImages/compressed/Images/AnanyaIyerProfileCard.png"} alt="Ananya Profile" />
+                            }} width={553} height={920} loading='lazy' src={"https://synctrip.gumlet.io/compressed/Images/AnanyaIyerProfileCard.png"} alt="Ananya Profile" />
                         </div>}
                     </div>
                 )}
@@ -89,7 +89,7 @@ const SwipeDemo: React.FC = () => {
                             borderRadius: '24px',
                             overflow: 'hidden',
                         }}>
-                            <GumletImage containerStyle={{ objectFit: 'contain', height: '100%', width: '100%' }} loading='lazy' src={"https://synctrip.in/AllImages/compressed/Images/MatchPopUp.png"} width={260} height={400} alt="It's a Match!" />
+                            <GumletImage containerStyle={{ objectFit: 'contain', height: '100%', width: '100%' }} loading='lazy' src={"https://synctrip.gumlet.io/compressed/Images/MatchPopUp.png"} width={260} height={400} alt="It's a Match!" />
                         </div>
                     </div>
                 )}
@@ -102,7 +102,7 @@ const SwipeDemo: React.FC = () => {
                             <div style={{ position: 'absolute', left: '15px', color: '#0d344b', fontSize: '20px' }}>‹</div>
                             <div style={headerInfoStyle}>
                                 <div style={avatarHeaderWrapper}>
-                                    <GumletImage loading='lazy' src={"https://synctrip.in/AllImages/compressed/Images/AnanyaIyerProfileCard.png"} alt="AnanyaAvatar" height={35} width={35} containerStyle={{
+                                    <GumletImage loading='lazy' src={"https://synctrip.gumlet.io/compressed/Images/AnanyaIyerProfileCard.png"} alt="AnanyaAvatar" height={35} width={35} containerStyle={{
                                         objectFit: 'cover', borderRadius: '50%', width: '35px',
                                         height: '35px',
                                         position: 'relative',
@@ -118,7 +118,7 @@ const SwipeDemo: React.FC = () => {
                             {/* Received Message Group */}
                             <div style={receivedWrapper}>
                                 <div style={bubbleAvatarWrapper}>
-                                    <GumletImage loading='lazy' src={"https://synctrip.in/AllImages/compressed/Images/AnanyaIyerProfileCard.png"} alt="AnanyaAvatar" height={28} width={28} containerStyle={{
+                                    <GumletImage loading='lazy' src={"https://synctrip.gumlet.io/compressed/Images/AnanyaIyerProfileCard.png"} alt="AnanyaAvatar" height={28} width={28} containerStyle={{
                                         objectFit: 'cover', borderRadius: '50%', width: '28px',
                                         height: '28px',
                                         position: 'relative',
@@ -130,7 +130,7 @@ const SwipeDemo: React.FC = () => {
 
                             <div className="m-animate m-slide-up" style={{ ...receivedWrapper, animationDelay: '1s' }}>
                                 <div style={bubbleAvatarWrapper}>
-                                    <GumletImage loading='lazy' src={"https://synctrip.in/AllImages/compressed/Images/AnanyaIyerProfileCard.png"} alt="AnanyaAvatar" height={28} width={28} containerStyle={{
+                                    <GumletImage loading='lazy' src={"https://synctrip.gumlet.io/compressed/Images/AnanyaIyerProfileCard.png"} alt="AnanyaAvatar" height={28} width={28} containerStyle={{
                                         objectFit: 'cover', borderRadius: '50%', width: '28px',
                                         height: '28px',
                                         position: 'relative',

@@ -6,19 +6,31 @@ import { ExplorePageData, Location } from "@/types";
 import dynamic from "next/dynamic";
 import { LocationServices } from "@/utils/location.utils";
 
-const ExploreSection = dynamic(
-    () => import("../Explore/ExploreSectionV2"),
-    { ssr: true }
-);
+// const ExploreSection = dynamic(
+//     () => import("../Explore/ExploreSectionV2"),
+//     { ssr: true }
+// );
+
+import ExploreSection from "../Explore/ExploreSectionV2";
 
 const PAGE_SIZE = 8;
 
-export default function HomeContentV2() {
-    const [locations, setLocations] = useState<Location[]>([]);
-    const [page, setPage] = useState(1);
-    const [hasMore, setHasMore] = useState(false);
-    const [totalCount, setTotalCount] = useState(0);
-    const [explorePageData, setExplorePageData] = useState<ExplorePageData>();
+interface HomeContentV2Props {
+    initialLocations?: Location[];
+    initialTotal?: number;
+    initialExplorePageData?: ExplorePageData;
+}
+
+export default function HomeContentV2({
+    initialLocations = [],
+    initialTotal = 0,
+    initialExplorePageData,
+}: HomeContentV2Props) {
+    const [locations, setLocations] = useState<Location[]>(initialLocations);
+    const [page, setPage] = useState(initialLocations.length > 0 ? 2 : 1); // Start from page 2 if we have initial data
+    const [hasMore, setHasMore] = useState(initialLocations.length < initialTotal);
+    const [totalCount, setTotalCount] = useState(initialTotal);
+    const [explorePageData, setExplorePageData] = useState<ExplorePageData | undefined>(initialExplorePageData);
     const [searchTerm, setSearchTerm] = useState<{ term: string; state: string }>({ term: "", state: "" });
     const [isLoading, setIsLoading] = useState(false);
     const [isLoadingMore, setIsLoadingMore] = useState(false);
@@ -96,17 +108,21 @@ export default function HomeContentV2() {
 
     // Initial load on mount — fetch first page with empty filters
     useEffect(() => {
-        fetchLocations({ term: "", state: "" }, 1, false);
+        if (initialLocations.length === 0) {
+            fetchLocations({ term: "", state: "" }, 1, false);
+        }
 
-        const fetchExplorePageData = async () => {
-            try {
-                const data = await LocationServices.getDataForExplorePage();
-                setExplorePageData(data);
-            } catch (error) {
-                console.error("Error fetching explore page data:", error);
-            }
-        };
-        fetchExplorePageData();
+        if (!initialExplorePageData) {
+            const fetchExplorePageData = async () => {
+                try {
+                    const data = await LocationServices.getDataForExplorePage();
+                    setExplorePageData(data);
+                } catch (error) {
+                    console.error("Error fetching explore page data:", error);
+                }
+            };
+            fetchExplorePageData();
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

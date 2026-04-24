@@ -2,7 +2,7 @@
 import { Metadata } from 'next';
 import HomeContent from '@/components/Home/HomeContent';
 import { ApiService } from '@/utils/api.utils';
-import { Events, Location } from '@/types';
+import { Events, ExplorePageData, Location } from '@/types';
 import { LocationFields, locationsJsonLd, homeJsonLd } from '@/constants';
 import HomeContentV2 from '@/components/Home/HomeContentV2';
 import { LocationServices } from '@/utils/location.utils';
@@ -190,21 +190,37 @@ export default async function Home() {
   // Data fetching with error handling
   // const initialLocations: Location[] = [];
   // let initialEvents: Events[] = [];
-  // let initialLocation: string = 'India';
+  let initialLocations: Location[] = [];
+  let initialTotal = 0;
+  let initialExplorePageData: ExplorePageData | undefined;
 
   try {
-
-    // const cookieStore = await cookies();
-    // const tokenCookie = cookieStore.get('userToken')?.value || '';
-    // initialLocations = (await LocationServices.searchLocationsForExplore("")) || [];
-
-    // const eventsData = await ApiService.getServerSidePropsForEvents();
-    // initialEvents = eventsData.initialEvents || [];
-    // initialLocation = eventsData.initialLocation || 'India';
-
+    const [locationsResponse, explorePageData] = await Promise.all([
+      LocationServices.searchLocationsForExploreSSR(
+        { term: "", state: "" }, 1
+      ),
+      LocationServices.getDataForExplorePageSSR(),
+    ]);
+    initialLocations = locationsResponse.data || [];
+    initialTotal = locationsResponse.total ?? initialLocations.length;
+    initialExplorePageData = explorePageData;
   } catch (error) {
     console.error('Error fetching data for Home page:', error);
   }
+
+  // try {
+
+  // const cookieStore = await cookies();
+  // const tokenCookie = cookieStore.get('userToken')?.value || '';
+  // initialLocations = (await LocationServices.searchLocationsForExplore("")) || [];
+
+  // const eventsData = await ApiService.getServerSidePropsForEvents();
+  // initialEvents = eventsData.initialEvents || [];
+  // initialLocation = eventsData.initialLocation || 'India';
+
+  // } catch (error) {
+  //   console.error('Error fetching data for Home page:', error);
+  // }
 
   // const randomLocations = [...initialLocations]
   //   .sort(() => 0.5 - Math.random())
@@ -220,7 +236,11 @@ export default async function Home() {
         initialLocations={initialLocations}
         initialHasMore={initialLocations.length >= 12}
       /> */}
-      <HomeContentV2 />
+      <HomeContentV2
+        initialLocations={initialLocations}
+        initialTotal={initialTotal}
+        initialExplorePageData={initialExplorePageData}
+      />
       {/* <div className="HomePage paddingSectionLeftRight"> */}
       {/* <FestivalsEvents
           initialEvents={initialEvents}

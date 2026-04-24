@@ -58,17 +58,17 @@ export default function GumletImage({
 
         const cleanSrc = normalizeUrl(src);
 
-        const hostname = extractHostname(cleanSrc);
-        const matchedHost = ORIGIN_HOSTS.find((h) => hostname === h);
+        // const hostname = extractHostname(cleanSrc);
+        // const matchedHost = ORIGIN_HOSTS.find((h) => hostname === h);
 
-        let updatedUrl = cleanSrc;
+        const updatedUrl = cleanSrc;
 
-        if (matchedHost) {
-            updatedUrl =
-                matchedHost !== ORIGIN_HOSTS[2]
-                    ? cleanSrc.replace(`${matchedHost}/AllImages`, GUMLET_HOST)
-                    : cleanSrc.replace(matchedHost, GUMLET_HOST);
-        }
+        // if (matchedHost) {
+        //     updatedUrl =
+        //         matchedHost !== ORIGIN_HOSTS[2]
+        //             ? cleanSrc.replace(`${matchedHost}/AllImages`, GUMLET_HOST)
+        //             : cleanSrc.replace(matchedHost, GUMLET_HOST);
+        // }
 
         const updateSize = () => {
             if (!containerRef.current) return;

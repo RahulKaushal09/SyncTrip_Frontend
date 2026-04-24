@@ -9,7 +9,6 @@ import { redirectToStore } from "@/utils/redirectToStore";
 
 // 1. Data Types
 type TripData = {
-  _id: string;
   id: string;
   locationName: string;
   tripSnapshot: {

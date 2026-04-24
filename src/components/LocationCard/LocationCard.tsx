@@ -171,7 +171,8 @@ const LocationCard: React.FC<LocationCardProps> = ({
                         ))
                     ) : (
                         <Carousel.Item>
-                            <Image
+                            <GumletImage
+                                containerClassName='h-full'
                                 className="d-block"
                                 src="https://via.placeholder.com/300x200?text=No+Image"
                                 alt={`${cleanName} - Image coming soon`}

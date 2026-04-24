@@ -55,6 +55,7 @@ export interface UserTripActivity {
     routeSignature?: string;
     polyline?: string;
 }
+
 export interface UserTrip {
     id?: string;     // Unique identifier for the trip
     userId?: string; // ID of the user who created the trip
@@ -81,7 +82,45 @@ export interface UserTrip {
     activitiesCount?: number;
     groupContext?: groupContextTrip;
     isGroupTrip?: boolean;
+    createdAt?: string; // ISO date string for when the trip was created
+    updatedAt?: string; // ISO date string for when the trip was last updated
+    // Additional fields can be added as needed
+    tripDescription?: string; // A brief description of the trip
+    placeName?: string; // Specific place within the location (e.g., "Eiffel Tower" in "Paris")
+    maxParticipants?: number; // Maximum number of participants allowed
+    currentParticipants?: number; // Current number of participants
 };
+
+// ─── Core trip shape (flat — matches API response directly) ──────────────────
+
+export interface UserTripPreview {
+    _id: string;
+    id: string;
+    locationId: string;
+    locationName: string;
+    tripName: string;
+    tripImage: string;
+    startDate: string;   // ISO 8601
+    endDate: string;   // ISO 8601
+    interests: string[];
+    privacy: string;
+    tripType: string;
+    placeName: string;
+    tripDescription: string;
+    maxParticipants: number;
+    currentParticipants: number;
+    genderPreference: string;
+    tripStatus: string;
+
+    // Optional SEO block — may or may not be returned by the API
+    seo?: {
+        seo_title?: string;
+        seo_description?: string;
+        seo_keywords?: string[];
+    };
+}
+
+
 export type groupContextTrip = {
     isInGroup: boolean,
     groupId?: string,
@@ -116,7 +155,7 @@ export interface Notification {
     isRead: boolean;
     readAt?: string; // ISO date string
     createdAt: string; // ISO date string
-}       
+}
 
 type FAQSchema = {
     question: string;

@@ -7,13 +7,15 @@ import dynamic from 'next/dynamic';
 import "../../../../styles/Blogs/blogDetail.css";
 import { LocationFields } from "@/constants";
 
-const BlogContent = dynamic(() => import("@/components/Blogs/BlogContent"), {
-  loading: () => (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="w-12 h-12 rounded-full border-4 border-[#4bbef5] border-t-transparent animate-spin" />
-    </div>
-  ),
-});
+// const BlogContent = dynamic(() => import("@/components/Blogs/BlogContent"), {
+//   loading: () => (
+//     <div className="min-h-screen flex items-center justify-center">
+//       <div className="w-12 h-12 rounded-full border-4 border-[#4bbef5] border-t-transparent animate-spin" />
+//     </div>
+//   ),
+// });
+
+import BlogContent from "@/components/Blogs/BlogContent";
 
 interface BlogDetailProps {
   params: Promise<{ slug: string }>;

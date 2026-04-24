@@ -1,6 +1,8 @@
 import { Metadata } from 'next';
-import ActivitiesClient from '@/components/Explore/ActivityClient';
 import { homeJsonLd } from '@/constants';
+import { MoviePlan, RidePlan, SportsPlan, HangoutPlan } from '@/types';
+import { ApiService } from '@/utils';
+import ActivitiesInner from '@/components/Explore/ActivityClient';
 
 export const metadata: Metadata = {
   title: 'Explore Local Plans & Meetups | SyncTrip',
@@ -41,11 +43,42 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function ExploreActivities() {
+export default async function ExploreActivities({
+  searchParams,
+}: {
+  searchParams: Promise<{ cat?: string }>;
+}) {
+  const { cat = '' } = await searchParams;
+  let initialRides: RidePlan[] = [];
+  let initialMovies: MoviePlan[] = [];
+  let initialSports: SportsPlan[] = [];
+  let initialHangouts: HangoutPlan[] = [];
+
+  try {
+    const [r, m, s, h] = await Promise.all([
+      ApiService.getRidePlansSSR().catch(() => []),
+      ApiService.getMoviesPlansSSR().catch(() => []),
+      ApiService.getSportsPlansSSR().catch(() => []),
+      ApiService.getHangoutPlansSSR().catch(() => []),
+    ]);
+    initialRides = r;
+    initialMovies = m;
+    initialSports = s;
+    initialHangouts = h;
+  } catch (error) {
+    console.error('Error fetching activities:', error);
+  }
+
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(homeJsonLd) }} />
-      <ActivitiesClient />
+      <ActivitiesInner
+        initialRides={initialRides}
+        initialMovies={initialMovies}
+        initialSports={initialSports}
+        initialHangouts={initialHangouts}
+        initialCat={cat}
+      />
     </>
   );
 }

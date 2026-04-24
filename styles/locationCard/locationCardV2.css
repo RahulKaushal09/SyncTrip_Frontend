@@ -69,7 +69,7 @@
     flex-shrink: 0;
     scroll-snap-align: start;
     cursor: pointer;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    /* box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); */
     transition: var(--lc-transition);
     /* Fix for Safari border-radius overflow bug */
     transform: translateZ(0);
@@ -78,8 +78,8 @@
 /* Desktop Hover Lift */
 @media (hover: hover) {
     .lc-card:hover {
-        /* transform: translateY(-4px); */
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        transform: scale(1.005); 
+        /* box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15); */
     }
 }
 

@@ -149,6 +149,7 @@
 .sw-actions {
   display: flex;
   align-items: center;
+  margin-right: 2px;
   gap: 0.5rem;
   padding: 0 0.5rem;
   width: 100%;
