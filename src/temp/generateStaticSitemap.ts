@@ -52,7 +52,7 @@ async function generateSitemap() {
     try {
 
         const locationResponse = await ApiService.fetchLocations(0, 1000, ['id', 'title', 'placesToVisit', 'country']);
-        console.log('Fetched locations for sitemap:', locationResponse.locations.length);
+        // console.log('Fetched locations for sitemap:', locationResponse.locations.length);
         locations = locationResponse.locations as Location[] || [];
     } catch (error) {
         console.error('Error fetching locations for sitemap:', error);
@@ -92,7 +92,7 @@ async function generateSitemap() {
             0.9
         );
     });
-    console.log('Generated trip URLs for sitemap:', locationPages.length);
+    // console.log('Generated trip URLs for sitemap:', locationPages.length);
     // Combine all entries
     const allEntries: SitemapEntry[] = [...staticPages, ...locationPages, ...tripPages];
 
@@ -102,7 +102,7 @@ async function generateSitemap() {
     const outputPath = path.join('D:\\DOITBUNNYY\\NextJs\\synctrip-frontend\\public', 'sitemap.xml');
     try {
         await fs.writeFile(outputPath, sitemapXml);
-        console.log('✅ Static sitemap.xml generated successfully at public/sitemap.xml');
+        // console.log('✅ Static sitemap.xml generated successfully at public/sitemap.xml');
     } catch (error) {
         console.error('Error writing sitemap.xml:', error);
     }

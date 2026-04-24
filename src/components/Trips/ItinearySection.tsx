@@ -129,7 +129,7 @@ export const styles = {
 
 
 const ItinerarySection: React.FC<{ tripId: string, tripDetails: UserTrip, loading: boolean }> = ({ tripId, tripDetails, loading }) => {
-  
+
   const [days, setDays] = useState<DayPlan[]>([]);
   // const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -162,7 +162,7 @@ const ItinerarySection: React.FC<{ tripId: string, tripDetails: UserTrip, loadin
         }
       });
     }
-    console.log("Places data collected from activities:", placesData);
+    // console.log("Places data collected from activities:", placesData);
     if (placesData.length === 0) {
       const allPlaceIds = [
         ...new Set(tripData_?.activities?.map((act) => act.placeId)),
@@ -185,11 +185,11 @@ const ItinerarySection: React.FC<{ tripId: string, tripDetails: UserTrip, loadin
         const date = new Date(start);
         date.setDate(start.getDate() + idx);
 
-        console.log("Processing day:", idx + 1, date.toDateString());
+        // console.log("Processing day:", idx + 1, date.toDateString());
         const dayKey =
           Object.keys(activityGroups).find((k) => {
             if (activityGroups[k][0]?.dayDate) {
-              console.log("Matching dayDate:", new Date(activityGroups[k][0].dayDate).toDateString(), "with", date.toDateString());
+              // console.log("Matching dayDate:", new Date(activityGroups[k][0].dayDate).toDateString(), "with", date.toDateString());
               return (
                 new Date(activityGroups[k][0].dayDate).toDateString() ===
                 date.toDateString()
@@ -215,7 +215,7 @@ const ItinerarySection: React.FC<{ tripId: string, tripDetails: UserTrip, loadin
         );
 
         const firstAct = acts[0];
-        console.log("First activity for the day:", firstAct);
+        // console.log("First activity for the day:", firstAct);
         const route: RouteCache = {
           signature: firstAct?.routeSignature || null,
           coords: null,
@@ -328,7 +328,7 @@ const ItinerarySection: React.FC<{ tripId: string, tripDetails: UserTrip, loadin
   }
 
   const openEditItineraryScreen = () => {
-    router.push('/userTrip/'+tripDetails.id+'/planner');
+    router.push('/userTrip/' + tripDetails.id + '/planner');
     // navigate("TripPlannerManually", { tripId: tripId, showHotelsAfter: false });
   };
 
@@ -342,12 +342,12 @@ const ItinerarySection: React.FC<{ tripId: string, tripDetails: UserTrip, loadin
   }
 
   if (days.length === 0) {
-  return (
-    <div style={{ display: "flex", flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <span>No itinerary available.</span>
-    </div>
-  );
-}
+    return (
+      <div style={{ display: "flex", flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <span>No itinerary available.</span>
+      </div>
+    );
+  }
 
   return (
     <div style={styles.screen}>
@@ -373,9 +373,9 @@ const ItinerarySection: React.FC<{ tripId: string, tripDetails: UserTrip, loadin
 
                 <div style={styles.headerRight}>
                   {isOpen ? (
-                    <ChevronUp style={styles.chev } />
+                    <ChevronUp style={styles.chev} />
                   ) : (
-                    <ChevronDown style={styles.chev } />
+                    <ChevronDown style={styles.chev} />
                   )}
                 </div>
               </div>

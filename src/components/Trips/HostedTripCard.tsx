@@ -29,8 +29,8 @@ const HostedTripCard: React.FC<HostedTripCardProps> = ({
     title,
     mainImageUrl,
     locationName,
-    
-    
+
+
     price,
     status,
   } = trip;
@@ -57,7 +57,7 @@ const HostedTripCard: React.FC<HostedTripCardProps> = ({
       year: 'numeric',
     });
   };
-  console.log(trip);
+  // console.log(trip);
   const dateLabel = `${formatDate(startDate)} - ${formatDate(endDate)}`;
 
   const isCompleted = status === 'completed' || activeTab === 'history';

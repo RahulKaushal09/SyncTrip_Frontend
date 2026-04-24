@@ -56,10 +56,10 @@ async function getRecaptcha() {
       recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", {
         size: "invisible",
         callback: (response: string) => {
-          console.log("reCAPTCHA solved:", response);
+          // console.log("reCAPTCHA solved:", response);
         },
         "expired-callback": () => {
-          console.log("reCAPTCHA expired");
+          // console.log("reCAPTCHA expired");
           recaptchaVerifier?.clear(); // Reset on expire
         },
       });
@@ -91,8 +91,8 @@ export async function sendOtp(phone: string) {
   catch (error: any) {
     console.error('Send OTP error:', error);
     // Re-throw for component handling
-    throw new Error(error.code === 'auth/invalid-app-credential' 
-      ? 'App configuration issue—check Firebase console domains.' 
+    throw new Error(error.code === 'auth/invalid-app-credential'
+      ? 'App configuration issue—check Firebase console domains.'
       : 'Failed to send OTP. Please try again.');
   }
 }

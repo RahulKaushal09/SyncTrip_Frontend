@@ -14,17 +14,17 @@ type Props = {
 export default function GroupTripOnMatchingCard({ trip }: Props) {
     const router = useRouter();
 
-    const { image, locationName, startDate, endDate, groupContext,id } = trip;
+    const { image, locationName, startDate, endDate, groupContext, id } = trip;
 
     if (!groupContext?.isInGroup) return null;
     const openGroupChat = () => {
         if (groupContext.chatId) {
-            console.log('Navigating to group chat for chatId:', groupContext.chatId);
+            // console.log('Navigating to group chat for chatId:', groupContext.chatId);
             router.push(`/chats?chatId=${groupContext.chatId}&tripId=${trip.id}`);
         }
     };
     const openGroupDetails = () => {
-        console.log('Navigating to group details for groupId:', groupContext.groupId);
+        // console.log('Navigating to group details for groupId:', groupContext.groupId);
         router.push(`/userTrip/${trip.id}/groups/${groupContext.groupId}`);
     }
     const openAllGroups = () => {

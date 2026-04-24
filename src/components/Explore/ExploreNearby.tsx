@@ -75,7 +75,7 @@ const ExploreNearby: React.FC = () => {
         navigator.geolocation.getCurrentPosition(
             async (position) => {
                 const { latitude, longitude } = position.coords;
-                console.log('User Location:', latitude, longitude);
+                // console.log('User Location:', latitude, longitude);
 
                 try {
                     const data = await ApiService.fetchNearbyEntities(latitude, longitude, radius);
@@ -311,7 +311,7 @@ const ExploreNearby: React.FC = () => {
                 onClick={handleExploreClick}
             >
                 {/* <i className="fas fa-compass"></i> */}
-                <Compass/>
+                <Compass />
                 Explore Nearby
             </button>
 

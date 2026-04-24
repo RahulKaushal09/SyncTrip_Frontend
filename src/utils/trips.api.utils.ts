@@ -22,9 +22,9 @@ export class TripsApiService {
         return allTripsData;
     }
     static async fetchAllHostedTrips(): Promise<HostedTrip[]> {
-        const allTripsResponse = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/hostedTrips`,{
+        const allTripsResponse = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/hostedTrips`, {
             cache: 'no-store',
-  next: { revalidate: 0 },
+            next: { revalidate: 0 },
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
         });
@@ -69,12 +69,12 @@ export class TripsApiService {
         if (!tripResponse) {
             throw new Error('Failed to join the hosted trip');
         }
-        const responseData: { success: boolean; message: string } = ( tripResponse).data;
+        const responseData: { success: boolean; message: string } = (tripResponse).data;
         return responseData;
     }
     static async fetchEnrolledTrips(token: string = ""): Promise<Trip[]> {
         if (!token) return [];
-        console.log('Fetching enrolled trips...', token);
+        // console.log('Fetching enrolled trips...', token);
         const enrolledTripsResponse = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/trips/en/enrolled`, {
             method: 'GET',
             headers: {
@@ -86,7 +86,7 @@ export class TripsApiService {
             throw new Error('Failed to fetch enrolled trips');
         }
         const enrolledTripsData: Trip[] = await enrolledTripsResponse.json();
-        console.log('Enrolled Trips:', enrolledTripsData);
+        // console.log('Enrolled Trips:', enrolledTripsData);
         return enrolledTripsData;
     }
 

@@ -48,7 +48,7 @@ export default function GetLocationBlock({ initialLocation, setEvents }: GetLoca
     // let indianCities: IndianCity[] = []; // Replace with actual data or prop
     // indianCities = indianCitiesPageData;
     useEffect(() => {
-        ( async () => {
+        (async () => {
             const cities = await ApiService.getAllLocationsForEventsFromBackend(false);
             setIndianCities(cities);
         })();
@@ -127,8 +127,8 @@ export default function GetLocationBlock({ initialLocation, setEvents }: GetLoca
             const lowerQuery = query.toLowerCase();
             const startsWith: IndianCity[] = [];
             const includes: IndianCity[] = [];
-            console.log('Fetching locations for query:', query);
-            console.log('Available cities:', indianCities.map(city => city.locationName));
+            // console.log('Fetching locations for query:', query);
+            // console.log('Available cities:', indianCities.map(city => city.locationName));
             indianCities.forEach(city => {
                 const name = city.locationName.toLowerCase();
                 if (name.startsWith(lowerQuery)) {

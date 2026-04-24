@@ -226,7 +226,7 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
                     });
                 }
                 updateUserFields({ fcmToken: token });
-                console.log("FCM token registered with backend");
+                // console.log("FCM token registered with backend");
             } catch (err) {
                 console.error("Failed to save FCM token to backend", err);
             }
@@ -283,7 +283,7 @@ export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
         const existingStep = StorageUtils.getItem<number>(STORAGE_KEYS.COMPLETE_PROFILE_STEP) || 1;
         if (step <= existingStep) return;
         StorageUtils.setItem<number>(STORAGE_KEYS.COMPLETE_PROFILE_STEP, step);
-        console.log("Updated COMPLETE_PROFILE_STEP in storage to:", step);
+        // console.log("Updated COMPLETE_PROFILE_STEP in storage to:", step);
         setLastStepOfCompleteProfile(step);
     }, []);
 

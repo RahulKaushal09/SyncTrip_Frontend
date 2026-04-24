@@ -51,11 +51,11 @@ export default function AddBlogPage() {
   const [selectedLocationIds, setSelectedLocationIds] = useState<string[]>([]);
 
   const fieldsToFetchForHome = [LocationFields.TITLE, LocationFields.ID];
-  
+
   useEffect(() => {
     const fetchLocations = async () => {
       try {
-        
+
         const response = await ApiService.fetchLocations(0, 1000, fieldsToFetchForHome);
         setLocations(response.locations);
       } catch (error) {
@@ -68,7 +68,7 @@ export default function AddBlogPage() {
   // const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
   //   const { name, type, value } = e.target;
   //   const checked = (e.target as HTMLInputElement).checked;
-    
+
   //   setFormData((prev) => ({
   //     ...prev,
   //     [name]: type === 'checkbox' ? checked : value,
@@ -81,30 +81,30 @@ export default function AddBlogPage() {
   //   }));
   // };
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-  const { name, type, value } = e.target;
-  const checked = (e.target as HTMLInputElement).checked;
+    const { name, type, value } = e.target;
+    const checked = (e.target as HTMLInputElement).checked;
 
-  console.log(`Handling change: ${name} = ${value}`); // Debugging
+    // console.log(`Handling change: ${name} = ${value}`); // Debugging
 
-  setFormData((prev) => {
-    if (name.includes('seo_') || name === 'canonical_url') {
-      const seoField = name; // Keep the full name (e.g., 'seo_title')
-      console.log(`Updating SEO field: ${seoField} = ${value}`); // Debugging
+    setFormData((prev) => {
+      if (name.includes('seo_') || name === 'canonical_url') {
+        const seoField = name; // Keep the full name (e.g., 'seo_title')
+        // console.log(`Updating SEO field: ${seoField} = ${value}`); // Debugging
+        return {
+          ...prev,
+          seo: {
+            ...prev.seo,
+            [seoField]: value, // Update the correct field (e.g., 'seo_title')
+          },
+        };
+      }
+
       return {
         ...prev,
-        seo: {
-          ...prev.seo,
-          [seoField]: value, // Update the correct field (e.g., 'seo_title')
-        },
+        [name]: type === 'checkbox' ? checked : value,
       };
-    }
-
-    return {
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value,
-    };
-  });
-};
+    });
+  };
 
   const handleKeywordsChange = (e: ChangeEvent<HTMLInputElement>) => {
     const keywords = e.target.value.split(',').map((keyword) => keyword.trim());
@@ -179,63 +179,63 @@ export default function AddBlogPage() {
   // };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  try {
-    const cleanedContent = stripFroalaCredit(formData.content);
-    const payload: addBlogRequestSchema = {
-      title: formData.title,
-      slug: formData.slug,
-      content: cleanedContent,
-      featuredImage: formData.featuredImage,
-      relatedLocations: selectedLocationIds,
-      seo: {
-        ...formData.seo,
-        seo_image: formData.featuredImage,
-      },
-      author: formData.author,
-      readTime: formData.readTime,
-      // category: formData.category,
-      rating: formData.rating,
-      featured: formData.featured,
-    };
+    try {
+      const cleanedContent = stripFroalaCredit(formData.content);
+      const payload: addBlogRequestSchema = {
+        title: formData.title,
+        slug: formData.slug,
+        content: cleanedContent,
+        featuredImage: formData.featuredImage,
+        relatedLocations: selectedLocationIds,
+        seo: {
+          ...formData.seo,
+          seo_image: formData.featuredImage,
+        },
+        author: formData.author,
+        readTime: formData.readTime,
+        // category: formData.category,
+        rating: formData.rating,
+        featured: formData.featured,
+      };
 
-    const createdBlog = await BlogsApiServices.createNewBlog(payload);
+      const createdBlog = await BlogsApiServices.createNewBlog(payload);
 
-    if (createdBlog) {
-      // setFormData({
-      //   title: '',
-      //   slug: '',
-      //   content: '',
-      //   featuredImage: '',
-      //   relatedLocations: [],
-      //   seo: {
-      //     seo_title: '',
-      //     seo_description: '',
-      //     seo_keywords: [],
-      //     canonical_url: '',
-      //     seo_image: '',
-      //   },
-      //   featured: false,
-      //   author: '',
-      //   readTime: '',
-      //   rating: '',
-      //   id: '',
-      //   createdAt: '',
-      //   tags: [],
-      //   category: '',
-      // });
-      // setSelectedLocationIds([]);
-      alert('Blog created successfully!');
+      if (createdBlog) {
+        // setFormData({
+        //   title: '',
+        //   slug: '',
+        //   content: '',
+        //   featuredImage: '',
+        //   relatedLocations: [],
+        //   seo: {
+        //     seo_title: '',
+        //     seo_description: '',
+        //     seo_keywords: [],
+        //     canonical_url: '',
+        //     seo_image: '',
+        //   },
+        //   featured: false,
+        //   author: '',
+        //   readTime: '',
+        //   rating: '',
+        //   id: '',
+        //   createdAt: '',
+        //   tags: [],
+        //   category: '',
+        // });
+        // setSelectedLocationIds([]);
+        alert('Blog created successfully!');
+      }
+    } catch (error: unknown) {
+      console.error('Error creating blog:', error);
+      const errorMessage = (error as Error).message === 'Slug already exists'
+        ? 'The slug is already in use. Please choose a different one.'
+        : 'Failed to create blog. Please try again.';
+      alert(errorMessage);
     }
-  } catch (error: unknown) {
-    console.error('Error creating blog:', error);
-    const errorMessage = (error as Error).message === 'Slug already exists'
-      ? 'The slug is already in use. Please choose a different one.'
-      : 'Failed to create blog. Please try again.';
-    alert(errorMessage);
-  }
-};
+  };
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-10">
@@ -263,9 +263,9 @@ export default function AddBlogPage() {
         <FroalaEditor
           model={formData.content}
           onModelChange={(content) => {
-    const cleaned = stripFroalaCredit(content);
-    setFormData((prev) => ({ ...prev, content: cleaned }));
-  }}
+            const cleaned = stripFroalaCredit(content);
+            setFormData((prev) => ({ ...prev, content: cleaned }));
+          }}
           // onModelChange={(content: string) => setFormData((prev) => ({ ...prev, content }))}
           config={{
             placeholderText: 'Write your blog content here...',

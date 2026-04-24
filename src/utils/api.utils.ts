@@ -443,7 +443,7 @@ export class ApiService {
   static async saveTripDetails(tripDetails: FormData) {
     try {
       const res = await apiClient.post(`/app/createUserTripWithDetails_v2`, tripDetails);
-      console.log('Trip details saved successfully:', res);
+      // console.log('Trip details saved successfully:', res);
       if (res.status === 409) {
         toast.success("You Already have a trip planned for this location!");
       }
@@ -535,7 +535,7 @@ export class ApiService {
         body: JSON.stringify({ fields }),
       });
       const data: Location = await response.json();
-      console.log('Fetched location data:', data);
+      // console.log('Fetched location data:', data);
       return data;
     } catch (error) {
       console.error('Failed to fetch location by ID:', error);

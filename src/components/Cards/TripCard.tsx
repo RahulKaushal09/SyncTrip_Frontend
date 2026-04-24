@@ -33,7 +33,6 @@ const formatRange = (start?: string, end?: string) => {
 const TripCard: React.FC<Props> = ({ trip, onPressCard, onPressChats, onPressMatch, onPressEdit, onPressDelete }) => {
   const router = useRouter();
   const imageUrl = trip.tripImage || "/images/placeholder-trip.jpg"; // replace with real placeholder path
-  console.log("TripCard render:", trip);
   return (
     <article style={cardStyles.card} role="button" onClick={onPressCard ?? (() => { })}>
       <div style={cardStyles.imageWrap}>

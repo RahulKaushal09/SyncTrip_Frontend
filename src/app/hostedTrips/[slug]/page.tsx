@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { slug } = await params; // Await params
 
     const [uuid] = slug.split('_');
-    console.log('Generating metadata for trip UUID:', uuid);
+    // console.log('Generating metadata for trip UUID:', uuid);
     const tripData = await TripsApiService.fetchHostedTripById(uuid);
     if (!tripData) {
         return {
@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         id,
         inclusions: { food, hotel, travel },
     } = trip;
-    const {startDate, endDate,availableSeats} = dates[0] || {};
+    const { startDate, endDate, availableSeats } = dates[0] || {};
     const duration = endDate && startDate ? Math.ceil((new Date(endDate).getTime() - new Date(startDate).getTime()) / (1000 * 60 * 60 * 24)) + 1 : 'N/A';
     // Title
     const metaTitle = `${title} – ${locationName ? locationName + ' | ' : ''}${duration} Days ₹${price}+ | SyncTrip`;
@@ -62,7 +62,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
     // OG/Twitter images
     const imageUrl = MainImageUrl || '/images/default-og.jpg';
-    const expectedSlug = uuid +"_" + trip.slug;
+    const expectedSlug = uuid + "_" + trip.slug;
     const canonicalURL = `https://synctrip.in/hostedTrips/${expectedSlug}`;
     return {
         title: metaTitle,
@@ -115,17 +115,17 @@ const TripsDetailsPage = async ({ params }: Props) => {
     // const tokenCookie = cookieStore.get('userToken');
     const tripsData: HostedTrip = await TripsApiService.fetchHostedTripById(uuid);
     if (!tripsData) return notFound();
-    
-    const expectedSlug = uuid +"_" + tripsData.slug;
+
+    const expectedSlug = uuid + "_" + tripsData.slug;
     if (slug !== expectedSlug) {
         redirect(`/hostedTrips/${expectedSlug}`);
     }
 
-    
+
 
 
     const LocationIdConnectedWith = tripsData.locationId;
-    const locationData: Location | null = await ApiService.fetchLocationByIdServerWithSpecificFields(LocationIdConnectedWith,[LocationFields.BEST_TIME,LocationFields.TITLE,LocationFields.PLACES_TO_VISIT,LocationFields.DESCRIPTION,LocationFields.RATING,LocationFields.PLACES_NUMBER_TO_VISIT,LocationFields.IMAGES,LocationFields.PHOTOS,LocationFields.ID]);
+    const locationData: Location | null = await ApiService.fetchLocationByIdServerWithSpecificFields(LocationIdConnectedWith, [LocationFields.BEST_TIME, LocationFields.TITLE, LocationFields.PLACES_TO_VISIT, LocationFields.DESCRIPTION, LocationFields.RATING, LocationFields.PLACES_NUMBER_TO_VISIT, LocationFields.IMAGES, LocationFields.PHOTOS, LocationFields.ID]);
     if (!locationData) return notFound();
     // const otherGoing = tripsData.appliedUsers || [];
 
@@ -149,11 +149,11 @@ const TripsDetailsPage = async ({ params }: Props) => {
     return (
         <>
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(offerSchema) }} />
-        <TripDetailsContentClient
-            tripData={tripsData}
-            locationData={locationData}
+            <TripDetailsContentClient
+                tripData={tripsData}
+                locationData={locationData}
             // otherGoing={otherGoing}
-        />
+            />
         </>
     );
 };

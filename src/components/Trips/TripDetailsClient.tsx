@@ -112,10 +112,10 @@ export default function TripDetailsContentClient({
         // Handle login click
         triggerLogin(enrollInTrip);
     };
-    
+
     const enrollInTrip = () => {
         // Handle trip enrollment
-        console.log('Join Trip clicked for trip ID:', tripData.id);
+        // console.log('Join Trip clicked for trip ID:', tripData.id);
         triggerLogin(() => TripsApiService.joinHostedTrip(tripData.id))
     };
 

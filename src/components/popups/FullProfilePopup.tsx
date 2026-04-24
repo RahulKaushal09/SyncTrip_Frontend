@@ -110,13 +110,13 @@ export default function FullProfilePopup({ user, onClose, onProfileComplete }: F
     async function handleVerifyOtp() {
         const otpLimitReached = await ApiService.checkIfOTPLimitReached();
         if (otp.length !== 6 && !otpLimitReached) {
-            console.log("Entered Otp:", otp);
+            // console.log("Entered Otp:", otp);
             setError("Please enter a valid 6-digit OTP");
             return;
         }
 
         if (otpLimitReached && otp.length !== 4) {
-            console.log("Entered Otp:", otp);
+            // console.log("Entered Otp:", otp);
             setError("Please enter a valid 4-digit OTP");
             return;
         }

@@ -50,8 +50,8 @@ export default function NotificationPermissionPrompt() {
   function closeGuide() {
     setShowGuide(false);
   }
-  console.log("showPrompt", showPrompt);
-  console.log("showGuide", showGuide);
+  // console.log("showPrompt", showPrompt);
+  // console.log("showGuide", showGuide);
   if (!showPrompt && !showGuide) return null;
 
   return (

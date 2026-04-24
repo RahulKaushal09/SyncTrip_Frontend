@@ -279,7 +279,7 @@ const HotelsAndStaysSection: React.FC<HotelsAndStaysSectionProps> = ({
                 const data: Hotel[] = await response.json();
                 let updatedHotels: Hotel[] = [];
                 if (HotelIdsWishListed && HotelIdsWishListed.length > 0) {
-                    console.log('HotelIdsWishListed:', HotelIdsWishListed);
+                    // console.log('HotelIdsWishListed:', HotelIdsWishListed);
                     updatedHotels = data.map((hotel) => ({
                         ...hotel,
                         isWishlisted: HotelIdsWishListed.includes(hotel.id),

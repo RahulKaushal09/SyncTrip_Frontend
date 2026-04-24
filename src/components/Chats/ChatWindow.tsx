@@ -103,7 +103,7 @@ export default function ChatWindow({ chatId, currentUserId, chat }: Props) {
 
     // on connect: if chatId already present, join it (avoids join-before-connect race)
     socket.on("connect", () => {
-      console.log("socket connected", socket.id);
+      // console.log("socket connected", socket.id);
       if (chatId) {
         socket.emit("join_chat", chatId);
       }

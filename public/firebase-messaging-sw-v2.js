@@ -14,7 +14,7 @@ firebase.initializeApp({
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage((payload) => {
-  console.log("[SW] Background message received:", payload);
+  // console.log("[SW] Background message received:", payload);
 
   const notificationTitle = payload.notification?.title || "New Notification";
   const notificationOptions = {
@@ -31,7 +31,7 @@ messaging.onBackgroundMessage((payload) => {
 
 // 🔥 IMPROVED CLICK HANDLER
 self.addEventListener("notificationclick", (event) => {
-  console.log("[SW] Notification clicked:", event);
+  // console.log("[SW] Notification clicked:", event);
 
   event.notification.close();
 

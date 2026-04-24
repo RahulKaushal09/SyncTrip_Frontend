@@ -254,7 +254,7 @@ function UserTripDetailsPageContent() {
                 // fetch location details and trip details in parallel
                 // console.log('Fetching location and trip details for', locationId, tripId);
 
-                console.log(locationFields);
+                // console.log(locationFields);
                 const tripData = await TripServices.fetchTripWithGroupDetails(tripId as string, tripFields);
                 const groupContext: groupContextTrip = tripData.groupContext;
                 setGroupContext(groupContext);
@@ -297,7 +297,7 @@ function UserTripDetailsPageContent() {
                     }
                 }
 
-                console.log(locationDetails);
+                // console.log(locationDetails);
                 setLocation(locationDetails);
                 setHotelIds(locationDetails?.hotels as string[] || []);
                 setRestaurantIds(locationDetails?.restaurantsandfoods as string[] || []);
@@ -409,7 +409,7 @@ function UserTripDetailsPageContent() {
                 };
             }) || [];
             tripDataForItineary.activities = activitiesWithPlaces;
-            console.log("Itinerary Trip Data with Places:", tripDataForItineary);
+            // console.log("Itinerary Trip Data with Places:", tripDataForItineary);
             setIsLoadingItinerary(false);
             setItineraryTripDetails(tripDataForItineary);
             setSelectedKey(key);

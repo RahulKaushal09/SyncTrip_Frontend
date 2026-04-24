@@ -17,7 +17,7 @@ export default function GroupPreviewPage({ group }: { group: GroupCard }) {
     const { isLoggedIn, user } = useLogin();
     const [isAdmin, setIsAdmin] = useState(group.createdBy === user?.id);
     const [showPopup, setShowPopup] = useState(false);
-    
+
     useEffect(() => {
         setIsAdmin(group.createdBy === user?.id);
     }, [user, group]);
@@ -32,7 +32,7 @@ export default function GroupPreviewPage({ group }: { group: GroupCard }) {
     const isFull = group.membersCount >= group.maxMembers;
 
     const remainingCount = Math.max(0, group.maxMembers - group.membersCount);
-    console.log(remainingCount);
+    // console.log(remainingCount);
     if (!group) {
         return <div className="paddingTopAndSide text-center py-20 r1">Group preview not found</div>;
     }
@@ -191,7 +191,7 @@ export default function GroupPreviewPage({ group }: { group: GroupCard }) {
                             </h4>
 
                             <p className="s1 text-neutral-1 leading-relaxed">
-                                First create your trip on SyncTrip. <br/> During the travel mode selection step, open the <span className="font-semibold">Groups</span> section, find this group, and join the discussion.
+                                First create your trip on SyncTrip. <br /> During the travel mode selection step, open the <span className="font-semibold">Groups</span> section, find this group, and join the discussion.
                             </p>
                         </div>
                     </div>
