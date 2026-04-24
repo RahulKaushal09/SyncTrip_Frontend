@@ -27,7 +27,7 @@ export class ApiService {
     return {
       'Content-Type': 'application/json',
       'Authorization': token ? `Bearer ${token}` : '',
-      'next_public_s_b': process.env.NEXT_PUBLIC_S_B || '',
+
     };
   }
   private static async handleResponse<T>(response: Response): Promise<T> {

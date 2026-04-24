@@ -66,7 +66,7 @@ export class BlogsApiServices {
             headers: {
                 'Content-Type': 'application/json',
                 // Authorization: `Bearer ${token}`,
-                'next_public_s_b': process.env.NEXT_PUBLIC_S_B || '',
+
             },
         });
         if (!blogResponse.ok) {

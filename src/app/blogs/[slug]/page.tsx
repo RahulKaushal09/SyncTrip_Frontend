@@ -130,10 +130,7 @@ export async function generateStaticParams() {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/blogs/slugs`, {
       cache: 'force-cache',
-      headers: {
-        // NEXT_PUBLIC_S_B
-        'next_public_s_b': process.env.NEXT_PUBLIC_S_B || '',
-      },
+
     });
     const slugs: string[] = await res.json();
     return slugs.map((slug) => ({ slug }));

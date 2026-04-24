@@ -36,13 +36,9 @@ const getLocation = cache(async (uuid: string) => {
 export async function generateStaticParams() {
     try {
         const baseUrl = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
-        // console.log(`Fetching location slugs from ${baseUrl}/locations/slugs for generateStaticParams...${process.env.NEXT_PUBLIC_S_B}`);
         const res = await fetch(`${baseUrl}/locations/slugs`, {
 
-            headers: {
-                // NEXT_PUBLIC_S_B
-                'next_public_s_b': process.env.NEXT_PUBLIC_S_B || '',
-            },
+            cache: 'force-cache',
         });
         const slugs: string[] = await res.json();
         // console.log(`Pre-building ${slugs.length} location pages`);
