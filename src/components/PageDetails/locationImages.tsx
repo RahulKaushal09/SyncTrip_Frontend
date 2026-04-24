@@ -187,6 +187,7 @@ const LocationImageGallery: React.FC<Props> = ({ locationImages, locationName })
                                     style={{ objectFit: 'cover' }}
                                     alt={`Attraction in ${locationName}`}
                                     loading={index === 0 ? 'eager' : 'lazy'}
+                                    priority={index === 0}
                                 />
                             </div>
                         ))}

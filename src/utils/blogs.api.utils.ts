@@ -22,7 +22,7 @@ export class BlogsApiServices {
 
         const allBlogsResponse = await fetch(
             `${API_CONFIG.BACKEND_BASE_URL}/blogs/all?${queryParams.toString()}`,
-            
+
             {
                 next: { revalidate: 7200 }, // ✅ cache for 2 hours
                 method: 'POST',
@@ -66,6 +66,7 @@ export class BlogsApiServices {
             headers: {
                 'Content-Type': 'application/json',
                 // Authorization: `Bearer ${token}`,
+                'next_public_s_b': process.env.NEXT_PUBLIC_S_B || '',
             },
         });
         if (!blogResponse.ok) {
