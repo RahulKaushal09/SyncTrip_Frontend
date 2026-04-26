@@ -1,3 +1,4 @@
+// src/app/location/[slug]/page.tsx
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import { ApiService } from '@/utils/api.utils';
@@ -63,7 +64,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const destination = location.title ?? 'Destination';
 
     const title = `${destination} Travel Guide: Top ${placesCount} Things to Do & Plan Your Trip with SyncTrip`;
-    const description = `Explore ${destination} with SyncTrip! Discover ${placesCount}+ must-see attractions, ${hotelsCount}+ top hotels, and expert tips for your perfect ${destination} adventure. Book now!`;
+    const description = `Plan your ${destination} trip with SyncTrip. Discover ${placesCount}+ attractions, find verified travel companions heading to ${destination}, and join India's 5,000+ traveler community. Free on Android & iOS.`;
     const canonicalSlug = CommonServices.generateLocationSlug(uuid, destination, String(placesCount), country);
     const canonicalURL = `https://synctrip.in/location/${canonicalSlug}`;
     const ogImage = location.images?.[0] ?? 'https://via.placeholder.com/1200x630?text=SyncTrip+Destination';
@@ -98,8 +99,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
             title,
             description,
             images: [ogImage],
-            site: '@synctrip_in',
-            creator: '@synctrip_in',
+            site: '@synctrip44398',
+            creator: '@synctrip44398',
         },
         robots: {
             index: true,

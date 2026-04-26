@@ -1,3 +1,4 @@
+// src/app/blogs/page.tsx
 import BlogHero from "@/components/Blogs/BlogHero";
 export const dynamic = "force-dynamic";
 

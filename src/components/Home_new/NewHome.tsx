@@ -1,7 +1,7 @@
 "use client";
 
 import Image from 'next/image'
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import './newhomecss.css'
 import { Compass, PlaneIcon, Sparkles } from 'lucide-react'
 import { triggerLogin } from '@/utils';
@@ -15,7 +15,7 @@ import DownloadPlaystore from '@/assets/icons/GetOnPlayStoreSVG.svg';
 import DownloadAppstore from '@/assets/icons/GetOnAppStore.svg';
 
 const HomeHeroSectionNew = () => {
-    const [screenWidth, setScreenWidth] = useState<number | null>(null);
+    // const [screenWidth, setScreenWidth] = useState<number | null>(null);
     const { showLoader } = useLoader();
     const router = useRouter();
     const redirectToUrl = (redirectUrl: string) => {
@@ -23,19 +23,19 @@ const HomeHeroSectionNew = () => {
         router.push(redirectUrl);
     };
 
-    useEffect(() => {
-        setScreenWidth(window.innerWidth);
-        // console.log("Screen width:", window.innerWidth);
+    // useEffect(() => {
+    //     setScreenWidth(window.innerWidth);
+    //     // console.log("Screen width:", window.innerWidth);
 
-        const handleResize = () => {
-            setScreenWidth(window.innerWidth);
-            // console.log("Screen width:", window.innerWidth);
-        };
-        window.addEventListener('resize', handleResize);
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        };
-    }, []);
+    //     const handleResize = () => {
+    //         setScreenWidth(window.innerWidth);
+    //         // console.log("Screen width:", window.innerWidth);
+    //     };
+    //     window.addEventListener('resize', handleResize);
+    //     return () => {
+    //         window.removeEventListener('resize', handleResize);
+    //     };
+    // }, []);
 
     return (
         <div style={{
@@ -52,9 +52,16 @@ const HomeHeroSectionNew = () => {
                             <Sparkles className="heroSparkle" />
                             <span>Join 5000+ Happy Indian Travelers</span>
                         </div>
+                        <h1 className="heroTitleMain">
+                            Find Your Travel Buddy in India
+                        </h1>
+                        <h2 className="heroTitleSub">
+                            Plan trips, rides, sports & movies - with verified explorers
+                        </h2>
 
-                        <h1 className="heroTitleMain">{screenWidth && screenWidth > 900 ? "Any Plan. Any Time." : "Stop Planning Solo."}</h1>
-                        <h1 className="heroTitleSub">{screenWidth && screenWidth > 900 ? "Connect for trips, rides, and events." : "Start Exploring Together."}</h1>
+
+                        {/* <h1 className="heroTitleMain">{screenWidth && screenWidth > 900 ? "Any Plan. Any Time." : "Stop Planning Solo."}</h1>
+                        <h1 className="heroTitleSub">{screenWidth && screenWidth > 900 ? "Connect for trips, rides, and events." : "Start Exploring Together."}</h1> */}
 
                         <p className="heroDescription">
                             Lead your trip, set your vibe, connect with verified explorers!

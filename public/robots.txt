@@ -1,0 +1,38 @@
+# synctrip.in robots.txt
+# Block app-shell pages that require login / have no SEO value
+User-agent: *
+Allow: /
+Allow: /blogs/
+Allow: /explore/
+Allow: /about
+Disallow: /create/
+Disallow: /hostedTrips
+Disallow: /notifications
+Disallow: /chats
+Disallow: /user/
+Disallow: /userTrip/
+Disallow: /userTrips/
+Disallow: /trips/
+Disallow: /api/
+
+# Explicitly allow all major AI crawlers
+# These drive AI Overview citations on Google, Bing, Perplexity
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: GoogleExtended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+Sitemap: https://synctrip.in/sitemap.xml

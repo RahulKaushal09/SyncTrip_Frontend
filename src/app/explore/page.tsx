@@ -1,4 +1,4 @@
-// src/app/page.tsx
+// src/app/explore/page.tsx
 import { Metadata } from 'next';
 import HomeContent from '@/components/Home/HomeContent';
 import { ApiService } from '@/utils/api.utils';
@@ -135,41 +135,28 @@ export const viewport = {
 //   },
 // };
 export const metadata: Metadata = {
-  title: 'SyncTrip: Plan Your Perfect Adventure | Group Trips & Curated Destinations',
-  description: 'Discover unique group trips & curated travel destinations with SyncTrip. Explore detailed itineraries, connect with fellow adventurers, and book your dream vacation today!',
-  keywords: 'group travel, adventure trips, curated destinations, travel planning, India tours, solo travel, budget travel, luxury travel, bespoke itineraries, SyncTrip',
-  authors: [{ name: 'SyncTrip' }],
+  title: 'Explore Travel Destinations in India – Find Trip Companions | SyncTrip',
+  description: 'Browse 500+ Indian destinations, find verified travel companions heading your way, and plan group trips. From Goa to Leh — discover where India travels. Free on Android & iOS.',
+  keywords: 'explore destinations India, travel companion India, group trips India, find travel buddy, SyncTrip explore',
+  authors: [{ name: 'SyncTrip', url: 'https://synctrip.in' }],
   robots: 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1',
+  alternates: { canonical: 'https://synctrip.in/explore' }, // ← WAS pointing to homepage. Critical fix.
   openGraph: {
-    title: 'SyncTrip - Discover Amazing Travel Destinations',
-    description: 'Find and join trips near you. Explore curated travel destinations and connect with fellow travelers.',
+    title: 'Explore Travel Destinations in India | SyncTrip',
+    description: 'Browse 500+ Indian destinations and find verified travel companions. Plan group trips across India.',
     type: 'website',
-    url: 'https://synctrip.in',
+    url: 'https://synctrip.in/explore',
     siteName: 'SyncTrip',
-    locale: 'en_US',
-    images: [
-      {
-        url: 'https://synctrip.in/logo_main_withoutBG.png',
-        width: 1200,
-        height: 630,
-        alt: 'SyncTrip Logo',
-      },
-    ],
+    locale: 'en_IN',
+    images: [{ url: 'https://synctrip.in/og-home.png', width: 1200, height: 630, alt: 'Explore destinations on SyncTrip' }],
   },
   twitter: {
     card: 'summary_large_image',
-    site: '@synctrip',
-    creator: '@synctrip',
-    title: 'SyncTrip - Discover Amazing Travel Destinations',
-    description: 'Find and join trips near you. Explore curated travel destinations and connect with fellow travelers.',
-    images: ['https://synctrip.in/logo_main_withoutBG.png'],
-  },
-  alternates: {
-    canonical: 'https://synctrip.in',
-  },
-  other: {
-    'theme-color': '#1976d2',
-    'color-scheme': 'light',
+    site: '@synctrip44398',
+    creator: '@synctrip44398',
+    title: 'Explore Travel Destinations in India | SyncTrip',
+    description: 'Browse 500+ Indian destinations and find verified travel companions.',
+    images: ['https://synctrip.in/og-home.png'],
   },
 };
 
@@ -208,26 +195,11 @@ export default async function Home() {
     console.error('Error fetching data for Home page:', error);
   }
 
-  // try {
-
-  // const cookieStore = await cookies();
-  // const tokenCookie = cookieStore.get('userToken')?.value || '';
-  // initialLocations = (await LocationServices.searchLocationsForExplore("")) || [];
-
-  // const eventsData = await ApiService.getServerSidePropsForEvents();
-  // initialEvents = eventsData.initialEvents || [];
-  // initialLocation = eventsData.initialLocation || 'India';
-
-  // } catch (error) {
-  //   console.error('Error fetching data for Home page:', error);
-  // }
-
-  // const randomLocations = [...initialLocations]
-  //   .sort(() => 0.5 - Math.random())
-  //   .slice(0, 8);
-
   return (
     <>
+      <h1 style={{ position: 'absolute', width: '1px', height: '1px', overflow: 'hidden', clip: 'rect(0,0,0,0)', whiteSpace: 'nowrap' }}>
+        Explore Travel Destinations in India
+      </h1>
       {/* JSON-LD structured data */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(homeJsonLd) }} />
       {/* <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(locationsJsonLd(initialLocations.slice(0, 10))) }} /> */}

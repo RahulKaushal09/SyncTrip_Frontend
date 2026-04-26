@@ -1,3 +1,4 @@
+// src/app/explore/plans/page.tsx
 import { Metadata } from 'next';
 import { homeJsonLd } from '@/constants';
 import { MoviePlan, RidePlan, SportsPlan, HangoutPlan } from '@/types';
@@ -28,8 +29,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    site: '@synctrip',
-    creator: '@synctrip',
+    site: '@synctrip44398',
+    creator: '@synctrip44398',
     title: 'Explore Local Plans & Meetups | SyncTrip',
     description: 'Find and join upcoming rides, movie plans, sports matches, and casual hangouts near you.',
     images: ['https://synctrip.in/logo_main_withoutBG.png'],

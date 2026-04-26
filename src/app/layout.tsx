@@ -12,9 +12,18 @@ import './globals.css'; // relative path to the file
 // import { RouteChangeHandler } from './Handlers/RouteChangeHandler';
 // import NavbarServer from '@/components/Navbar/NavbarServer';
 export const metadata = {
-  title: 'Home | SyncTrip',
-  description: 'Discover and join trips near you.',
+  metadataBase: new URL('https://synctrip.in'),
+  title: {
+    default: 'SyncTrip – Find Travel Buddies & Plan Trips in India',
+    template: '%s | SyncTrip',
+    // Now: blog pages get "Solo Travel India Guide | SyncTrip"
+    // Homepage overrides this with its own full title in page.tsx
+  },
+  description: 'SyncTrip connects solo travelers across India. Find a travel buddy, join trip groups, and plan rides, sports, movies & local hangouts. Free on Android & iOS.',
+  robots: 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1',
+  alternates: { canonical: 'https://synctrip.in' },
 };
+
 import Script from 'next/script';
 import dynamic from 'next/dynamic';
 // import { LoaderProvider } from '@/components/providers/LoaderContext';
@@ -47,6 +56,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en">
       <body>
+        <link
+          rel="preload"
+          as="image"
+          href="https://synctrip.gumlet.io/compressed/Images/HomePageBg.png"
+          fetchPriority="high"
+        />
         <Script
           id="clarity-script"
           strategy="lazyOnload"

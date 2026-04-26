@@ -48,7 +48,7 @@
 
 .floatingChat2 {
   position: absolute;
-  top: 20%;
+  top: 0;
   left: 4%;
   z-index: 1;
   pointer-events: none;
@@ -56,10 +56,12 @@
   animation-delay: 2s;
 }
 
+
+
 .floatingChat1 {
   position: absolute;
   bottom: 0;
-  top: 23%;
+  top: 0;
   right: 5%;
   z-index: 1;
   pointer-events: none;
@@ -83,6 +85,7 @@
   font-size: 3.5rem;
   line-height: 1.2;
   margin-top: -1rem;
+  z-index: 100;
   /* -mt-6 */
 }
 
@@ -216,9 +219,12 @@
 }
 
 @keyframes bounce {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(20px);
   }
@@ -257,7 +263,7 @@
   /* 5. Stack Buttons Vertically
      On phones, full-width stacked buttons are easier to click */
   .heroActions {
-    flex-direction: column;
+    /* flex-direction: column; */
     width: 80%;
     gap: 0.75rem;
   }
@@ -345,14 +351,28 @@
   }
 }
 
+@media (min-width:600px) and (max-width:980px) {
+
+  .heroTitleMain {
+    font-size: 2.5rem;
+  }
+
+  .heroTitleSub {
+    font-size: 1.7rem;
+  }
+}
+
 @media (max-width: 600px) {
   .floatingImg3 {
     width: 360px;
   }
 
-  .heroTitleMain,
-  .heroTitleSub {
+  .heroTitleMain {
     font-size: 2.5rem;
+  }
+
+  .heroTitleSub {
+    font-size: 2rem;
   }
 }
 
@@ -369,9 +389,12 @@
     bottom: 30px;
   }
 
-  .heroTitleMain,
+  .heroTitleMain {
+    font-size: 2.5rem;
+  }
+
   .heroTitleSub {
-    font-size: 2.1rem;
+    font-size: 1.7rem;
   }
 
   .heroDescription {

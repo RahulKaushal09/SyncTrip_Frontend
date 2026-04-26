@@ -6,9 +6,6 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 const nextConfig: NextConfig = {
   reactStrictMode: false,
 
-  // 🔥 THIS FIXES YOUR CPU PROBLEM (adds standalone output)
-  // output: "standalone",
-
   async headers() {
     return [
       {
@@ -20,13 +17,15 @@ const nextConfig: NextConfig = {
           },
           { key: "X-Frame-Options", value: "SAMEORIGIN" },
           { key: "X-Content-Type-Options", value: "nosniff" },
+          // Added: tell Google canonical host
+          { key: "X-Robots-Tag", value: "index, follow" },
         ],
       },
     ];
   },
 
   images: {
-    unoptimized: true,   // disables Next.js image optimization completely
+    unoptimized: true,
     remotePatterns: [
       { protocol: "https", hostname: "lh3.googleusercontent.com", pathname: "/**" },
       { protocol: "https", hostname: "synctrip.in", pathname: "/AllImages/**" },
@@ -37,7 +36,6 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "via.placeholder.com", pathname: "/**" },
       { protocol: "https", hostname: "muddietrails.com", pathname: "/**" },
       { protocol: "https", hostname: "cdn-icons-png.flaticon.com", pathname: "/**" },
-      { protocol: "https", hostname: "via.placeholder.com", pathname: "/**" },
       { protocol: "http", hostname: "localhost", pathname: "/**" },
       { protocol: "https", hostname: "picsum.photos", pathname: "/**" },
       { protocol: "https", hostname: "wbksuxwcqnzuppviunfz.supabase.co", pathname: "/**" },
@@ -50,13 +48,23 @@ const nextConfig: NextConfig = {
 
   async redirects() {
     return [
+      // 1. CANONICAL HOST: www → non-www (301 permanent)
+      // Fixes the GSC split between www.synctrip.in and synctrip.in
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'www.synctrip.in' }],
+        destination: 'https://synctrip.in/:path*',
+        permanent: true,
+      },
+
+      // 2. Your existing app-shell redirects (unchanged)
       {
         source: "/(chats|user|create|userTrip|userTrips|trips|notifications|how-it-works)/:path*",
         destination: '/',
         permanent: false,
       },
-    ]
-  }
+    ];
+  },
 };
 
 module.exports = withBundleAnalyzer(nextConfig);
