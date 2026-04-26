@@ -15,7 +15,7 @@ import { BlogPost } from "@/types";
 import { BlogsApiServices } from "@/utils";
 export const generateMetadata = async (): Promise<Metadata> => {
   return {
-    title: "Solo Travel Tips & India Travel Guides | SyncTrip Blog",
+    title: "Solo Travel Tips & India Travel Guides",
     description: "Discover inspiring travel stories, guides, and experiences from real travelers. Explore blogs to plan your next adventure.",
     keywords: [
       "travel blogs",
@@ -28,7 +28,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
       canonical: "https://synctrip.in/blogs",
     },
     openGraph: {
-      title: "Solo Travel Tips & India Travel Guides | SyncTrip Blog",
+      title: "Solo Travel Tips & India Travel Guides",
       description: "Discover inspiring travel stories, guides, and experiences from real travelers.",
       url: "https://synctrip.in/blogs",
       type: "website",
@@ -41,7 +41,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
     },
     twitter: {
       card: "summary_large_image",
-      title: "Solo Travel Tips & India Travel Guides | SyncTrip Blog",
+      title: "Solo Travel Tips & India Travel Guides",
       description: "Read blogs and plan your next trip with SyncTrip.",
       images: ["https://synctrip.in/logo_main.jpg"], // ✅ Replace with your image
     },
