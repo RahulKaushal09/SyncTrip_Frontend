@@ -6,13 +6,13 @@ import { ApiService } from '@/utils';
 import ActivitiesInner from '@/components/Explore/ActivityClient';
 
 export const metadata: Metadata = {
-  title: 'Explore Local Plans & Meetups | SyncTrip',
+  title: 'Explore Local Plans & Meetups in India',
   description: 'Discover upcoming motorcycle rides, movie plans, sports matches, and casual hangouts in your city. Join local activities and find your crew with SyncTrip.',
   keywords: 'local activities, group plans, motorcycle rides, movie meetups, sports matches, casual hangouts, travel buddy, SyncTrip',
   authors: [{ name: 'SyncTrip' }],
   robots: 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1',
   openGraph: {
-    title: 'Explore Local Plans & Meetups | SyncTrip',
+    title: 'Explore Local Plans & Meetups in India',
     description: 'Find and join upcoming rides, movie plans, sports matches, and casual hangouts near you. Connect with locals who share your vibe.',
     type: 'website',
     url: 'https://synctrip.in/explore/plans',
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     site: '@synctrip44398',
     creator: '@synctrip44398',
-    title: 'Explore Local Plans & Meetups | SyncTrip',
+    title: 'Explore Local Plans & Meetups in India',
     description: 'Find and join upcoming rides, movie plans, sports matches, and casual hangouts near you.',
     images: ['https://synctrip.in/logo_main_withoutBG.png'],
   },

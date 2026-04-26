@@ -135,7 +135,7 @@ export const viewport = {
 //   },
 // };
 export const metadata: Metadata = {
-  title: 'Explore Travel Destinations in India – Find Trip Companions | SyncTrip',
+  title: 'Explore Travel Destinations in India – Find Trip Companions',
   description: 'Browse 500+ Indian destinations, find verified travel companions heading your way, and plan group trips. From Goa to Leh — discover where India travels. Free on Android & iOS.',
   keywords: 'explore destinations India, travel companion India, group trips India, find travel buddy, SyncTrip explore',
   authors: [{ name: 'SyncTrip', url: 'https://synctrip.in' }],
