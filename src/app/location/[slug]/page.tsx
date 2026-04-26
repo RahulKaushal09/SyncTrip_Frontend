@@ -63,7 +63,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const country = location.country ?? 'India';
     const destination = location.title ?? 'Destination';
 
-    const title = `${destination} Travel Guide: Top ${placesCount} Things to Do & Plan Your Trip with SyncTrip`;
+    const title = `Things to Do in ${destination} – Travel Guide & Trip Companions | SyncTrip`;
     const description = `Plan your ${destination} trip with SyncTrip. Discover ${placesCount}+ attractions, find verified travel companions heading to ${destination}, and join India's 5,000+ traveler community. Free on Android & iOS.`;
     const canonicalSlug = CommonServices.generateLocationSlug(uuid, destination, String(placesCount), country);
     const canonicalURL = `https://synctrip.in/location/${canonicalSlug}`;
