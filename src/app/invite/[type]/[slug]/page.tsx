@@ -4,6 +4,8 @@ import { UserTripPreview, PlanPreview } from "@/types";
 import { ApiService } from "@/utils";
 import { Metadata } from "next";
 import { notFound } from "next/navigation"; // 👈 Import notFound for 404 handling
+import { redirect } from "next/navigation";
+import { redirectToStore } from "@/utils/redirectToStore";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -18,7 +20,7 @@ type JsonLd = {
   "@graph": Array<Record<string, unknown>>;
 };
 
-type InviteType = "trip" | "sports" | "riders" | "outing" | "movies";
+type InviteType = "trips" | "sports" | "riders" | "outing" | "movies";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -84,7 +86,7 @@ function buildTripJsonLd(trip: UserTripPreview, seo: SeoData, slug: string): Jso
         name: seo.seo_title || trip.tripName,
         description: seo.seo_description || trip.tripDescription,
         image: trip.tripImage,
-        url: `${process.env.NEXT_PUBLIC_BASE_URL}/invite/trip/${slug}`,
+        url: `${process.env.NEXT_PUBLIC_BASE_URL}/invite/trips/${slug}`,
         startDate: trip.startDate,
         endDate: trip.endDate,
         location: {
@@ -117,9 +119,9 @@ function buildPlanJsonLd(plan: PlanPreview, type: string, seo: SeoData, slug: st
         startDate: plan.scheduleDate ?? undefined,
         location: plan.venueName || plan.locationName
           ? {
-              "@type": "Place",
-              name: plan.venueName || plan.locationName,
-            }
+            "@type": "Place",
+            name: plan.venueName || plan.locationName,
+          }
           : undefined,
       },
     ],
@@ -136,9 +138,12 @@ export async function generateMetadata({
   const { type, slug } = await params;
   const id = getTripIdFromSlug(slug);
 
-  if (type === "trip") {
+  const KNOWN_TYPES = ["trips", "sports", "riders", "outing", "movies"];
+  if (!KNOWN_TYPES.includes(type)) redirectToStore();
+
+  if (type === "trips") {
     const trip = await getTripData(id);
-    
+
     // 👈 Handle null trip gracefully for metadata
     if (!trip) {
       return { title: "Trip Not Found | SyncTrip" };
@@ -155,7 +160,7 @@ export async function generateMetadata({
       openGraph: {
         title,
         description,
-        url: `${process.env.NEXT_PUBLIC_BASE_URL}/invite/trip/${slug}`,
+        url: `${process.env.NEXT_PUBLIC_BASE_URL}/invite/trips/${slug}`,
         images: trip.tripImage ? [{ url: trip.tripImage, alt: trip.tripName }] : undefined,
       },
       alternates: {
@@ -166,7 +171,7 @@ export async function generateMetadata({
 
   // Non-trip types
   const plan = await getPlanData(type as InviteType, id);
-  
+
   // 👈 Handle null plan gracefully for metadata
   if (!plan) {
     return { title: "Plan Not Found | SyncTrip" };
@@ -187,7 +192,7 @@ export async function generateMetadata({
       title,
       description,
       url: `${process.env.NEXT_PUBLIC_BASE_URL}/invite/${type}/${slug}`,
-      images: plan.image ? [{ url: plan.image, alt: plan.title }] : {url: "https://synctrip.in/logo_main_withoutBG.png", alt: plan.title},
+      images: plan.image ? [{ url: plan.image, alt: plan.title }] : { url: "https://synctrip.in/logo_main_withoutBG.png", alt: plan.title },
     },
     alternates: {
       canonical: `${process.env.NEXT_PUBLIC_BASE_URL}/invite/${type}/${slug}`,
@@ -205,9 +210,13 @@ const InvitePage = async ({
   const { type, slug } = await params;
   const id = getTripIdFromSlug(slug);
 
-  if (type === "trip") {
+  const KNOWN_TYPES = ["trips", "sports", "riders", "outing", "movies"];
+
+  if (!KNOWN_TYPES.includes(type)) redirectToStore();
+
+  if (type === "trips") {
     const trip = await getTripData(id);
-    
+
     // 👈 Redirects to the closest default Next.js 404 page (app/not-found.tsx)
     if (!trip) notFound();
 
@@ -227,7 +236,7 @@ const InvitePage = async ({
 
   // Non-trip plan types
   const plan = await getPlanData(type as InviteType, id);
-  
+
   // 👈 Redirects to the closest default Next.js 404 page
   if (!plan) notFound();
 
