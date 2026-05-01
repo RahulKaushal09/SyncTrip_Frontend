@@ -78,7 +78,6 @@ const BlogDetailPage = async ({ params }: BlogDetailProps) => {
 
   const relatedLocDetails = await ApiService.fetchLocationsByIds(relatedLocations, [LocationFields.ID, LocationFields.TITLE, LocationFields.SLUG, LocationFields.COUNTRY, LocationFields.STATE, LocationFields.PHOTOS]);
 
-  console.log("Related Locations:", relatedLocDetails);
 
   if (!blog) return notFound();
 
