@@ -362,7 +362,7 @@ export default function AddBlogPage() {
           type="text"
           name="author"
           placeholder="Author Name"
-          value={formData.author}
+          value={formData.author || 'SyncTrip'}
           onChange={handleChange}
           className="w-full border p-2 rounded"
         />
@@ -378,7 +378,7 @@ export default function AddBlogPage() {
           type="number"
           name="rating"
           placeholder="Rating (0-5)"
-          value={formData.rating}
+          value={formData.rating || 5}
           min="0"
           max="5"
           onChange={handleChange}

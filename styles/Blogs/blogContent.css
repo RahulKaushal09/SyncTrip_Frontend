@@ -400,3 +400,119 @@
         margin: 1.5rem 0; /* Less gap above and below images */
     }
 }
+
+/* ── Related Locations ── */
+.related-locations {
+    margin: 2.5rem 0 2rem;
+    padding: 2rem;
+    background: #f9f9f7;
+    border-radius: 16px;
+    border: 1px solid #ebebeb;
+}
+
+.related-locations-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 1.25rem;
+}
+
+.related-locations-icon {
+    color: #e05c2a; /* swap for your brand accent */
+    flex-shrink: 0;
+}
+
+.related-locations-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0;
+    letter-spacing: -0.01em;
+}
+
+.related-locations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 12px;
+}
+
+/* Card */
+.location-card {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    aspect-ratio: 3 / 4;
+    transition: transform 0.22s ease, box-shadow 0.22s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+}
+
+.location-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
+}
+
+.location-card-image-wrap {
+    position: absolute;
+    inset: 0;
+}
+
+.location-card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.35s ease;
+}
+
+.location-card:hover .location-card-image {
+    transform: scale(1.06);
+}
+
+.location-card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to bottom,
+        transparent 40%,
+        rgba(0, 0, 0, 0.62) 100%
+    );
+}
+
+.location-card-body {
+    position: relative;
+    z-index: 1;
+    margin-top: auto;
+    padding: 10px 10px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.location-card-name {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.2;
+}
+
+.location-card-meta {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+@media (max-width: 640px) {
+    .related-locations {
+        padding: 1.25rem;
+    }
+
+    .related-locations-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+}

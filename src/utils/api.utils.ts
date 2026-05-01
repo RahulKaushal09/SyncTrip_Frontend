@@ -341,7 +341,7 @@ export class ApiService {
       console.error('Failed to fetch locations by IDs:', error);
       return [];
     }
-  } // check
+  }
   // Utility to merge server locations with client wishlist data
   static mergeLocationsWithWishlist(serverLocations: Location[], clientLocations: Location[]): Location[] {
     const wishlistMap = new Map();

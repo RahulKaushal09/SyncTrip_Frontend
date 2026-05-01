@@ -1,16 +1,16 @@
 "use client";
-import { BlogPost } from "@/types";
+import { BlogPost, Location } from "@/types";
 import "../../../styles/Blogs/blogContent.css";
-import { Calendar, Clock, User, Share2, Tag, Smartphone, Play, Apple, ArrowLeft } from "lucide-react";
+import { Calendar, Clock, User, Share2, Tag, ArrowLeft, MapPin } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { APP_LINKS } from "@/constants";
 import { redirectToStore } from "@/utils/redirectToStore";
 
 interface BlogContentProps {
     blog: BlogPost;
+    relatedLocations: Partial<Location>[];
 }
 
-const BlogContent = ({ blog }: BlogContentProps) => {
+const BlogContent = ({ blog, relatedLocations }: BlogContentProps) => {
     const router = useRouter();
 
     const handleShare = () => {
@@ -29,22 +29,18 @@ const BlogContent = ({ blog }: BlogContentProps) => {
     return (
         <article className="editorial-layout">
 
-            {/* ── LEFT SIDEBAR (Sticky on Desktop) ── */}
+            {/* ── LEFT SIDEBAR ── */}
             <aside className="editorial-sidebar">
-
-                {/* Back Button */}
                 <button onClick={() => router.push('/blogs')} className="editorial-back-btn">
                     <ArrowLeft size={16} />
                     <span>Back to Blogs</span>
                 </button>
 
-                {/* Category & Title */}
                 <div className="sidebar-header">
                     <span className="editorial-category">{blog.category}</span>
                     <h1 className="editorial-title">{blog.title}</h1>
                 </div>
 
-                {/* Meta Info */}
                 <div className="editorial-meta">
                     <div className="meta-item">
                         <User size={16} className="meta-icon" />
@@ -66,7 +62,6 @@ const BlogContent = ({ blog }: BlogContentProps) => {
                     </div>
                 </div>
 
-                {/* Tags */}
                 {blog.filterTags && blog.filterTags.length > 0 && (
                     <div className="editorial-tags">
                         {blog.filterTags.map((tag, index) => (
@@ -77,23 +72,15 @@ const BlogContent = ({ blog }: BlogContentProps) => {
                     </div>
                 )}
 
-                {/* Share Action */}
                 <button onClick={handleShare} className="editorial-share-btn">
                     <Share2 size={16} />
                     <span>Share Article</span>
                 </button>
-
-                {/* SyncTrip App Promo Card (Desktop Only) */}
-                {/* <button onClick={redirectToStore} className="btn btn-primary">
-                    Download SyncTrip App
-                </button> */}
-
             </aside>
 
-            {/* ── RIGHT CONTENT (Scrollable) ── */}
+            {/* ── RIGHT CONTENT ── */}
             <main className="editorial-main-content">
 
-                {/* Hero Image */}
                 <div className="editorial-hero">
                     <img
                         src={blog.featuredImage}
@@ -103,14 +90,52 @@ const BlogContent = ({ blog }: BlogContentProps) => {
                     />
                 </div>
 
-                {/* Rich Text Body */}
                 <div
                     className="editorial-body-text"
                     dangerouslySetInnerHTML={{ __html: blog.content }}
                 />
 
+                {/* ── RELATED LOCATIONS ── */}
+                {relatedLocations && relatedLocations.length > 0 && (
+                    <section className="related-locations">
+                        <div className="related-locations-header">
+                            <MapPin size={18} className="related-locations-icon" />
+                            <h2 className="related-locations-title">Explore Related Destinations</h2>
+                        </div>
+
+                        <div className="related-locations-grid">
+                            {relatedLocations.map((location) => (
+                                <a
+                                    key={location.id}
+                                    href={`${process.env.NEXT_PUBLIC_DOMAIN_BASE_URL}/location/${location.slug}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="location-card"
+                                >
+                                    <div className="location-card-image-wrap">
+                                        <img
+                                            src={location.photos?.[0]}
+                                            alt={location.title}
+                                            className="location-card-image"
+                                            loading="lazy"
+                                        />
+                                        <div className="location-card-overlay" />
+                                    </div>
+                                    <div className="location-card-body">
+                                        <span className="location-card-name">{location.title}</span>
+                                        <span className="location-card-meta">
+                                            <MapPin size={11} />
+                                            {[location.state, location.country].filter(Boolean).join(", ")}
+                                        </span>
+                                    </div>
+                                </a>
+                            ))}
+                        </div>
+                    </section>
+                )}
+
                 <button onClick={redirectToStore} className="btn btn-primary !w-full !text-xl">
-                    Download SyncTrip App 
+                    Download SyncTrip App
                 </button>
 
             </main>

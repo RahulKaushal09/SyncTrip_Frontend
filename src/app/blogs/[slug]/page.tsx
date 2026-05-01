@@ -2,11 +2,12 @@
 
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
-import { BlogsApiServices } from "@/utils";
+import { ApiService, BlogsApiServices } from "@/utils";
 import { BlogPost } from "@/types";
 import BlogContent from "@/components/Blogs/BlogContent";
 import "../../../../styles/Blogs/blogDetail.css";
 import { cache } from 'react';
+import { LocationFields } from "@/constants";
 
 interface BlogDetailProps {
   params: Promise<{ slug: string }>;
@@ -73,6 +74,12 @@ const BlogDetailPage = async ({ params }: BlogDetailProps) => {
   const { slug } = await params;
   const blog = await getBlog(slug); // ✅ same call, Next.js serves from cache — no second network hit
 
+  const relatedLocations = blog?.relatedLocations || [];
+
+  const relatedLocDetails = await ApiService.fetchLocationsByIds(relatedLocations, [LocationFields.ID, LocationFields.TITLE, LocationFields.SLUG, LocationFields.COUNTRY, LocationFields.STATE, LocationFields.PHOTOS]);
+
+  console.log("Related Locations:", relatedLocDetails);
+
   if (!blog) return notFound();
 
   const articleSchema = {
@@ -106,7 +113,7 @@ const BlogDetailPage = async ({ params }: BlogDetailProps) => {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
       />
       <main className="editorial-blog-container">
-        <BlogContent blog={blog} />
+        <BlogContent blog={blog} relatedLocations={relatedLocDetails} />
       </main>
     </div>
   );

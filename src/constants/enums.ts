@@ -80,6 +80,7 @@ export const LocationFields = Object.freeze({
     FILTER_TAGS: 'filterTags',
     FEATURED: 'featured',
     SEO: 'seo',
+    SLUG: 'slug'
 });
 export const TripFields = Object.freeze({
     TRIP_ID: 'id',
