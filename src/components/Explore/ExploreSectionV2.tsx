@@ -89,7 +89,6 @@ const CategorySlider = ({
     };
 
     if (!isLoading && data.length === 0) return null;
-
     return (
         <div className="es-slider-section">
             <div className="es-slider-header">

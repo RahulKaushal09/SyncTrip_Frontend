@@ -74,7 +74,7 @@ const LocationCardV2: React.FC<LocationCardProps> = ({
 
     const handleCardClick = () => {
         if (locationLink) {
-            showLoader();
+            // showLoader();
             router.push(locationLink);
         }
     };

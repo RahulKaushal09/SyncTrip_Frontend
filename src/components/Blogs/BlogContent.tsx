@@ -96,7 +96,7 @@ const BlogContent = ({ blog, relatedLocations }: BlogContentProps) => {
                 />
 
                 {/* ── RELATED LOCATIONS ── */}
-                {relatedLocations && relatedLocations.length > 0 && (
+                {/* {relatedLocations && relatedLocations.length > 0 && (
                     <section className="related-locations">
                         <div className="related-locations-header">
                             <MapPin size={18} className="related-locations-icon" />
@@ -132,7 +132,7 @@ const BlogContent = ({ blog, relatedLocations }: BlogContentProps) => {
                             ))}
                         </div>
                     </section>
-                )}
+                )} */}
 
                 <button onClick={redirectToStore} className="btn btn-primary !w-full !text-xl">
                     Download SyncTrip App
