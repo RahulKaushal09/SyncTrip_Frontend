@@ -217,7 +217,7 @@ export interface Location {
     filterTags?: string[];
     featured?: boolean;
 
-
+    slug?: string;
     seo?: {
         title?: string;
         metaDescription?: string;

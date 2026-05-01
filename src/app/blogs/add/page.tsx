@@ -20,6 +20,10 @@ const stripFroalaCredit = (html) => {
     ''
   );
 };
+
+const generateSlug = (title: string) =>
+  title.toLowerCase().trim().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-');
+
 export default function AddBlogPage() {
   const [formData, setFormData] = useState<BlogPost>({
     title: '',
@@ -84,25 +88,32 @@ export default function AddBlogPage() {
     const { name, type, value } = e.target;
     const checked = (e.target as HTMLInputElement).checked;
 
-    // console.log(`Handling change: ${name} = ${value}`); // Debugging
-
     setFormData((prev) => {
       if (name.includes('seo_') || name === 'canonical_url') {
-        const seoField = name; // Keep the full name (e.g., 'seo_title')
-        // console.log(`Updating SEO field: ${seoField} = ${value}`); // Debugging
+        return { ...prev, seo: { ...prev.seo, [name]: value } };
+      }
+
+      // Auto-derive slug and canonical from title
+      if (name === 'title') {
+        const newSlug = generateSlug(value);
         return {
           ...prev,
-          seo: {
-            ...prev.seo,
-            [seoField]: value, // Update the correct field (e.g., 'seo_title')
-          },
+          title: value,
+          slug: newSlug,
+          seo: { ...prev.seo, canonical_url: `https://synctrip.in/blogs/${newSlug}` },
         };
       }
 
-      return {
-        ...prev,
-        [name]: type === 'checkbox' ? checked : value,
-      };
+      // Recompute canonical when slug is manually edited
+      if (name === 'slug') {
+        return {
+          ...prev,
+          slug: value,
+          seo: { ...prev.seo, canonical_url: `https://synctrip.in/blogs/${value}` },
+        };
+      }
+
+      return { ...prev, [name]: type === 'checkbox' ? checked : value };
     });
   };
 
@@ -375,14 +386,25 @@ export default function AddBlogPage() {
         />
 
         <h2 className="text-xl font-semibold mt-6">SEO Information</h2>
-        <input
-          type="text"
-          name="seo_title"
-          placeholder="SEO Title"
-          value={formData.seo.seo_title}
-          onChange={handleChange}
-          className="w-full border p-2 rounded"
-        />
+        <div className="flex gap-2 items-center">
+          <input
+            type="text"
+            name="seo_title"
+            placeholder="SEO Title"
+            value={formData.seo.seo_title}
+            onChange={handleChange}
+            className="w-full border p-2 rounded"
+          />
+          <button
+            type="button"
+            onClick={() =>
+              setFormData((prev) => ({ ...prev, seo: { ...prev.seo, seo_title: prev.title } }))
+            }
+            className="whitespace-nowrap border px-3 py-2 rounded text-sm hover:bg-gray-100"
+          >
+            Use Title
+          </button>
+        </div>
         <textarea
           name="seo_description"
           placeholder="SEO Description"

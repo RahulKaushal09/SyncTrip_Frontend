@@ -29,6 +29,9 @@ interface LocationCardProps {
     whishlistParentType?: string;
     isLoading?: boolean;
     typeOfCard?: string;
+    state?: string;
+    country?: string;
+    slug?: string;
 }
 
 const LocationCard: React.FC<LocationCardProps> = ({
@@ -49,7 +52,8 @@ const LocationCard: React.FC<LocationCardProps> = ({
     whishlistParentId,
     whishlistParentType,
     isLoading = false,
-    typeOfCard
+    typeOfCard,
+    slug
 }) => {
 
 
@@ -58,10 +62,12 @@ const LocationCard: React.FC<LocationCardProps> = ({
         locationLink = ""
     }
     else if (typeOfCard === typeOfLocationCardEnum.placestovisit && placeConnectedwithid) {
-        locationLink += CommonServices.generateLocationSlug(placeConnectedwithid, "Destination", "20", "India");
+        // locationLink += CommonServices.generateLocationSlug(placeConnectedwithid, "Destination", "20", "India");
+        locationLink += slug;
     }
     else if (typeOfCard != typeOfLocationCardEnum.placestovisit) {
-        locationLink += CommonServices.generateLocationSlug(cardId as string, name, places as string, "India");
+        // locationLink += CommonServices.generateLocationSlug(cardId as string, name, places as string, "India");
+        locationLink += slug;
     }
 
     const router = useRouter();

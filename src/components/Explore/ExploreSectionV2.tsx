@@ -121,6 +121,7 @@ const CategorySlider = ({
                             typeOfCard={typeOfLocationCardEnum.location}
                             state={loc.state || ""}
                             country={loc.country || "India"}
+                            slug={loc.slug as string}
                         />
                     ))}
             </div>
@@ -264,6 +265,7 @@ const ExploreSectionV2: React.FC<ExploreSectionProps> = ({
                                         isLoading={isLoading && gridLocations.length === 0}
                                         typeOfCard={typeOfLocationCardEnum.location}
                                         showWishlistIcon={false}
+                                        slug={loc.slug as string}
                                     />
                                 </div>
                             ))}

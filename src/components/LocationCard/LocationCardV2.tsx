@@ -13,6 +13,7 @@ interface LocationCardProps {
     rating?: string;
     places?: string;
     bestTime?: string;
+    slug?: string;
     images?: string[];
     Highlights?: string;
     inlineStyle?: React.CSSProperties;
@@ -38,7 +39,8 @@ const LocationCardV2: React.FC<LocationCardProps> = ({
     images = [],
     cardId,
     isLoading = false,
-    typeOfCard
+    typeOfCard,
+    slug,
 }) => {
     const router = useRouter();
     const { showLoader } = useLoader();
@@ -46,7 +48,8 @@ const LocationCardV2: React.FC<LocationCardProps> = ({
     let locationLink = `/location/`;
 
     if (typeOfCard !== typeOfLocationCardEnum.placestovisit) {
-        locationLink += CommonServices.generateLocationSlug(cardId as string, name, places as string, 'India');
+        // locationLink += CommonServices.generateLocationSlug(cardId as string, name, places as string, 'India');
+        locationLink += slug;
     }
 
     const cleanName = name.replace(/[0-9.]/g, '').trim();

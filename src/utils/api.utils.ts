@@ -526,6 +526,21 @@ export class ApiService {
       return null;
     }
   }
+  static async fetchLocationBySlugServer(slug: string): Promise<Location | null> {
+    try {
+      const response = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/locations/slug/${slug}`, {
+        method: 'GET'
+      });
+
+      if (!response.ok) return null;
+
+      const data: Location = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Failed to fetch location by ID:', error);
+      return null;
+    }
+  }
   static async fetchLocationByIdServerWithSpecificFields(id: string, fields: string[], token: string = ""): Promise<Location | null> {
     try {
 
