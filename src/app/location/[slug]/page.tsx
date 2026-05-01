@@ -113,51 +113,32 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function LocationPage({ params }: Props) {
-<<<<<<< HEAD
-    const { slug } = await params;
-    let [uuid] = slug.split('_');
-    if (uuid) uuid = mapPreviousIdsWithNew(uuid);
-
-    const locationData = await getLocation(uuid); // ✅ cached, no second fetch
-=======
 
 
     const { slug } = await params; // Await params
     const locationData = await ApiService.fetchLocationBySlugServer(slug);
->>>>>>> 939c4d1 (Location Slug based)
 
     if (!locationData) return notFound();
 
-    const expectedSlug = CommonServices.generateLocationSlug(
-        uuid,
-        locationData.title || 'Destination',
-        locationData.placesNumberToVisit || "10",
-        locationData.country || 'India'
-    );
+    // const expectedSlug = CommonServices.generateLocationSlug(
+    //     uuid,
+    //     locationData.title || 'Destination',
+    //     locationData.placesNumberToVisit || "10",
+    //     locationData.country || 'India'
+    // );
 
-<<<<<<< HEAD
-    if (slug !== expectedSlug) {
-        redirect(`/location/${expectedSlug}`);
-    }
-=======
     // const expectedSlug = CommonServices.generateLocationSlug(uuid, locationData.title || 'Destination', locationData.placesNumberToVisit || "10", locationData.country || 'India');
 
     // Redirect if slug is outdated or mismatched
     // if (slug !== expectedSlug) {
     //     redirect(`/location/${expectedSlug}`);
     // }
->>>>>>> 939c4d1 (Location Slug based)
 
     const ldObjects: Record<string, unknown>[] = [];
-<<<<<<< HEAD
-    const ogImage = locationData.images?.[0] ?? "https://via.placeholder.com/1200x630?text=SyncTrip";
-    const canonicalURL = `https://synctrip.in/location/${expectedSlug}`;
-=======
     const ogImage =
         locationData.images?.[0] ??
         "https://via.placeholder.com/1200x630?text=SyncTrip";
     const canonicalURL = `https://synctrip.in/location/${slug}`;
->>>>>>> 939c4d1 (Location Slug based)
 
     if (locationData.seo?.schema?.jsonld) {
         ldObjects.push({

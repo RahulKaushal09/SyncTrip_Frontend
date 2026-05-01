@@ -213,24 +213,24 @@
 ========================================= */
 
 /* Mobile: one card at a time */
-.es-slider-track > * {
+.es-slider-track>* {
     scroll-snap-align: start;
     flex: 0 0 100%;
     max-width: 100%;
 }
 
-/* Tablet: show ~2 cards */
+/* Tablet: show 3 cards */
 @media (min-width: 640px) {
-    .es-slider-track > * {
-        flex: 0 0 calc(50% - 0.625rem);
-        max-width: calc(50% - 0.625rem);
+    .es-slider-track>* {
+        flex: 0 0 calc(33.333% - 0.84rem);
+        max-width: calc(33.333% - 0.84rem);
     }
 }
 
-/* Desktop: show ~3 cards */
+/* Desktop: show 4 cards */
 @media (min-width: 1024px) {
-    .es-slider-track > * {
-        flex: 0 0 calc(33.333% - 0.84rem);
-        max-width: calc(33.333% - 0.84rem);
+    .es-slider-track>* {
+        flex: 0 0 calc(25% - 0.94rem);
+        max-width: calc(25% - 0.94rem);
     }
 }
