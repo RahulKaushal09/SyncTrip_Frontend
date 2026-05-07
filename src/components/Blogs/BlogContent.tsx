@@ -96,43 +96,45 @@ const BlogContent = ({ blog, relatedLocations }: BlogContentProps) => {
                 />
 
                 {/* ── RELATED LOCATIONS ── */}
-                {/* {relatedLocations && relatedLocations.length > 0 && (
+                {relatedLocations && relatedLocations.length > 0 && (
                     <section className="related-locations">
                         <div className="related-locations-header">
-                            <MapPin size={18} className="related-locations-icon" />
-                            <h2 className="related-locations-title">Explore Related Destinations</h2>
+                            <MapPin size={24} className="related-locations-icon" />
+                            <h2 className="related-locations-title">Read More About</h2>
                         </div>
 
-                        <div className="related-locations-grid">
-                            {relatedLocations.map((location) => (
-                                <a
-                                    key={location.id}
-                                    href={`${process.env.NEXT_PUBLIC_DOMAIN_BASE_URL}/location/${location.slug}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="location-card"
-                                >
-                                    <div className="location-card-image-wrap">
-                                        <img
-                                            src={location.photos?.[0]}
-                                            alt={location.title}
-                                            className="location-card-image"
-                                            loading="lazy"
-                                        />
-                                        <div className="location-card-overlay" />
-                                    </div>
-                                    <div className="location-card-body">
-                                        <span className="location-card-name">{location.title}</span>
-                                        <span className="location-card-meta">
-                                            <MapPin size={11} />
-                                            {[location.state, location.country].filter(Boolean).join(", ")}
-                                        </span>
-                                    </div>
-                                </a>
-                            ))}
+                        <div className="related-locations-scroll-wrap">
+                            <div className="related-locations-strip">
+                                {relatedLocations.map((location) => (
+                                    <a
+                                        key={location.id}
+                                        href={`${process.env.NEXT_PUBLIC_DOMAIN_BASE_URL}/location/${location.slug}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="location-card"
+                                    >
+                                        <div className="location-card-image-wrap">
+                                            <img
+                                                src={location.photos?.[0]}
+                                                alt={location.title}
+                                                className="location-card-image"
+                                                loading="lazy"
+                                            />
+                                            <div className="location-card-overlay" />
+                                        </div>
+                                        <div className="location-card-body">
+                                            <span className="location-card-name">{location.title}</span>
+                                            <span className="location-card-meta">
+                                                <MapPin size={11} />
+                                                {[location.state, location.country].filter(Boolean).join(", ")}
+                                            </span>
+                                        </div>
+                                    </a>
+                                ))}
+                            </div>
                         </div>
                     </section>
-                )} */}
+                )}
 
                 <button onClick={redirectToStore} className="btn btn-primary !w-full !text-xl">
                     Download SyncTrip App
