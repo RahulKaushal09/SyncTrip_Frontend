@@ -235,10 +235,10 @@ const DownloadPopup = () => {
     };
 
     useEffect(() => {
-        if (shouldBlockPopup) {
-            setIsVisible(false);
-            return;
-        }
+        // if (shouldBlockPopup) {
+        //     setIsVisible(false);
+        //     return;
+        // }
 
         resetPopupIfNeeded();
 
@@ -261,7 +261,7 @@ const DownloadPopup = () => {
             setTimeout(() => { if (!shouldBlockPopup) setIsVisible(true); }, INITIAL_DELAY_LOGGED_IN);
 
         } else {
-            const guestStrikes = parseInt(localStorage.getItem("guest_strikes") || "0");
+            // const guestStrikes = parseInt(localStorage.getItem("guest_strikes") || "0");
 
             // if (guestStrikes >= 3) {
             //     // Auth lock — show immediately, no auto-dismiss
@@ -290,17 +290,17 @@ const DownloadPopup = () => {
                 return;
             }
         } else {
-            const newStrikes = parseInt(localStorage.getItem("guest_strikes") || "0") + 1;
-            localStorage.setItem("guest_strikes", newStrikes.toString());
-            if (newStrikes >= 3) {
-                // Next appearance is auth lock
-                setTimeout(() => {
-                    setIsAuthLock(true);
-                    setVariant(0);
-                    setIsVisible(true);
-                }, getRandomReappearDelay());
-                return;
-            }
+            // const newStrikes = parseInt(localStorage.getItem("guest_strikes") || "0") + 1;
+            // localStorage.setItem("guest_strikes", newStrikes.toString());
+            // if (newStrikes >= 3) {
+            //     // Next appearance is auth lock
+            //     setTimeout(() => {
+            //         setIsAuthLock(true);
+            //         setVariant(0);
+            //         setIsVisible(true);
+            //     }, getRandomReappearDelay());
+            //     return;
+            // }
         }
 
         // Schedule next popup after random 30–40s
