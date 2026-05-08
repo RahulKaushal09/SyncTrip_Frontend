@@ -91,18 +91,19 @@ export default function FaceVerificationClient({ token, userName, invalidToken =
             }
 
             setStatus("camera_active");
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error("Camera error:", err);
+            const error = err as { name?: string };
             if (
-                err?.name === "NotAllowedError" ||
-                err?.name === "PermissionDeniedError"
+                error?.name === "NotAllowedError" ||
+                error?.name === "PermissionDeniedError"
             ) {
                 setErrorMsg(
                     "Camera permission denied. Please allow camera access in your browser settings."
                 );
-            } else if (err?.name === "NotFoundError") {
+            } else if (error?.name === "NotFoundError") {
                 setErrorMsg("No camera found on this device.");
-            } else if (err?.name === "NotReadableError") {
+            } else if (error?.name === "NotReadableError") {
                 setErrorMsg(
                     "Camera is in use by another app. Please close it and try again."
                 );
