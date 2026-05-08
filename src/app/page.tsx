@@ -177,7 +177,7 @@ export default async function Home() {
       {/* <HomeWrapper version="v2" /> */}
       <HomeHeroSectionNew />
       {/* <ChoiceSection /> */}
-      <ChoiceFeatureSectionV2 />
+      {/* <ChoiceFeatureSectionV2 /> */}
       <InfiniteTripMarquee />
       {/* <ChoiceFeatureSectionV3 /> */}
       {/* <CommunityShowcase /> */}

@@ -112,7 +112,7 @@ export default function InfiniteTripMarquee() {
   const row1 = [...TRIPS, ...TRIPS, ...TRIPS];
 
   return (
-    <section className={`${styles.section} bg-gradient-to-bl from-[#c2e3f7] via-[#F2FAFF] to-[#c2e3f7]`} aria-label="Live trips on SyncTrip">
+    <section className={`${styles.section} bg-gradient-to-bl from-[#F3FAFF] via-[#F2FAFF] to-[#c2e3f7]`} aria-label="Live trips on SyncTrip">
       {/* Gradients to fade out the left and right edges smoothly */}
       {/* <div className={styles.fadeLeft} aria-hidden="true" />
       <div className={styles.fadeRight} aria-hidden="true" /> */}
