@@ -12,7 +12,7 @@ import { APP_LINKS } from '@/constants';
 const Footer = () => {
     const pathname = usePathname();
     const router = useRouter();
-    const shouldHideFooter = pathname.includes('/chats') || pathname.includes('/invite') || pathname.includes('/groups') || pathname.includes('/create') || (pathname.includes('userTrip/') && pathname.includes('/travel-mode')) || (pathname.includes('userTrip/') && pathname.includes('/groups')) || (pathname.includes('userTrip/') && pathname.includes('/planner')) || (pathname.includes('userTrip/') && pathname.includes('/matching')) || pathname.includes('/careers/linkedin/march-2026') || pathname.includes('/explore/plans');
+    const shouldHideFooter = pathname.includes('/chats') || pathname.includes('/invite') || pathname.includes('/groups') || pathname.includes('/create') || (pathname.includes('userTrip/') && pathname.includes('/travel-mode')) || (pathname.includes('userTrip/') && pathname.includes('/groups')) || (pathname.includes('userTrip/') && pathname.includes('/planner')) || (pathname.includes('userTrip/') && pathname.includes('/matching')) || pathname.includes('/careers/linkedin/march-2026') || pathname.includes('/explore/plans') || pathname.includes('/profile');
 
     const companyLinks = [
         { name: 'About', url: '/about' },

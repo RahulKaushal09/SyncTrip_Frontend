@@ -116,9 +116,9 @@ export class UserApiService {
             formData.append('profilePhoto', file);
             // debugger;
             const response = await UserApiService.updateProfilePhoto(file);
-    
+
             const newImageUrl = response.url;
-    
+
             if (newImageUrl) {
                 // toast.success("Profile picture updated!");
                 return {
@@ -133,7 +133,7 @@ export class UserApiService {
             // toast.error(errorMessage);
         }
     };
-    
+
     static async submitAssessment(formData: string): Promise<{ success: boolean; message?: string }> {
         try {
             const res = await apiClient.post("/users/career/user-submission", formData);
@@ -146,6 +146,66 @@ export class UserApiService {
             };
         }
     };
+
+    static async verifyUserSelfie(selfieFile: File, userToken: string): Promise<{ success: boolean; matchPercentage?: number; profileImage?: string; message?: string }> {
+        try {
+            const formData = new FormData();
+            formData.append('selfie', selfieFile);
+
+            const response = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/users/verify-existing-profile-picture`, {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${userToken}`,
+                },
+                body: formData,
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                return {
+                    success: false,
+                    matchPercentage: data.matchPercentage ?? null,
+                    message: data.message || "Verification failed.",
+                };
+            }
+
+            return {
+                success: true,
+                matchPercentage: data.matchPercentage,
+                profileImage: data.profileImage,
+                message: data.message,
+            };
+
+        } catch (error) {
+            console.error("Error verifying selfie:", error);
+            return {
+                success: false,
+                message: "Failed to verify selfie. Please try again later.",
+            };
+        }
+    };
+
+    static async checkFaceVerified(userToken: string): Promise<{ success: boolean; isVerified?: boolean; message?: string }> {
+        try {
+            const response = await fetch(`${API_CONFIG.BACKEND_BASE_URL}/users/refreshProfileVerificationStatus`, {
+                headers: {
+                    Authorization: `Bearer ${userToken}`
+                }
+            });
+            const data = await response.json();
+            return {
+                success: true,
+                isVerified: data.profile_picture_verified || false,
+            };
+        } catch (error) {
+            console.error("Error checking face verification:", error);
+            return {
+                success: false,
+                message: "Failed to check verification status. Please try again later.",
+            };
+        }
+    }
 }
 
 
