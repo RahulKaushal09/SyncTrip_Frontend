@@ -166,7 +166,7 @@ export default function FaceVerificationClient({ token, userName, invalidToken =
 
             // ✅ Auto-redirect after short delay so user sees the success screen
             setTimeout(() => {
-                window.location.href = "https://synctrip.in/profile/verify-return";
+                window.open("https://synctrip.in/verify-return", "_blank");
             }, 1500);
 
         } catch (err) {
@@ -177,7 +177,7 @@ export default function FaceVerificationClient({ token, userName, invalidToken =
     };
 
     const handleRedirect = () => {
-        window.location.href = "https://synctrip.in/profile/verify-return";
+        window.open("https://synctrip.in/verify-return", "_blank");
     };
 
     return (
