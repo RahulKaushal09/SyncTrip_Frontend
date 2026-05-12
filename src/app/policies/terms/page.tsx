@@ -3,191 +3,744 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "SyncTrip Terms of Use",
+  title: "SyncTrip Terms of Use | SyncTrip",
   description:
-    "Read the terms of use for SyncTrip, a social travel coordination platform connecting travelers for collaborative itinerary planning and group travel.",
+    "Read the terms of use for SyncTrip, a social activity and travel coordination platform connecting people for group trips, rides, movies, sports, and outings.",
+  robots: "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1",
 };
+
+type Item = { term: string; detail: string };
+
+type Section = {
+  number: string;
+  title: string;
+  highlight?: boolean;
+  badge?: string;
+  intro?: string;
+  items?: Item[];
+  content?: string;
+  note?: string;
+  safetyItems?: string[];
+};
+
+const sections: Section[] = [
+  {
+    number: "1",
+    title: "Eligibility",
+    items: [
+      {
+        term: "Age requirement",
+        detail:
+          "You must be at least 18 years old to use SyncTrip. Face verification is used as an additional safeguard to enforce this requirement.",
+      },
+      {
+        term: "Legal capacity",
+        detail:
+          "You represent that you have the legal capacity to enter into these Terms in your jurisdiction.",
+      },
+      {
+        term: "Accurate information",
+        detail:
+          "You must provide accurate, complete, and current information during registration and keep it updated at all times.",
+      },
+    ],
+  },
+  {
+    number: "2",
+    title: "Account Registration and Security",
+    items: [
+      {
+        term: "Registration",
+        detail:
+          "Registration requires a valid email, phone number, or third-party login (e.g., Google).",
+      },
+      {
+        term: "Account responsibility",
+        detail:
+          "You are solely responsible for all activity on your account and for keeping your credentials secure.",
+      },
+      {
+        term: "Unauthorized use",
+        detail:
+          "Notify us immediately at synctripofficial@gmail.com of any unauthorized use of your account.",
+      },
+      {
+        term: "Suspension",
+        detail:
+          "We reserve the right to suspend or terminate accounts for violations of these Terms, suspicious activity, failed face verification, or at our discretion.",
+      },
+    ],
+  },
+  {
+    number: "3",
+    title: "Platform Purpose and Features",
+    intro:
+      "SyncTrip is a social activity coordination platform — not a dating service, romantic matchmaking platform, or booking service. It is strictly for facilitating group coordination among users who share common activity interests.",
+    items: [
+      {
+        term: "Groups",
+        detail:
+          "Users create or join Groups for shared activities: Trips (travel planning), Riders (bike rides), Cinema (movies), Sports, and Outings/Hangouts. Groups allow collaborative planning, activity coordination, and group chat.",
+      },
+      {
+        term: "Face Verification for Chat",
+        detail:
+          "To access group chat, users must complete a one-time face verification by submitting a selfie, which is compared against their profile photo. This is required to maintain community safety. Refusing verification restricts chat access.",
+      },
+      {
+        term: "SyncMaps",
+        detail:
+          "Users may opt in to SyncMaps to view and be visible to nearby SyncTrip users on a live map. By default, your location is shared at approximate precision (~500 meters). You may switch to precise sharing (~150 meters) or hidden mode (not visible) at any time within the app. Location sharing is active only while SyncMaps is open.",
+      },
+      {
+        term: "No booking services",
+        detail:
+          "SyncTrip does not book flights, hotels, transportation, or activities. Any arrangements made off-platform are solely between users.",
+      },
+      {
+        term: "Curated content",
+        detail:
+          "We may display destination info, points of interest, or recommendations for convenience, but do not guarantee accuracy or availability.",
+      },
+    ],
+  },
+  {
+    number: "4",
+    title: "User Responsibilities and Safety",
+    intro:
+      "You are solely responsible for your interactions with other users. SyncTrip facilitates connections but does not screen users beyond face verification and basic account checks.",
+    safetyItems: [
+      "Always meet group members in public places first before any private arrangements.",
+      "Do not meet in private locations (e.g., hotels, homes) unless you have built substantial trust.",
+      "Share your plans with friends or family outside the Platform.",
+      "Verify information shared by others independently before acting on it.",
+      "Use caution when sharing personal financial information or sensitive details.",
+      "Be aware that enabling SyncMaps shares your location with nearby users. Even at approximate precision (~500m), your general area is visible. Only enable precise location sharing if you are comfortable with nearby users knowing your location.",
+      "Report any concerning behavior immediately via in-app reporting tools.",
+    ],
+    note: "SyncTrip is not liable for any outcomes from user interactions, including but not limited to personal safety, disputes, financial loss, or travel disruptions.",
+  },
+  {
+    number: "5",
+    title: "Prohibited Conduct",
+    highlight: true,
+    badge: "IMPORTANT",
+    intro: "You agree not to:",
+    items: [
+      {
+        term: "Platform misuse",
+        detail:
+          "Use the Platform for dating, romantic matchmaking, or any non-activity-related purposes.",
+      },
+      {
+        term: "Harassment",
+        detail: "Harass, threaten, abuse, defame, or discriminate against other users.",
+      },
+      {
+        term: "False information",
+        detail: "Post false, misleading, or fraudulent group or activity information.",
+      },
+      {
+        term: "Scams",
+        detail: "Solicit money, engage in scams, or promote illegal activities.",
+      },
+      {
+        term: "Impersonation",
+        detail:
+          "Impersonate others, create fake accounts, or submit someone else's photo for face verification.",
+      },
+      {
+        term: "Verification fraud",
+        detail:
+          "Submit any image other than your own face for verification (cartoons, other people, manipulated photos). This is a serious violation and may be reported to authorities.",
+      },
+      {
+        term: "Location misuse",
+        detail:
+          "Use SyncMaps or any location data from the Platform to stalk, track, follow, or repeatedly appear near another user without their consent.",
+      },
+      {
+        term: "Spam & privacy",
+        detail: "Spam, send unsolicited messages, or violate other users' privacy.",
+      },
+      {
+        term: "Technical interference",
+        detail:
+          "Upload harmful code, viruses, or otherwise interfere with the Platform's functionality or security.",
+      },
+      {
+        term: "Unauthorized access",
+        detail: "Attempt to access other users' accounts or data without permission.",
+      },
+    ],
+    note: "Violations may result in immediate account termination and reporting to law enforcement where applicable.",
+  },
+  {
+    number: "6",
+    title: "User Content",
+    items: [
+      {
+        term: "Ownership",
+        detail:
+          "You retain ownership of content you post (group details, itineraries, messages, photos).",
+      },
+      {
+        term: "License to SyncTrip",
+        detail:
+          "You grant SyncTrip a worldwide, non-exclusive, royalty-free license to use, display, modify, and distribute your content solely for operating and promoting the Platform.",
+      },
+      {
+        term: "Your responsibility",
+        detail:
+          "You are responsible for your content and warrant it does not infringe third-party rights, violate any laws, or breach these Terms.",
+      },
+      {
+        term: "Removal",
+        detail:
+          "We may remove content that violates these Terms or applicable laws without notice.",
+      },
+    ],
+  },
+  {
+    number: "7",
+    title: "Intellectual Property",
+    items: [
+      {
+        term: "SyncTrip IP",
+        detail:
+          "SyncTrip owns all Platform content, features, branding, and technology (excluding user content).",
+      },
+      {
+        term: "Restrictions",
+        detail:
+          "You may not copy, modify, reverse-engineer, or create derivative works of any part of the Platform without express written permission.",
+      },
+    ],
+  },
+  {
+    number: "8",
+    title: "Disclaimers",
+    items: [
+      {
+        term: "As-is service",
+        detail:
+          'The Platform is provided "as is" without warranties of any kind, express or implied.',
+      },
+      {
+        term: "No guarantees",
+        detail:
+          "We do not guarantee group compatibility, activity outcomes, user reliability, or uninterrupted service.",
+      },
+      {
+        term: "Third-party content",
+        detail:
+          "Third-party links or information displayed on the Platform are not endorsed by SyncTrip.",
+      },
+      {
+        term: "SyncMaps accuracy",
+        detail:
+          "Location data on SyncMaps is approximate and may not reflect exact real-time positions. Do not rely solely on SyncMaps for safety decisions.",
+      },
+    ],
+  },
+  {
+    number: "9",
+    title: "Limitation of Liability",
+    content: `To the fullest extent permitted by applicable law:
+
+• SyncTrip is not liable for indirect, incidental, special, or consequential damages.
+• Our total liability to you is limited to the amount you paid us (if any) in the past 12 months.
+• We are not responsible for user conduct, activity risks, location-based interactions, or third-party services.
+• We are not liable for any harm arising from SyncMaps usage, face verification disputes, or group interactions arranged through the Platform.`,
+  },
+  {
+    number: "10",
+    title: "Termination",
+    items: [
+      {
+        term: "By you",
+        detail: "You may delete your account at any time through the app settings.",
+      },
+      {
+        term: "By SyncTrip",
+        detail:
+          "We may terminate or suspend your access immediately for violations of these Terms, failed verification, or at our discretion without prior notice.",
+      },
+      {
+        term: "Effect",
+        detail:
+          "Surviving provisions including disclaimers, limitation of liability, and intellectual property rights remain in effect after termination.",
+      },
+    ],
+  },
+  {
+    number: "11",
+    title: "Governing Law and Dispute Resolution",
+    items: [
+      {
+        term: "Governing law",
+        detail: "These Terms are governed by the laws of India.",
+      },
+      {
+        term: "Jurisdiction",
+        detail:
+          "Disputes shall be resolved exclusively in the courts of Chandigarh, India.",
+      },
+      {
+        term: "Consumer disputes",
+        detail:
+          "For consumer disputes, you may approach relevant consumer forums under Indian law.",
+      },
+    ],
+  },
+  {
+    number: "12",
+    title: "Changes to Terms",
+    content:
+      "We may update these Terms as our features and legal obligations evolve. Significant changes will be notified via email or in-app notification at least 7 days before taking effect. Continued use after changes constitutes your acceptance of the revised Terms.",
+  },
+];
 
 export default function TermsPage() {
   return (
     <main
       style={{
         minHeight: "100vh",
-        background: "#f8fafc",
-        padding: "40px 16px",
+        background: "#f0f4f8",
+        padding: "48px 16px 64px",
+        fontFamily:
+          "'Geist', 'DM Sans', ui-sans-serif, system-ui, -apple-system, sans-serif",
       }}
     >
-      <div
-        style={{
-          maxWidth: "900px",
-          margin: "0 auto",
-          background: "#ffffff",
-          borderRadius: "16px",
-          padding: "28px 22px",
-          boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
-          border: "1px solid rgba(0,0,0,0.06)",
-        }}
-      >
-        {/* Header */}
-        <div style={{ marginBottom: "18px" }}>
+      <div style={{ maxWidth: "860px", margin: "0 auto" }}>
+        {/* Header Card */}
+        <div
+          style={{
+            background: "#0f172a",
+            borderRadius: "20px",
+            padding: "40px 40px 36px",
+            marginBottom: "24px",
+            position: "relative",
+            overflow: "hidden",
+          }}
+        >
+          <div
+            style={{
+              position: "absolute",
+              top: "-40px",
+              right: "-40px",
+              width: "200px",
+              height: "200px",
+              borderRadius: "50%",
+              background:
+                "radial-gradient(circle, rgba(16,185,129,0.2) 0%, transparent 70%)",
+              pointerEvents: "none",
+            }}
+          />
+          <div
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "8px",
+              background: "rgba(16,185,129,0.12)",
+              border: "1px solid rgba(16,185,129,0.3)",
+              borderRadius: "100px",
+              padding: "6px 14px",
+              marginBottom: "20px",
+            }}
+          >
+            <div
+              style={{
+                width: "7px",
+                height: "7px",
+                borderRadius: "50%",
+                background: "#34d399",
+              }}
+            />
+            <span
+              style={{
+                fontSize: "12px",
+                color: "#6ee7b7",
+                fontWeight: 600,
+                letterSpacing: "0.05em",
+              }}
+            >
+              LEGAL DOCUMENT
+            </span>
+          </div>
           <h1
             style={{
-              margin: 0,
-              fontSize: "28px",
-              fontWeight: 700,
-              color: "#0f172a",
+              margin: "0 0 10px 0",
+              fontSize: "32px",
+              fontWeight: 800,
+              color: "#f8fafc",
+              letterSpacing: "-0.5px",
+              lineHeight: 1.2,
             }}
           >
-            SyncTrip Terms of Use
+            Terms of Use
           </h1>
-
+          <p
+            style={{ margin: 0, fontSize: "14px", color: "#94a3b8", lineHeight: 1.6 }}
+          >
+            Effective Date: May 12, 2026 &nbsp;·&nbsp; Applies to all SyncTrip Platform services
+          </p>
           <p
             style={{
-              margin: "8px 0 0 0",
+              margin: "16px 0 0 0",
               fontSize: "14px",
-              color: "#475569",
-              lineHeight: 1.6,
+              color: "#cbd5e1",
+              lineHeight: 1.7,
+              maxWidth: "600px",
             }}
           >
-            Effective Date: January 22, 2026
+            Welcome to{" "}
+            <strong style={{ color: "#e2e8f0" }}>SyncTrip</strong>, operated by{" "}
+            <strong style={{ color: "#e2e8f0" }}>
+              SyncTrip Digital Private Limited
+            </strong>{" "}
+            ("we," "us," or "SyncTrip"). SyncTrip is a social activity coordination
+            platform — not a dating service or booking platform — for group trips,
+            rides, movies, sports, and outings. By using the Platform, you agree to
+            these Terms.
           </p>
         </div>
 
-        {/* Content */}
+        {/* Quick Nav */}
         <div
           style={{
-            padding: "18px",
-            borderRadius: "12px",
-            background: "#f1f5f9",
-            border: "1px solid rgba(0,0,0,0.06)",
+            background: "#fff",
+            borderRadius: "16px",
+            padding: "20px 28px",
+            marginBottom: "20px",
+            border: "1px solid #e2e8f0",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
           }}
         >
-          <pre
+          <p
             style={{
-              whiteSpace: "pre-wrap",
-              wordBreak: "break-word",
-              fontFamily:
-                "ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial",
-              fontSize: "15px",
-              lineHeight: "1.8",
-              margin: 0,
-              color: "#0f172a",
+              margin: "0 0 12px 0",
+              fontSize: "11px",
+              fontWeight: 700,
+              color: "#94a3b8",
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
             }}
           >
-            {`SyncTrip Terms of Use
-Effective Date: January 22, 2026
-Welcome to SyncTrip (the "Platform"), operated by SyncTrip Digital Private Limited ("we," "us," "our," or "SyncTrip"). SyncTrip is a social travel coordination platform that connects travelers planning trips to the same destinations in India (and potentially internationally) to enable collaborative itinerary planning, shared experiences, and group travel coordination. SyncTrip is not a dating service, matchmaking for romantic purposes, or a booking platform. It is strictly for facilitating travel companionship and logistical collaboration among users heading to similar locations.
-By accessing, registering, or using the Platform (including the website at synctrip.in, mobile apps, or any related services), you agree to be bound by these Terms of Use ("Terms"). If you do not agree, do not use the Platform.
-1. Eligibility
-
-You must be at least 18 years old to use SyncTrip.
-You represent that you have the legal capacity to enter into these Terms.
-You must provide accurate, complete, and current information during registration and maintain it updated.
-
-2. Account Registration and Security
-
-Registration requires a valid email, phone number, or third-party login (e.g., Google).
-You are solely responsible for all activity on your account and for keeping your password secure.
-Notify us immediately of any unauthorized use.
-We reserve the right to suspend or terminate accounts for violations of these Terms, suspicious activity, or at our discretion.
-
-3. Platform Purpose and Features
-
-Users create "Trip Profiles" with details such as destination, dates, budget, interests, and preferences.
-The Platform matches users based on overlapping trip details (not personal profiles for romantic purposes).
-Matches enable chat, collaborative itinerary creation, and sharing of travel plans.
-SyncTrip does not book flights, hotels, transportation, or activities. Any arrangements made off-platform are solely between users.
-We may display curated destination information, hotels, or points of interest for convenience, but we do not guarantee accuracy or availability.
-
-4. User Responsibilities and Safety
-You are solely responsible for your interactions with other users. SyncTrip facilitates connections but does not screen users beyond basic verification (e.g., email/phone).
-Important Safety Guidelines (Strongly Recommended):
-
-Always meet matched travelers in public places first.
-Do not meet in private locations (e.g., hotels, homes) unless you have built substantial trust through ongoing communication and feel completely safe.
-Share your travel plans with friends or family outside the Platform.
-Verify information shared by others independently.
-Use caution when sharing personal details, locations, or financial information.
-Report any concerning behavior immediately via the in-app reporting tools.
-
-SyncTrip is not liable for any outcomes from user interactions, including but not limited to personal safety, disputes, financial loss, or travel disruptions.
-5. Prohibited Conduct
-You agree not to:
-
-Use the Platform for dating, romantic matchmaking, or any non-travel-related purposes.
-Harass, threaten, abuse, defame, or discriminate against others.
-Post false, misleading, or fraudulent trip information.
-Solicit money, engage in scams, or promote illegal activities.
-Impersonate others or create fake accounts.
-Spam, send unsolicited messages, or violate privacy.
-Upload harmful code, viruses, or interfere with the Platform's functionality.
-Attempt to access others' accounts or data without permission.
-
-Violations may result in immediate account termination and reporting to authorities if illegal.
-6. User Content
-
-You retain ownership of content you post (trip details, itineraries, messages, photos).
-You grant SyncTrip a worldwide, non-exclusive, royalty-free license to use, display, modify, and distribute your content for operating and promoting the Platform.
-You are responsible for your content and warrant it does not infringe third-party rights.
-We may remove content that violates these Terms.
-
-7. Intellectual Property
-
-SyncTrip owns all Platform content, features, and branding (excluding user content).
-You may not copy, modify, or create derivative works without permission.
-
-8. Disclaimers
-
-The Platform is provided "as is" without warranties of any kind.
-We do not guarantee matches, travel outcomes, user reliability, or uninterrupted service.
-Third-party links or information are not endorsed by us.
-
-9. Limitation of Liability
-To the fullest extent permitted by law:
-
-SyncTrip is not liable for indirect, incidental, or consequential damages.
-Our total liability is limited to the amount you paid us (if any) in the past 12 months.
-We are not responsible for user conduct, travel risks, or third-party services.
-
-10. Termination
-
-You may delete your account at any time.
-We may terminate or suspend access immediately for violations or at our discretion.
-Surviving provisions (e.g., disclaimers, liability) remain in effect post-termination.
-
-11. Governing Law and Dispute Resolution
-
-These Terms are governed by the laws of India.
-Disputes shall be resolved exclusively in the courts of Chandigarh, India.
-For consumer disputes, you may approach relevant forums under Indian law.
-
-12. Changes to Terms
-We may update these Terms. Continued use after changes constitutes acceptance. Significant changes will be notified via email or in-app.
-Contact us at synctripofficial@gamil.com for questions.`}
-          </pre>
+            Contents
+          </p>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+            {sections.map((s) => (
+              <a
+                key={s.number}
+                href={`#section-${s.number}`}
+                style={{
+                  fontSize: "13px",
+                  color: "#334155",
+                  background: "#f1f5f9",
+                  borderRadius: "8px",
+                  padding: "5px 12px",
+                  textDecoration: "none",
+                  fontWeight: 500,
+                }}
+              >
+                {s.number}. {s.title}
+              </a>
+            ))}
+          </div>
         </div>
 
-        {/* Footer */}
-        <p
+        {/* Sections */}
+        {sections.map((section) => (
+          <div
+            key={section.number}
+            id={`section-${section.number}`}
+            style={{
+              background: section.highlight ? "#fafafa" : "#fff",
+              borderRadius: "16px",
+              padding: "28px 32px",
+              marginBottom: "16px",
+              border: section.highlight
+                ? "1.5px solid #10b981"
+                : "1px solid #e2e8f0",
+              boxShadow: section.highlight
+                ? "0 0 0 4px rgba(16,185,129,0.06), 0 2px 8px rgba(0,0,0,0.04)"
+                : "0 2px 8px rgba(0,0,0,0.04)",
+            }}
+          >
+            {/* Section Header */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "12px",
+                marginBottom: "20px",
+              }}
+            >
+              <div
+                style={{
+                  minWidth: "36px",
+                  height: "36px",
+                  borderRadius: "10px",
+                  background: section.highlight ? "#10b981" : "#0f172a",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: "13px",
+                  fontWeight: 800,
+                  color: "#fff",
+                }}
+              >
+                {section.number}
+              </div>
+              <h2
+                style={{
+                  margin: 0,
+                  fontSize: "18px",
+                  fontWeight: 700,
+                  color: "#0f172a",
+                  letterSpacing: "-0.3px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px",
+                  flexWrap: "wrap",
+                }}
+              >
+                {section.title}
+                {section.badge && (
+                  <span
+                    style={{
+                      fontSize: "11px",
+                      fontWeight: 700,
+                      color: "#10b981",
+                      background: "rgba(16,185,129,0.1)",
+                      borderRadius: "6px",
+                      padding: "2px 8px",
+                      letterSpacing: "0.04em",
+                    }}
+                  >
+                    {section.badge}
+                  </span>
+                )}
+              </h2>
+            </div>
+
+            {/* Intro paragraph */}
+            {section.intro && (
+              <p
+                style={{
+                  margin: "0 0 16px 0",
+                  fontSize: "14px",
+                  color: "#64748b",
+                  lineHeight: 1.7,
+                  fontStyle: "italic",
+                }}
+              >
+                {section.intro}
+              </p>
+            )}
+
+            {/* Items */}
+            {section.items && (
+              <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                {section.items.map((item) => (
+                  <div
+                    key={item.term}
+                    style={{
+                      display: "flex",
+                      gap: "12px",
+                      padding: "12px 14px",
+                      background: "#f8fafc",
+                      borderRadius: "10px",
+                      border: "1px solid #f1f5f9",
+                    }}
+                  >
+                    <div
+                      style={{
+                        minWidth: "6px",
+                        height: "6px",
+                        borderRadius: "50%",
+                        background: section.highlight ? "#10b981" : "#6366f1",
+                        marginTop: "7px",
+                      }}
+                    />
+                    <div>
+                      <span
+                        style={{
+                          fontSize: "14px",
+                          fontWeight: 700,
+                          color: "#1e293b",
+                        }}
+                      >
+                        {item.term}:{" "}
+                      </span>
+                      <span
+                        style={{
+                          fontSize: "14px",
+                          color: "#475569",
+                          lineHeight: 1.7,
+                        }}
+                      >
+                        {item.detail}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Safety items (yellow callout style) */}
+            {section.safetyItems && (
+              <div
+                style={{
+                  background: "#fffbeb",
+                  border: "1px solid #fde68a",
+                  borderRadius: "12px",
+                  padding: "16px 18px",
+                  marginTop: section.intro ? "0" : "0",
+                }}
+              >
+                <p
+                  style={{
+                    margin: "0 0 10px 0",
+                    fontSize: "12px",
+                    fontWeight: 700,
+                    color: "#92400e",
+                    letterSpacing: "0.06em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  ⚠ Safety Guidelines (Strongly Recommended)
+                </p>
+                <div
+                  style={{ display: "flex", flexDirection: "column", gap: "8px" }}
+                >
+                  {section.safetyItems.map((item, i) => (
+                    <div
+                      key={i}
+                      style={{ display: "flex", gap: "10px", alignItems: "flex-start" }}
+                    >
+                      <div
+                        style={{
+                          minWidth: "6px",
+                          height: "6px",
+                          borderRadius: "50%",
+                          background: "#d97706",
+                          marginTop: "7px",
+                        }}
+                      />
+                      <p
+                        style={{
+                          margin: 0,
+                          fontSize: "14px",
+                          color: "#78350f",
+                          lineHeight: 1.65,
+                        }}
+                      >
+                        {item}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Prose content */}
+            {section.content && (
+              <p
+                style={{
+                  margin: 0,
+                  fontSize: "14px",
+                  color: "#475569",
+                  lineHeight: 1.8,
+                  whiteSpace: "pre-line",
+                }}
+              >
+                {section.content}
+              </p>
+            )}
+
+            {/* Note */}
+            {section.note && (
+              <div
+                style={{
+                  marginTop: "16px",
+                  padding: "12px 16px",
+                  background: "rgba(99,102,241,0.06)",
+                  borderRadius: "10px",
+                  borderLeft: "3px solid #6366f1",
+                }}
+              >
+                <p
+                  style={{
+                    margin: 0,
+                    fontSize: "13px",
+                    color: "#4338ca",
+                    lineHeight: 1.6,
+                  }}
+                >
+                  {section.note}
+                </p>
+              </div>
+            )}
+          </div>
+        ))}
+
+        {/* Contact Footer */}
+        <div
           style={{
-            marginTop: "18px",
-            fontSize: "13px",
-            color: "#64748b",
-            lineHeight: 1.6,
+            background: "#0f172a",
+            borderRadius: "16px",
+            padding: "28px 32px",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            flexWrap: "wrap",
+            gap: "16px",
           }}
         >
-          If you have any questions, contact us at{" "}
+          <div>
+            <p
+              style={{
+                margin: "0 0 4px 0",
+                fontSize: "15px",
+                fontWeight: 700,
+                color: "#f8fafc",
+              }}
+            >
+              Questions about these Terms?
+            </p>
+            <p
+              style={{
+                margin: 0,
+                fontSize: "13px",
+                color: "#94a3b8",
+                lineHeight: 1.6,
+              }}
+            >
+              Governed by the laws of India.
+              <br />
+              Disputes resolved in the courts of Chandigarh, India.
+            </p>
+          </div>
           <a
-            href="mailto:synctripofficial@gamil.com"
-            style={{ color: "#2563eb", textDecoration: "none" }}
+            href="mailto:synctripofficial@gmail.com"
+            style={{
+              display: "inline-block",
+              background: "#10b981",
+              color: "#fff",
+              borderRadius: "10px",
+              padding: "10px 20px",
+              fontSize: "14px",
+              fontWeight: 600,
+              textDecoration: "none",
+              letterSpacing: "0.01em",
+            }}
           >
             synctripofficial@gmail.com
           </a>
-        </p>
+        </div>
       </div>
     </main>
   );
 }
-
-
-
