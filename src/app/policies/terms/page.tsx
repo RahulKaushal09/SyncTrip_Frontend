@@ -399,7 +399,7 @@ export default function TermsPage() {
             <strong style={{ color: "#e2e8f0" }}>
               SyncTrip Digital Private Limited
             </strong>{" "}
-            ("we," "us," or "SyncTrip"). SyncTrip is a social activity coordination
+            (&quot;we,&quot; &quot;us,&quot; or &quot;SyncTrip&quot;). SyncTrip is a social activity coordination
             platform — not a dating service or booking platform — for group trips,
             rides, movies, sports, and outings. By using the Platform, you agree to
             these Terms.

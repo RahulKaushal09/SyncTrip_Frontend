@@ -291,7 +291,7 @@ export default function PrivacyPolicyPage() {
             }}
           >
             SyncTrip respects your privacy. This Policy explains how we collect, use, share, and
-            protect your personal information in compliance with India's{" "}
+            protect your personal information in compliance with India&apos;s{" "}
             <strong style={{ color: "#e2e8f0" }}>
               Digital Personal Data Protection Act, 2023 (DPDP Act)
             </strong>{" "}

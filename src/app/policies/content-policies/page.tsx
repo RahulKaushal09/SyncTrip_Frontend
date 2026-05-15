@@ -184,7 +184,7 @@ const sections = [
       },
       {
         label: null,
-        text: "You may appeal enforcement decisions by contacting support@synctrip.app within 14 days.",
+        text: "You may appeal enforcement decisions by contacting synctripofficial@gmail.com within 14 days.",
       },
     ],
   },
@@ -430,7 +430,7 @@ export default function CommunityGuidelinesPage() {
             </div>
             <div style={{ textAlign: "right" }}>
               <p style={{ margin: "0 0 4px 0", fontSize: "13px" }}>
-                Questions? <a href="mailto:support@synctrip.app" style={{ color: "#93c5fd" }}>support@synctrip.app</a>
+                Questions? <a href="mailto:synctripofficial@gmail.com" style={{ color: "#93c5fd" }}>Mail Us!</a>
               </p>
               <p style={{ margin: 0, fontSize: "12px", color: "#94a3b8" }}>
                 © 2026 SyncTrip. All rights reserved.

@@ -100,12 +100,12 @@ const AppDownloadStack = () => {
               </div>
             </div>
             <h2 className="text-3xl lg:text-6xl font-extrabold leading-[1.05] tracking-tight text-white drop-shadow-lg">
-              Get Exclusive Access, <br />
-              <span className="text-primary-1 bg-clip-text text-transparent bg-gradient-to-r from-primary-1 to-blue-400">only on SyncTrip Mobile App.</span>
+              Introducing<br />
+              <span className="text-primary-1 bg-clip-text text-transparent bg-gradient-to-r from-primary-1 to-blue-400">SyncMaps - World on Your Fingertips</span>
             </h2>
             <div className="flex flex-col gap-5 lg:gap-8 w-full">
               <p className="text-base lg:text-xl text-white/80 max-w-md m-0 mx-auto lg:mx-0 font-light leading-relaxed">
-                Connect with travelers. Free Access to Chats. Share the journey — all from one app.
+                Connect with like-minded adventurers, discover local meetups, and turn your travel dreams into reality - all from the palm of your hand.
               </p>
               <StoreBadge isDark={true} href="https://play.google.com/store/apps/details?id=com.synctrip" />
             </div>
@@ -148,23 +148,23 @@ const AppDownloadStack = () => {
             <div className="flex justify-center">
               <div className="inline-flex items-center px-5 py-2 rounded-full border backdrop-blur-md bg-white/80 border-primary-3/30 shadow-sm">
                 <span className="text-xs lg:text-sm uppercase tracking-[0.25em] font-bold text-primary-1">
-                  Swipe. Match.
+                  Plan, Meet & Explore
                 </span>
               </div>
             </div>
             <h2 className="text-3xl lg:text-6xl font-extrabold leading-[1.05] tracking-tight text-secondary-1">
-              All your connections <br />
-              <span className="text-primary-1">at one Place.</span>
+              Trips, Rides, Movies <br />
+              <span className="text-primary-1">and moreee.</span>
             </h2>
-            <div className="flex flex-col gap-1 mx-auto lg:mx-0 w-full max-w-md">
-              <FeatureRow text="Swipe through verified profiles" isDark={false} />
-              <FeatureRow text="Matches, Received and Sent Connections" isDark={false} />
-              <FeatureRow text="Chat instantly when you match" isDark={false} />
+            <div className="flex text-lg flex-col gap-1 mx-auto lg:mx-0 w-full max-w-md">
+              Join 5000+ verified travelers using SyncTrip to find companions for trips, bike rides, sports, movies and local hangouts across India. 
+              <br/>
+              <strong>Your next adventure is just a swipe away!</strong>
             </div>
           </div>
 
           <div className="w-full -rotate-3 flex-1 flex justify-center items-center relative">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-secondary-1/10 blur-[100px] rounded-full pointer-events-none" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] rounded-full pointer-events-none" />
             <div className="relative w-full max-w-[220px] lg:max-w-[420px] lg:aspect-[4/6] transition-transform duration-[800ms] group-hover:-translate-y-4">
               <GumletImage
                 src={displayImg2.src}
@@ -271,13 +271,12 @@ const AppDownloadStack = () => {
           </div>
 
           <div className="w-full -rotate-3 flex-1 flex justify-center items-center relative">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-primary-1/20 blur-[100px] rounded-full pointer-events-none" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px]  rounded-full pointer-events-none" />
             <div className="relative w-full max-w-[220px] lg:max-w-[420px] lg:aspect-[3/4] transition-transform duration-[800ms] group-hover:-translate-y-4">
-              <GumletImage
+              <img
                 src={displayImg4.src}
                 alt="SyncTrip Download"
-                fill
-                containerStyle={{ height: "100%", width: "100%", objectFit: "contain" }}
+                style={{ height: "100%", width: "100%", objectFit: "contain" }}
               />
             </div>
           </div>

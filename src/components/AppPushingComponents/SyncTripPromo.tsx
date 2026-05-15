@@ -117,7 +117,7 @@ const SyncTripPromo = () => {
               }}
             >
               Join{" "}
-              <strong className="text-white font-semibold">1,000+ verified travelers</strong>{" "}
+              <strong className="text-white font-semibold">5,000+ verified travelers</strong>{" "}
               enjoying a safe, social, and seamless experience with SyncTrip.
             </p>
 
@@ -156,7 +156,7 @@ const SyncTripPromo = () => {
             <img
               src={d2.src}
               alt="SyncTrip App Screen 2"
-              className="absolute bottom-[-5%] right-[10%] md:right-[5%] w-[45%] md:w-[48%] max-w-[240px] object-contain z-10 
+              className="absolute bottom-[-5%] right-[10%] md:right-[15%] w-[45%] md:w-[48%] max-w-[240px] object-contain z-10 
                          rotate-6 drop-shadow-[0_20px_40px_rgba(0,0,0,0.2)] 
                          pointer-events-auto transition-transform duration-500 hover:-translate-y-4 hover:rotate-3 origin-bottom"
             />

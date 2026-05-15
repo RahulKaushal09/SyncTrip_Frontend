@@ -2,13 +2,33 @@
 
 import { Metadata } from "next";
 
+interface Item {
+  label: string | null;
+  text: string;
+  isEmail?: boolean;
+}
+
+interface Subsection {
+  heading: string;
+  bullets: string[];
+}
+
+interface Section {
+  id: string;
+  icon: string;
+  title: string;
+  badge?: string;
+  items: Item[];
+  subsections?: Subsection[];
+}
+
 export const metadata: Metadata = {
   title: "SyncTrip Child Safety & Protection Policy",
   description:
     "SyncTrip is committed to maintaining a safe environment and strictly prohibits any form of child sexual abuse or exploitation (CSAE) on the platform. All users must be 18+ and verified.",
 };
 
-const sections = [
+const sections : Section[] = [
   {
     id: "age-requirement",
     icon: "🔞",
@@ -374,7 +394,7 @@ export default function ChildSafetyPage() {
                             {item.label}:{" "}
                           </strong>
                         )}
-                        {(item as any).isEmail ? (
+                        {item.isEmail ? (
                           <a
                             href={`mailto:${item.text}`}
                             style={{ color: "#2563eb", textDecoration: "none", fontWeight: 600 }}
@@ -390,7 +410,7 @@ export default function ChildSafetyPage() {
                 </ul>
 
                 {/* Subsections (bullet groups) */}
-                {(section as any).subsections?.map((sub: any, sidx: number) => (
+                {section.subsections?.map((sub: Subsection, sidx: number) => (
                   <div
                     key={sidx}
                     style={{
