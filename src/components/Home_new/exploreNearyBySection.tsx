@@ -353,7 +353,7 @@ export default function ExploreNearbySection() {
   // Handlers that attempt to request location again if it's not available or permission previously denied
   const handleRadiusChange = async (newValue: string | number) => {
     setRadius(Number(newValue));
-    // This call is triggered by a user interaction (dropdown selection) — allowed to re-request location prompt
+    // This call is triggered by a user interaction (dropdown selection) - allowed to re-request location prompt
     if (!userLocation || locationPermissionDenied) {
       await requestUserLocation(true);
     }

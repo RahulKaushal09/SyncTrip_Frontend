@@ -14,8 +14,8 @@ export async function generateMetadata(): Promise<Metadata> {
     const totalTrips = trips.length;
     const samplePrice = trips.length ? Math.min(...trips.map(t => t.essentials.price)) : null;
     const title = totalTrips > 0
-      ? `${totalTrips} Handpicked Group Trips & Tour Packages — SyncTrip`
-      : 'Handpicked Group Trips & Tour Packages — SyncTrip';
+      ? `${totalTrips} Handpicked Group Trips & Tour Packages - SyncTrip`
+      : 'Handpicked Group Trips & Tour Packages - SyncTrip';
     const description = totalTrips > 0
       ? `Discover ${totalTrips} curated group trips starting from ${samplePrice ? `₹${samplePrice}` : 'affordable prices'}. Book immersive group adventures with verified companions.`
       : 'Discover curated group trips, itineraries and affordable tour packages on SyncTrip.';
@@ -46,7 +46,7 @@ export async function generateMetadata(): Promise<Metadata> {
     };
   } catch {
     return {
-      title: 'Handpicked Group Trips & Tour Packages — SyncTrip',
+      title: 'Handpicked Group Trips & Tour Packages - SyncTrip',
       description: 'Discover curated group trips, itineraries and affordable tour packages on SyncTrip.'
     };
   }
@@ -120,17 +120,17 @@ export async function generateMetadata(): Promise<Metadata> {
 
 
 const TripsPage = async ({ }) => {
-    let trips: Trip[] = [];
-    const tripsResponse: getAllTripsResponseSchema = await TripsApiService.fetchAllTrips();
-    trips = tripsResponse.trips || [];
-    // const totaltrips = tripsResponse.totalTrips || 0;
-    return (
-        <div className="trips-container ">
-            <TripSection
-                trips={trips}
-            />
-        </div>
-    );
+  let trips: Trip[] = [];
+  const tripsResponse: getAllTripsResponseSchema = await TripsApiService.fetchAllTrips();
+  trips = tripsResponse.trips || [];
+  // const totaltrips = tripsResponse.totalTrips || 0;
+  return (
+    <div className="trips-container ">
+      <TripSection
+        trips={trips}
+      />
+    </div>
+  );
 };
 
 

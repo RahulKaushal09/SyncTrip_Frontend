@@ -21,7 +21,6 @@ export const metadata = {
   },
   description: 'SyncTrip connects solo travelers across India. Find a travel buddy, join trip groups, and plan rides, sports, movies & local hangouts. Free on Android & iOS.',
   robots: 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1',
-  alternates: { canonical: 'https://synctrip.in' },
 };
 
 import Script from 'next/script';

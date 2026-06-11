@@ -528,7 +528,7 @@ function CreateTripContent() {
   // --- Step 7: Modify / Review Component (Formerly Step 6) ---
   const Step6Review: React.FC = () => {
     const dateRange =
-      startDate && endDate ? CommonServices.formatRange(startDate.toISOString(), endDate.toISOString()) : '—';
+      startDate && endDate ? CommonServices.formatRange(startDate.toISOString(), endDate.toISOString()) : '-';
 
     // Generate a temporary URL for the review screen if the image is a File
     const reviewImageUrl = tripImage instanceof File ? URL.createObjectURL(tripImage) : tripImage;
@@ -548,12 +548,12 @@ function CreateTripContent() {
               <div className="font-medium text-sm text-gray-800">{label}</div>
               {pill ? (
                 <div className="chipsBox mt-2">
-                  {typeof value === 'string' && value !== '—' && value.split(', ').map((val, i) => (
+                  {typeof value === 'string' && value !== '-' && value.split(', ').map((val, i) => (
                     <span key={`${val}-${i}`} className="chip ">
                       {val}
                     </span>
                   ))}
-                  {(!value || (typeof value === 'string' && value === '—')) && (
+                  {(!value || (typeof value === 'string' && value === '-')) && (
                     <div className="text-sm text-gray-500 mt-1">Select</div>
                   )}
                 </div>
@@ -597,7 +597,7 @@ function CreateTripContent() {
         <Card
           icon={<MapPin size={18} />}
           label="Location"
-          value={selectedLocation?.title || '—'}
+          value={selectedLocation?.title || '-'}
           onEdit={() => goEdit(1)}
         />
 
@@ -636,7 +636,7 @@ function CreateTripContent() {
         {/* <Card
           icon={<Star size={18} />}
           label="Interests"
-          value={selectedPreferences.length ? selectedPreferences.join(', ') : '—'}
+          value={selectedPreferences.length ? selectedPreferences.join(', ') : '-'}
           pill
           onEdit={() => goEdit(4)} // Shifted to 4
         />
@@ -644,7 +644,7 @@ function CreateTripContent() {
         <Card
           icon={<CreditCard size={18} />}
           label="Budget"
-          value={selectedBudget || '—'}
+          value={selectedBudget || '-'}
           pill
           onEdit={() => goEdit(5)} // Shifted to 5
         /> */}
@@ -652,7 +652,7 @@ function CreateTripContent() {
         <Card
           icon={<Lock size={18} />}
           label="Privacy"
-          value={selectedPrivacy || '—'}
+          value={selectedPrivacy || '-'}
           pill
           onEdit={() => goEdit(6)} // Note: Shifted to 6, assuming Privacy is now step 6
         />

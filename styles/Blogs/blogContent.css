@@ -460,7 +460,7 @@
     font-family: var(--font-sans);
 }
 
-/* Scroll wrapper — fade hint on right, padding gives hover lift room */
+/* Scroll wrapper - fade hint on right, padding gives hover lift room */
 .related-locations-scroll-wrap {
     position: relative;
 }
@@ -477,7 +477,7 @@
     z-index: 1;
 } */
 
-/* Horizontal strip — padding creates room for shadow + lift transform */
+/* Horizontal strip - padding creates room for shadow + lift transform */
 .related-locations-strip {
     display: flex;
     gap: 12px;
@@ -576,7 +576,7 @@
     }
 }
 
-/* Mobile — exactly 3 cards */
+/* Mobile - exactly 3 cards */
 @media (max-width: 768px) {
     .location-card {
         flex: 0 0 calc((100% - 24px) / 3);
@@ -584,7 +584,7 @@
     }
 }
 
-/* Small phones — 2 cards + fade hint */
+/* Small phones - 2 cards + fade hint */
 @media (max-width: 420px) {
     .location-card {
         flex: 0 0 calc((100% - 12px) / 2);

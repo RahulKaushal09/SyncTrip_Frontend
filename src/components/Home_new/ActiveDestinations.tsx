@@ -103,7 +103,7 @@ export default function ActiveDestinations({
             </header>
 
             <div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mb-10">
-                {destinations.map((d,idx) => (
+                {destinations.map((d, idx) => (
                     <article
                         key={d.id}
                         className="group bg-white rounded-2xl overflow-hidden border border-[#E8E8EC] shadow-sm hover:shadow-lg transform hover:-translate-y-2 transition-all duration-300 cursor-pointer"
@@ -117,8 +117,8 @@ export default function ActiveDestinations({
                                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                 className="object-cover transition-transform duration-500 group-hover:scale-105"
                                 priority={false}
-                                // width={idx == 0?290:280}
-                                // height={idx == 0?387:466}
+                            // width={idx == 0?290:280}
+                            // height={idx == 0?387:466}
                             />
 
                             <div className="absolute inset-0 bg-gradient-to-b from-[rgba(22,50,79,0)] to-[rgba(22,50,79,0.52)] pointer-events-none" />
@@ -179,7 +179,7 @@ export default function ActiveDestinations({
                 </h4>
 
                 <p className="text-neutral-600 max-w-2xl mx-auto mb-8">
-                    Create your perfect trip and connect with travellers heading to the same destination — or join groups already planning their adventure.
+                    Create your perfect trip and connect with travellers heading to the same destination - or join groups already planning their adventure.
                 </p>
 
                 {/* FLOW */}

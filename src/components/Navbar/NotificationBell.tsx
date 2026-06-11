@@ -8,7 +8,7 @@ import { Bell } from "lucide-react";
 // import { API_CONFIG } from "@/constants";
 import { getSocket } from "@/utils/socket";
 
-export default function NotificationBell({iconColor = "black"}: {iconColor?: string}) {
+export default function NotificationBell({ iconColor = "black" }: { iconColor?: string }) {
   const [count, setCount] = useState(0);
   const socketRef = useRef<Socket | null>(null);
 
@@ -24,10 +24,10 @@ export default function NotificationBell({iconColor = "black"}: {iconColor?: str
   };
 
   useEffect(() => {
-    
+
     fetchCount(); // Initial load
 
-   
+
     const socket = getSocket();
 
     socketRef.current = socket;
@@ -56,7 +56,7 @@ export default function NotificationBell({iconColor = "black"}: {iconColor?: str
     // Visibility refresh (keep, but log)
     const onVisible = () => {
       if (document.visibilityState === "visible") {
-        // console.log("👁️ Tab visible — syncing count");
+        // console.log("👁️ Tab visible - syncing count");
         fetchCount();
       }
     };
@@ -71,12 +71,12 @@ export default function NotificationBell({iconColor = "black"}: {iconColor?: str
     };
   }, []);
 
-  // Redundant cleanup (remove this useEffect — first one handles it)
+  // Redundant cleanup (remove this useEffect - first one handles it)
   // useEffect(() => { return () => { if (socketRef.current) socketRef.current.disconnect(); }; }, []);
 
   return (
     <Link href="/notifications" className="relative cursor-pointer flex items-center">
-      <Bell color={iconColor} size={22}  />
+      <Bell color={iconColor} size={22} />
       {count > 0 && (
         <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
           {count > 9 ? "9+" : count}

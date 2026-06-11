@@ -34,7 +34,7 @@ export default async function FaceVerificationPage({ searchParams }: PageProps) 
         return <InvalidToken />;
     }
 
-    // 2. Decode token — invalid structure
+    // 2. Decode token - invalid structure
     const payload = decodeJwtPayload(token);
     if (!payload) {
         return <InvalidToken />;

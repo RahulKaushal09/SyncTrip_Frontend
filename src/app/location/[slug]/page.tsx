@@ -18,7 +18,7 @@ export const viewport = {
     initialScale: 1,
 };
 
-// ✅ 30 day revalidation — location data never changes
+// ✅ 30 day revalidation - location data never changes
 export const revalidate = 2592000;
 
 // ✅ new location slugs SSR on first hit, cached after

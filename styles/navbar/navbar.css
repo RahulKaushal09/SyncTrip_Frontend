@@ -207,7 +207,7 @@ navbar-toggler {
 .chat-icon-btn svg {
     display: block;
     color: #111827;
-    /* default icon color — inherits text color */
+    /* default icon color - inherits text color */
 }
 
 /* unread badge (red) */

@@ -118,7 +118,7 @@ const sections = [
       },
       {
         label: "Group Coordination Only",
-        text: "SyncMaps is designed for coordinating group travel plans — not for monitoring individuals. Misuse of this feature for surveillance or coercion is strictly prohibited.",
+        text: "SyncMaps is designed for coordinating group travel plans - not for monitoring individuals. Misuse of this feature for surveillance or coercion is strictly prohibited.",
       },
     ],
   },
@@ -130,7 +130,7 @@ const sections = [
     items: [
       {
         label: "Authentic Submission Required",
-        text: "Submitting any image other than your own face for verification purposes — including images of other people, cartoons, AI-generated faces, or manipulated photos — is a violation of this Content Policy.",
+        text: "Submitting any image other than your own face for verification purposes - including images of other people, cartoons, AI-generated faces, or manipulated photos - is a violation of this Content Policy.",
       },
       {
         label: "Identity Integrity",
@@ -153,7 +153,7 @@ const sections = [
       },
       {
         label: null,
-        text: "Report users who make you feel uncomfortable — your report is confidential.",
+        text: "Report users who make you feel uncomfortable - your report is confidential.",
       },
       {
         label: null,
@@ -161,7 +161,7 @@ const sections = [
       },
       {
         label: null,
-        text: "Never share financial information or make payments through the app.",
+        text: "Never share financial information or make payments to other users through the app. SyncTrip only collects payment through official subscription flows (App Store, Google Play, or Razorpay). If anyone claiming to represent SyncTrip asks for money outside those flows, report them.",
       },
     ],
   },
@@ -180,7 +180,7 @@ const sections = [
       },
       {
         label: null,
-        text: "Severe violations — including threats, location-based harassment, and child safety violations — are reported to law enforcement.",
+        text: "Severe violations - including threats, location-based harassment, and child safety violations - are reported to law enforcement.",
       },
       {
         label: null,
@@ -239,7 +239,7 @@ export default function CommunityGuidelinesPage() {
           </h1>
 
           <p style={{ margin: "0 0 6px 0", fontSize: "14px", color: "#64748b", fontFamily: "Arial, sans-serif" }}>
-            Effective Date: January 22, 2026 &nbsp;·&nbsp; Last Updated: 2026
+            Effective Date: January 22, 2026 &nbsp;·&nbsp; Last Updated: June 11, 2026
           </p>
 
           <p
@@ -447,7 +447,7 @@ export default function CommunityGuidelinesPage() {
               color: "#94a3b8",
             }}
           >
-            Help keep SyncTrip safe — report violations directly in the app using the{" "}
+            Help keep SyncTrip safe - report violations directly in the app using the{" "}
             <strong style={{ color: "#cbd5e1" }}>Report</strong> button on any profile or message.
             Our Trust & Safety team reviews every report.
           </div>

@@ -130,7 +130,7 @@ export const DownloadAppModal: React.FC<Props> = ({ isOpen, onClose }) => {
                     Only Available on Mobile
                 </h2>
                 <p style={{ fontSize: '0.95rem', color: '#52525b', margin: '0 0 20px', lineHeight: 1.5 }}>
-                    Sign up, join plans, and connect with your crew — all in the app.
+                    Sign up, join plans, and connect with your crew - all in the app.
                 </p>
 
                 {/* ── CAROUSEL SECTION ── */}

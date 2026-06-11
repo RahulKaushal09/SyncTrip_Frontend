@@ -16,13 +16,13 @@ export const viewport = {
 };
 
 // export const metadata: Metadata = {
-//   title: "Explore India's Top Destinations — SyncTrip",
+//   title: "Explore India's Top Destinations - SyncTrip",
 //   description: 'Explore curated destinations, city guides, festivals and group trips across India. Find itineraries, hotels and verified travel companions on SyncTrip.',
 //   keywords: 'explore India, travel destinations India, curated trips, group trips, SyncTrip destinations',
 //   authors: [{ name: 'SyncTrip' }],
 //   robots: 'index, follow, max-snippet:-1, max-image-preview:large',
 //   openGraph: {
-//     title: "Explore India's Top Destinations — SyncTrip",
+//     title: "Explore India's Top Destinations - SyncTrip",
 //     description: 'Explore curated destinations and group trips across India. Find itineraries, hotels and verified companions.',
 //     url: 'https://synctrip.in/explore',
 //     siteName: 'SyncTrip',
@@ -39,7 +39,7 @@ export const viewport = {
 //   },
 //   twitter: {
 //     card: 'summary_large_image',
-//     title: "Explore India's Top Destinations — SyncTrip",
+//     title: "Explore India's Top Destinations - SyncTrip",
 //     description: 'Find curated group trips, city guides and itineraries across India.',
 //     creator: '@synctrip',
 //     images: ['https://synctrip.in/logo_1200.png'],
@@ -91,7 +91,7 @@ export const viewport = {
 //   // TARGET: High-volume "Travel Buddy" + "Lead" intent
 //   title: 'SyncTrip | Lead Your Own Trip & Find Verified Travel Buddies',
 
-//   description: 'The DIY social travel platform. Don’t wait for a tour — create your own trip, host a solo traveler group, or find verified travel companions heading your way. Plan together, share costs, and travel safely.',
+//   description: 'The DIY social travel platform. Don’t wait for a tour - create your own trip, host a solo traveler group, or find verified travel companions heading your way. Plan together, share costs, and travel safely.',
 
 //   // TARGET: +9,900% Growth keywords: "Solo travel tips", "Verified", "Create"
 //   keywords: 'find travel buddy India, solo traveler community, create travel groups, host a trip, verified travel companion, solo travel tips India, group trip coordination, SyncTrip',
@@ -136,7 +136,7 @@ export const viewport = {
 // };
 export const metadata: Metadata = {
   title: 'Explore Travel Destinations in India – Find Trip Companions',
-  description: 'Browse 500+ Indian destinations, find verified travel companions heading your way, and plan group trips. From Goa to Leh — discover where India travels. Free on Android & iOS.',
+  description: 'Browse 500+ Indian destinations, find verified travel companions heading your way, and plan group trips. From Goa to Leh - discover where India travels. Free on Android & iOS.',
   keywords: 'explore destinations India, travel companion India, group trips India, find travel buddy, SyncTrip explore',
   authors: [{ name: 'SyncTrip', url: 'https://synctrip.in' }],
   robots: 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1',

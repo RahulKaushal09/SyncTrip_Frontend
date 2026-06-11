@@ -91,7 +91,7 @@ export interface UserTrip {
     currentParticipants?: number; // Current number of participants
 };
 
-// ─── Core trip shape (flat — matches API response directly) ──────────────────
+// ─── Core trip shape (flat - matches API response directly) ──────────────────
 
 export interface UserTripPreview {
     _id: string;
@@ -112,7 +112,7 @@ export interface UserTripPreview {
     genderPreference: string;
     tripStatus: string;
 
-    // Optional SEO block — may or may not be returned by the API
+    // Optional SEO block - may or may not be returned by the API
     seo?: {
         seo_title?: string;
         seo_description?: string;

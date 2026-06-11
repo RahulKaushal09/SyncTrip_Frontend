@@ -75,7 +75,7 @@ const AboutSections: React.FC<{
             {/* --- About Description --- */}
             <div className="descriptionContainer">
                 <p className="text-lg font-bold mb-3">Highlights:</p>
-                <p className="descriptionText">{description || '—'}</p>
+                <p className="descriptionText">{description || '-'}</p>
 
                 {longDesc && (
                     <button

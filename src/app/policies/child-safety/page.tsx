@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     "SyncTrip is committed to maintaining a safe environment and strictly prohibits any form of child sexual abuse or exploitation (CSAE) on the platform. All users must be 18+ and verified.",
 };
 
-const sections : Section[] = [
+const sections: Section[] = [
   {
     id: "age-requirement",
     icon: "🔞",
@@ -45,7 +45,7 @@ const sections : Section[] = [
       },
       {
         label: "Face Verification",
-        text: "SyncTrip uses face verification to confirm user identity and age. If during this process we detect — or receive credible reports — that a user may be a minor, their account will be immediately suspended pending review.",
+        text: "SyncTrip uses face verification to confirm user identity and age. If during this process we detect - or receive credible reports - that a user may be a minor, their account will be immediately suspended pending review.",
       },
       {
         label: "Restricted Features",
@@ -102,7 +102,7 @@ const sections : Section[] = [
       },
       {
         label: "Fraudulent Submissions",
-        text: "Submitting any image other than your own face — including images of minors, other adults, cartoons, AI-generated faces, or manipulated photos — is a serious violation of this Policy and our Content Policy, and will result in permanent account termination.",
+        text: "Submitting any image other than your own face - including images of minors, other adults, cartoons, AI-generated faces, or manipulated photos - is a serious violation of this Policy and our Content Policy, and will result in permanent account termination.",
       },
       {
         label: "Data Privacy",
@@ -122,7 +122,7 @@ const sections : Section[] = [
       },
       {
         label: "Prohibited Use",
-        text: "SyncMaps must not be used to locate, track, follow, or approach any individual — particularly minors — without explicit consent. Such behaviour constitutes a serious safety violation.",
+        text: "SyncMaps must not be used to locate, track, follow, or approach any individual - particularly minors - without explicit consent. Such behaviour constitutes a serious safety violation.",
       },
       {
         label: "Immediate Action",
@@ -141,7 +141,7 @@ const sections : Section[] = [
       },
       {
         label: null,
-        text: "Our Trust & Safety team reviews all child safety reports as the highest priority and takes immediate action — including content removal, account suspension, or permanent bans.",
+        text: "Our Trust & Safety team reviews all child safety reports as the highest priority and takes immediate action - including content removal, account suspension, or permanent bans.",
       },
       {
         label: null,
@@ -502,7 +502,7 @@ export default function ChildSafetyPage() {
                 🌍 SyncTrip
               </p>
               <p style={{ margin: 0, fontSize: "13px", lineHeight: 1.6 }}>
-                Safe, verified travel coordination — adults only.
+                Safe, verified travel coordination - adults only.
               </p>
             </div>
             <div style={{ textAlign: "right" }}>

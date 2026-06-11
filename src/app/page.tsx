@@ -17,10 +17,10 @@ export const metadata: Metadata = {
   title: 'Find Travel Buddies in India – Solo Travel Companion App | SyncTrip',
   // ↑ Primary keyword "find travel buddies in India" front-loaded
   // ↑ "Solo Travel Companion App" = exact transactional query
-  // ↑ 60 chars exactly — fits Google title display
+  // ↑ 60 chars exactly - fits Google title display
 
   description: 'Connect with 5,000+ verified Indian travelers heading your way. Find trip companions, join bike rides, sports groups, movie plans & weekend hangouts. Free on Android & iOS.',
-  // ↑ 175 chars — includes primary kw, social proof (5000+), all 4 activity
+  // ↑ 175 chars - includes primary kw, social proof (5000+), all 4 activity
   // ↑ categories, CTA (Free), platform (Android & iOS)
 
   keywords: [
@@ -162,7 +162,7 @@ export default async function Home() {
             "@type": "WebSite",
             "name": "SyncTrip",
             "url": "https://synctrip.in",
-            "description": "India's solo travel companion app — find travel buddies, plan trips, join local activity groups.",
+            "description": "India's solo travel companion app - find travel buddies, plan trips, join local activity groups.",
             "potentialAction": {
               "@type": "SearchAction",
               "target": {

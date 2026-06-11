@@ -124,7 +124,7 @@ const SyncTripPromo = () => {
             {/* CTA */}
             <div className="mt-4 pb-8 flex gap-6 md:pb-0">
               <a
-                href={APP_LINKS.PLAY_STORE} 
+                href={APP_LINKS.PLAY_STORE}
                 className="inline-block transition-transform duration-300 hover:-translate-y-1 hover:scale-105 active:scale-95 drop-shadow-[0_6px_16px_rgba(0,0,0,0.2)]"
               >
                 <img
@@ -148,11 +148,11 @@ const SyncTripPromo = () => {
 
           {/* ── RIGHT: Overlapping phone mockups ── */}
           <div className="relative hidden w-full md:w-[45%] h-[380px] md:h-auto md:flex justify-center items-end self-end overflow-visible pointer-events-none px-4 md:px-0">
-            
+
             {/* Soft glow behind phones */}
             <div className="absolute bottom-10 left-1/2 -translate-x-1/2 w-[80%] h-[40%] rounded-full bg-white/20 blur-[32px] z-0" />
 
-            {/* Back phone (d2) — shifted right, rotated right, sits lower in z-index */}
+            {/* Back phone (d2) - shifted right, rotated right, sits lower in z-index */}
             <img
               src={d2.src}
               alt="SyncTrip App Screen 2"
@@ -161,7 +161,7 @@ const SyncTripPromo = () => {
                          pointer-events-auto transition-transform duration-500 hover:-translate-y-4 hover:rotate-3 origin-bottom"
             />
 
-            {/* Front phone (d1) — larger, rotated left, higher z-index, overlapping */}
+            {/* Front phone (d1) - larger, rotated left, higher z-index, overlapping */}
             <img
               src={d1.src}
               alt="SyncTrip App Screen 1"

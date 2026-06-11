@@ -64,7 +64,7 @@ export default function TravelModePage() {
   }
 
   const formatDate = (dateStr: string | undefined) => {
-    if (!dateStr) return '—';
+    if (!dateStr) return '-';
     return new Date(dateStr).toLocaleDateString('en-IN', {
       day: 'numeric',
       month: 'short',
@@ -170,7 +170,7 @@ export default function TravelModePage() {
                   onClick={() => router.push(`/userTrip/${tripId}/groups/${groupData?.groupId}`)}
                   className="btn btn-primary !h-[56px] w-full !flex items-center justify-between px-6 hover:bg-secondary-5"
                 >
-                  <div className="flex items-center gap-3"> 
+                  <div className="flex items-center gap-3">
                     <Users size={18} />
                     <span className="b2">View Group Details</span>
                   </div>
@@ -208,7 +208,7 @@ export default function TravelModePage() {
         {/* PRIMARY CHOICE: GROUP DISCUSSIONS (Col-span 6) */}
         <div className="lg:col-span-6 m-animate play m-slide-up">
           <div className="bg-primary-5 border-2 border-primary-1 rounded-3xl p-8 hov-lift h-full flex flex-col relative overflow-hidden">
-            
+
             <div className="flex mt-2 items-center gap-4 mb-6">
               <div className="bg-primary-1 p-3 rounded-2xl">
                 <MessageSquare className="text-white" size={28} />
@@ -220,7 +220,7 @@ export default function TravelModePage() {
             </div>
 
             <p className="r2 text-secondary-1 mb-8 leading-relaxed">
-              Jump into active conversations with verified explorers heading to the same destination. 
+              Jump into active conversations with verified explorers heading to the same destination.
               Share itineraries, ask questions, and form organic connections before you travel.
             </p>
 
@@ -252,7 +252,7 @@ export default function TravelModePage() {
         {/* SECONDARY CHOICE: SOLO ADVENTURE (Col-span 6) */}
         <div className="lg:col-span-6 m-animate play m-slide-up" style={{ '--i': 1 } as React.CSSProperties}>
           <div className="bg-white border-2 border-neutral-4 rounded-3xl p-8 h-full flex flex-col hov-lift relative overflow-hidden">
-            
+
             <div className="flex mt-2 items-center gap-4 mb-6">
               <div className="bg-neutral-5 w-fit rounded-2xl p-3 border flex items-center justify-center">
                 <User className="text-neutral-1" size={28} />

@@ -66,8 +66,23 @@ const sections = [
           },
         ],
       },
+      {
+        label: "d. Subscription & Billing Data",
+        items: [
+          {
+            term: "Subscription details",
+            detail:
+              "When you purchase SyncTrip Plus we collect the plan selected, billing period, transaction ID, payment method type (e.g., UPI, card type, wallet - but not the full card number or UPI VPA), subscription status, renewal date, and the platform that processed the payment (Razorpay, Apple, or Google).",
+          },
+          {
+            term: "What we never see",
+            detail:
+              "Card numbers, CVVs, and UPI PINs are never seen or stored by SyncTrip. They go directly from your device to the payment processor over a secured channel.",
+          },
+        ],
+      },
     ],
-    note: "Face verification data constitutes sensitive personal data under the DPDP Act 2023 and IT (SPDI) Rules, 2011. We do not collect other sensitive personal data (e.g., health, financial details) unless voluntarily shared.",
+    note: "Face verification data constitutes sensitive personal data under the DPDP Act 2023 and IT (SPDI) Rules, 2011. We do not collect other sensitive personal data (e.g., health details) unless voluntarily shared. Payment is handled by our payment processors; we store only billing metadata, never full payment-instrument details.",
   },
   {
     number: "2",
@@ -123,7 +138,12 @@ const sections = [
       {
         term: "Service Providers",
         detail:
-          "Hosting (e.g., AWS), analytics, payment processors (if introduced). All providers are bound by confidentiality obligations.",
+          "Hosting (e.g., AWS) and analytics providers, all bound by confidentiality obligations.",
+      },
+      {
+        term: "Payment Processors",
+        detail:
+          "Razorpay (Android and web payments), Apple Inc. (iOS in-app purchases), and Google LLC (Play Billing where applicable). These processors receive the minimum data needed to charge your subscription and operate under their own privacy commitments.",
       },
       {
         term: "Legal Requirements",
@@ -160,7 +180,8 @@ We commit to the following:
 • Deleted accounts: Data is anonymized or removed within 30 days (except where required for legal holds or backups).
 • Face verification images: Deleted within 24 hours of processing.
 • Verification status: Retained for account integrity for the duration of your account.
-• Location data: Not stored persistently beyond the active SyncMaps session unless required for dispute resolution.`,
+• Location data: Not stored persistently beyond the active SyncMaps session unless required for dispute resolution.
+• Billing and tax records: As required by the Companies Act 2013 and the GST Act, transaction records, invoices, and subscription-status history are retained for 8 years from the end of the financial year, even after account deletion. This applies only to billing metadata - not to your profile, chats, or photos, which follow the standard 30-day deletion rule.`,
   },
   {
     number: "5",
@@ -279,7 +300,7 @@ export default function PrivacyPolicyPage() {
             Privacy Policy
           </h1>
           <p style={{ margin: 0, fontSize: "14px", color: "#94a3b8", lineHeight: 1.6 }}>
-            Effective Date: May 12, 2026 &nbsp;·&nbsp; Governs all SyncTrip Platform services
+            Effective Date: June 11, 2026 &nbsp;·&nbsp; Governs all SyncTrip Platform services
           </p>
           <p
             style={{

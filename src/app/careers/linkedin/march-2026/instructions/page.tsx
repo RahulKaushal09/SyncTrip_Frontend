@@ -98,7 +98,7 @@ const InstructionsPage: React.FC = () => {
       {/* MAIN LAYOUT */}
       <div className="flex flex-col lg:flex-row gap-8 items-start">
 
-        {/* LEFT PANEL — PROFILE */}
+        {/* LEFT PANEL - PROFILE */}
         <div className="w-full lg:w-[360px] shrink-0 bg-secondary-5 border border-secondary-3 rounded-2xl p-8 shadow-sm relative overflow-hidden">
           {/* Decorative background accent */}
           <div className="absolute top-0 right-0 w-32 h-32 bg-secondary-3 opacity-20 rounded-bl-full -z-10" />
@@ -172,7 +172,7 @@ const InstructionsPage: React.FC = () => {
           )}
         </div>
 
-        {/* RIGHT PANEL — INSTRUCTIONS */}
+        {/* RIGHT PANEL - INSTRUCTIONS */}
         <div className="flex-1 bg-white border border-neutral-4 rounded-2xl p-8 lg:p-10 shadow-sm">
           <h2 className="text-2xl font-bold mb-4">
             Assessment Instructions

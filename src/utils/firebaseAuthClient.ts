@@ -92,7 +92,7 @@ export async function sendOtp(phone: string) {
     console.error('Send OTP error:', error);
     // Re-throw for component handling
     throw new Error(error.code === 'auth/invalid-app-credential'
-      ? 'App configuration issue—check Firebase console domains.'
+      ? 'App configuration issue-check Firebase console domains.'
       : 'Failed to send OTP. Please try again.');
   }
 }

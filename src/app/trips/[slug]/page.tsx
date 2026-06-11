@@ -22,8 +22,8 @@ import { Metadata } from 'next';
 
 //   const trip = tripData.trip;
 //   const { title: tripTitle, MainImageUrl, essentials: { price, duration, region, typeOfTrip, bestTime }, tripRating } = trip;
-//   const metaTitle = `${tripTitle} — ${duration}d | From ₹${price} | SyncTrip`;
-//   const metaDescription = `Book "${tripTitle}", a ${duration}-day ${typeOfTrip ?? 'trip'} in ${region || 'India'}. Starts at ₹${price}. Includes accommodation and meals (if listed). Limited seats — reserve now.`;
+//   const metaTitle = `${tripTitle} - ${duration}d | From ₹${price} | SyncTrip`;
+//   const metaDescription = `Book "${tripTitle}", a ${duration}-day ${typeOfTrip ?? 'trip'} in ${region || 'India'}. Starts at ₹${price}. Includes accommodation and meals (if listed). Limited seats - reserve now.`;
 
 //   const canonicalSlug = CommonServices.generateTripSlug(uuid, tripTitle || 'trip');
 //   const canonicalURL = `https://synctrip.in/trips/${canonicalSlug}`;
@@ -39,7 +39,7 @@ import { Metadata } from 'next';
 //       url: canonicalURL,
 //       type: 'website',
 //       siteName: 'SyncTrip',
-//       images: [{ url: imageUrl, width: 1200, height: 630, alt: `${tripTitle} — SyncTrip` }],
+//       images: [{ url: imageUrl, width: 1200, height: 630, alt: `${tripTitle} - SyncTrip` }],
 //       locale: 'en_IN',
 //     },
 //     twitter: { card: 'summary_large_image', title: metaTitle, description: metaDescription, images: [imageUrl] },
@@ -164,7 +164,7 @@ const TripsDetailsPage = async ({ params }: Props) => {
         redirect(`/trips/${expectedSlug}`);
     }
 
-    
+
 
 
     const LocationIdConnectedWith = tripsData.trip.locationId;
@@ -192,7 +192,7 @@ const TripsDetailsPage = async ({ params }: Props) => {
     return (
         <>
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(offerSchema) }} />
-        {/* <TripDetailsContentClient
+            {/* <TripDetailsContentClient
             tripData={tripsData.trip}
             locationData={locationData}
         /> */}

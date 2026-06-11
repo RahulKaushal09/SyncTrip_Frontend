@@ -493,7 +493,7 @@ const TripPlannerPageContent: React.FC = () => {
     }
   }, [tripDetails, placesToVisit]);
 
-  // Fit map to all places on load — robust with padding and center
+  // Fit map to all places on load - robust with padding and center
   useEffect(() => {
     if (!mapRef.current) return;
     if (!placesToVisit || placesToVisit.length === 0) {
@@ -811,7 +811,7 @@ const TripPlannerPageContent: React.FC = () => {
             setSelectedPlace(null);
           }
         } else {
-          // No mouseDownPos (e.g., touch or programmatic click) — close if not dragging
+          // No mouseDownPos (e.g., touch or programmatic click) - close if not dragging
           setSelectedPlace(null);
         }
       }

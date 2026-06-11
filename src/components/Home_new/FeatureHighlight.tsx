@@ -33,7 +33,7 @@ const RadarVisual = () => {
       <button className={`${styles.actionBtn} ${styles.btnBlue}`} onClick={handlePing}>
         {pinging ? (
           <>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="animate-spin"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="animate-spin"><path d="M21 12a9 9 0 1 1-6.219-8.56" /></svg>
             Scanning...
           </>
         ) : "Scan Area"}
@@ -46,19 +46,19 @@ const RadarVisual = () => {
 const MatchVisual = () => {
   const tags = ["Solo traveller", "Adventure", "Foodie", "Offbeat"];
   const dummyNames = ["Rahul", "Sneha", "Aman", "Kriti", "Vikram", "Neha", "Priya"];
-  
+
   const [phase, setPhase] = useState<"idle" | "searching" | "found">("idle");
   const [displayName, setDisplayName] = useState("?");
 
   const handleMatch = () => {
     if (phase !== "idle") return;
     setPhase("searching");
-    
+
     let ticks = 0;
     const interval = setInterval(() => {
       setDisplayName(dummyNames[ticks % dummyNames.length].charAt(0));
       ticks++;
-      
+
       if (ticks > 15) {
         clearInterval(interval);
         setPhase("found");
@@ -83,7 +83,7 @@ const MatchVisual = () => {
             {displayName}
           </div>
         </div>
-        
+
         <div className={`${styles.tagCloud} ${phase !== 'idle' ? styles.tagCloudHidden : ''}`}>
           {tags.map((t, i) => (
             <span key={t} className={styles.vibeTag}>{t}</span>
@@ -94,8 +94,8 @@ const MatchVisual = () => {
           Priya • Manali • Oct 12
         </div>
       </div>
-      <button 
-        className={`${styles.actionBtn} ${styles.btnPink}`} 
+      <button
+        className={`${styles.actionBtn} ${styles.btnPink}`}
         onClick={handleMatch}
         disabled={phase !== 'idle'}
       >
@@ -130,7 +130,7 @@ const IntroVisual = () => {
         <div className={styles.introAvatar}>A</div>
         <div className={styles.introContent}>
           <div className={styles.introName}>Aryan S.</div>
-          <div className={styles.introMsg}>&quot;Hey! Saw you&apos;re into morning rides — heading to Kasauli Sunday, wanna join?&quot;</div>
+          <div className={styles.introMsg}>&quot;Hey! Saw you&apos;re into morning rides - heading to Kasauli Sunday, wanna join?&quot;</div>
         </div>
       </div>
 
@@ -173,8 +173,8 @@ const SafetyVisual = () => {
           <div className={styles.shieldInner}>
             <svg width="40" height="44" viewBox="0 0 36 40" fill="none">
               <path d="M18 2L3 8.5V20C3 29 10.5 37 18 39C25.5 37 33 29 33 20V8.5L18 2Z"
-                fill="currentColor" fillOpacity={secure ? "1" : "0.1"} stroke="currentColor" strokeWidth="2" strokeLinejoin="round"/>
-              <path d="M12 20l4 4 8-8" stroke={secure ? "#fff" : "currentColor"} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                fill="currentColor" fillOpacity={secure ? "1" : "0.1"} stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+              <path d="M12 20l4 4 8-8" stroke={secure ? "#fff" : "currentColor"} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </div>
         </div>
@@ -236,7 +236,7 @@ const BentoFeatures = () => {
             <div className={styles.cardInfo}>
               <span className={`${styles.cardAccent} ${styles.accentPink}`}>Match</span>
               <h3 className={styles.cardTitle}>Find Your Travel Twin</h3>
-              <p className={styles.cardDesc}>Interests, travel style, vibe — see who gets it.</p>
+              <p className={styles.cardDesc}>Interests, travel style, vibe - see who gets it.</p>
             </div>
             <div className={styles.visualContainer}>
               <MatchVisual />

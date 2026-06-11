@@ -363,7 +363,7 @@ export default function MatchingPage() {
             setRotation(0)
             setIsExpanded(false)
             setExpandDy(0)
-            // advance index — allow it to become profiles.length (one past last)
+            // advance index - allow it to become profiles.length (one past last)
             setIndex(prev => {
                 const next = prev + 1
                 // clamp between 0 and profiles.length (not profiles.length - 1)
@@ -623,7 +623,7 @@ export default function MatchingPage() {
     }
 
     // -------------------------------------
-    // UI — SWIPE CARDS
+    // UI - SWIPE CARDS
     // -------------------------------------
     const bottomRadius = (isExpanded || expandDy < -20) ? 0 : 18
     return (

@@ -54,7 +54,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
 //     */
 //     title: "Solo Travel Tips & DIY Trip Planning Guides | SyncTrip Community",
 
-//     description: "Master the art of DIY travel. From safety tips for solo female travelers to hosting your own group trips—read verified guides that put you in the driver’s seat.",
+//     description: "Master the art of DIY travel. From safety tips for solo female travelers to hosting your own group trips-read verified guides that put you in the driver’s seat.",
 
 //     keywords: [
 //       "solo travel tips India",

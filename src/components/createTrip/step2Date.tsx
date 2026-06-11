@@ -24,7 +24,7 @@ const dayCountInclusive = (start: Date, end: Date) => {
   return Math.floor((e - s) / msPerDay) + 1;
 };
 
-// returns true if a date is Saturday (6) or Sunday (0) — pure weekday test
+// returns true if a date is Saturday (6) or Sunday (0) - pure weekday test
 const isWeekend = (d: Date) => {
   const dow = d.getDay();
   return dow === 0 || dow === 6;
@@ -171,7 +171,7 @@ const Step2SelectDates: React.FC<Step2SelectDatesProps> = ({
       if (start > globalMax) return '';
       const s = start.toDateString();
       const e = end > globalMax ? globalMax.toDateString() : end.toDateString();
-      return `Recommended weekend: ${s} — ${e}`;
+      return `Recommended weekend: ${s} - ${e}`;
     },
     [globalMax]
   );
@@ -408,7 +408,7 @@ const Step2SelectDates: React.FC<Step2SelectDatesProps> = ({
             Tip: Booking window: next 30 days. Minimum stay: {MIN_TRIP_DAYS} days. Max: {MAX_TRIP_DAYS} days.
           </div>
           <div style={{ marginTop: 4, fontSize: 12, color: '#666' }}>
-            Most travelers choose weekends — you may find better matches on those dates.
+            Most travelers choose weekends - you may find better matches on those dates.
           </div>
         </div>
       </div>
@@ -426,7 +426,7 @@ const Step2SelectDates: React.FC<Step2SelectDatesProps> = ({
               border: '1px solid #f0c36b',
             }}
           />
-          Weekends are highlighted — hover a weekend to see recommended weekend range.
+          Weekends are highlighted - hover a weekend to see recommended weekend range.
         </span>
       </div>
 

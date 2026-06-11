@@ -61,7 +61,7 @@ export default function NotificationPermissionPrompt() {
           <div className="notif-prompt-card">
             <h3>🔔 Stay Updated!</h3>
             <p>
-              Enable notifications to get instant alerts for new matches and messages — even when the app is closed.
+              Enable notifications to get instant alerts for new matches and messages - even when the app is closed.
             </p>
             <div style={{ display: 'flex', gap: '12px', marginTop: '16px' }}>
               <button className="btn btn-primary" onClick={handleEnable}>

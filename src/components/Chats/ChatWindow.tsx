@@ -256,7 +256,7 @@ export default function ChatWindow({ chatId, currentUserId, chat }: Props) {
           setMessages((s) => [...s, msgToMap]);
           // console.log("Message sent and added to UI:", msgToMap);
         } else {
-          // socket already handled it — nothing to do (optional: update existing pending state)
+          // socket already handled it - nothing to do (optional: update existing pending state)
           // console.debug("message already received via socket, skipping append", saved.id);
         }
       }

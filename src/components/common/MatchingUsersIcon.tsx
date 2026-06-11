@@ -8,7 +8,7 @@ type Props = {
   tripId?: string | null;
   count?: number; // number of matching users (badge)
   loading?: boolean;
-  onClickOpen?: () => void; // callback — if provided, component will call and NOT navigate
+  onClickOpen?: () => void; // callback - if provided, component will call and NOT navigate
   tooltipText?: string; // override tooltip
   ariaLabel?: string;
 };
@@ -69,8 +69,8 @@ export default function MatchingUsersIcon({
           xmlns="http://www.w3.org/2000/svg"
           aria-hidden
         >
-          <path d="M16 11c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM8 11c1.657 0 3-1.343 3-3S9.657 5 8 5 5 6.343 5 8s1.343 3 3 3zM8 13c-2.667 0-8 1.333-8 4v2h9.5c-.334-.667-.5-1.333-.5-2 0-1.333.667-2.667 2.5-3.5C12.167 13.667 10.167 13 8 13z" fill="currentColor"/>
-          <path d="M22 17c0-1.667-5.333-4-8-4  -2.167 0-4.167.667-4.5 3.5 1.833.833 2.5 2.167 2.5 3.5 0 .667-.167 1.333-.5 2H22v-5z" fill="currentColor"/>
+          <path d="M16 11c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM8 11c1.657 0 3-1.343 3-3S9.657 5 8 5 5 6.343 5 8s1.343 3 3 3zM8 13c-2.667 0-8 1.333-8 4v2h9.5c-.334-.667-.5-1.333-.5-2 0-1.333.667-2.667 2.5-3.5C12.167 13.667 10.167 13 8 13z" fill="currentColor" />
+          <path d="M22 17c0-1.667-5.333-4-8-4  -2.167 0-4.167.667-4.5 3.5 1.833.833 2.5 2.167 2.5 3.5 0 .667-.167 1.333-.5 2H22v-5z" fill="currentColor" />
         </svg>
 
         {/* badge */}
@@ -116,7 +116,7 @@ export default function MatchingUsersIcon({
         )}
       </button>
 
-      {/* Tooltip — simple, no external libs */}
+      {/* Tooltip - simple, no external libs */}
       <div
         role="tooltip"
         aria-hidden={!showTooltip}

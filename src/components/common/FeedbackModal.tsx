@@ -137,7 +137,7 @@ export default function FeedbackModal({ feedBackFormOpen, setFeedbackFormOpen, i
         onBlur={() => setHoverRating(null)}
         onClick={() => setRating(idx)}
       >
-        {/* simple emojis — replace with icons if you have a brand icon set */}
+        {/* simple emojis - replace with icons if you have a brand icon set */}
         {idx === 1 && "😠"}
         {idx === 2 && "😕"}
         {idx === 3 && "😐"}
@@ -154,7 +154,7 @@ export default function FeedbackModal({ feedBackFormOpen, setFeedbackFormOpen, i
 
         {submitted ? (
           <div className="feedback-submitted">
-            <h2 id="feedback-heading">Thanks — feedback received</h2>
+            <h2 id="feedback-heading">Thanks - feedback received</h2>
             <p className="muted">✅ We appreciate you helping make SyncTrip better.</p>
             <div className="actions">
               <button className="btn primary" onClick={() => { setSubmitted(false); setFeedbackFormOpen(false); }}>
@@ -171,7 +171,7 @@ export default function FeedbackModal({ feedBackFormOpen, setFeedbackFormOpen, i
               <div className="rating-row">
                 <div className="rating-label">How was your experience?</div>
                 <div className="rating-smileys" role="radiogroup" aria-label="Rate your experience">
-                  {[1,2,3,4,5].map((n) => <Smiley key={n} idx={n} />)}
+                  {[1, 2, 3, 4, 5].map((n) => <Smiley key={n} idx={n} />)}
                 </div>
                 {/* <div className="rating-caption">{ (hoverRating ?? rating) ? SMILEY_LABELS[(hoverRating ?? rating)! - 1] : "Select" }</div> */}
               </div>

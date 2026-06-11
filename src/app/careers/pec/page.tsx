@@ -69,9 +69,9 @@ export default function Page() {
             return;
         }
         if (user.email?.includes("@pec.edu.in")) {
-    setShowModal("usePersonalEmail");
-    return;
-}
+            setShowModal("usePersonalEmail");
+            return;
+        }
 
         // generate one-time token, save application record locally and show popup with form link and token
         const newToken = generateToken(10);
@@ -89,7 +89,7 @@ export default function Page() {
         if (!token) return;
         navigator.clipboard.writeText(token).then(
             () => {
-                alert("Token copied to clipboard — paste it in the Google Form field.");
+                alert("Token copied to clipboard - paste it in the Google Form field.");
             },
             () => {
                 alert("Could not copy automatically. Please copy it manually.");
@@ -107,7 +107,7 @@ export default function Page() {
         <div className="min-h-screen bg-slate-50 p-6">
             <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-md p-8">
                 <header className="mb-6">
-                    <h1 className="text-2xl font-semibold">Software Developer Intern — On-site (Chandigarh)</h1>
+                    <h1 className="text-2xl font-semibold">Software Developer Intern - On-site (Chandigarh)</h1>
                     <p className="text-sm text-slate-600 mt-1">SyncTrip • 4–6 months • Stipend: Competitive • Internship Certificate + PPO</p>
                 </header>
 
@@ -119,7 +119,7 @@ export default function Page() {
                     <br></br>
                     <h3>Role overview</h3>
                     <p>
-                        We are looking for a Software Developer Intern who is an all-rounder — someone who can contribute to product
+                        We are looking for a Software Developer Intern who is an all-rounder - someone who can contribute to product
                         development, UI design, tech implementation, social media & online presence, trip/event management and
                         operations support.
                     </p>
@@ -164,7 +164,7 @@ export default function Page() {
                         className={`px-5 py-2 rounded-lg text-white font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 ${applied ? "bg-slate-400 cursor-not-allowed" : "bg-indigo-600 hover:bg-indigo-700"
                             }`}
                     >
-                        {applied ? "Applied (PEC)" : "Apply — PEC Software Dev Internship"}
+                        {applied ? "Applied (PEC)" : "Apply - PEC Software Dev Internship"}
                     </button>
 
                     <div className="text-sm text-slate-600">
@@ -238,7 +238,7 @@ export default function Page() {
                                             // simulate marking profile complete in demo
                                             setShowModal(null);
                                             triggerLogin(handleApplyClick);
-                                            
+
                                         }}
                                         className="px-4 py-2 rounded-md bg-indigo-600 text-white"
                                     >
@@ -250,7 +250,7 @@ export default function Page() {
 
                         {showModal === "token" && (
                             <div>
-                                <h3 className="text-lg font-semibold mb-2">Application — PEC Software Dev Internship</h3>
+                                <h3 className="text-lg font-semibold mb-2">Application - PEC Software Dev Internship</h3>
                                 <p className="text-sm text-slate-600 mb-4">
                                     Thanks for applying! We&apos;ve generated a one-time Application Token for you. Please paste this token in the
                                     Google Form (link provided) to complete the test/selection process.

@@ -45,7 +45,7 @@ const Footer = () => {
                         />
                     </div>
                     <p className='footerTextColorNormal footer-tagline'>
-                        Plan together, travel smarter — sync your perfect trip in minutes.
+                        Plan together, travel smarter - sync your perfect trip in minutes.
                     </p>
                 </div>
 

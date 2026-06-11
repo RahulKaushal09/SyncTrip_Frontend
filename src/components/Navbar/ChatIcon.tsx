@@ -42,7 +42,7 @@ export default function ChatIcon({ className = "", currentUserId, onClickOpen, i
         // fallback: fetch recent chats and count unread messages (cheap heuristic)
         const chats = await ChatApiService.fetchChats();
         if (!mountedRef.current) return;
-        
+
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const unread = Array.isArray(chats)
           ? chats.reduce((acc: number, c: Chat) => acc + (c.unreadCount || 0), 0)
@@ -70,12 +70,12 @@ export default function ChatIcon({ className = "", currentUserId, onClickOpen, i
     fetchUnread(); // fetch once only
 
     // NEW: Socket connection for real-time updates
-   
+
     const socket = getSocket();
 
     socketRef.current = socket;
 
-    
+
 
     // NEW: Listen for chat unread events
     socket.on("chat_unread_increment", ({ delta = 1 }) => {
@@ -99,7 +99,7 @@ export default function ChatIcon({ className = "", currentUserId, onClickOpen, i
     // Optional: Visibility sync (refetch if tab hidden during updates)
     const onVisible = () => {
       if (document.visibilityState === "visible") {
-        // console.log("👁️ Tab visible — syncing chat count");
+        // console.log("👁️ Tab visible - syncing chat count");
         fetchUnread();
       }
     };

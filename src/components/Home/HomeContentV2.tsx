@@ -106,7 +106,7 @@ export default function HomeContentV2({
         fetchLocations(latestSearchRef.current, page, true);
     }, [fetchLocations, page]);
 
-    // Initial load on mount — fetch first page with empty filters
+    // Initial load on mount - fetch first page with empty filters
     useEffect(() => {
         if (initialLocations.length === 0) {
             fetchLocations({ term: "", state: "" }, 1, false);

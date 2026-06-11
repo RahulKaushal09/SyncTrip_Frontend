@@ -50,7 +50,7 @@ export default function GroupTripOnMatchingCard({ trip }: Props) {
                             </div>
 
                             <div className="MatchingCardActivities">
-                                You&apos;re traveling as part of a group — connect with travelers inside the group chat.
+                                You&apos;re traveling as part of a group - connect with travelers inside the group chat.
 
                             </div>
                         </div>

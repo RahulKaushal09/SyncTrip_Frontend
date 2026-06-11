@@ -16,7 +16,7 @@ interface BlogDetailProps {
 // ✅ Cache the fetch so it's called ONCE per slug, reused by both
 // generateMetadata and the page component during the same build/request
 
-// Wrap with React cache — guarantees single fetch per slug per render
+// Wrap with React cache - guarantees single fetch per slug per render
 const getBlog = cache(async (slug: string): Promise<BlogPost | null> => {
   try {
     return await BlogsApiServices.fetchBlogBySlug(slug) ?? null;
@@ -39,8 +39,8 @@ export async function generateStaticParams() {
   }
 }
 
-// ✅ Built once, never revalidated — blogs don't change after publish
-export const revalidate = 3600; // 1 hour — blogs don't change so this barely matters
+// ✅ Built once, never revalidated - blogs don't change after publish
+export const revalidate = 3600; // 1 hour - blogs don't change so this barely matters
 export const dynamicParams = true; // new blog slug → SSR on first hit → cached forever after
 
 export async function generateMetadata({ params }: BlogDetailProps): Promise<Metadata> {
@@ -72,7 +72,7 @@ export async function generateMetadata({ params }: BlogDetailProps): Promise<Met
 
 const BlogDetailPage = async ({ params }: BlogDetailProps) => {
   const { slug } = await params;
-  const blog = await getBlog(slug); // ✅ same call, Next.js serves from cache — no second network hit
+  const blog = await getBlog(slug); // ✅ same call, Next.js serves from cache - no second network hit
 
   const relatedLocations = blog?.relatedLocations || [];
 

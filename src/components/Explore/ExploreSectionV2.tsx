@@ -178,7 +178,7 @@ const ExploreSectionV2: React.FC<ExploreSectionProps> = ({
                 initialState={searchTerm.state}
             />
 
-            {/* Featured category sliders — hidden smoothly when searching */}
+            {/* Featured category sliders - hidden smoothly when searching */}
             <div
                 style={{
                     transition: 'var(--es-transition)',

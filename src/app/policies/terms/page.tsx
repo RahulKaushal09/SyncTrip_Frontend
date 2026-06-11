@@ -75,7 +75,7 @@ const sections: Section[] = [
     number: "3",
     title: "Platform Purpose and Features",
     intro:
-      "SyncTrip is a social activity coordination platform — not a dating service, romantic matchmaking platform, or booking service. It is strictly for facilitating group coordination among users who share common activity interests.",
+      "SyncTrip is a social activity coordination platform - not a dating service, romantic matchmaking platform, or booking service. It is strictly for facilitating group coordination among users who share common activity interests.",
     items: [
       {
         term: "Groups",
@@ -295,6 +295,67 @@ const sections: Section[] = [
   },
   {
     number: "12",
+    title: "SyncTrip Plus Subscription",
+    highlight: true,
+    badge: "BILLING",
+    intro:
+      "SyncTrip Plus is an optional premium subscription. The following terms govern your purchase, renewal, cancellation, and refunds. Prices are inclusive of applicable GST.",
+    items: [
+      {
+        term: "Plans and pricing",
+        detail:
+          "SyncTrip Plus Weekly - ₹49 per week, auto-renewing every 7 days. SyncTrip Plus Monthly - ₹199 per month, auto-renewing every 30 days. Prices may be adjusted with at least 30 days' advance notice via email and in-app notification. Existing subscribers keep their then-current price until their next renewal.",
+      },
+      {
+        term: "Auto-renewal",
+        detail:
+          "Your subscription renews automatically at the end of each billing period using the payment method on file. By confirming payment you authorize SyncTrip and the applicable payment processor (Razorpay on Android/web, Apple on iOS, Google on supported Android billing) to charge the published price at each renewal until you cancel.",
+      },
+      {
+        term: "Cancellation",
+        detail:
+          "You may cancel at any time before the next billing date. Razorpay (Android/web): Settings → Subscription → Cancel, or email synctripofficial@gmail.com from your registered address. Apple (iOS): Apple ID Settings → Subscriptions → SyncTrip → Cancel. Google Play (Android via Play Billing): Google Play → Subscriptions → SyncTrip → Cancel. Cancellation stops the next auto-renewal; you keep Plus access through the end of the current paid period. There is no separate cancellation fee.",
+      },
+      {
+        term: "Refunds",
+        detail:
+          "All charges are final and non-refundable except: (a) duplicate charges or technical billing errors - full refund within 7 working days of report; (b) inability to access Plus features for more than 48 continuous hours due to a confirmed SyncTrip-side outage - pro-rated credit; (c) charges processed after a successful cancellation - full refund. Apple App Store and Google Play purchases are governed by Apple's and Google's respective refund policies and must be requested through them (https://reportaproblem.apple.com for Apple); SyncTrip cannot directly refund those transactions. For Razorpay-originated charges, email synctripofficial@gmail.com with your registered email/phone and a transaction reference; we aim to respond within 3 working days.",
+      },
+      {
+        term: "Pre-debit notification",
+        detail:
+          "As required by the Reserve Bank of India for recurring e-mandates, you will receive a notification at least 24 hours before each auto-renewal charge, with instructions to cancel if you no longer wish to renew.",
+      },
+      {
+        term: "Failed payments and grace period",
+        detail:
+          "If a renewal payment fails, we will retry as permitted by the payment processor. You receive a 3-day grace period during which Plus features remain active. If payment is not successfully collected after the grace period, the subscription is suspended and the account reverts to the free tier.",
+      },
+      {
+        term: "Free trial",
+        detail:
+          "SyncTrip does not currently offer a free trial. If a free trial is introduced, the trial duration, conversion price, and cancellation deadline will be disclosed before signup.",
+      },
+      {
+        term: "Plan changes",
+        detail:
+          "Switching between Weekly and Monthly takes effect at the next billing cycle. Downgrades do not prorate; upgrades may prorate where the payment processor supports it.",
+      },
+      {
+        term: "Tax invoices",
+        detail:
+          "GST-compliant invoices for Razorpay purchases are emailed to your registered address within 7 days of each successful charge. iOS and Android purchases are invoiced by Apple and Google respectively.",
+      },
+      {
+        term: "Termination of Plus by SyncTrip",
+        detail:
+          "We may suspend or terminate a subscription without refund for material violations of these Terms or the Community Guidelines (including verification fraud, harassment, or abuse). Where required, we will provide notice and a 14-day appeal window.",
+      },
+    ],
+    note: "Apple App Store and Google Play subscriptions are also subject to the terms of those platforms. Where a platform's terms conflict with these Terms for purchases made through that platform, the platform's terms govern the transaction.",
+  },
+  {
+    number: "13",
     title: "Changes to Terms",
     content:
       "We may update these Terms as our features and legal obligations evolve. Significant changes will be notified via email or in-app notification at least 7 days before taking effect. Continued use after changes constitutes your acceptance of the revised Terms.",
@@ -383,7 +444,7 @@ export default function TermsPage() {
           <p
             style={{ margin: 0, fontSize: "14px", color: "#94a3b8", lineHeight: 1.6 }}
           >
-            Effective Date: May 12, 2026 &nbsp;·&nbsp; Applies to all SyncTrip Platform services
+            Effective Date: June 11, 2026 &nbsp;·&nbsp; Applies to all SyncTrip Platform services
           </p>
           <p
             style={{
@@ -400,7 +461,7 @@ export default function TermsPage() {
               SyncTrip Digital Private Limited
             </strong>{" "}
             (&quot;we,&quot; &quot;us,&quot; or &quot;SyncTrip&quot;). SyncTrip is a social activity coordination
-            platform — not a dating service or booking platform — for group trips,
+            platform - not a dating service or booking platform - for group trips,
             rides, movies, sports, and outings. By using the Platform, you agree to
             these Terms.
           </p>

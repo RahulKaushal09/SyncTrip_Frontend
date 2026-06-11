@@ -265,7 +265,7 @@ const DownloadPopup = () => {
             // const guestStrikes = parseInt(localStorage.getItem("guest_strikes") || "0");
 
             // if (guestStrikes >= 3) {
-            //     // Auth lock — show immediately, no auto-dismiss
+            //     // Auth lock - show immediately, no auto-dismiss
             //     setIsAuthLock(true);
             //     setVariant(0);
             //     setIsVisible(true);
@@ -276,7 +276,7 @@ const DownloadPopup = () => {
             setVariant(getRandomVariant() as 0 | 3 | 4);
             setTimeout(() => { if (!shouldBlockPopup) setIsVisible(true); }, INITIAL_DELAY_GUEST);
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isLoggedIn, shouldBlockPopup]);
 
     const handleClose = () => {
