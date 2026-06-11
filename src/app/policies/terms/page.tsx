@@ -344,7 +344,7 @@ const sections: Section[] = [
       {
         term: "Tax invoices",
         detail:
-          "GST-compliant invoices for Razorpay purchases are emailed to your registered address within 7 days of each successful charge. iOS and Android purchases are invoiced by Apple and Google respectively.",
+          "Payment receipts for Razorpay purchases are emailed to your registered address within 7 days of each successful charge. iOS and Android purchases are invoiced separately by Apple and Google respectively, including their own GST registration on those invoices. SyncTrip will begin issuing GST-compliant invoices for Razorpay purchases once SyncTrip's annual turnover crosses the GST registration threshold under applicable Indian tax law.",
       },
       {
         term: "Termination of Plus by SyncTrip",
