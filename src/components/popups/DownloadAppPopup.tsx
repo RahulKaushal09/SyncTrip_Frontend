@@ -56,12 +56,12 @@ const Variant0StackedCards = ({ handleClose, handleLoginRedirect, isAuthLock }: 
 
         <div className="popup-body-content text-center">
             <h2 className="text-[28px] !font-sans !font-semibold text-secondary-1">
-                {isAuthLock ? "Sign In Required" : "Ready for the Trip?"}
+                {isAuthLock ? "Sign In Required" : "Got Plans?"}
             </h2>
             <p className="text-neutral-1 px-3 mt-2 mb-4">
                 {isAuthLock
-                    ? "You've reached the guest preview limit. Sign in to continue exploring full itineraries."
-                    : "Get the full experience! Join the group chat and see real-time updates."}
+                    ? "You've reached the guest preview limit. Sign in to keep discovering plans and people near you."
+                    : "Discover sports, movies, outings, rides & trips happening near you — and connect with people who are in."}
             </p>
 
             <div className="feature-mini-pill-row">
@@ -102,12 +102,12 @@ const Variant3SingleImageSheet = ({ handleClose, handleLoginRedirect, isAuthLock
 
         <div className="popup-body-content text-center">
             <h2 className="text-[28px] !font-sans !font-semibold text-secondary-1">
-                {isAuthLock ? "Please Sign In" : "Ready for the Trip?"}
+                {isAuthLock ? "Please Sign In" : "Got Plans?"}
             </h2>
             <p className="text-neutral-1 px-3 mt-2 mb-6">
                 {isAuthLock
-                    ? "Your guest session has reached its limit. Sign in to access your full itineraries securely."
-                    : "Get the full experience! Join the group chat and see real-time updates."}
+                    ? "Your guest session has reached its limit. Sign in to access plans and people near you securely."
+                    : "Discover sports, movies, outings, rides & trips happening near you — and connect with people who are in."}
             </p>
 
             <div className="popup-cta-trap mt-2">
@@ -167,13 +167,13 @@ const Variant4AppBannerToast = ({ handleClose }: PopupVariantProps) => {
 
             <div className="px-6 pb-2 pt-2 text-center bg-white">
                 <div className="inline-block bg-primary-1/10 text-primary-1 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-2">
-                    Exclusive Access
+                    Plans Near You
                 </div>
                 <h2 className="text-xl font-serif text-secondary-1 mb-1.5">
-                    Unlock the Full Itinerary
+                    Find Your Next Plan
                 </h2>
                 <p className="text-neutral-500 text-xs mb-3 leading-relaxed">
-                    Web users only see partial details. Download the SyncTrip app to view maps, group chats, and live updates.
+                    Sports, movies, outings, rides & trips happening near you. Download the SyncTrip app to join in and connect with people.
                 </p>
                 <button
                     onClick={redirectToStore}
@@ -202,6 +202,7 @@ const DownloadPopup = () => {
         isLoginPopupOpen ||
         isCompleteProfilePopupOpen ||
         pathname.includes("/create/trip") ||
+        pathname.includes("/invite") ||
         pathname.includes("careers/linkedin/march-2026") ||
         pathname.includes("/profile");
 

@@ -53,6 +53,7 @@ export const ROUTES = {
 export const APP_LINKS = {
     PLAY_STORE: 'https://play.google.com/store/apps/details?id=com.synctrip',
     APP_STORE: 'https://apps.apple.com/in/app/synctrip-plan-meet-explore/id6761762665',
+    WEB_HOME: 'https://synctrip.in',
 }
 
 export const BREAKPOINTS = {
