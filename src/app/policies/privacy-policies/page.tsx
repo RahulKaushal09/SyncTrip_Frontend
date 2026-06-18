@@ -119,6 +119,11 @@ const sections = [
         term: "Marketing",
         detail: "Optional promotional emails (opt-out available at any time).",
       },
+      {
+        term: "Advertising & Audience Matching",
+        detail:
+          "With your consent, we use limited identifiers (such as a hashed email address, hashed phone number, and device/advertising identifiers) and in-app activity signals to measure the performance of our advertising, to show you relevant SyncTrip ads on third-party platforms, and to build “lookalike” audiences that help us reach people similar to our existing users. You can withdraw this consent at any time in the app settings or by contacting us, after which we stop using your data for these purposes.",
+      },
     ],
   },
   {
@@ -144,6 +149,11 @@ const sections = [
         term: "Payment Processors",
         detail:
           "Razorpay (Android and web payments), Apple Inc. (iOS in-app purchases), and Google LLC (Play Billing where applicable). These processors receive the minimum data needed to charge your subscription and operate under their own privacy commitments.",
+      },
+      {
+        term: "Advertising Partners",
+        detail:
+          "With your consent, we share limited identifiers (hashed email, hashed phone number, device/advertising identifiers) and in-app event data with advertising platforms — currently Meta Platforms, Inc. (Facebook/Instagram) and Google LLC — solely to measure advertising performance, deliver relevant ads, and create audience segments. Identifiers are hashed before sharing where supported. These platforms process this data under their own terms. We do not share your name, chat content, photos, or precise location with advertising partners, and we do not sell your personal data.",
       },
       {
         term: "Legal Requirements",
@@ -191,6 +201,7 @@ We commit to the following:
 • Access, correct, or delete your personal data.
 • Withdraw consent at any time (may limit certain features).
 • Opt out of marketing communications.
+• Opt out of personalized advertising and audience matching at any time (in-app settings or by contacting us).
 • Request data portability.
 • File complaints with the Data Protection Board of India.
 • Location precision control: Change your SyncMaps visibility (hidden, approximate, precise) at any time within the app.
@@ -300,7 +311,7 @@ export default function PrivacyPolicyPage() {
             Privacy Policy
           </h1>
           <p style={{ margin: 0, fontSize: "14px", color: "#94a3b8", lineHeight: 1.6 }}>
-            Effective Date: June 11, 2026 &nbsp;·&nbsp; Governs all SyncTrip Platform services
+            Effective Date: June 20, 2026 &nbsp;·&nbsp; Governs all SyncTrip Platform services
           </p>
           <p
             style={{
@@ -599,9 +610,9 @@ export default function PrivacyPolicyPage() {
               Questions about this Policy?
             </p>
             <p style={{ margin: 0, fontSize: "13px", color: "#94a3b8", lineHeight: 1.6 }}>
-              Grievance Officer to be appointed as per IT Rules, 2011.
+              Grievance Officer: Rahul Kaushal, Founder &amp; Grievance Officer, SyncTrip Digital Private Limited.
               <br />
-              Data Protection Board of India complaints accepted.
+              Contact: synctripofficial@gmail.com &nbsp;·&nbsp; Data Protection Board of India complaints accepted.
             </p>
           </div>
           <a
