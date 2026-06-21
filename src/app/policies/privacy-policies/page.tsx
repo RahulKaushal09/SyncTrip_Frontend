@@ -44,7 +44,12 @@ const sections = [
           {
             term: "Usage data",
             detail:
-              "Device info, IP address, browser type, pages viewed, and interaction logs.",
+              "Device info (model, OS version, app version), IP address, browser type, pages viewed, and interaction logs.",
+          },
+          {
+            term: "Advertising identifiers",
+            detail:
+              "With your consent, we collect your device's advertising identifier (Apple IDFA on iOS, Google Advertising ID on Android) and limited in-app event data for the purposes described in Sections 2 and 3B. You can disable this at any time via the in-app “Personalized ads & audience matching” toggle in Settings → Privacy, or by denying App Tracking Transparency permission on iOS.",
           },
           {
             term: "Location data (SyncMaps)",
@@ -183,6 +188,17 @@ We commit to the following:
 • You may request deletion of any stored verification data by contacting synctripofficial@gmail.com.`,
   },
   {
+    number: "3B",
+    title: "Advertising Technologies (Meta SDK & Conversions API)",
+    content: `To measure our advertising and show you relevant SyncTrip ads, our mobile app integrates the Meta SDK (software provided by Meta Platforms, Inc., operator of Facebook and Instagram). With your consent, this SDK collects and transmits to Meta certain in-app events (such as app installs, sign-ups, and key actions) together with device and advertising identifiers. We also use server-side tracking through Meta's Conversions API (CAPI), which sends the same categories of event data to Meta from our servers, with identifiers such as email and phone number hashed before transmission. Google's equivalent advertising and measurement tools may be used in the same way.
+
+This data is used to attribute ad performance, deliver relevant ads, and build "lookalike" audiences — it is not used to share your name, chat content, photos, or precise location. Meta processes this information as an independent controller under its own terms; you can review how Meta handles it in the Meta Privacy Policy. You can turn off personalized advertising and audience matching at any time through the advertising-consent toggle in the app settings or by contacting synctripofficial@gmail.com, after which we stop sending your data for these purposes.`,
+    link: {
+      label: "Meta Privacy Policy",
+      href: "https://www.facebook.com/about/privacy",
+    },
+  },
+  {
     number: "4",
     title: "Data Retention",
     content: `We retain your data for as long as your account is active or as needed for legal and compliance purposes.
@@ -191,7 +207,8 @@ We commit to the following:
 • Face verification images: Deleted within 24 hours of processing.
 • Verification status: Retained for account integrity for the duration of your account.
 • Location data: Not stored persistently beyond the active SyncMaps session unless required for dispute resolution.
-• Billing and tax records: As required by the Companies Act 2013 and the GST Act, transaction records, invoices, and subscription-status history are retained for 8 years from the end of the financial year, even after account deletion. This applies only to billing metadata - not to your profile, chats, or photos, which follow the standard 30-day deletion rule.`,
+• Billing and tax records: As required by the Companies Act 2013 and the GST Act, transaction records, invoices, and subscription-status history are retained for 8 years from the end of the financial year, even after account deletion. This applies only to billing metadata - not to your profile, chats, or photos, which follow the standard 30-day deletion rule.
+• Advertising event data shared with Meta and Google is retained by those platforms per their own retention policies. We do not store individual ad-event records ourselves beyond status flags used to prevent duplicate reporting.`,
   },
   {
     number: "5",
@@ -571,6 +588,31 @@ export default function PrivacyPolicyPage() {
               >
                 {section.content}
               </p>
+            )}
+
+            {/* External link */}
+            {"link" in section && section.link && (
+              <a
+                href={section.link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  marginTop: "14px",
+                  fontSize: "13px",
+                  fontWeight: 600,
+                  color: "#4338ca",
+                  background: "rgba(99,102,241,0.08)",
+                  border: "1px solid rgba(99,102,241,0.25)",
+                  borderRadius: "8px",
+                  padding: "8px 14px",
+                  textDecoration: "none",
+                }}
+              >
+                {section.link.label} ↗
+              </a>
             )}
 
             {/* Note */}
