@@ -11,6 +11,7 @@ import {
     Lock,
     Loader2,
     RefreshCw,
+    Repeat,
     Sparkles,
     Wallet,
     XCircle,
@@ -18,14 +19,17 @@ import {
 } from 'lucide-react';
 import {
     createOrder,
+    createSubscription,
+    getActiveSubscription,
     getOrderStatus,
     makeCheckoutClient,
     verifyOrder,
+    verifySubscription,
 } from '@/utils/checkout.api.utils';
 import type {
+    CheckoutDetails,
     CheckoutSignal,
-    CreateOrderData,
-    RazorpayHandlerResponse,
+    RazorpayCheckoutResponse,
 } from './checkout.types';
 
 const RAZORPAY_SRC = 'https://checkout.razorpay.com/v1/checkout.js';
@@ -53,11 +57,13 @@ export default function CheckoutClient() {
 
     const planId = params.get('planId') ?? '';
     const applyWallet = params.get('applyWallet') === '1';
+    // applyWallet=1 → one-time wallet order; applyWallet=0 → recurring auto-renew subscription.
+    const mode: CheckoutDetails['mode'] = applyWallet ? 'order' : 'subscription';
     // NOTE: token is a bearer credential — read it, never log it, never put it in a URL.
     const token = params.get('token') ?? '';
 
     const [phase, setPhase] = useState<Phase>('validating');
-    const [order, setOrder] = useState<CreateOrderData | null>(null);
+    const [details, setDetails] = useState<CheckoutDetails | null>(null);
     const [errorMsg, setErrorMsg] = useState<string>('');
     const [scriptReady, setScriptReady] = useState<boolean>(false);
 
@@ -80,7 +86,7 @@ export default function CheckoutClient() {
                 const payload = JSON.stringify({
                     status,
                     endDate: endDateRef.current,
-                    planId: order?.planId || planId || undefined,
+                    planId: details?.planId || planId || undefined,
                 });
                 window.ReactNativeWebView?.postMessage(payload);
             } catch {
@@ -93,7 +99,7 @@ export default function CheckoutClient() {
                 window.location.hash = 'payment-failed';
             }
         },
-        [order?.planId, planId],
+        [details?.planId, planId],
     );
 
     /** Manual "return to app" — re-posts success even after the guarded auto-signal. */
@@ -103,13 +109,13 @@ export default function CheckoutClient() {
                 JSON.stringify({
                     status: 'success',
                     endDate: endDateRef.current,
-                    planId: order?.planId || planId || undefined,
+                    planId: details?.planId || planId || undefined,
                 }),
             );
         } catch {
             /* best-effort */
         }
-    }, [order?.planId, planId]);
+    }, [details?.planId, planId]);
 
     const isAuthError = useCallback((err: unknown) => {
         if (axios.isAxiosError(err)) {
@@ -124,8 +130,8 @@ export default function CheckoutClient() {
         return false;
     }, []);
 
-    // ── Boot: validate params + create the order (this also authenticates the token) ──
-    const loadOrder = useCallback(async () => {
+    // ── Boot: validate params + create order/subscription (this also authenticates the token) ──
+    const loadCheckout = useCallback(async () => {
         if (!client || !token || !planId) {
             setPhase('error');
             setErrorMsg('This checkout link is incomplete. Please reopen it from the app.');
@@ -134,8 +140,32 @@ export default function CheckoutClient() {
         setPhase('validating');
         setErrorMsg('');
         try {
-            const data = await createOrder(client, planId, applyWallet);
-            setOrder(data);
+            if (mode === 'order') {
+                const d = await createOrder(client, planId, true);
+                setDetails({
+                    mode: 'order',
+                    planId: d.planId,
+                    planName: d.planName,
+                    currency: d.currency,
+                    amount: d.amount,
+                    price: d.price,
+                    walletApplied: d.walletApplied,
+                    orderId: d.orderId,
+                });
+            } else {
+                const s = await createSubscription(client, planId);
+                setDetails({
+                    mode: 'subscription',
+                    planId: s.planId,
+                    planName: s.planName,
+                    currency: s.currency,
+                    amount: s.amount,
+                    price: s.amount,
+                    walletApplied: 0,
+                    subscriptionId: s.subscriptionId,
+                    isTrial: s.isTrial,
+                });
+            }
             setPhase('summary');
         } catch (err) {
             if (isAuthError(err)) {
@@ -145,23 +175,30 @@ export default function CheckoutClient() {
                 setErrorMsg('We could not start your checkout. Please try again.');
             }
         }
-    }, [client, token, planId, applyWallet, isAuthError]);
+    }, [client, token, planId, mode, isAuthError]);
 
     useEffect(() => {
-        loadOrder();
-    }, [loadOrder]);
+        loadCheckout();
+    }, [loadCheckout]);
 
-    // ── Verify (with reconcile fallback) ──
+    // ── Verify (with reconcile fallback) — branches on mode ──
     const runVerify = useCallback(
-        async (resp: RazorpayHandlerResponse) => {
-            if (!client || !order) return;
+        async (resp: RazorpayCheckoutResponse) => {
+            if (!client || !details) return;
             setPhase('verifying');
             try {
-                const { ok, data } = await verifyOrder(client, {
-                    razorpay_order_id: resp.razorpay_order_id,
-                    razorpay_payment_id: resp.razorpay_payment_id,
-                    razorpay_signature: resp.razorpay_signature,
-                });
+                const { ok, data } =
+                    details.mode === 'order'
+                        ? await verifyOrder(client, {
+                              razorpay_order_id: resp.razorpay_order_id ?? '',
+                              razorpay_payment_id: resp.razorpay_payment_id,
+                              razorpay_signature: resp.razorpay_signature,
+                          })
+                        : await verifySubscription(client, {
+                              razorpay_subscription_id: resp.razorpay_subscription_id ?? '',
+                              razorpay_payment_id: resp.razorpay_payment_id,
+                              razorpay_signature: resp.razorpay_signature,
+                          });
                 if (ok) {
                     endDateRef.current = data?.subscription?.endDate;
                     setPhase('success');
@@ -171,7 +208,7 @@ export default function CheckoutClient() {
                     signalApp('failed');
                 }
             } catch (err) {
-                // Network/5xx during verify → reconcile against the real order status once.
+                // Network/5xx during verify → reconcile against the real status once.
                 // (create→verify→reconcile are all idempotent: no double-charge.)
                 if (isAuthError(err)) {
                     setPhase('expired');
@@ -179,9 +216,20 @@ export default function CheckoutClient() {
                 }
                 setPhase('reconciling');
                 try {
-                    const status = await getOrderStatus(client, order.orderId);
-                    if (status.status === 'active') {
-                        endDateRef.current = status.subscription?.endDate;
+                    let active = false;
+                    let endDate: string | undefined;
+                    if (details.mode === 'order' && details.orderId) {
+                        const status = await getOrderStatus(client, details.orderId);
+                        active = status.status === 'active';
+                        endDate = status.subscription?.endDate;
+                    } else {
+                        // Recurring has no order id → reconcile via the active-subscription endpoint.
+                        const res = await getActiveSubscription(client);
+                        active = res.active;
+                        endDate = res.endDate;
+                    }
+                    if (active) {
+                        endDateRef.current = endDate;
                         setPhase('success');
                         signalApp('success');
                     } else {
@@ -194,13 +242,13 @@ export default function CheckoutClient() {
                 }
             }
         },
-        [client, order, signalApp, isAuthError],
+        [client, details, signalApp, isAuthError],
     );
 
     // ── Open Razorpay Checkout ──
     const openCheckout = useCallback(() => {
         if (payingRef.current) return; // double-tap guard
-        if (!order) return;
+        if (!details) return;
         if (typeof window === 'undefined' || !window.Razorpay || !scriptReady) {
             setPhase('error');
             setErrorMsg('Payment is still loading. Please check your connection and retry.');
@@ -211,13 +259,19 @@ export default function CheckoutClient() {
 
         const rzp = new window.Razorpay({
             key: process.env.NEXT_PUBLIC_RAZORPAY_KEY || '',
-            order_id: order.orderId,
-            amount: Math.round(order.amount * 100), // paise
-            currency: order.currency || 'INR',
+            // One-time order → order_id (+ amount). Recurring → subscription_id; Razorpay
+            // derives the amount from the plan, so we must NOT pass amount/currency here.
+            ...(details.mode === 'order'
+                ? {
+                      order_id: details.orderId,
+                      amount: Math.round(details.amount * 100), // paise
+                      currency: details.currency || 'INR',
+                  }
+                : { subscription_id: details.subscriptionId }),
             name: 'SyncTrip',
-            description: order.planName,
+            description: details.planName,
             theme: { color: BRAND },
-            handler: (response: RazorpayHandlerResponse) => {
+            handler: (response: RazorpayCheckoutResponse) => {
                 payingRef.current = false;
                 runVerify(response);
             },
@@ -238,7 +292,7 @@ export default function CheckoutClient() {
         });
 
         rzp.open();
-    }, [order, scriptReady, runVerify, signalApp]);
+    }, [details, scriptReady, runVerify, signalApp]);
 
     // ── Render ──
     return (
@@ -261,9 +315,9 @@ export default function CheckoutClient() {
                     phase === 'paying' ||
                     phase === 'verifying' ||
                     phase === 'reconciling') &&
-                    order && (
+                    details && (
                         <SummaryView
-                            order={order}
+                            details={details}
                             phase={phase}
                             disabled={!scriptReady}
                             onPay={openCheckout}
@@ -271,7 +325,11 @@ export default function CheckoutClient() {
                     )}
 
                 {phase === 'success' && (
-                    <SuccessView endDate={endDateRef.current} onReturn={returnToApp} />
+                    <SuccessView
+                        endDate={endDateRef.current}
+                        recurring={details?.mode === 'subscription'}
+                        onReturn={returnToApp}
+                    />
                 )}
 
                 {phase === 'failed' && (
@@ -291,7 +349,7 @@ export default function CheckoutClient() {
                     <ResultView
                         kind="cancel"
                         title="Checkout cancelled"
-                        body="You closed the payment before it completed. Your wallet hasn't been touched — resume whenever you're ready."
+                        body="You closed the payment before it completed. Nothing has been charged — resume whenever you're ready."
                         primaryLabel="Resume payment"
                         onPrimary={() => {
                             signalledRef.current = false;
@@ -314,7 +372,7 @@ export default function CheckoutClient() {
                         title="Something went wrong"
                         body={errorMsg || 'Please try again in a moment.'}
                         primaryLabel="Try again"
-                        onPrimary={loadOrder}
+                        onPrimary={loadCheckout}
                     />
                 )}
             </div>
@@ -368,12 +426,12 @@ function SkeletonView() {
 }
 
 function SummaryView({
-    order,
+    details,
     phase,
     disabled,
     onPay,
 }: {
-    order: CreateOrderData;
+    details: CheckoutDetails;
     phase: Phase;
     disabled: boolean;
     onPay: () => void;
@@ -386,23 +444,39 @@ function SummaryView({
                 ? 'Finalising your plan…'
                 : 'Opening secure payment…';
 
+    const isOrder = details.mode === 'order';
+    const hasWallet = isOrder && details.walletApplied > 0;
     const savePct =
-        order.walletApplied > 0 && order.price > 0
-            ? Math.round((order.walletApplied / order.price) * 100)
+        hasWallet && details.price > 0
+            ? Math.round((details.walletApplied / details.price) * 100)
             : 0;
+
+    const subtitle = isOrder
+        ? hasWallet
+            ? 'One-time purchase · wallet credit applied'
+            : 'One-time purchase'
+        : details.isTrial
+            ? 'Auto-renewing subscription · free trial'
+            : 'Auto-renewing subscription';
+
+    const totalLabel = isOrder
+        ? 'To pay today'
+        : details.isTrial
+            ? 'Due after trial'
+            : 'Billed today';
 
     return (
         <>
-            <PlanHeader
-                planName={order.planName}
-                subtitle={order.walletApplied > 0 ? 'One-time purchase · wallet credit applied' : 'Complete your purchase'}
-            />
+            <PlanHeader planName={details.planName} subtitle={subtitle} />
 
             <div className="body">
                 <div className="summary">
-                    <Row label="Plan price" value={rupees(order.price)} />
+                    <Row
+                        label={isOrder ? 'Plan price' : 'Subscription'}
+                        value={rupees(details.price)}
+                    />
 
-                    {order.walletApplied > 0 && (
+                    {hasWallet && (
                         <Row
                             label={
                                 <span className="wallet-label">
@@ -412,7 +486,7 @@ function SummaryView({
                                     Wallet credit
                                 </span>
                             }
-                            value={`− ${rupees(order.walletApplied)}`}
+                            value={`− ${rupees(details.walletApplied)}`}
                             valueClass="credit"
                         />
                     )}
@@ -421,24 +495,35 @@ function SummaryView({
 
                     <div className="total-row">
                         <div>
-                            <span className="total-label">To pay today</span>
+                            <span className="total-label">{totalLabel}</span>
                             {savePct > 0 && (
                                 <span className="save-pill">You save {savePct}%</span>
                             )}
                         </div>
-                        <span className="total-amount">{rupees(order.amount)}</span>
+                        <span className="total-amount">{rupees(details.amount)}</span>
                     </div>
                 </div>
 
-                {order.walletApplied > 0 && (
-                    <div className="note">
-                        <Check size={15} className="note-icon" />
-                        <span>
-                            This is a <b>one-time purchase</b> using your wallet credit - it will{' '}
-                            <b>not auto-renew</b>.
-                        </span>
-                    </div>
-                )}
+                {isOrder
+                    ? hasWallet && (
+                          <div className="note">
+                              <Check size={15} className="note-icon" />
+                              <span>
+                                  This is a <b>one-time purchase</b> using your wallet credit - it
+                                  will <b>not auto-renew</b>.
+                              </span>
+                          </div>
+                      )
+                    : (
+                          <div className="note">
+                              <Repeat size={15} className="note-icon" />
+                              <span>
+                                  {rupees(details.amount)} will <b>auto-debit every billing cycle</b>
+                                  {details.isTrial ? ' once your free trial ends' : ''}. You can{' '}
+                                  <b>cancel anytime</b> from the SyncTrip app.
+                              </span>
+                          </div>
+                      )}
 
                 <button
                     type="button"
@@ -452,8 +537,12 @@ function SummaryView({
                         </>
                     ) : (
                         <>
-                            <Lock size={17} />
-                            <span>Pay {rupees(order.amount)}</span>
+                            {isOrder ? <Lock size={17} /> : <Repeat size={17} />}
+                            <span>
+                                {isOrder
+                                    ? `Pay ${rupees(details.amount)}`
+                                    : `Subscribe · ${rupees(details.amount)}`}
+                            </span>
                         </>
                     )}
                 </button>
@@ -491,7 +580,15 @@ function Row({
     );
 }
 
-function SuccessView({ endDate, onReturn }: { endDate?: string; onReturn: () => void }) {
+function SuccessView({
+    endDate,
+    recurring,
+    onReturn,
+}: {
+    endDate?: string;
+    recurring?: boolean;
+    onReturn: () => void;
+}) {
     const pretty = endDate
         ? new Date(endDate).toLocaleDateString('en-IN', {
             day: 'numeric',
@@ -510,8 +607,10 @@ function SuccessView({ endDate, onReturn }: { endDate?: string; onReturn: () => 
             </div>
             <h1 className="state-title">You&apos;re on SyncTrip Plus 🎉</h1>
             <p className="state-body">
-                Your subscription is active{pretty ? <> until <b>{pretty}</b></> : ''}. Enjoy
-                every Plus feature.
+                Your subscription is active{pretty ? <> until <b>{pretty}</b></> : ''}.{' '}
+                {recurring
+                    ? 'It renews automatically — manage or cancel it anytime in the app.'
+                    : 'Enjoy every Plus feature.'}
             </p>
             <button type="button" onClick={onReturn} className="pay-btn pay-btn--success">
                 Return to the app

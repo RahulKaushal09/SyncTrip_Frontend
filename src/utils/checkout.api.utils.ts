@@ -10,10 +10,13 @@
  */
 import axios, { AxiosInstance } from 'axios';
 import type {
+    ActiveSubscriptionData,
     ApiEnvelope,
     CreateOrderData,
+    CreateSubscriptionData,
     OrderStatusData,
     RazorpayHandlerResponse,
+    RazorpaySubscriptionHandlerResponse,
     VerifyData,
 } from '@/app/checkout/checkout.types';
 
@@ -60,7 +63,7 @@ export async function verifyOrder(
     return { ok: Boolean(res.data?.success), data: res.data?.data };
 }
 
-/** Safety-net reconcile: used only when verify fails with a network/5xx error. */
+/** Safety-net reconcile (ORDER mode): used only when verify fails with a network/5xx error. */
 export async function getOrderStatus(
     client: AxiosInstance,
     orderId: string,
@@ -69,4 +72,48 @@ export async function getOrderStatus(
         `/subscription/razorpay/order/${orderId}/status`,
     );
     return res.data?.data ?? { status: 'pending' };
+}
+
+/* ───────────────────── recurring SUBSCRIPTION mode (applyWallet=0) ───────────────────── */
+
+export async function createSubscription(
+    client: AxiosInstance,
+    planId: string,
+): Promise<CreateSubscriptionData> {
+    const res = await client.post<ApiEnvelope<CreateSubscriptionData>>(
+        '/subscription/razorpay/create',
+        { planId },
+    );
+    if (!res.data?.success || !res.data?.data?.subscriptionId) {
+        throw new Error(res.data?.message || 'Could not create subscription');
+    }
+    return res.data.data;
+}
+
+export async function verifySubscription(
+    client: AxiosInstance,
+    payload: RazorpaySubscriptionHandlerResponse,
+): Promise<{ ok: boolean; data?: VerifyData }> {
+    const res = await client.post<ApiEnvelope<VerifyData>>(
+        '/subscription/razorpay/verify',
+        payload,
+    );
+    return { ok: Boolean(res.data?.success), data: res.data?.data };
+}
+
+/**
+ * Safety-net reconcile (SUBSCRIPTION mode): recurring has no order id, so we ask the
+ * backend for the user's active subscription. Defensive about the response shape.
+ */
+export async function getActiveSubscription(
+    client: AxiosInstance,
+): Promise<{ active: boolean; endDate?: string }> {
+    const res = await client.get<ApiEnvelope<ActiveSubscriptionData>>('/subscription/active');
+    const d = res.data?.data;
+    const active =
+        d?.isActive === true ||
+        d?.active === true ||
+        d?.status === 'active' ||
+        d?.subscription?.status === 'active';
+    return { active, endDate: d?.subscription?.endDate };
 }
