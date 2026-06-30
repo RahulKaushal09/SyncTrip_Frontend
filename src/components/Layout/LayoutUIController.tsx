@@ -12,7 +12,8 @@ export default function LayoutUIController({ children }: { children: React.React
   const hideUI =
     (pathname.includes("userTrip/") && pathname.includes("/planner")) ||
     (pathname.includes("userTrip/") && pathname.includes("/matching")) ||
-    pathname.includes("/chats") || 
+    pathname.includes("/chats") ||
+    pathname.includes("/checkout") ||
     pathname.includes("/careers/linkedin/march-2026/assessment") || /^\/blogs\/.+/.test(pathname);
 
   return (

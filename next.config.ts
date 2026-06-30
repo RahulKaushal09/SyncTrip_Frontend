@@ -9,7 +9,8 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
-        source: "/(.*)",
+        // Everything except /checkout (handled separately below so it can be noindex + no-store).
+        source: "/((?!checkout).*)",
         headers: [
           {
             key: "Strict-Transport-Security",
@@ -19,6 +20,20 @@ const nextConfig: NextConfig = {
           { key: "X-Content-Type-Options", value: "nosniff" },
           // Added: tell Google canonical host
           { key: "X-Robots-Tag", value: "index, follow" },
+        ],
+      },
+      {
+        // Per-user, token-bearing checkout page opened inside the app WebView:
+        // never cache, never index. (X-Frame-Options omitted — RN WebView is not an iframe.)
+        source: "/checkout",
+        headers: [
+          {
+            key: "Strict-Transport-Security",
+            value: "max-age=31536000; includeSubDomains; preload",
+          },
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Cache-Control", value: "no-store, max-age=0" },
+          { key: "X-Robots-Tag", value: "noindex, nofollow" },
         ],
       },
     ];

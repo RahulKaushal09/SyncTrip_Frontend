@@ -16,6 +16,7 @@ export default function robots(): MetadataRoute.Robots {
                     '/userTrips/',
                     '/trips/',
                     '/api/',
+                    '/checkout',
                 ],
             },
             { userAgent: 'GPTBot', allow: '/' },

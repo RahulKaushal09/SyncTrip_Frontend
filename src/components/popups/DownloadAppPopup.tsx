@@ -203,6 +203,7 @@ const DownloadPopup = () => {
         isCompleteProfilePopupOpen ||
         pathname.includes("/create/trip") ||
         pathname.includes("/invite") ||
+        pathname.includes("/checkout") ||
         pathname.includes("/policies") ||
         pathname.includes("careers/linkedin/march-2026") ||
         pathname.includes("/profile");
