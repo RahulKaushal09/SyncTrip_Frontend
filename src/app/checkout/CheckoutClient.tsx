@@ -190,15 +190,15 @@ export default function CheckoutClient() {
                 const { ok, data } =
                     details.mode === 'order'
                         ? await verifyOrder(client, {
-                              razorpay_order_id: resp.razorpay_order_id ?? '',
-                              razorpay_payment_id: resp.razorpay_payment_id,
-                              razorpay_signature: resp.razorpay_signature,
-                          })
+                            razorpay_order_id: resp.razorpay_order_id ?? '',
+                            razorpay_payment_id: resp.razorpay_payment_id,
+                            razorpay_signature: resp.razorpay_signature,
+                        })
                         : await verifySubscription(client, {
-                              razorpay_subscription_id: resp.razorpay_subscription_id ?? '',
-                              razorpay_payment_id: resp.razorpay_payment_id,
-                              razorpay_signature: resp.razorpay_signature,
-                          });
+                            razorpay_subscription_id: resp.razorpay_subscription_id ?? '',
+                            razorpay_payment_id: resp.razorpay_payment_id,
+                            razorpay_signature: resp.razorpay_signature,
+                        });
                 if (ok) {
                     endDateRef.current = data?.subscription?.endDate;
                     setPhase('success');
@@ -263,10 +263,10 @@ export default function CheckoutClient() {
             // derives the amount from the plan, so we must NOT pass amount/currency here.
             ...(details.mode === 'order'
                 ? {
-                      order_id: details.orderId,
-                      amount: Math.round(details.amount * 100), // paise
-                      currency: details.currency || 'INR',
-                  }
+                    order_id: details.orderId,
+                    amount: Math.round(details.amount * 100), // paise
+                    currency: details.currency || 'INR',
+                }
                 : { subscription_id: details.subscriptionId }),
             name: 'SyncTrip',
             description: details.planName,
@@ -349,7 +349,7 @@ export default function CheckoutClient() {
                     <ResultView
                         kind="cancel"
                         title="Checkout cancelled"
-                        body="You closed the payment before it completed. Nothing has been charged — resume whenever you're ready."
+                        body="You closed the payment before it completed. Nothing has been charged - resume whenever you're ready."
                         primaryLabel="Resume payment"
                         onPrimary={() => {
                             signalledRef.current = false;
@@ -456,7 +456,7 @@ function SummaryView({
             ? 'One-time purchase · wallet credit applied'
             : 'One-time purchase'
         : details.isTrial
-            ? 'Auto-renewing subscription · free trial'
+            ? 'Auto-renewing subscription · Weekly trial'
             : 'Auto-renewing subscription';
 
     const totalLabel = isOrder
@@ -506,24 +506,24 @@ function SummaryView({
 
                 {isOrder
                     ? hasWallet && (
-                          <div className="note">
-                              <Check size={15} className="note-icon" />
-                              <span>
-                                  This is a <b>one-time purchase</b> using your wallet credit - it
-                                  will <b>not auto-renew</b>.
-                              </span>
-                          </div>
-                      )
+                        <div className="note">
+                            <Check size={15} className="note-icon" />
+                            <span>
+                                This is a <b>one-time purchase</b> using your wallet credit - it
+                                will <b>not auto-renew</b>.
+                            </span>
+                        </div>
+                    )
                     : (
-                          <div className="note">
-                              <Repeat size={15} className="note-icon" />
-                              <span>
-                                  {rupees(details.amount)} will <b>auto-debit every billing cycle</b>
-                                  {details.isTrial ? ' once your free trial ends' : ''}. You can{' '}
-                                  <b>cancel anytime</b> from the SyncTrip app.
-                              </span>
-                          </div>
-                      )}
+                        <div className="note">
+                            <Repeat size={15} className="note-icon" />
+                            <span>
+                                {rupees(details.amount)} will <b>auto-debit every billing cycle</b>
+                                {details.isTrial ? ' once your free trial ends' : ''}. You can{' '}
+                                <b>cancel anytime</b> from the SyncTrip app.
+                            </span>
+                        </div>
+                    )}
 
                 <button
                     type="button"
