@@ -3,6 +3,7 @@ import React from 'react';
 import "../../../styles/Footer.css";
 import SyncTripLogoText from "../../assets/images/logoWeb.png";
 import SyncTripLogo from "../../assets/images/logo_main_withoutBG.png"
+import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Facebook, Instagram, Linkedin } from 'lucide-react';
 import GetItOnPlaystore from "../../assets/icons/GetOnPlayStoreSVG.svg";
@@ -19,6 +20,29 @@ const Footer = () => {
         // { name: 'Explore', url: '/explore' },
         { name: 'Blog', url: '/blogs' },
         // { name: 'Plans', url: '/explore/plans' },
+    ];
+
+    /**
+     * Sitewide internal links.
+     *
+     * Until now the homepage exposed exactly three crawlable internal URLs
+     * (/, /about, /blogs) because the navbar and every card navigate with
+     * router.push, which crawlers cannot follow. These rows put the city and
+     * destination hubs on every page of the site, which is how link equity
+     * reaches them at all.
+     */
+    const cityLinks = [
+        { name: 'Gurgaon', url: '/city/gurgaon' },
+        { name: 'Delhi', url: '/city/delhi' },
+        { name: 'Noida', url: '/city/noida' },
+        { name: 'Faridabad', url: '/city/faridabad' },
+    ];
+
+    const exploreLinks = [
+        { name: 'Destinations', url: '/explore' },
+        { name: 'Local plans & meetups', url: '/explore/plans' },
+        { name: 'Travel blog', url: '/blogs' },
+        { name: 'How it works', url: '/how-it-works' },
     ];
 
     const contactLinks = [
@@ -146,6 +170,29 @@ const Footer = () => {
                                 className="appstore-img"
                             />
                         </a>
+                    </div>
+                </div>
+            </div>
+
+            <div className="footer-links-row">
+                <div className="footer-links-group">
+                    <span className="footer-links-label">Plans in Delhi NCR</span>
+                    <div className="footer-links-set">
+                        {cityLinks.map((link) => (
+                            <Link key={link.url} className="footerTextColorNormal" href={link.url}>
+                                {link.name}
+                            </Link>
+                        ))}
+                    </div>
+                </div>
+                <div className="footer-links-group">
+                    <span className="footer-links-label">Explore</span>
+                    <div className="footer-links-set">
+                        {exploreLinks.map((link) => (
+                            <Link key={link.url} className="footerTextColorNormal" href={link.url}>
+                                {link.name}
+                            </Link>
+                        ))}
                     </div>
                 </div>
             </div>

@@ -4,8 +4,6 @@ import { Metadata } from 'next';
 import { ApiService } from '@/utils/api.utils';
 import LocationPageDetails from '@/components/PageDetails/LocationPageDetails';
 import { mapPreviousIdsWithNew } from '@/constants/mapPreviousIdsWithNew';
-import { redirect } from 'next/navigation';
-import { CommonServices } from '@/utils';
 import { PlacesToVisit } from '@/types';
 import { cache } from 'react';
 
@@ -24,10 +22,29 @@ export const revalidate = 2592000;
 // ✅ new location slugs SSR on first hit, cached after
 export const dynamicParams = true;
 
-// ✅ single fetch per slug, reused by generateMetadata + LocationPage
-const getLocation = cache(async (uuid: string) => {
+/**
+ * One fetch per slug, shared by generateMetadata and LocationPage.
+ *
+ * Resolves BY SLUG, which is what these URLs actually are. It used to take the
+ * uuid from `slug.split('_')[0]`, but the slugs stopped carrying a uuid when
+ * they became "things-to-do-in-<place>" - so the lookup silently missed, every
+ * page fell back to the literal word "Destination" for its title, and the
+ * canonical was built out of that fallback and pointed at a URL that 404s.
+ * Google drops a page whose canonical it cannot fetch: that was all 776
+ * location pages telling the index to ignore them.
+ *
+ * Legacy "<uuid>_<words>" slugs still resolve through the id lookup below, so
+ * older shared links keep working.
+ */
+const getLocation = cache(async (slug: string) => {
     try {
-        return await ApiService.fetchLocationByIdServer(uuid) ?? null;
+        const bySlug = await ApiService.fetchLocationBySlugServer(slug);
+        if (bySlug) return bySlug;
+
+        // Legacy slug shape: "<uuid>_<title>-<n>-places-to-visit-in-<country>".
+        const [maybeUuid] = slug.split('_');
+        if (!maybeUuid || maybeUuid === slug) return null;
+        return await ApiService.fetchLocationByIdServer(mapPreviousIdsWithNew(maybeUuid)) ?? null;
     } catch {
         return null;
     }
@@ -52,22 +69,28 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { slug } = await params;
-    let [uuid] = slug.split('_');
-    if (uuid) uuid = mapPreviousIdsWithNew(uuid);
 
-    const location = await getLocation(uuid); // ✅ cached
-    if (!location) return {};
+    const location = await getLocation(slug); // ✅ cached, shared with the page
+    if (!location) return { title: 'Destination not found | SyncTrip', robots: { index: false, follow: true } };
 
     const placesCount = location.placesToVisit?.length ?? 10;
-    const hotelsCount = location.hotels?.length ?? 5;
-    const country = location.country ?? 'India';
-    const destination = location.title ?? 'Destination';
+    const destination = location.title;
+
+    // No `?? 'Destination'` fallback anywhere in here. A page that cannot name
+    // its own destination must not publish a title and canonical built out of
+    // the placeholder - that is exactly how 776 pages ended up identical.
+    if (!destination) return { robots: { index: false, follow: true } };
 
     const title = `Things to Do in ${destination} – Travel Guide & Trip Companions`;
-    const description = `Plan your ${destination} trip with SyncTrip. Discover ${placesCount}+ attractions, find verified travel companions heading to ${destination}, and join India's 5,000+ traveler community. Free on Android & iOS.`;
-    const canonicalSlug = CommonServices.generateLocationSlug(uuid, destination, String(placesCount), country);
-    const canonicalURL = `https://synctrip.in/location/${canonicalSlug}`;
-    const ogImage = location.images?.[0] ?? 'https://via.placeholder.com/1200x630?text=SyncTrip+Destination';
+    const description = `Plan your ${destination} trip with SyncTrip. Discover ${placesCount}+ attractions, find verified travel companions heading to ${destination}, and join India's traveler community. Free on Android & iOS.`;
+    // The canonical is the URL being served. It used to be re-derived from the
+    // title, which produced a slug no route matched.
+    const canonicalURL = `https://synctrip.in/location/${slug}`;
+    const ogImage = location.images?.[0] ?? 'https://synctrip.in/logo_1200.png';
+    // India-first: a young domain cannot afford to spend its crawl budget on
+    // Basel and Pigeon Forge. Non-India destinations stay reachable and keep
+    // passing links, they just leave the index.
+    const isIndia = (location.country ?? 'India').trim().toLowerCase() === 'india';
 
     return {
         title,
@@ -103,7 +126,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
             creator: '@synctrip44398',
         },
         robots: {
-            index: true,
+            index: isIndia,
             follow: true,
             'max-snippet': -1,
             'max-image-preview': 'large',
@@ -116,7 +139,7 @@ export default async function LocationPage({ params }: Props) {
 
 
     const { slug } = await params; // Await params
-    const locationData = await ApiService.fetchLocationBySlugServer(slug);
+    const locationData = await getLocation(slug); // same cached fetch as generateMetadata
 
     if (!locationData) return notFound();
 

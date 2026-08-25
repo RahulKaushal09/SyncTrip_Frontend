@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import { Users, Shield, MessageCircle, ArrowBigRight } from "lucide-react";
 import styles from "./CommunityBento.module.css";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 // Import your existing images
@@ -37,9 +38,9 @@ const CommunityBento = () => {
       <div className={styles.bentoGrid}>
 
         {/* Box 1: Rides (Tall - Spans 2 Rows) */}
-        <div className={`${styles.bentoCard} ${styles.tallCard}`} onClick={() => router.push(ROUTES.PLANS)}>
+        <Link href={ROUTES.PLANS} className={`${styles.bentoCard} ${styles.tallCard}`} aria-label="Find bike ride groups near you">
           <div className={styles.imageWrapper}>
-            <Image src={ridersImage.src} alt="Rides" fill sizes="(max-width: 768px) 100vw, 25vw" className={styles.bgImage} />
+            <Image src={ridersImage.src} alt="Group of riders on a weekend bike ride organised on SyncTrip" fill sizes="(max-width: 768px) 100vw, 25vw" className={styles.bgImage} />
             <div className={styles.scrim} />
           </div>
           <div className={styles.cardContent}>
@@ -47,24 +48,24 @@ const CommunityBento = () => {
             <h3 className={styles.cardTitle}>Find your riding tribe.</h3>
             <p className={styles.cardDesc}>Join rider groups that match your pace, plan routes, and hit the open road to your next adventure.</p>
           </div>
-        </div>
+        </Link>
 
         {/* Box 2: Sports (Square) */}
-        <div className={`${styles.bentoCard} ${styles.squareCard}`} onClick={() => router.push(ROUTES.PLANS)}>
+        <Link href={ROUTES.PLANS} className={`${styles.bentoCard} ${styles.squareCard}`} aria-label="Find players for sports and turf games near you">
           <div className={styles.imageWrapper}>
-            <Image src={sportsImage.src} alt="Sports" fill sizes="(max-width: 768px) 100vw, 25vw" className={styles.bgImage} />
+            <Image src={sportsImage.src} alt="Players joining a turf sports game on SyncTrip" fill sizes="(max-width: 768px) 100vw, 25vw" className={styles.bgImage} />
             <div className={styles.scrim} />
           </div>
           <div className={styles.cardContent}>
             <div className={styles.tag}>Sports & Games</div>
             <h3 className={styles.cardTitle}>Play with the Community!</h3>
           </div>
-        </div>
+        </Link>
 
         {/* Box 3: Hangouts (Wide) */}
-        <div className={`${styles.bentoCard} ${styles.wideCard}`} onClick={() => router.push(ROUTES.PLANS)}>
+        <Link href={ROUTES.PLANS} className={`${styles.bentoCard} ${styles.wideCard}`} aria-label="Find people for cafes, city walks and weekend hangouts">
           <div className={styles.imageWrapper}>
-            <Image src={outingImage.src} alt="Outings" fill sizes="(max-width: 768px) 100vw, 50vw" className={styles.bgImage} />
+            <Image src={outingImage.src} alt="People meeting up for a cafe hangout near them" fill sizes="(max-width: 768px) 100vw, 50vw" className={styles.bgImage} />
             <div className={styles.scrim} />
           </div>
           <div className={styles.cardContent}>
@@ -72,19 +73,19 @@ const CommunityBento = () => {
             <h3 className={styles.cardTitle}>Meet your kind of people.</h3>
             <p className={styles.cardDesc}>Find people for cafes, city walks, and chill weekend hangouts.</p>
           </div>
-        </div>
+        </Link>
 
         {/* Box 4: Movies (Square) */}
-        <div className={`${styles.bentoCard} ${styles.squareCard}`} onClick={() => router.push(ROUTES.PLANS)}>
+        <Link href={ROUTES.PLANS} className={`${styles.bentoCard} ${styles.squareCard}`} aria-label="Find a movie buddy for the latest releases">
           <div className={styles.imageWrapper}>
-            <Image src={moviesImage.src} alt="Movies" fill sizes="(max-width: 768px) 100vw, 25vw" className={styles.bgImage} />
+            <Image src={moviesImage.src} alt="Friends matched for a movie night on SyncTrip" fill sizes="(max-width: 768px) 100vw, 25vw" className={styles.bgImage} />
             <div className={styles.scrim} />
           </div>
           <div className={styles.cardContent}>
             <div className={styles.tag}>Movie Nights</div>
             <h3 className={styles.cardTitle}>Find Other Cinephiles!</h3>
           </div>
-        </div>
+        </Link>
 
         {/* Box 5: Open Communities (Wide - Specialized Dark Card) */}
         <div className={`${styles.bentoCard} ${styles.wideCard} ${styles.chatCard}`} onClick={redirectToStore}>

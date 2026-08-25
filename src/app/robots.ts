@@ -5,7 +5,7 @@ export default function robots(): MetadataRoute.Robots {
         rules: [
             {
                 userAgent: '*',
-                allow: ['/', '/blogs/', '/explore/', '/about', '/location/'],
+                allow: ['/', '/blogs/', '/explore/', '/about', '/location/', '/city/', '/share/', '/how-it-works'],
                 disallow: [
                     '/create/',
                     '/hostedTrips',
@@ -17,6 +17,10 @@ export default function robots(): MetadataRoute.Robots {
                     '/trips/',
                     '/api/',
                     '/checkout',
+                    // Per-user share targets. The club / club-event / mega-event
+                    // share pages ARE public and indexable; these two are not.
+                    '/share/user/',
+                    '/share/chat/',
                 ],
             },
             { userAgent: 'GPTBot', allow: '/' },

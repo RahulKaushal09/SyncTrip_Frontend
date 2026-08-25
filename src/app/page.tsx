@@ -20,8 +20,8 @@ export const metadata: Metadata = {
   // ↑ "Solo Travel Companion App" = exact transactional query
   // ↑ 60 chars exactly - fits Google title display
 
-  description: 'Plan trips, join bike rides, sports, movies & weekend outings with 10,000+ verified people near you. Find your crew and club events on SyncTrip. Free app.',
-  // ↑ 175 chars - includes primary kw, social proof (5000+), all 4 activity
+  description: 'Find people to do things with in Gurgaon, Delhi NCR & across India. Join bike rides, turf games, movie nights, weekend outings and club events near you. Free app.',
+  // ↑ 168 chars - includes primary kw, social proof (5000+), all 4 activity
   // ↑ categories, CTA (Free), platform (Android & iOS)
 
   keywords: [
@@ -42,7 +42,15 @@ export const metadata: Metadata = {
     'verified travel companions',
     'local activity groups India',
     'find travel companions India',
-
+    // Delhi NCR is the launch city cluster - these are the terms /city/* pages
+    // target, repeated here so the homepage supports rather than competes.
+    'things to do in gurgaon',
+    'make friends in gurgaon',
+    'weekend plans in delhi ncr',
+    'clubs in gurgaon',
+    'riders club gurgaon',
+    'turf booking partners gurgaon',
+    'meetups in delhi ncr',
   ].join(', '),
 
   authors: [{ name: 'SyncTrip', url: 'https://synctrip.in' }],
@@ -52,7 +60,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Find Travel Buddies & Activity Groups in India | SyncTrip',
 
-    description: 'Plan trips, join bike rides, sports, movies & weekend outings with 10,000+ verified people near you. Find your crew and club events on SyncTrip. Free app.',
+    description: 'Find people to do things with in Gurgaon, Delhi NCR & across India. Join bike rides, turf games, movie nights, weekend outings and club events near you. Free app.',
 
     type: 'website',
     url: 'https://synctrip.in',
@@ -93,6 +101,12 @@ export default async function Home() {
             name: "SyncTrip",
             url: "https://synctrip.in",
             logo: "https://synctrip.in/logo_main_withoutBG.png",
+            areaServed: [
+              { "@type": "City", name: "Gurugram" },
+              { "@type": "City", name: "Delhi" },
+              { "@type": "City", name: "Noida" },
+              { "@type": "Country", name: "India" }
+            ],
             sameAs: [
               // "https://www.facebook.com/synctrip",
               // "https://twitter.com/synctrip",
@@ -143,12 +157,11 @@ export default async function Home() {
               "price": "0",
               "priceCurrency": "INR"
             },
-            "aggregateRating": {
-              "@type": "AggregateRating",
-              "ratingValue": "4.9",
-              "reviewCount": "5000",
-              "bestRating": "5"
-            },
+            // aggregateRating deliberately omitted. Google's structured-data
+            // policy requires ratings to reflect reviews shown ON this page;
+            // a hardcoded 4.9/5000 with no visible reviews is a manual-action
+            // risk for the whole domain. Re-add it only when the real Play
+            // Store rating is fetched AND the reviews are rendered here.
             "author": {
               "@type": "Organization",
               "name": "SyncTrip",

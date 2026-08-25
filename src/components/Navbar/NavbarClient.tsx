@@ -259,9 +259,11 @@ const NavbarClient = ({ }) => {
               // onClick={() => redirectBtnClick(ROUTES.EXPLORE)}
               // style={{ cursor: "pointe r" }}
               >
-                <span style={{ color: (!isSticky && isHomePage) ? "white" : "" }} className="nav-link">
-                  Explore
-                </span>
+                <Link href={ROUTES.EXPLORE} className="nav-link">
+                  <span style={{ color: (!isSticky && isHomePage) ? "white" : "" }}>
+                    Explore
+                  </span>
+                </Link>
               </li>
               <li className="nav-item"
                 onClick={() => {
@@ -277,9 +279,11 @@ const NavbarClient = ({ }) => {
               // onClick={() => redirectBtnClick(ROUTES.EXPLORE)}
               // style={{ cursor: "pointer" }}
               >
-                <span style={{ color: (!isSticky && isHomePage) ? "white" : "" }} className="nav-link">
-                  Plans
-                </span>
+                <Link href={ROUTES.PLANS} className="nav-link">
+                  <span style={{ color: (!isSticky && isHomePage) ? "white" : "" }}>
+                    Plans
+                  </span>
+                </Link>
               </li>
               {/* <li className="nav-item"
               onClick={() => {
@@ -334,9 +338,11 @@ const NavbarClient = ({ }) => {
                   }
                 }}
                 style={{ cursor: "pointer" }}>
-                <span style={{ color: (!isSticky && isHomePage) ? "white" : "" }} className="nav-link">
-                  Blogs
-                </span>
+                <Link href={ROUTES.BLOGS} className="nav-link">
+                  <span style={{ color: (!isSticky && isHomePage) ? "white" : "" }}>
+                    Blogs
+                  </span>
+                </Link>
               </li>
               {/* <li className="nav-item dropdown">
                 {LoadingUser ? (
@@ -584,7 +590,7 @@ const NavbarClient = ({ }) => {
               }}
             // onClick={() => { redirectBtnClick(ROUTES.EXPLORE); closeDrawer(); }}
             >
-              <span className="nav-link">Explore</span>
+              <Link href={ROUTES.EXPLORE} className="nav-link" onClick={closeDrawer}>Explore</Link>
             </li>
             <li className="nav-item"
               onClick={() => {
@@ -601,7 +607,7 @@ const NavbarClient = ({ }) => {
               }}
             // onClick={() => { redirectBtnClick(ROUTES.EXPLORE); closeDrawer(); }}
             >
-              <span className="nav-link">Plans</span>
+              <Link href={ROUTES.PLANS} className="nav-link" onClick={closeDrawer}>Plans</Link>
             </li>
             <li className="nav-item"
               onClick={() => {
@@ -619,7 +625,7 @@ const NavbarClient = ({ }) => {
 
             //   }}
             >
-              <span className="nav-link">Blogs</span>
+              <Link href={ROUTES.BLOGS} className="nav-link" onClick={closeDrawer}>Blogs</Link>
             </li>
             {/* {isLoggedIn &&
 

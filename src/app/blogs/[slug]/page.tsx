@@ -48,19 +48,28 @@ export async function generateMetadata({ params }: BlogDetailProps): Promise<Met
   const blog = await getBlog(slug); // ✅ Next.js dedupes this automatically (React cache)
   if (!blog) return {};
 
+  /**
+   * layout.tsx applies the `%s | SyncTrip` title template, and most backend
+   * seo_title values already end in "| SyncTrip" - which was shipping titles
+   * like "Best Time to Visit Goa ... | SyncTrip | SyncTrip" and burning ~11
+   * characters of the ~60 Google actually displays.
+   */
+  const rawTitle = blog.seo?.seo_title || blog.title;
+  const title = rawTitle?.replace(/\s*[|\-–]\s*SyncTrip\s*$/i, "").trim() || blog.title;
+
   return {
-    title: blog.seo?.seo_title || blog.title,
+    title,
     description: blog.seo?.seo_description || blog.content?.substring(0, 160),
     keywords: blog.seo?.seo_keywords?.join(", "),
     openGraph: {
-      title: blog.seo?.seo_title || blog.title,
+      title,
       description: blog.seo?.seo_description,
       images: [{ url: blog.seo?.seo_image || blog.featuredImage, alt: blog.title }],
       type: "article",
     },
     twitter: {
       card: "summary_large_image",
-      title: blog.seo?.seo_title || blog.title,
+      title,
       description: blog.seo?.seo_description,
       images: [blog.seo?.seo_image || blog.featuredImage],
     },
