@@ -125,7 +125,7 @@ export default function InfiniteTripMarquee() {
         </div>
 
       </div>
-      <p style={{ padding: 20, textAlign: "center", color: "#ccc" }}>SyncTrip is India's social travel and activity app to find travel buddies, join local activity groups, and discover club events near you. Free on Android and iOS. No subscription — just trips, companions, and plans waiting to happen.</p>
+      <p style={{ padding: 20, textAlign: "center", color: "#ccc" }}>SyncTrip is India&apos;s social travel and activity app to find travel buddies, join local activity groups, and discover club events near you. Free on Android and iOS. No subscription — just trips, companions, and plans waiting to happen.</p>
 
     </section>
   );
