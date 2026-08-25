@@ -9,11 +9,16 @@ export default function LayoutUIController({ children }: { children: React.React
   const pathname = usePathname();
   const router = useRouter();
 
+  // The club portal runs inside the app's WebView, which supplies its own close and
+  // reload — no navbar, announcement bar or spacer belongs on top of it.
+  const isClubPortal = pathname === "/club" || pathname.startsWith("/club/");
+
   const hideUI =
     (pathname.includes("userTrip/") && pathname.includes("/planner")) ||
     (pathname.includes("userTrip/") && pathname.includes("/matching")) ||
     pathname.includes("/chats") ||
     pathname.includes("/checkout") ||
+    isClubPortal ||
     pathname.includes("/careers/linkedin/march-2026/assessment") || /^\/blogs\/.+/.test(pathname);
 
   return (

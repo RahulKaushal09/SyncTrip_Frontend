@@ -206,7 +206,8 @@ const DownloadPopup = () => {
         pathname.includes("/checkout") ||
         pathname.includes("/policies") ||
         pathname.includes("careers/linkedin/march-2026") ||
-        pathname.includes("/profile");
+        pathname.includes("/profile") ||
+        pathname.includes("/club");
 
     // Lock scroll only for auth-lock state (not for regular popups)
     useEffect(() => {
