@@ -8,18 +8,19 @@ import AppFeatures from "@/components/Home_new/AppFeatures";
 import SyncTripPromo from "@/components/AppPushingComponents/SyncTripPromo";
 import ChoiceFeatureSectionV2 from "@/components/Home_new/ChoiceSection_v2";
 import CommunityShowcaseV2 from "@/components/Home_new/CommunityShowcase_v2";
+import ClubEvents from "@/components/Home_new/ClubEvents";
 import InfiniteTripMarquee from "@/components/Home_new/InfinteTripMarquee";
 import TestimonialsV2 from "@/components/Home_new/Testimonials_V2";
 import CommunityBento from "@/components/Home_new/CommunityBento";
 
 
 export const metadata: Metadata = {
-  title: 'Find Travel Buddies in India – Solo Travel Companion App | SyncTrip',
+  title: 'Find Travel Buddies & Activity Groups in India | SyncTrip',
   // ↑ Primary keyword "find travel buddies in India" front-loaded
   // ↑ "Solo Travel Companion App" = exact transactional query
   // ↑ 60 chars exactly - fits Google title display
 
-  description: 'Connect with 5,000+ verified Indian travelers heading your way. Find trip companions, join bike rides, sports groups, movie plans & weekend hangouts. Free on Android & iOS.',
+  description: 'Plan trips, join bike rides, sports, movies & weekend outings with 10,000+ verified people near you. Find your crew and club events on SyncTrip. Free app.',
   // ↑ 175 chars - includes primary kw, social proof (5000+), all 4 activity
   // ↑ categories, CTA (Free), platform (Android & iOS)
 
@@ -35,6 +36,13 @@ export const metadata: Metadata = {
     'sports group near me',
     'find movie partner',
     'SyncTrip',
+    'travel community app',
+    'plan trips with friends India',
+    'group travel app India',
+    'verified travel companions',
+    'local activity groups India',
+    'find travel companions India',
+
   ].join(', '),
 
   authors: [{ name: 'SyncTrip', url: 'https://synctrip.in' }],
@@ -42,8 +50,10 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://synctrip.in' },
 
   openGraph: {
-    title: 'Find Your Travel Buddy in India | SyncTrip',
-    description: 'Join 5,000+ verified travelers. Match with companions for trips, rides, sports & movies across India.',
+    title: 'Find Travel Buddies & Activity Groups in India | SyncTrip',
+
+    description: 'Plan trips, join bike rides, sports, movies & weekend outings with 10,000+ verified people near you. Find your crew and club events on SyncTrip. Free app.',
+
     type: 'website',
     url: 'https://synctrip.in',
     siteName: 'SyncTrip',
@@ -182,6 +192,7 @@ export default async function Home() {
       {/* <ChoiceFeatureSectionV3 /> */}
       {/* <CommunityShowcase /> */}
       <CommunityShowcaseV2 />
+      <ClubEvents />
       <AppFeatures />
       <CommunityBento />
       {/* <FeatureScroll /> */}

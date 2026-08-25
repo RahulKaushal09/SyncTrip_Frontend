@@ -1,7 +1,7 @@
 .section {
   position: relative;
   overflow: hidden;
-  padding: 6rem 1.5rem;
+  padding: 3rem 1.5rem;
 }
 
 /* --- Premium Ambient Background --- */
@@ -13,7 +13,8 @@
   pointer-events: none;
 }
 
-.ambientBlob1, .ambientBlob2 {
+.ambientBlob1,
+.ambientBlob2 {
   position: absolute;
   border-radius: 50%;
   filter: blur(120px);
@@ -39,8 +40,13 @@
 }
 
 @keyframes floatAmbient {
-  0% { transform: translate(0, 0) scale(1); }
-  100% { transform: translate(-50px, 50px) scale(1.1); }
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  100% {
+    transform: translate(-50px, 50px) scale(1.1);
+  }
 }
 
 .contentWrap {
@@ -54,7 +60,7 @@
 /* --- Header Section --- */
 .header {
   text-align: center;
-  max-width: 700px;
+  /* max-width: 700px; */
   margin: 0 auto 5rem;
   display: flex;
   flex-direction: column;
@@ -119,17 +125,18 @@
   gap: 2.5rem;
   /* Extra top/right padding so floating images don't clip */
   padding-top: 2rem;
-  padding-right: 2rem; 
+  padding-right: 2rem;
 }
 
 .card {
   position: relative;
-  border-radius: 32px; /* Very soft, modern corners */
+  border-radius: 32px;
+  /* Very soft, modern corners */
   background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.8);
-  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.04), 
-              inset 0 0 0 1px rgba(255,255,255, 0.5);
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.04),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.5);
   padding: 2rem;
   display: flex;
   flex-direction: column;
@@ -154,8 +161,8 @@
 
 .card:hover {
   /* transform: translateY(-8px); */
-  box-shadow: 0 30px 60px rgba(15, 23, 42, 0.08), 
-              inset 0 0 0 1px rgba(255,255,255, 1);
+  box-shadow: 0 30px 60px rgba(15, 23, 42, 0.08),
+    inset 0 0 0 1px rgba(255, 255, 255, 1);
 }
 
 .card:hover .cardGlow {
@@ -176,13 +183,45 @@
 }
 
 .cardBadge {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   font-size: 0.75rem;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--accent);
   margin-bottom: 1rem;
+}
+
+.cardIcon {
+  font-size: 1rem;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+/* Stretched link: real anchor text for crawlers, full-card hit area for users */
+.cardLink {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.cardLink::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 32px;
+  z-index: 4;
+}
+
+.cardLink:focus-visible {
+  outline: none;
+}
+
+.cardLink:focus-visible::after {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
 }
 
 .cardHeading {
@@ -245,13 +284,50 @@
 }
 
 @keyframes floatImage {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-12px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-12px);
+  }
 }
 
 /* --- Live Ping Chip --- */
+/* --- Footer Actions --- */
+.footerActions {
+  margin-top: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+}
+
+.ctaButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 32px;
+  border-radius: 100px;
+  background: linear-gradient(135deg, #4bbef5, #F3359E);
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  box-shadow: 0 12px 30px rgba(75, 190, 245, 0.35);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.ctaButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 40px rgba(243, 53, 158, 0.28);
+}
+
 .liveChip {
-  margin: 4rem auto 0;
   width: fit-content;
   display: flex;
   align-items: center;
@@ -260,7 +336,7 @@
   padding: 12px 24px;
   border-radius: 100px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-  border: 1px solid rgba(0,0,0,0.03);
+  border: 1px solid rgba(0, 0, 0, 0.03);
 }
 
 .livePulseWrap {
@@ -296,7 +372,9 @@
 }
 
 @keyframes ping {
-  75%, 100% {
+
+  75%,
+  100% {
     transform: scale(3.5);
     opacity: 0;
   }
@@ -308,9 +386,11 @@
     gap: 2rem;
     padding-right: 1rem;
   }
+
   .card {
     padding: 2rem;
   }
+
   .cardImageWrap {
     width: 180px;
     height: 180px;
@@ -322,41 +402,62 @@
   .section {
     padding: 4rem 1rem;
   }
+
   .header {
     margin-bottom: 5rem;
   }
+
   .grid {
     grid-template-columns: 1fr;
-    gap: 5rem; /* Massive gap to accommodate top-popping images */
+    gap: 5rem;
+    /* Massive gap to accommodate top-popping images */
     padding-right: 0;
     padding-top: 3rem;
   }
+
   .card {
     align-items: center;
     text-align: center;
-    padding: 3.5rem 1.5rem 2rem; /* Extra top padding for text */
+    padding: 3.5rem 1.5rem 2rem;
+    /* Extra top padding for text */
   }
+
   .cardContent {
     max-width: 100%;
   }
+
   .textWrap {
     margin-bottom: 1.5rem;
   }
+
   .statList {
     justify-content: center;
   }
+
   .cardImageWrap {
     width: 160px;
     height: 160px;
     top: -6rem;
     right: auto;
     left: 50%;
-    margin-left: -80px; /* Center perfectly */
+    margin-left: -80px;
+    /* Center perfectly */
   }
+
   .cardGlow {
     width: 100%;
     height: 100px;
     top: 0;
     border-radius: 32px 32px 0 0;
+  }
+
+  .footerActions {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .ctaButton {
+    width: 100%;
+    max-width: 320px;
   }
 }

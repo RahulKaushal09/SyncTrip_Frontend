@@ -1,17 +1,21 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import Image, { type StaticImageData } from "next/image";
 import sports from "@/assets/images/sportsButton.png";
 import movies from "@/assets/images/moviesButton.png";
 import bikes from "@/assets/images/bikeButton.png";
 import outing from "@/assets/images/outingButton.png";
+import { ROUTES } from "@/constants";
 import styles from "./CommunityShowcaseV2.module.css";
 
 type Community = {
   id: string;
   title: string;
+  icon: string;
   image: StaticImageData;
+  imageAlt: string;
   accent: string;
   heading: string;
   description: string;
@@ -20,40 +24,48 @@ type Community = {
 
 const COMMUNITIES: Community[] = [
   {
-    id: "outings",
-    title: "Outings",
-    image: outing,
-    accent: "#4bbef5", // Used hex for better color-mix compatibility if variables fail
-    heading: "Explore the Unseen",
-    description: "Discover hidden gems, weekend getaways, and local cafes with people who share your vibe.",
-    stats: ["1.2K+ Explorers", "Daily Meetups"]
-  },
-  {
-    id: "movies",
-    title: "Movies",
-    image: movies,
-    accent: "#F3359E", 
-    heading: "Catch the Latest Flicks",
-    description: "Find horror buffs, Marvel geeks, or indie film lovers to share the popcorn with.",
-    stats: ["500+ Cinephiles", "Watch Parties"]
-  },
-  {
     id: "sports",
-    title: "Sports",
+    title: "Sports & Games",
+    icon: "🏏",
     image: sports,
+    imageAlt: "Find sports partners for turf cricket, football and badminton games near you",
     accent: "#10B981",
-    heading: "Get Your Game On",
-    description: "Missing a player for your turf match? Or morning badminton rally? Build your ultimate squad here.",
+    heading: "Missing a Player for Turf or Badminton?",
+    description: "Build your squad, join pickup games and weekly matches with athletes near you.",
     stats: ["800+ Athletes", "Weekly Tournaments"]
   },
   {
     id: "rides",
     title: "Bike Rides",
+    icon: "🏍️",
     image: bikes,
+    imageAlt: "Join group motorcycle rides and weekend bike trips with riders near you",
     accent: "#F59E0B",
     heading: "Hit the Open Road",
-    description: "Feel the breeze and conquer new terrains. Connect with fellow riders and plan scenic routes.",
+    description: "Join breakfast rides, weekend loops, and long-haul motorcycle trips with riders who match your pace.",
     stats: ["2K+ Riders", "Breakfast Rides"]
+  },
+  {
+    id: "movies",
+    title: "Movie Nights",
+    icon: "🎬",
+    image: movies,
+    imageAlt: "Find a movie buddy for the latest releases and watch parties near you",
+    accent: "#F3359E",
+    heading: "Match on the Film, Plan the Night",
+    description: "Find horror buffs, Marvel geeks, and indie lovers to share the popcorn with.",
+    stats: ["500+ Cinephiles", "Watch Parties"]
+  },
+  {
+    id: "outings",
+    title: "Outings & Hangouts",
+    icon: "☕",
+    image: outing,
+    imageAlt: "Discover cafe hangouts, city walks and weekend meetups near you",
+    accent: "#4bbef5", // Used hex for better color-mix compatibility if variables fail
+    heading: "Something New Near You, Every Day",
+    description: "Discover cafes, city walks, and weekend meetups with people who share your interests.",
+    stats: ["1.2K+ Explorers", "Daily Meetups"]
   }
 ];
 
@@ -64,17 +76,27 @@ type CommunityCardProps = {
 
 const CommunityCard = ({ community, priority = false }: CommunityCardProps) => {
   return (
-    <article 
-      className={styles.card} 
+    <article
+      className={styles.card}
       style={{ "--accent": community.accent } as React.CSSProperties}
     >
       {/* Decorative background blob matched to the accent color */}
       {/* <div className={styles.cardGlow} aria-hidden="true" /> */}
-      
+
       <div className={styles.cardContent}>
         <div className={styles.textWrap}>
-          <span className={styles.cardBadge}>{community.title}</span>
-          <h4 className={styles.cardHeading}>{community.heading}</h4>
+          <span className={styles.cardBadge}>
+            <span className={styles.cardIcon} aria-hidden="true">{community.icon}</span>
+            {community.title}
+          </span>
+          {/* Stretched link keeps the whole card clickable while giving crawlers real anchor text */}
+          <Link
+            href={ROUTES.PLANS}
+            className={styles.cardLink}
+            aria-label={`Explore ${community.title} plans near you`}
+          >
+            <h3 className={styles.cardHeading}>{community.heading}</h3>
+          </Link>
           <p className={styles.cardDescription}>{community.description}</p>
         </div>
 
@@ -88,10 +110,10 @@ const CommunityCard = ({ community, priority = false }: CommunityCardProps) => {
       </div>
 
       {/* Floating Image Wrapper */}
-      <div className={styles.cardImageWrap} aria-hidden="true">
+      <div className={styles.cardImageWrap}>
         <Image
           src={community.image}
-          alt={community.title}
+          alt={community.imageAlt}
           fill
           priority={priority}
           sizes="(max-width: 767px) 140px, 220px"
@@ -115,14 +137,15 @@ const CommunityShowcaseV2 = () => {
         <header className={styles.header}>
           <div className={styles.kickerWrap}>
             <span className={styles.kickerDot} />
-            <span className={styles.kicker}>SYNC YOUR VIBE</span>
+            <span className={styles.kicker}>ACTIVITIES NEAR YOU</span>
           </div>
           <h2 className={styles.title}>
-            Find Your Community.<br/>
-            Get Connected Nearby.
+            Do more of what you love, together.
+            {/* <br className="hidden !sm:block" /> */}
+
           </h2>
           <p className={styles.subtitle}>
-            Join vibrant local groups, discover shared interests, and turn nearby moments into meaningful connections. Available only on <strong>SyncTrip.</strong>
+            Find activity partners near you for sports, bike rides, movie nights and cafe hangouts. Join local plans, meet people who share your interests, and turn nearby moments into real connections on <strong>SyncTrip.</strong>
           </p>
         </header>
 
@@ -136,12 +159,18 @@ const CommunityShowcaseV2 = () => {
           ))}
         </div>
 
-        <div className={styles.liveChip}>
-          <div className={styles.livePulseWrap}>
-            <span className={styles.liveDot} aria-hidden="true" />
-            <span className={styles.livePing} aria-hidden="true" />
+        <div className={styles.footerActions}>
+          <Link href={ROUTES.PLANS} className={styles.ctaButton}>
+            Explore Activities
+          </Link>
+
+          <div className={styles.liveChip}>
+            <div className={styles.livePulseWrap}>
+              <span className={styles.liveDot} aria-hidden="true" />
+              <span className={styles.livePing} aria-hidden="true" />
+            </div>
+            <span className={styles.liveText}>4 New plans nearby</span>
           </div>
-          <span className={styles.liveText}>4 New plans nearby</span>
         </div>
       </div>
     </section>

@@ -27,3 +27,6 @@ export * from './api.types';
 // Common types
 export * from './common.types';
 
+// Clubs, club events and mega events (public share pages)
+export * from './club.types';
+

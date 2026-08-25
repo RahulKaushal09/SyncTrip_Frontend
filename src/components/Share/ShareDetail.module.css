@@ -1,0 +1,500 @@
+/* Shared shell for the three public share pages: club, club event, mega event. */
+
+.page {
+  /* A shared link is opened on a phone more often than not: nothing here may
+     push the document wider than the viewport. */
+  overflow-x: hidden;
+  background: linear-gradient(180deg, #F7FAFC 0%, #FFFFFF 40%, #F6F9FB 100%);
+  min-height: 100vh;
+  padding-bottom: 4rem;
+  color: #0f172a;
+}
+
+/* --- Hero --- */
+.hero {
+  position: relative;
+  width: 100%;
+  min-height: 340px;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  background: #16324F;
+}
+
+.heroTall {
+  min-height: 460px;
+}
+
+.heroImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.heroFallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 5rem;
+  background: linear-gradient(135deg, #16324F, #0c1c2e);
+}
+
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(6, 17, 30, 0.92) 0%, rgba(6, 17, 30, 0.45) 45%, rgba(6, 17, 30, 0.15) 100%);
+}
+
+.heroInner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.badgeRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(10px);
+  color: #ffffff;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border-radius: 100px;
+}
+
+.badgeAccent {
+  background: rgba(16, 185, 129, 0.9);
+  border-color: rgba(16, 185, 129, 0.9);
+}
+
+.badgeWarn {
+  background: rgba(239, 68, 68, 0.92);
+  border-color: rgba(239, 68, 68, 0.92);
+}
+
+.heroTitle {
+  margin: 0;
+  overflow-wrap: anywhere;
+  color: #ffffff;
+  font-size: clamp(1.9rem, 4.6vw, 3rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+.heroSubtitle {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 1.02rem;
+  line-height: 1.55;
+  font-weight: 500;
+  max-width: 44rem;
+}
+
+.heroByline {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.heroLogo {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* --- Body layout --- */
+.container {
+  width: 100%;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  gap: 2rem;
+  align-items: start;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  min-width: 0;
+}
+
+.aside {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  position: sticky;
+  top: 96px;
+}
+
+.card {
+  background: #ffffff;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 24px;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.05);
+  padding: 1.6rem;
+}
+
+.cardTitle {
+  margin: 0 0 1rem;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: #0f172a;
+}
+
+.prose {
+  margin: 0;
+  overflow-wrap: anywhere;
+  color: #475569;
+  font-size: 1rem;
+  line-height: 1.75;
+  white-space: pre-line;
+}
+
+/* --- Key facts --- */
+.factList {
+  display: grid;
+  gap: 1rem;
+}
+
+.fact {
+  display: flex;
+  gap: 0.85rem;
+  align-items: flex-start;
+}
+
+.factIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: #F1F7FD;
+  color: #2b7fb8;
+}
+
+.factLabel {
+  margin: 0;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #94a3b8;
+}
+
+.factValue {
+  margin: 0.15rem 0 0;
+  overflow-wrap: anywhere;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.45;
+}
+
+.factNote {
+  margin: 0.15rem 0 0;
+  font-size: 0.85rem;
+  color: #64748b;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+/* --- Lists and chips --- */
+.bulletList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.7rem;
+}
+
+.bulletItem {
+  display: flex;
+  gap: 0.65rem;
+  align-items: flex-start;
+  color: #475569;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.bulletDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #4bbef5;
+  flex-shrink: 0;
+  margin-top: 0.55rem;
+}
+
+.chipRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.chip {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #0f172a;
+  background: #F1F5F9;
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  padding: 0.45rem 0.9rem;
+  border-radius: 100px;
+  text-transform: capitalize;
+}
+
+/* --- Stats strip --- */
+.statRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+}
+
+.statValue {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1;
+}
+
+.statLabel {
+  margin-top: 0.35rem;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #94a3b8;
+}
+
+/* --- Schedule / FAQ / event rows --- */
+.rowList {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.row {
+  display: flex;
+  gap: 0.9rem;
+  align-items: center;
+  padding: 0.9rem 1rem;
+  border-radius: 16px;
+  border: 1px solid rgba(15, 23, 42, 0.07);
+  background: #FBFDFF;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+a.row:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px rgba(15, 23, 42, 0.07);
+}
+
+.rowDate {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: #EEF6FD;
+  color: #1e293b;
+}
+
+.rowDay {
+  font-size: 1.1rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.rowMonth {
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+.rowBody {
+  min-width: 0;
+}
+
+.rowTitle {
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.rowMeta {
+  margin: 0.2rem 0 0;
+  font-size: 0.82rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.faqItem {
+  border-top: 1px solid rgba(15, 23, 42, 0.07);
+  padding: 1rem 0 0;
+  margin-top: 1rem;
+}
+
+.faqItem:first-of-type {
+  border-top: none;
+  padding-top: 0;
+  margin-top: 0;
+}
+
+.faqQuestion {
+  margin: 0 0 0.4rem;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.faqAnswer {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.65;
+  color: #475569;
+}
+
+/* --- Banners --- */
+.banner {
+  border-radius: 18px;
+  padding: 1rem 1.2rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.55;
+}
+
+.bannerWarn {
+  background: #FEF2F2;
+  border: 1px solid #FECACA;
+  color: #B91C1C;
+}
+
+/* --- CTA card --- */
+.ctaCard {
+  background: linear-gradient(135deg, #16324F, #0c1c2e);
+  border-radius: 24px;
+  padding: 1.75rem;
+  color: #ffffff;
+  box-shadow: 0 20px 45px rgba(12, 28, 46, 0.25);
+}
+
+.ctaTitle {
+  margin: 0 0 0.5rem;
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  /* Explicit: globals.css colours every h2 #003b59, which is invisible on this
+     dark card and beats plain inheritance from .ctaCard. */
+  color: #ffffff;
+}
+
+.ctaText {
+  margin: 0 0 1.25rem;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.ctaPrice {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+
+.ctaPriceValue {
+  font-size: 1.8rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.ctaPriceLabel {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.footerNote {
+  max-width: 1080px;
+  margin: 2rem auto 0;
+  padding: 0 1.5rem;
+  color: #94a3b8;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.footerNote a {
+  color: #2b7fb8;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+/* --- Responsiveness --- */
+@media (max-width: 900px) {
+  .container {
+    /* minmax(0, 1fr), not 1fr: a plain 1fr refuses to shrink below its
+       content's min-content width, which is what lets a long venue name or URL
+       widen the whole page. */
+    grid-template-columns: minmax(0, 1fr);
+    padding-top: 1.75rem;
+  }
+  .aside {
+    position: static;
+    order: -1;
+  }
+  .hero,
+  .heroTall {
+    min-height: 300px;
+  }
+  .heroInner {
+    padding: 2rem 1.25rem;
+  }
+}

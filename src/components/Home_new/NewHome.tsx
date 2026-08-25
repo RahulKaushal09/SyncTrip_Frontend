@@ -50,22 +50,23 @@ const HomeHeroSectionNew = () => {
                     <div className="heroContent">
                         <div className="heroBadge">
                             <Sparkles className="heroSparkle" />
-                            <span>Join 5000+ Happy Indian Travelers</span>
+                            <span>Join 10000+ verified Indian explorers</span>
                         </div>
                         <h1 className="heroTitleMain">
-                            Find Your Travel Buddy in India
+                            Find Your People.<br></br>
+                            Plan Your Next Adventure.
                         </h1>
                         <h2 className="heroTitleSub">
-                            Plan trips, rides, sports & movies - with verified explorers
+                            Trips, activities & weekend outings with verified people who share your vibe.
                         </h2>
 
 
                         {/* <h1 className="heroTitleMain">{screenWidth && screenWidth > 900 ? "Any Plan. Any Time." : "Stop Planning Solo."}</h1>
                         <h1 className="heroTitleSub">{screenWidth && screenWidth > 900 ? "Connect for trips, rides, and events." : "Start Exploring Together."}</h1> */}
 
-                        <p className="heroDescription">
-                            Lead your trip, set your vibe, connect with verified explorers!
-                        </p>
+                        {/* <p className="heroDescription">
+                            Whether it's a Goa trip, a Sunday turf match, a breakfast ride, or just catching a movie - SyncTrip connects you with travellers and locals near you. Lead your own plan or join one.
+                        </p> */}
 
                         <span className='floatingChat1'>
                             <GumletImage src={"https://synctrip.gumlet.io/compressed/Images/ChatHomePage1.png"} alt='ChatBubble1' width={200} height={120} />

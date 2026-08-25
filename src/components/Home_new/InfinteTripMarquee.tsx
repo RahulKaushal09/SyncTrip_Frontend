@@ -116,7 +116,6 @@ export default function InfiniteTripMarquee() {
       {/* Gradients to fade out the left and right edges smoothly */}
       {/* <div className={styles.fadeLeft} aria-hidden="true" />
       <div className={styles.fadeRight} aria-hidden="true" /> */}
-
       {/* Scrolling Track */}
       <div onClick={redirectToStore} className={styles.trackWrap}>
         <div className={styles.track}>
@@ -124,7 +123,10 @@ export default function InfiniteTripMarquee() {
             <TripCard key={`r1-${trip.id}-${idx}`} data={trip} />
           ))}
         </div>
+
       </div>
+      <p style={{ padding: 20, textAlign: "center", color: "#ccc" }}>SyncTrip is India's social travel and activity app to find travel buddies, join local activity groups, and discover club events near you. Free on Android and iOS. No subscription — just trips, companions, and plans waiting to happen.</p>
+
     </section>
   );
 }
