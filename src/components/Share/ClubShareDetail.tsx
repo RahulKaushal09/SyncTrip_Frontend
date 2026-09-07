@@ -203,7 +203,7 @@ export default function ClubShareDetail({ club, upcomingEvents }: Props) {
               Following a club on SyncTrip gets you into its chat room and notifies you the moment it announces a new event or meetup.
             </p>
             <GetAppCta
-              appPath={`/share/club/${club.slug || club.id}`}
+              appPath={`/share/club/${club.id}`}
               label="Open in the app"
               note="Free on Android and iOS."
             />

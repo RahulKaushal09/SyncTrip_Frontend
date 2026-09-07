@@ -55,7 +55,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const title = clubHeadline(club);
   const description = clubDescription(club);
-  const canonical = absoluteUrl(`/share/club/${club.slug || club.id}`);
+  const canonical = absoluteUrl(`/share/club/${club.id}`);
   const image = toOgImageUrl(club.coverImageUrl || club.logoUrl);
 
   return {
@@ -161,7 +161,7 @@ export default async function ClubSharePage({ params }: PageProps) {
   if (!club) notFound();
 
   const upcomingEvents = await ClubApiService.getClubUpcomingEvents(club.id, 6);
-  const canonical = absoluteUrl(`/share/club/${club.slug || club.id}`);
+  const canonical = absoluteUrl(`/share/club/${club.id}`);
 
   return (
     <>
