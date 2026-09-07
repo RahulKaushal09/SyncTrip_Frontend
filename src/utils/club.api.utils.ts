@@ -1,5 +1,6 @@
-import { API_CONFIG } from "@/constants";
+import { cache } from "react";
 import { Club, ClubEvent, ClubMedia, MegaEvent } from "@/types";
+import apiClient from "./apiClient";
 
 /**
  * Public reads for the shared club / event pages.
@@ -20,19 +21,31 @@ import { Club, ClubEvent, ClubMedia, MegaEvent } from "@/types";
  *    actually removes it.
  */
 
-const REVALIDATE_SECONDS = 300;
-
+/**
+ * Every read here goes through `apiClient`, the same axios instance the rest of
+ * the app uses, so base URL, timeout and headers stay in one place.
+ *
+ * It MUST stay wrapped in try/catch. axios rejects on 4xx/5xx as well as on
+ * network failure, and these are public pages reached by a shared link: a club
+ * that was deleted, an event id someone mistyped, or a backend that is briefly
+ * down all have to render notFound() or a degraded page — never an unhandled
+ * AggregateError that turns into a 500 for whoever opened the link.
+ *
+ * Paths are relative: `apiClient` already carries the /api base URL, so passing
+ * an absolute one here would only work by accident.
+ */
 async function getJson<T>(path: string): Promise<T | null> {
   try {
-    const res = await fetch(`${API_CONFIG.BACKEND_BASE_URL}${path}`, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-      next: { revalidate: REVALIDATE_SECONDS },
-    });
-    if (!res.ok) return null;
-    return (await res.json()) as T;
+    const res = await apiClient.get<T>(path);
+    return res.data ?? null;
   } catch (error) {
-    console.error(`Club API request failed: ${path}`, error);
+    const status =
+      typeof error === "object" && error !== null && "response" in error
+        ? (error as { response?: { status?: number } }).response?.status
+        : undefined;
+    // A 404 is the normal "this link is dead" case and not worth a stack trace.
+    if (status === 404) return null;
+    console.error(`Club API request failed: ${path}`, status ?? error);
     return null;
   }
 }
@@ -203,37 +216,50 @@ function toPublicMegaEvent(raw: Raw | null | undefined): MegaEvent | null {
   };
 }
 
+/**
+ * Each read is wrapped in React's `cache()`.
+ *
+ * generateMetadata and the page component both need the same record, and axios
+ * — unlike `fetch` — is not deduplicated by Next. Without this every share page
+ * would hit the backend twice per render.
+ */
+
+/** GET /clubs/:idOrSlug - accepts a uuid or a slug, so shared links resolve either way. */
+const getClub = cache(async (idOrSlug: string): Promise<Club | null> => {
+  const data = await getJson<{ club: Raw }>(`/clubs/${encodeURIComponent(idOrSlug)}`);
+  return toPublicClub(data?.club);
+});
+
+/**
+ * GET /clubs/:clubId/events?filter=upcoming
+ *
+ * Only the club's own next few events, for its own page. There is no all-clubs
+ * or all-events listing on the website by design.
+ */
+const getClubUpcomingEvents = cache(async (clubId: string, limit = 6): Promise<ClubEvent[]> => {
+  const data = await getJson<{ events: Raw[] }>(
+    `/clubs/${encodeURIComponent(clubId)}/events?filter=upcoming&limit=${limit}`
+  );
+  return (data?.events ?? [])
+    .map(toPublicClubEvent)
+    .filter((event): event is ClubEvent => event !== null);
+});
+
+/** GET /club-events/:id */
+const getClubEvent = cache(async (eventId: string): Promise<ClubEvent | null> => {
+  const data = await getJson<{ event: Raw }>(`/club-events/${encodeURIComponent(eventId)}`);
+  return toPublicClubEvent(data?.event);
+});
+
+/** GET /megaEvents/:id - note the camelCase mount path on the backend. */
+const getMegaEvent = cache(async (eventId: string): Promise<MegaEvent | null> => {
+  const data = await getJson<{ event: Raw }>(`/megaEvents/${encodeURIComponent(eventId)}`);
+  return toPublicMegaEvent(data?.event);
+});
+
 export class ClubApiService {
-  /** GET /clubs/:idOrSlug - accepts a uuid or a slug, so shared links resolve either way. */
-  static async getClub(idOrSlug: string): Promise<Club | null> {
-    const data = await getJson<{ club: Raw }>(`/clubs/${encodeURIComponent(idOrSlug)}`);
-    return toPublicClub(data?.club);
-  }
-
-  /**
-   * GET /clubs/:clubId/events?filter=upcoming
-   *
-   * Only the club's own next few events, for its own page. There is no
-   * all-clubs or all-events listing on the website by design.
-   */
-  static async getClubUpcomingEvents(clubId: string, limit = 6): Promise<ClubEvent[]> {
-    const data = await getJson<{ events: Raw[] }>(
-      `/clubs/${encodeURIComponent(clubId)}/events?filter=upcoming&limit=${limit}`
-    );
-    return (data?.events ?? [])
-      .map(toPublicClubEvent)
-      .filter((event): event is ClubEvent => event !== null);
-  }
-
-  /** GET /club-events/:id */
-  static async getClubEvent(eventId: string): Promise<ClubEvent | null> {
-    const data = await getJson<{ event: Raw }>(`/club-events/${encodeURIComponent(eventId)}`);
-    return toPublicClubEvent(data?.event);
-  }
-
-  /** GET /megaEvents/:id - note the camelCase mount path on the backend. */
-  static async getMegaEvent(eventId: string): Promise<MegaEvent | null> {
-    const data = await getJson<{ event: Raw }>(`/megaEvents/${encodeURIComponent(eventId)}`);
-    return toPublicMegaEvent(data?.event);
-  }
+  static getClub = getClub;
+  static getClubUpcomingEvents = getClubUpcomingEvents;
+  static getClubEvent = getClubEvent;
+  static getMegaEvent = getMegaEvent;
 }

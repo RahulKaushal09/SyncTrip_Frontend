@@ -6,6 +6,9 @@ import { STORAGE_KEYS } from '@/constants';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_BASE_URL || 'http://localhost:5000';
 
+/** Server components share this client; the browser-only side effects must not run there. */
+const isBrowser = typeof window !== 'undefined';
+
 const apiClient = axios.create({
     baseURL: API_BASE_URL,
     timeout: 10000,
@@ -14,19 +17,19 @@ const apiClient = axios.create({
 
 apiClient.interceptors.request.use(
     (config) => {
-        const token = StorageUtils.getToken();
-        const refreshToken = localStorage.getItem(STORAGE_KEYS.REFRESH_TOKEN);
+        // const token = StorageUtils.getToken();
+        // const refreshToken = localStorage.getItem(STORAGE_KEYS.REFRESH_TOKEN);
 
-        if (token) {
-            config.headers = config.headers || {};
-            config.headers['Authorization'] = `Bearer ${token}`;
-            config.withCredentials = true;
-        }
+        // if (token) {
+        //     config.headers = config.headers || {};
+        //     config.headers['Authorization'] = `Bearer ${token}`;
+        //     config.withCredentials = true;
+        // }
 
-        if (refreshToken) {
-            config.headers = config.headers || {};
-            config.headers['x-refresh-token'] = refreshToken;
-        }
+        // if (refreshToken) {
+        //     config.headers = config.headers || {};
+        //     config.headers['x-refresh-token'] = refreshToken;
+        // }
         // if (token) {
         //     config.headers = config.headers || {};
         //     config.headers['Authorization'] = `Bearer ${token}`;
@@ -76,13 +79,20 @@ apiClient.interceptors.response.use(
             response.headers['x-refresh-token'] ||
             response.headers['X-Refresh-Token'];
 
-        if (newAccessToken) {
-            localStorage.setItem(STORAGE_KEYS.TOKEN, newAccessToken);
-            apiClient.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
-        }
+        // `isBrowser` guards every branch below. This client is now also called
+        // from server components (the /share/* and /city/* pages render on the
+        // server), where localStorage, window and a toast surface do not exist -
+        // touching them there throws inside the interceptor and turns a working
+        // API response into a 500 on the page.
+        if (isBrowser) {
+            if (newAccessToken) {
+                localStorage.setItem(STORAGE_KEYS.TOKEN, newAccessToken);
+                apiClient.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
+            }
 
-        if (newRefreshToken) {
-            localStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, newRefreshToken);
+            if (newRefreshToken) {
+                localStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, newRefreshToken);
+            }
         }
         // console.log('Response Interceptor: Checking for new token in headers...', { newToken });
         // if (newToken) {
@@ -97,14 +107,16 @@ apiClient.interceptors.response.use(
 
         if (status === 409) return Promise.resolve(error.response);
         if (status === 422) return Promise.resolve(error.response);
-        if (status === 501) toast.error(error.response?.data?.message || 'An error occurred');
+        if (status === 501 && isBrowser) toast.error(error.response?.data?.message || 'An error occurred');
 
         // ── Banned or force logged out ──
         const case1 = status === 403 && code === 'ACCOUNT_BANNED';
         const case2 = status === 401 && code === 'SESSION_NOT_FOUND';
         const case3 = status === 401 && code === 'INVALID_TOKEN';
 
-        if ((case1 || case2 || case3) && !isLoggingOut) {
+        // Forced logout is a browser-only flow: there is no session to clear and
+        // nowhere to navigate on the server.
+        if ((case1 || case2 || case3) && !isLoggingOut && isBrowser) {
             isLoggingOut = true;
             toast.error('Your account has been logged out.');
             StorageUtils.clearUserData();

@@ -1,12 +1,15 @@
 [
   {
-    "relation": ["delegate_permission/common.handle_all_urls"],
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
     "target": {
       "namespace": "android_app",
       "package_name": "com.synctrip",
       "sha256_cert_fingerprints": [
         "E8:04:DE:39:D9:BD:98:C8:66:74:CE:77:4E:AF:AC:3A:41:38:30:66:4E:2A:88:48:B7:43:C9:70:F6:B2:75:CA",
-"94:88:1F:2A:F7:C8:94:C7:6B:64:00:BB:19:05:EA:1D:0D:0E:92:F3:92:4A:70:D2:37:F9:E2:42:2D:F3:B4:AB"
+        "94:88:1F:2A:F7:C8:94:C7:6B:64:00:BB:19:05:EA:1D:0D:0E:92:F3:92:4A:70:D2:37:F9:E2:42:2D:F3:B4:AB",
+        "FA:C6:17:45:DC:09:03:78:6F:B9:ED:E6:2A:96:2B:39:9F:73:48:F0:BB:6F:89:9B:83:32:66:75:91:03:3B:9C"
       ]
     }
   }
