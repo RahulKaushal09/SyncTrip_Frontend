@@ -100,7 +100,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
             `${destination} trip planner`,
             `things to do in ${destination}`,
             `${destination} attractions`,
-            `best hotels ${destination}`,
+            // `best hotels ${destination}`,
             `${destination} itinerary`,
             `${destination} tours`,
             `group trips ${destination}`,

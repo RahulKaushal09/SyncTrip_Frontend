@@ -11,8 +11,8 @@ import { triggerLogin } from '@/utils';
 import LocationHeader from './LocationHeader';
 import Description from './Description';
 import PlacesToVisitSection from './PlacesToVisitSection';
-import HotelsAndStaysSection from './HotelsAndStaysSection';
-import PlanTripDates from './PlanTripDates';
+// import HotelsAndStaysSection from './HotelsAndStaysSection';
+// import PlanTripDates from './PlanTripDates';
 import SyncTripAppPushingSection from '../AppPushingComponents/AppPushingSection';
 // import LocationMapSection from './LocationMapSection';
 import Cookies from 'js-cookie';
@@ -176,12 +176,12 @@ const LocationPageDetails = ({ uuid, locationData }: { uuid: string; locationDat
                         parentId={locationData?.id}
                         parentType="location"
                     />
-                    <HotelsAndStaysSection
+                    {/* <HotelsAndStaysSection
                         hotelIds={locationData?.hotels as string[] || []}
                         locationName={locationData?.title}
                         parentId={uuid}
                         parentType="location"
-                    />
+                    /> */}
                     <CultureFestivalsSection data={locationData?.cultures as Culture[]} heading={`Local Cultures of ${locationData?.title}`} type="culture" />
                     {/* <PlanTripDates pageType={pageType as string} ctaAction={ctaAction}
                         EnrollInTrip={() => { }} locationId={locationData?.id} /> */}

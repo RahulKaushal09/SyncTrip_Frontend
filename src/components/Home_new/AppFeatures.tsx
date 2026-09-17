@@ -157,8 +157,8 @@ const AppDownloadStack = () => {
               <span className="text-primary-1">and moreee.</span>
             </h2>
             <div className="flex text-lg flex-col gap-1 mx-auto lg:mx-0 w-full max-w-md">
-              Join 5000+ verified travelers using SyncTrip to find companions for trips, bike rides, sports, movies and local hangouts across India. 
-              <br/>
+              Join 10000+ verified travelers using SyncTrip to find companions for trips, bike rides, sports, movies and local hangouts across India.
+              <br />
               <strong>Your next adventure is just a swipe away!</strong>
             </div>
           </div>
@@ -204,7 +204,7 @@ const AppDownloadStack = () => {
               </div>
             </div>
             <h2 className="text-3xl lg:text-6xl font-extrabold leading-[1.05] tracking-tight text-white">
-              5000+ travelers <br />
+              10000+ travelers <br />
               <span className="text-primary-1">already exploring.</span>
             </h2>
             <div className="flex flex-col gap-6 lg:gap-10 w-full">
