@@ -1,10 +1,13 @@
 import React from "react";
 import Link from "next/link";
-import { BadgeCheck, CalendarDays, Languages, MapPin, Ticket, Users } from "lucide-react";
+import { BadgeCheck, CalendarDays, ChevronDown, Languages, MapPin, RotateCcw, Ticket, Users } from "lucide-react";
 import { ClubEvent } from "@/types";
 import styles from "./ShareDetail.module.css";
 import GetAppCta from "./GetAppCta";
+import ClubEventBooking from "./ClubEventBooking";
+import bookingStyles from "./ClubBooking.module.css";
 import { formatPrice, formatTime, formatWhen, humanize, isPast } from "./shareFormat";
+import RichText from "@/components/common/RichText";
 
 type Props = {
   event: ClubEvent;
@@ -83,91 +86,9 @@ export default function ClubEventShareDetail({ event }: Props) {
             </div>
           )}
 
-          {event.description && (
-            <section className={styles.card}>
-              <h2 className={styles.cardTitle}>About this event</h2>
-              <p className={styles.prose}>{event.description}</p>
-            </section>
-          )}
-
-          {(event.whatToExpect?.length ?? 0) > 0 && (
-            <section className={styles.card}>
-              <h2 className={styles.cardTitle}>What to expect</h2>
-              <ul className={styles.bulletList}>
-                {event.whatToExpect!.map((item) => (
-                  <li key={item} className={styles.bulletItem}>
-                    <span className={styles.bulletDot} aria-hidden="true" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </section>
-          )}
-
-          {(event.whatsIncluded?.length ?? 0) > 0 && (
-            <section className={styles.card}>
-              <h2 className={styles.cardTitle}>What&apos;s included</h2>
-              <ul className={styles.bulletList}>
-                {event.whatsIncluded!.map((item) => (
-                  <li key={item} className={styles.bulletItem}>
-                    <span className={styles.bulletDot} aria-hidden="true" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </section>
-          )}
-
-          {(event.rules?.length ?? 0) > 0 && (
-            <section className={styles.card}>
-              <h2 className={styles.cardTitle}>Good to know</h2>
-              <ul className={styles.bulletList}>
-                {event.rules!.map((item) => (
-                  <li key={item} className={styles.bulletItem}>
-                    <span className={styles.bulletDot} aria-hidden="true" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </section>
-          )}
-
-          {tags.length > 0 && (
-            <section className={styles.card}>
-              <h2 className={styles.cardTitle}>Tags</h2>
-              <div className={styles.chipRow}>
-                {tags.map((tag) => (
-                  <span key={tag} className={styles.chip}>{humanize(tag)}</span>
-                ))}
-              </div>
-            </section>
-          )}
-        </main>
-
-        <aside className={styles.aside}>
-          <div className={styles.ctaCard}>
-            <div className={styles.ctaPrice}>
-              <span className={styles.ctaPriceValue}>{price}</span>
-              {!event.pricing?.isFree && <span className={styles.ctaPriceLabel}>per person</span>}
-            </div>
-            <h2 className={styles.ctaTitle}>
-              {isCancelled ? "This event was cancelled" : hasEnded ? "This event has ended" : "Book your spot"}
-            </h2>
-            <p className={styles.ctaText}>
-              {isCancelled || hasEnded
-                ? `Follow ${event.club?.name || "this club"} on SyncTrip to catch the next one.`
-                : "Booking, tickets and the event chat all happen inside the SyncTrip app."}
-            </p>
-            <GetAppCta
-              appPath={`/share/club-event/${event.id}`}
-              label={isCancelled || hasEnded ? "Open in the app" : "Book on SyncTrip"}
-              note="Free on Android and iOS."
-            />
-          </div>
-
           <div className={styles.card}>
             <h2 className={styles.cardTitle}>Event details</h2>
-            <div className={styles.factList}>
+            <div className={`${styles.factList} ${bookingStyles.factGrid}`}>
               {whenLine && (
                 <div className={styles.fact}>
                   <span className={styles.factIcon} aria-hidden="true"><CalendarDays size={18} /></span>
@@ -232,13 +153,145 @@ export default function ClubEventShareDetail({ event }: Props) {
               </div>
             </Link>
           )}
+
+          {event.description && (
+            <section className={styles.card}>
+              <h2 className={styles.cardTitle}>About this event</h2>
+              <RichText text={event.description} className={styles.prose} />
+            </section>
+          )}
+
+          {(event.hosts?.length ?? 0) > 0 && (
+            <section className={styles.card}>
+              <h2 className={styles.cardTitle}>Hosted by</h2>
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.9rem" }}>
+                {event.hosts!.map((h, i) => (
+                  <div key={`${h.name}-${i}`} className={bookingStyles.hostRow}>
+                    {h.avatarUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={h.avatarUrl} alt="" className={bookingStyles.hostAvatar} />
+                    ) : (
+                      <span className={bookingStyles.hostAvatar}>{h.name.charAt(0).toUpperCase()}</span>
+                    )}
+                    <div>
+                      <div className={bookingStyles.hostName}>{h.name}</div>
+                      <div className={bookingStyles.hostRole}>{h.role || "Host"}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {(event.whatToExpect?.length ?? 0) > 0 && (
+            <section className={styles.card}>
+              <h2 className={styles.cardTitle}>What to expect</h2>
+              <ul className={styles.bulletList}>
+                {event.whatToExpect!.map((item) => (
+                  <li key={item} className={styles.bulletItem}>
+                    <span className={styles.bulletDot} aria-hidden="true" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
+          {(event.whatsIncluded?.length ?? 0) > 0 && (
+            <section className={styles.card}>
+              <h2 className={styles.cardTitle}>What&apos;s included</h2>
+              <ul className={styles.bulletList}>
+                {event.whatsIncluded!.map((item) => (
+                  <li key={item} className={styles.bulletItem}>
+                    <span className={styles.bulletDot} aria-hidden="true" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
+          {(event.rules?.length ?? 0) > 0 && (
+            <section className={styles.card}>
+              <h2 className={styles.cardTitle}>Good to know</h2>
+              <ul className={styles.bulletList}>
+                {event.rules!.map((item) => (
+                  <li key={item} className={styles.bulletItem}>
+                    <span className={styles.bulletDot} aria-hidden="true" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
+          {(event.refundPolicyLines?.length ?? 0) > 0 && !isCancelled && (
+            <details className={styles.card}>
+              <summary className={bookingStyles.refundToggle} style={{ listStyle: "none" }}>
+                <h2 className={styles.cardTitle} style={{ margin: 0, display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                  <RotateCcw size={18} aria-hidden="true" /> Cancellation &amp; refunds
+                </h2>
+                <ChevronDown size={18} aria-hidden="true" />
+              </summary>
+              <ul className={bookingStyles.refundList}>
+                {event.refundPolicyLines!.map((line) => (
+                  <li key={line} className={bookingStyles.refundItem}>
+                    <span className={styles.bulletDot} aria-hidden="true" style={{ marginTop: "0.55rem" }} />
+                    {line}
+                  </li>
+                ))}
+                <li className={bookingStyles.refundItem} style={{ color: "#64748b" }}>
+                  Cancel from your ticket in the SyncTrip app. Refunds go back to your original payment method.
+                </li>
+              </ul>
+            </details>
+          )}
+
+          {tags.length > 0 && (
+            <section className={styles.card}>
+              <h2 className={styles.cardTitle}>Tags</h2>
+              <div className={styles.chipRow}>
+                {tags.map((tag) => (
+                  <span key={tag} className={styles.chip}>{humanize(tag)}</span>
+                ))}
+              </div>
+            </section>
+          )}
+        </main>
+
+        <aside className={styles.aside}>
+          {isCancelled || hasEnded ? (
+            <div className={styles.ctaCard}>
+              <div className={styles.ctaPrice}>
+                <span className={styles.ctaPriceValue}>{price}</span>
+                {!event.pricing?.isFree && <span className={styles.ctaPriceLabel}>per person</span>}
+              </div>
+              <h2 className={styles.ctaTitle}>
+                {isCancelled ? "This event was cancelled" : hasEnded ? "This event has ended" : "Book your spot"}
+              </h2>
+              <p className={styles.ctaText}>
+                {isCancelled || hasEnded
+                  ? `Follow ${event.club?.name || "this club"} on SyncTrip to catch the next one.`
+                  : "Booking, tickets and the event chat all happen inside the SyncTrip app."}
+              </p>
+              <GetAppCta
+                appPath={`/share/club-event/${event.id}`}
+                label={isCancelled || hasEnded ? "Open in the app" : "Book on SyncTrip"}
+                note="Free on Android and iOS."
+              />
+            </div>
+          ) : (
+            <ClubEventBooking event={event} />
+          )}
+
         </aside>
       </div>
 
       <p className={styles.footerNote}>
-        Club events are booked in the SyncTrip app.{" "}
+        Book here or in the SyncTrip app - your ticket and the event chat live in the app.{" "}
         <Link href="/explore/plans">Explore more local plans and meetups</Link>.
       </p>
+      <div className={bookingStyles.pageSpacer} aria-hidden="true" />
     </div>
   );
 }

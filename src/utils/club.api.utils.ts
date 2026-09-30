@@ -192,6 +192,43 @@ function toPublicClubEvent(raw: Raw | null | undefined): ClubEvent | null {
         wasLate: !!raw.cancellation.wasLate,
       }
       : null,
+    tierInfo: pickTierInfo(raw.pricing?.tierInfo),
+    refundPolicyLines: strList(raw.refundPolicyLines),
+    // Identity only. `whatsapp` and `userId` are dropped here on purpose.
+    hosts: Array.isArray(raw.hosts)
+      ? raw.hosts
+        .filter((h: Raw) => typeof h?.name === "string" && h.name)
+        .map((h: Raw) => ({ name: h.name as string, role: str(h.role), avatarUrl: str(h.avatarUrl) }))
+      : [],
+    totalAttendees: num(raw.totalAttendees) ?? 0,
+  };
+}
+
+/** The price ladder, field by field - nothing else from pricing leaves here. */
+function pickTierInfo(raw: Raw | null | undefined): ClubEvent["tierInfo"] {
+  if (!raw || !Array.isArray(raw.tiers) || !raw.current) return null;
+  const state = (v: unknown) => (v === "ended" || v === "current" ? v : "upcoming") as "ended" | "current" | "upcoming";
+  return {
+    tiers: raw.tiers.map((t: Raw) => ({
+      id: String(t.id ?? ""),
+      label: String(t.label ?? ""),
+      price: num(t.price) ?? 0,
+      untilSeatsSold: num(t.untilSeatsSold) ?? null,
+      endsAt: str(t.endsAt),
+      state: state(t.state),
+      seatsLeft: num(t.seatsLeft) ?? null,
+    })),
+    current: {
+      index: num(raw.current.index) ?? 0,
+      label: String(raw.current.label ?? ""),
+      price: num(raw.current.price) ?? 0,
+      seatsLeft: num(raw.current.seatsLeft) ?? null,
+      endsAt: str(raw.current.endsAt),
+      nextPrice: num(raw.current.nextPrice) ?? null,
+      nextLabel: str(raw.current.nextLabel),
+      isFirst: !!raw.current.isFirst,
+      isLast: !!raw.current.isLast,
+    },
   };
 }
 

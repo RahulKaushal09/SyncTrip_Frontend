@@ -119,6 +119,39 @@ export type ClubEvent = {
     cancelledAt?: string | null;
     wasLate?: boolean;
   } | null;
+  /** Early bird / Regular / … ladder; null for a single fixed price. */
+  tierInfo?: TicketTierInfo | null;
+  /** Ready-to-show refund lines, worded by the backend like the app. */
+  refundPolicyLines?: string[];
+  /** Who runs it - name, role and photo only (never their number). */
+  hosts?: { name: string; role?: string | null; avatarUrl?: string | null }[];
+  /** Headcount only - no faces or names on a public page. */
+  totalAttendees?: number;
+};
+
+export type TicketTier = {
+  id: string;
+  label: string;
+  price: number;
+  untilSeatsSold?: number | null;
+  endsAt?: string | null;
+  state: "ended" | "current" | "upcoming";
+  seatsLeft?: number | null;
+};
+
+export type TicketTierInfo = {
+  tiers: TicketTier[];
+  current: {
+    index: number;
+    label: string;
+    price: number;
+    seatsLeft?: number | null;
+    endsAt?: string | null;
+    nextPrice?: number | null;
+    nextLabel?: string | null;
+    isFirst?: boolean;
+    isLast?: boolean;
+  };
 };
 
 export type MegaEvent = {

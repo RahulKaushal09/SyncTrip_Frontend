@@ -8,6 +8,8 @@
   min-height: 100vh;
   padding-bottom: 4rem;
   color: #0f172a;
+  margin-top: -50px;
+  /* Accounts for navbar overlap */
 }
 
 /* --- Hero --- */
@@ -485,15 +487,20 @@ a.row:hover {
        widen the whole page. */
     grid-template-columns: minmax(0, 1fr);
     padding-top: 1.75rem;
+    margin-top: -25px;
+    /* Accounts for navbar overlap */
   }
+
   .aside {
     position: static;
     order: -1;
   }
+
   .hero,
   .heroTall {
     min-height: 300px;
   }
+
   .heroInner {
     padding: 2rem 1.25rem;
   }

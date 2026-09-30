@@ -5,6 +5,7 @@ import { MegaEvent } from "@/types";
 import styles from "./ShareDetail.module.css";
 import GetAppCta from "./GetAppCta";
 import { formatWhen, isPast } from "./shareFormat";
+import RichText from "@/components/common/RichText";
 
 type Props = {
   event: MegaEvent;
@@ -60,7 +61,7 @@ export default function MegaEventShareDetail({ event }: Props) {
           {event.description && (
             <section className={styles.card}>
               <h2 className={styles.cardTitle}>About this event</h2>
-              <p className={styles.prose}>{event.description}</p>
+              <RichText text={event.description} className={styles.prose} />
             </section>
           )}
 

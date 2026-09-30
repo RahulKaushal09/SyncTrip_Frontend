@@ -5,6 +5,7 @@ import { Club, ClubEvent } from "@/types";
 import styles from "./ShareDetail.module.css";
 import GetAppCta from "./GetAppCta";
 import { formatDayTile, formatTime, humanize } from "./shareFormat";
+import RichText from "@/components/common/RichText";
 
 type Props = {
   club: Club;
@@ -100,7 +101,7 @@ export default function ClubShareDetail({ club, upcomingEvents }: Props) {
           {club.description && (
             <section className={styles.card}>
               <h2 className={styles.cardTitle}>About {club.name}</h2>
-              <p className={styles.prose}>{club.description}</p>
+              <RichText text={club.description} className={styles.prose} />
             </section>
           )}
 
@@ -112,7 +113,7 @@ export default function ClubShareDetail({ club, upcomingEvents }: Props) {
                   <div key={item.title} className={styles.row}>
                     <div className={styles.rowBody}>
                       <h3 className={styles.rowTitle}>{item.title}</h3>
-                      {item.description && <p className={styles.rowMeta}>{item.description}</p>}
+                      {item.description && <RichText text={item.description} className={styles.rowMeta} />}
                     </div>
                   </div>
                 ))}
@@ -189,7 +190,7 @@ export default function ClubShareDetail({ club, upcomingEvents }: Props) {
               {faqs.map((faq) => (
                 <div key={faq.question} className={styles.faqItem}>
                   <h3 className={styles.faqQuestion}>{faq.question}</h3>
-                  <p className={styles.faqAnswer}>{faq.answer}</p>
+                  <RichText text={faq.answer} className={styles.faqAnswer} />
                 </div>
               ))}
             </section>

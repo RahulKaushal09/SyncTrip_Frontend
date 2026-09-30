@@ -4,6 +4,7 @@ import { use, useEffect, useState } from "react";
 import { PlanPreview } from "@/types";
 import { redirectToStore } from "@/utils/redirectToStore";
 import { APP_LINKS } from "@/constants";
+import RichText from "@/components/common/RichText";
 
 interface Props {
     plan: PlanPreview;
@@ -168,7 +169,7 @@ export default function PlanPreviewClient({ plan, type }: Props) {
                             <Divider />
                             <div style={{ padding: "20px 0" }}>
                                 <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.14em", color: "#A09F9C", textTransform: "uppercase", margin: "0 0 10px" }}>About</p>
-                                <p style={{ color: "#4A4946", fontSize: 15, lineHeight: 1.6, margin: 0 }}>{plan.description}</p>
+                                <RichText text={plan.description} style={{ color: "#4A4946", fontSize: 15, lineHeight: 1.6, margin: 0 }} />
                             </div>
                         </>
                     )}
@@ -245,7 +246,7 @@ export default function PlanPreviewClient({ plan, type }: Props) {
                     {plan.description && (
                         <div style={{ marginTop: 28 }}>
                             <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.14em", color: "#A09F9C", textTransform: "uppercase", margin: "0 0 10px" }}>About</p>
-                            <p style={{ color: "#4A4946", fontSize: 15, lineHeight: 1.75, margin: 0 }}>{plan.description}</p>
+                            <RichText text={plan.description} style={{ color: "#4A4946", fontSize: 15, lineHeight: 1.75, margin: 0 }} />
                         </div>
                     )}
 

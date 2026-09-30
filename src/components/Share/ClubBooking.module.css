@@ -1,0 +1,928 @@
+/* Ticket card, checkout sheet and mobile booking bar for /share/club-event. */
+
+.ticket {
+  background: #ffffff;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 24px;
+  box-shadow: 0 22px 50px rgba(15, 23, 42, 0.08);
+  overflow: hidden;
+}
+
+.ticketHead {
+  padding: 1.4rem 1.5rem 1.2rem;
+  background: var(--primary-5, #F2FAFF);
+  border-bottom: 1px solid var(--primary-4, #E3F5FF);
+  color: #0f172a;
+}
+
+.tierPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.28rem 0.65rem;
+  border-radius: 999px;
+  background: var(--primary-1, #3ABEF5);
+  color: #ffffff;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.priceRow {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  margin-top: 0.7rem;
+  flex-wrap: wrap;
+}
+
+.price {
+  font-size: 2.2rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.priceLabel {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.nextPrice {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--primary-hover, #007EB2);
+}
+
+.countdownWrap {
+  margin-top: 1rem;
+}
+
+.countdownLabel {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #475569;
+  margin-bottom: 0.45rem;
+}
+
+.countdown {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.cdBox {
+  min-width: 52px;
+  padding: 0.45rem 0.4rem;
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid var(--primary-3, #B8E8FF);
+  text-align: center;
+}
+
+.cdValue {
+  display: block;
+  font-size: 1.2rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.15;
+}
+
+.cdUnit {
+  display: block;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.cdColon {
+  font-weight: 800;
+  color: #94a3b8;
+  padding-bottom: 0.8rem;
+}
+
+.cdUrgent {
+  color: #e11d48;
+}
+
+.ticketBody {
+  padding: 1.25rem 1.5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.seatsHead {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #334155;
+}
+
+.seatsHot {
+  color: #e11d48;
+}
+
+.seatsBar {
+  height: 8px;
+  border-radius: 999px;
+  background: #eef2f7;
+  overflow: hidden;
+  margin-top: 0.45rem;
+}
+
+.seatsFill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--primary-1, #3ABEF5);
+}
+
+.ladder {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.ladderRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 12px;
+  border: 1px solid #eef2f7;
+  font-size: 0.86rem;
+}
+
+.ladderCurrent {
+  border-color: var(--primary-2, #7ACCF5);
+  background: var(--primary-5, #F2FAFF);
+}
+
+.ladderEnded {
+  opacity: 0.5;
+}
+
+.ladderName {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.ladderMeta {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #64748b;
+  margin-top: 0.1rem;
+}
+
+.ladderPrice {
+  font-weight: 800;
+  color: #0f172a;
+  white-space: nowrap;
+}
+
+.struck {
+  text-decoration: line-through;
+}
+
+.primaryBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 15px 24px;
+  border: none;
+  border-radius: 999px;
+  background: var(--primary-1, #3ABEF5);
+  color: #ffffff;
+  font-size: 0.98rem;
+  font-weight: 800;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(58, 190, 245, 0.28);
+  transition: transform 0.12s ease, opacity 0.12s ease, background 0.12s ease;
+}
+
+/**
+ * Same global `a { color: inherit !important }` problem as .storeRow, but this
+ * control's parent carries the sheet's dark ink, so the colour cannot simply be
+ * inherited from it. Scoped to the anchor form only — as a <button> the global
+ * rule never applied and the class colour already wins.
+ */
+a.primaryBtn {
+  color: #ffffff !important;
+}
+
+/**
+ * Keeps the primary action in view while the body scrolls under it, so the
+ * last step of a booking is never something you have to go looking for.
+ */
+.stickyCta {
+  position: sticky;
+  bottom: 0;
+  margin-top: auto;
+  padding-top: 0.85rem;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0), #ffffff 45%);
+}
+
+.primaryBtn:hover:not(:disabled) {
+  background: var(--primary-hover, #007EB2);
+}
+
+.primaryBtn:active {
+  transform: scale(0.98);
+}
+
+.primaryBtn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.secondaryLink {
+  display: block;
+  text-align: center;
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--primary-hover, #007EB2);
+  text-decoration: none;
+}
+
+.fineRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: #64748b;
+}
+
+/* ---------- Refunds / hosts ---------- */
+
+.refundToggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+.refundList {
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.refundItem {
+  display: flex;
+  gap: 0.6rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #334155;
+}
+
+.hostRow {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.hostAvatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--primary-1, #3ABEF5);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.hostName {
+  font-weight: 800;
+  color: #0f172a;
+  font-size: 0.95rem;
+}
+
+.hostRole {
+  font-size: 0.8rem;
+  color: #64748b;
+  font-weight: 600;
+}
+
+/* ---------- Mobile booking bar ---------- */
+
+.mobileBar {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .mobileBar {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 60;
+    padding: 0.8rem 1rem calc(0.8rem + env(safe-area-inset-bottom));
+    background: rgba(255, 255, 255, 0.97);
+    backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(15, 23, 42, 0.08);
+    box-shadow: 0 -10px 30px rgba(15, 23, 42, 0.08);
+  }
+
+  .mobileBar .primaryBtn {
+    width: auto;
+    flex: 1;
+    padding: 13px 18px;
+  }
+}
+
+.mobilePrice {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.mobilePriceValue {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.mobilePriceNote {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #e11d48;
+}
+
+/* ---------- Checkout sheet ---------- */
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(6, 17, 30, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem 1rem;
+  animation: fadeIn 0.18s ease;
+}
+
+/**
+ * The SHEET is capped and does not scroll; its BODY does.
+ *
+ * Scrolling the whole sheet pushed the header and the call-to-action off with
+ * the content: on a 1280x720 laptop the sheet ended 8px BELOW the viewport and
+ * "Open the event in SyncTrip" sat ~50px past the bottom edge, unreachable
+ * without scrolling inside a dialog that gave no sign it could scroll.
+ *
+ * Capped by the BACKDROP (max-height: 100%), not by a viewport unit. The
+ * backdrop is position:fixed; inset:0, so its content box is already "the
+ * visible area minus our own padding" — measuring against it cannot disagree
+ * with it. A vh/dvh calc has to restate that padding and guess which viewport
+ * the unit resolves against; when the two disagree the sheet hangs off the
+ * bottom edge, which is exactly the bug this replaced.
+ */
+.sheet {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 460px;
+  max-height: 100%;
+  overflow: hidden;
+  background: #ffffff;
+  border-radius: 24px;
+  box-shadow: 0 30px 80px rgba(6, 17, 30, 0.35);
+  animation: rise 0.22s ease;
+}
+
+@media (max-width: 600px) {
+  .backdrop {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .sheet {
+    max-width: none;
+    /* Percentage of the backdrop, which here is the full visible area — the
+       8% gap is what keeps the page visible behind the bottom sheet. */
+    max-height: 92%;
+    border-radius: 24px 24px 0 0;
+  }
+
+  /* The inset moves to the scrolling child, so the last control clears the
+     home indicator instead of hiding behind it. */
+  .sheetBody {
+    padding-bottom: calc(1.25rem + env(safe-area-inset-bottom));
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes rise {
+  from { transform: translateY(24px); opacity: 0.6; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.sheetHead {
+  /* Outside the scrolling body now, so it stays put without sticky. */
+  flex-shrink: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  background: #ffffff;
+  border-bottom: 1px solid #eef2f7;
+}
+
+.sheetTitle {
+  flex: 1;
+  margin: 0;
+  font-size: 1.02rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.iconBtn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: #f1f5f9;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.steps {
+  display: flex;
+  gap: 0.35rem;
+  padding: 0.85rem 1.25rem 0;
+  /* A flex child of the sheet, above the scrolling body — without this it
+     would be squeezed rather than keeping the body's space honest. */
+  flex-shrink: 0;
+}
+
+.stepDot {
+  flex: 1;
+  height: 4px;
+  border-radius: 999px;
+  background: #e2e8f0;
+}
+
+.stepDotOn {
+  background: var(--primary-1, #3ABEF5);
+}
+
+.sheetBody {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  /* min-height:0 is what actually lets a flex child shrink and scroll — without
+     it the child keeps its content height and overflows the sheet instead. */
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.eventMini {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+  padding: 0.75rem;
+  border-radius: 16px;
+  background: #f8fafc;
+}
+
+.eventMiniImg {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: var(--primary-4, #E3F5FF);
+}
+
+.eventMiniTitle {
+  font-weight: 800;
+  font-size: 0.92rem;
+  color: #0f172a;
+  line-height: 1.3;
+}
+
+.eventMiniMeta {
+  font-size: 0.78rem;
+  color: #64748b;
+  font-weight: 600;
+  margin-top: 0.15rem;
+}
+
+.label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #334155;
+  margin-bottom: 0.45rem;
+  letter-spacing: 0.01em;
+}
+
+.stepper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+}
+
+.stepperBtn {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: none;
+  background: #f1f5f9;
+  color: #0f172a;
+  font-size: 1.3rem;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stepperBtn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.stepperValue {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #0f172a;
+  text-align: center;
+}
+
+.stepperSub {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.summary {
+  border: 1px dashed #cbd5e1;
+  border-radius: 16px;
+  padding: 0.9rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  font-size: 0.88rem;
+  color: #334155;
+}
+
+.sumRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.sumTotal {
+  border-top: 1px solid #e2e8f0;
+  padding-top: 0.55rem;
+  margin-top: 0.2rem;
+  font-weight: 800;
+  font-size: 1rem;
+  color: #0f172a;
+}
+
+.input {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 14px;
+  font-size: 1rem;
+  font-family: inherit;
+  color: #0f172a;
+  background: #ffffff;
+  outline: none;
+  transition: border-color 0.12s ease;
+}
+
+.input:focus {
+  border-color: var(--primary-1, #3ABEF5);
+}
+
+.phoneWrap {
+  display: flex;
+  align-items: center;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.phoneWrap:focus-within {
+  border-color: var(--primary-1, #3ABEF5);
+}
+
+.phonePrefix {
+  padding: 0.85rem 0.8rem;
+  background: #f8fafc;
+  font-weight: 800;
+  color: #334155;
+  border-right: 1px solid #e2e8f0;
+}
+
+.phoneInput {
+  flex: 1;
+  border: none;
+  padding: 0.85rem 0.9rem;
+  font-size: 1rem;
+  font-family: inherit;
+  outline: none;
+  min-width: 0;
+  letter-spacing: 0.04em;
+}
+
+.genderRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+}
+
+.genderBtn {
+  padding: 0.75rem 0.5rem;
+  border-radius: 14px;
+  border: 1.5px solid #e2e8f0;
+  background: #ffffff;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #334155;
+  cursor: pointer;
+}
+
+.genderOn {
+  border-color: var(--primary-1, #3ABEF5);
+  background: var(--primary-5, #F2FAFF);
+  color: var(--primary-hover, #007EB2);
+}
+
+.otpInput {
+  width: 100%;
+  padding: 0.95rem 1rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 16px;
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: 0.6em;
+  text-align: center;
+  font-family: inherit;
+  outline: none;
+}
+
+.otpInput:focus {
+  border-color: var(--primary-1, #3ABEF5);
+}
+
+.helper {
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: #64748b;
+  margin: 0;
+}
+
+.linkBtn {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: 0.84rem;
+  font-weight: 800;
+  color: var(--primary-hover, #007EB2);
+  cursor: pointer;
+}
+
+.linkBtn:disabled {
+  color: #94a3b8;
+  cursor: default;
+}
+
+.error {
+  padding: 0.75rem 0.9rem;
+  border-radius: 14px;
+  background: #fef2f2;
+  color: #b91c1c;
+  font-size: 0.86rem;
+  line-height: 1.5;
+  font-weight: 600;
+}
+
+.notice {
+  padding: 0.9rem 1rem;
+  border-radius: 14px;
+  background: #f0f9ff;
+  color: #0c4a6e;
+  font-size: 0.86rem;
+  line-height: 1.55;
+}
+
+/* ---------- Success ---------- */
+
+.successHero {
+  text-align: center;
+  padding: 0.5rem 0 0.25rem;
+}
+
+.successEmoji {
+  font-size: 2.6rem;
+}
+
+.successTitle {
+  margin: 0.35rem 0 0.25rem;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.successSub {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #475569;
+  line-height: 1.55;
+}
+
+.appSteps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.appStep {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.appStepNum {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--primary-1, #3ABEF5);
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.appStepText {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #334155;
+}
+
+.appStepText strong {
+  color: #0f172a;
+}
+
+.perks {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.perk {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.65rem 0.7rem;
+  border-radius: 12px;
+  background: #f8fafc;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #334155;
+}
+
+/**
+ * globals.css has `a { color: inherit !important }`, which outranks any colour
+ * a module sets on a link. These two buttons therefore inherited the sheet's
+ * dark ink onto a near-black background and rendered as empty black slabs.
+ *
+ * Setting the colour on the ROW works WITH that rule rather than against it:
+ * the links inherit white from their parent, so no counter-!important is
+ * needed and nothing breaks if the global rule is ever cleaned up.
+ */
+.storeRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  color: #ffffff;
+}
+
+.storeBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.8rem;
+  border-radius: 14px;
+  background: #0f172a;
+  color: #ffffff;
+  font-size: 0.86rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2.5px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #ffffff;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Room for the fixed booking bar so it never covers the footer. */
+.pageSpacer {
+  height: 0;
+}
+
+@media (max-width: 900px) {
+  .pageSpacer {
+    height: 84px;
+  }
+}
+
+.refundToggle::-webkit-details-marker {
+  display: none;
+}
+
+details[open] > .refundToggle > svg {
+  transform: rotate(180deg);
+}
+
+/* Phones book from the fixed bar - one Book button on screen, not two. */
+@media (max-width: 900px) {
+  .cardBookBtn {
+    display: none;
+  }
+}
+
+/* Desktop: the ticket is the only sticky thing in the sidebar. */
+.stickyTicket {
+  position: sticky;
+  top: 96px;
+}
+
+@media (max-width: 900px) {
+  .stickyTicket {
+    position: static;
+  }
+}
+
+/* Event details sit in the wide main column: facts side by side on desktop. */
+.factGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem 1.5rem;
+}

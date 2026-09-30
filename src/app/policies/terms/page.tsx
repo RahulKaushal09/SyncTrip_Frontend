@@ -352,7 +352,7 @@ const sections: Section[] = [
           "We may suspend or terminate a subscription without refund for material violations of these Terms or the Community Guidelines (including verification fraud, harassment, or abuse). Where required, we will provide notice and a 14-day appeal window.",
       },
     ],
-    note: "Apple App Store and Google Play subscriptions are also subject to the terms of those platforms. Where a platform's terms conflict with these Terms for purchases made through that platform, the platform's terms govern the transaction.",
+    note: "Apple App Store and Google Play subscriptions are also subject to the terms of those platforms. Where a platform's terms conflict with these Terms for purchases made through that platform, the platform's terms govern the transaction. Refunds for club event tickets, and the full refund rules, are set out in our Refund & Cancellation Policy at synctrip.in/policies/refund-cancellation.",
   },
   {
     number: "13",

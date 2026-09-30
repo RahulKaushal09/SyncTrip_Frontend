@@ -11,6 +11,7 @@ import { useLogin } from '@/components/providers/LoginProvider';
 import { triggerLogin } from '@/utils';
 import Image from 'next/image';
 import PlayStoreWhite from '@/assets/icons/PlayStoreWhite.png'
+import RichText from "@/components/common/RichText";
 
 export default function GroupPreviewPage({ group }: { group: GroupCard }) {
     const router = useRouter();
@@ -114,7 +115,7 @@ export default function GroupPreviewPage({ group }: { group: GroupCard }) {
             {/* Group Description */}
             {group.description && (
                 <div className="m-animate play m-slide-up mb-10 bg-secondary-5 p-6 rounded-[24px] border border-secondary-4">
-                    <p className="r2 text-secondary-1 leading-relaxed opacity-90">{group.description}</p>
+                    <RichText text={group.description} className="r2 text-secondary-1 leading-relaxed opacity-90" />
                 </div>
             )}
 

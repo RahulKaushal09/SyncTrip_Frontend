@@ -84,9 +84,26 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', 'AW-17836239160');
+            gtag('config', 'AW-17836239160', { allow_enhanced_conversions: true });
           `}
         </Script>
+
+        {/* Meta Pixel - website ad conversions (club ticket checkout). The
+            same Purchase also goes server-side via the Conversions API with
+            a shared event id, so Meta counts it once. */}
+        {process.env.NEXT_PUBLIC_META_PIXEL_ID && (
+          <Script id="meta-pixel" strategy="afterInteractive">
+            {`
+              !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+              n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+              n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+              t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+              document,'script','https://connect.facebook.net/en_US/fbevents.js');
+              fbq('init', '${process.env.NEXT_PUBLIC_META_PIXEL_ID}');
+              fbq('track', 'PageView');
+            `}
+          </Script>
+        )}
 
 
         <link rel="icon" href="/favicon.ico" sizes="any" />
