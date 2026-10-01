@@ -1,5 +1,7 @@
 import { MetadataRoute } from 'next'
 import { CITY_PAGES } from '@/data/cityPages'
+import { CITY_GUIDES, MIN_INDEXABLE_VENUES } from '@/data/cityGuides'
+import { getCityVenues, venuesForGuide } from '@/lib/cityGuideApi'
 
 const base = 'https://synctrip.in'
 
@@ -63,11 +65,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.9,
     }))
 
+    // City guides: hub + activity pages. Activity pages only once they have enough
+    // venues to be worth indexing (same rule as their robots meta).
+    const guideUrls: MetadataRoute.Sitemap = []
+    for (const guide of CITY_GUIDES) {
+        guideUrls.push({ url: `${base}/city/${guide.citySlug}`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.9 })
+        const venues = await getCityVenues(guide.citySlug).catch(() => [])
+        for (const activity of guide.activities) {
+            if (venuesForGuide(venues, activity).length < MIN_INDEXABLE_VENUES) continue
+            guideUrls.push({ url: `${base}/city/${guide.citySlug}/${activity.slug}`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.85 })
+        }
+    }
+
     return [
         { url: base, lastModified: new Date(), changeFrequency: 'weekly', priority: 1.0 },
         { url: `${base}/explore`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.9 },
         { url: `${base}/explore/plans`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.9 },
         ...cityUrls,
+        ...guideUrls,
         { url: `${base}/blogs`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.8 },
         { url: `${base}/how-it-works`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
         { url: `${base}/about`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },

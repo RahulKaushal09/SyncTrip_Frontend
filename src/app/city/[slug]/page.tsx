@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import CityLanding from "@/components/City/CityLanding";
 import { CITY_PAGES, CityPage, getCityPage } from "@/data/cityPages";
+import { CITY_GUIDES, getCityGuide } from "@/data/cityGuides";
+import { getCityFeed, getCityVenues } from "@/lib/cityGuideApi";
+import { CityGuideHubView } from "@/components/CityGuide/views";
+import { hubJsonLd } from "@/components/CityGuide/jsonLd";
 
 /**
  * /city/:slug — the Delhi NCR launch cluster.
@@ -20,11 +24,29 @@ type PageProps = {
 };
 
 export function generateStaticParams() {
-  return CITY_PAGES.map((city) => ({ slug: city.slug }));
+  return [
+    ...CITY_PAGES.map((city) => ({ slug: city.slug })),
+    // City guides (hub + /city/<city>/<activity> pages), e.g. Chandigarh.
+    ...CITY_GUIDES.map((guide) => ({ slug: guide.citySlug })),
+  ];
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
+  const guide = getCityGuide(slug);
+  if (guide) {
+    const canonical = `https://synctrip.in/city/${guide.citySlug}`;
+    const image = `https://synctrip.in${guide.image.src}`;
+    return {
+      title: guide.seoTitle,
+      description: guide.seoDescription,
+      keywords: guide.keywords.join(", "),
+      alternates: { canonical },
+      openGraph: { title: guide.seoTitle, description: guide.seoDescription, url: canonical, siteName: "SyncTrip", locale: "en_IN", type: "website", images: [{ url: image, alt: guide.image.alt }] },
+      twitter: { card: "summary_large_image", site: "@synctrip44398", title: guide.seoTitle, description: guide.seoDescription, images: [image] },
+      robots: { index: true, follow: true, "max-snippet": -1, "max-image-preview": "large" },
+    };
+  }
   const city = getCityPage(slug);
   if (!city) return { title: "City not found | SyncTrip", robots: { index: false, follow: true } };
 
@@ -125,6 +147,16 @@ function buildJsonLd(city: CityPage) {
 
 export default async function CitySlugPage({ params }: PageProps) {
   const { slug } = await params;
+  const guide = getCityGuide(slug);
+  if (guide) {
+    const [venues, feed] = await Promise.all([getCityVenues(guide.citySlug), getCityFeed(guide.citySlug, {}, 8)]);
+    return (
+      <>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(hubJsonLd(guide, feed)) }} />
+        <CityGuideHubView city={guide} venues={venues} feed={feed} />
+      </>
+    );
+  }
   const city = getCityPage(slug);
   if (!city) notFound();
 
