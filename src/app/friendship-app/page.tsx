@@ -123,9 +123,17 @@ export default async function FriendshipAppPage() {
             "SyncTrip is a free friendship app, but not the kind where you chat with strangers forever. You join real plans with people near you (board-game nights, badminton and pickleball, café meetups, nights out, rides and weekend trips) and meet them there.",
             "Not dating. No awkward one-on-ones. Just something to do and people to do it with.",
           ]}
+          tone="brand"
+          sideImage={{
+            src: "/city-guides/friendship-game-night.jpg",
+            alt: "A group of new friends playing a card game around a café table at a SyncTrip board-game night",
+            badgeTitle: "SyncTrip board-game night",
+            badgeText: "Strangers at 7, a new group chat by 9",
+            chip: (<><Star size={14} aria-hidden /> 4.8 on Google Play</>),
+          }}
           stats={[
-            { icon: <Star size={15} aria-hidden />, label: "Rated 4.8 on Google Play (Oct 2026)" },
             { icon: <ShieldCheck size={15} aria-hidden />, label: "Friends, not dating" },
+            { icon: <Users size={15} aria-hidden />, label: "Games · sports · outings · trips" },
           ]}
           actions={
             <>

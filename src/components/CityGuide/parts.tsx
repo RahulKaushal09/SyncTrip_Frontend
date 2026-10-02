@@ -14,8 +14,18 @@ const TIME_OF_DAY: Record<string, string> = { morning: "Morning", afternoon: "Af
 
 /* ---------------- Hero ---------------- */
 
+export type HeroSideImage = {
+  src: string;
+  alt: string;
+  /** Small glass card over the photo, e.g. "SyncTrip board-game night". */
+  badgeTitle?: string;
+  badgeText?: string;
+  /** Floating chip in the top corner, e.g. a rating. */
+  chip?: React.ReactNode;
+};
+
 export function GuideHero({
-  crumbs, kicker, title, intro, image, actions, stats,
+  crumbs, kicker, title, intro, image, actions, stats, sideImage, tone,
 }: {
   crumbs: { label: string; href?: string }[];
   kicker: string;
@@ -24,46 +34,77 @@ export function GuideHero({
   image?: GuideImage;
   actions?: React.ReactNode;
   stats?: { icon: React.ReactNode; label: string }[];
+  /** Photo shown beside the copy (two columns on desktop, stacked on mobile). */
+  sideImage?: HeroSideImage;
+  /** "brand": richer blue→pink background for non-photo heroes. */
+  tone?: "brand";
 }) {
+  const copy = (
+    <>
+      <nav aria-label="Breadcrumb" className={styles.crumbs}>
+        {crumbs.map((c, i) => (
+          <React.Fragment key={c.label}>
+            {i > 0 && <ChevronRight size={13} aria-hidden />}
+            {c.href ? <Link href={c.href}>{c.label}</Link> : <span aria-current="page">{c.label}</span>}
+          </React.Fragment>
+        ))}
+      </nav>
+      <span className={styles.kicker}>
+        <span className={styles.kickerDot} />
+        {kicker}
+      </span>
+      <h1 className={styles.h1}>{title}</h1>
+      {intro.map((p) => (
+        <p key={p.slice(0, 32)} className={styles.lead}>
+          {p}
+        </p>
+      ))}
+      {stats && stats.length > 0 && (
+        <div className={styles.heroStats}>
+          {stats.map((s) => (
+            <span key={s.label} className={styles.heroStat}>
+              {s.icon}
+              {s.label}
+            </span>
+          ))}
+        </div>
+      )}
+      {actions && <div className={styles.heroActions}>{actions}</div>}
+    </>
+  );
+
   return (
-    <header className={`${styles.hero} ${image ? "" : styles.heroPlain}`}>
+    <header
+      className={`${styles.hero} ${image ? "" : styles.heroPlain} ${tone === "brand" ? styles.heroBrand : ""} ${sideImage ? styles.heroWithSide : ""}`}
+    >
       {image && (
         // Static, pre-compressed asset; eager because it is the LCP element.
         // eslint-disable-next-line @next/next/no-img-element
         <img className={styles.heroImg} src={image.src} alt={image.alt} fetchPriority="high" />
       )}
       {image && <div className={styles.heroShade} />}
-      <div className={styles.heroInner}>
-        <nav aria-label="Breadcrumb" className={styles.crumbs}>
-          {crumbs.map((c, i) => (
-            <React.Fragment key={c.label}>
-              {i > 0 && <ChevronRight size={13} aria-hidden />}
-              {c.href ? <Link href={c.href}>{c.label}</Link> : <span aria-current="page">{c.label}</span>}
-            </React.Fragment>
-          ))}
-        </nav>
-        <span className={styles.kicker}>
-          <span className={styles.kickerDot} />
-          {kicker}
-        </span>
-        <h1 className={styles.h1}>{title}</h1>
-        {intro.map((p) => (
-          <p key={p.slice(0, 32)} className={styles.lead}>
-            {p}
-          </p>
-        ))}
-        {stats && stats.length > 0 && (
-          <div className={styles.heroStats}>
-            {stats.map((s) => (
-              <span key={s.label} className={styles.heroStat}>
-                {s.icon}
-                {s.label}
-              </span>
-            ))}
-          </div>
-        )}
-        {actions && <div className={styles.heroActions}>{actions}</div>}
-      </div>
+      {sideImage ? (
+        <div className={`${styles.heroInner} ${styles.heroSplit}`}>
+          <div className={styles.heroCopy}>{copy}</div>
+          <figure className={styles.heroFigure}>
+            {/* Static, pre-compressed asset; eager because it shares the first viewport. */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={sideImage.src} alt={sideImage.alt} fetchPriority="high" />
+            {sideImage.chip && <span className={styles.heroFigureChip}>{sideImage.chip}</span>}
+            {(sideImage.badgeTitle || sideImage.badgeText) && (
+              <figcaption className={styles.heroFigureBadge}>
+                <span className={styles.heroFigureBadgeDot} aria-hidden />
+                <span>
+                  {sideImage.badgeTitle && <b>{sideImage.badgeTitle}</b>}
+                  {sideImage.badgeText && <span>{sideImage.badgeText}</span>}
+                </span>
+              </figcaption>
+            )}
+          </figure>
+        </div>
+      ) : (
+        <div className={styles.heroInner}>{copy}</div>
+      )}
       {image?.credit && (
         <span className={styles.photoCredit}>
           Photo:{" "}
@@ -218,7 +259,7 @@ export function AppCtaBand({ cityName }: { cityName: string }) {
   return (
     <aside className={styles.ctaBand}>
       <div>
-        <h2>Don&apos;t wait for your group chat to agree.</h2>
+        <h2 style={{ color: "white" }}>Don&apos;t wait for your group chat to agree.</h2>
         <p>Post what you want to do in {cityName} and people who are free will join. Free on Android and iOS.{" "}
           <Link href="/friendship-app" style={{ color: "#fff", textDecoration: "underline" }}>How SyncTrip works</Link>
         </p>
