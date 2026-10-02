@@ -67,6 +67,10 @@ export type CityGuide = {
   intro: string[];
   image: GuideImage;
   areas: { name: string; note: string }[];
+  /** Hub "areas" section heading + lead, and the lead above each activity page's venue list. */
+  areasTitle: string;
+  areasSub: string;
+  placesSub: string;
   getaways: { name: string; slug: string; distance: string; note: string }[];
   faqs: GuideFaq[];
   activities: ActivityGuide[];
@@ -84,6 +88,8 @@ const CC = {
   roseGarden: { author: "Harvinder Chandigarh", license: "CC BY-SA 4.0", url: "https://commons.wikimedia.org/wiki/File:Rose_Garden_,Chandigarh,India.jpg" },
   morni: { author: "Manojkhurana", license: "CC BY-SA 3.0", url: "https://commons.wikimedia.org/wiki/File:Morni_Hills_and_Tikkar_Taal,_Haryana,_India_-_8.jpeg" },
   escape: { author: "Hudson Bloom", license: "CC BY-SA 4.0", url: "https://commons.wikimedia.org/wiki/File:Escape_Room_-_%22The_Expedition%22_(Escape_Quest_Bethesda).jpg" },
+  cyberHub: { author: "Slyronit", license: "CC BY-SA 4.0", url: "https://commons.wikimedia.org/wiki/File:DLF_Cyber_Hub,_Gurgaon.jpg" },
+  bowling: { author: "RRRW001", license: "CC BY-SA 4.0", url: "https://commons.wikimedia.org/wiki/File:Ten_pin_bowling_alley,_Glenrothes.jpg" },
 };
 
 const HOW_SYNCTRIP_WORKS = {
@@ -433,6 +439,318 @@ const CHANDIGARH_ACTIVITIES: ActivityGuide[] = [
   },
 ];
 
+
+const GURGAON_ACTIVITIES: ActivityGuide[] = [
+  {
+    slug: "fun-activities",
+    navLabel: "Trampoline, karting & bowling",
+    icon: "Zap",
+    accent: "#F3359E",
+    seoTitle: "Trampoline, Go-Karting & Bowling in Gurgaon",
+    seoDescription:
+      "Trampoline parks, go-karting tracks, bowling alleys and escape rooms in Gurgaon, from Sohna Road to Cyber City, plus people to go with on SyncTrip.",
+    keywords: [
+      "trampoline park gurgaon", "go karting gurgaon", "bowling in gurgaon", "escape room gurgaon",
+      "fun activities in gurgaon", "things to do in gurgaon with friends", "game zone gurgaon", "trampoline park in gurugram",
+    ],
+    h1: "Trampoline parks, go-karting, bowling & escape rooms in Gurgaon",
+    kicker: "Group outings · Gurgaon",
+    intro: [
+      "Gurgaon's fun zones cluster in three places: Sohna Road and Golf Course Extension (trampoline parks, go-karting tracks in Balola, multi-game arenas), Cyber City and Ambience Mall (bowling and arcades), and Golf Course Road (escape rooms).",
+      "Every one of these is better with 4–8 people. If your friends are busy, post a plan on SyncTrip and go with people in Gurgaon who are up for the same thing.",
+    ],
+    image: { src: "/city-guides/activity-go-karting.jpg", alt: "Go-kart track", credit: CC.goKart },
+    venuePages: ["fun-activities"],
+    feed: { activities: ["bowling", "go_karting", "trampoline", "escape_room", "laser_tag"], outings: ["other", "mall"] },
+    venuesTitle: "Where to go",
+    tips: [
+      { title: "Weekday evenings beat weekends", text: "Trampoline parks and karting tracks are busiest on weekend afternoons. Weekday evenings mean shorter queues and more laps." },
+      { title: "Escape rooms need talkers", text: "Pick a team of 4–6 and say everything you find out loud. It's the fastest way to bond with people you've just met." },
+      HOW_SYNCTRIP_WORKS,
+    ],
+    faqs: [
+      { question: "Which is the best trampoline park in Gurgaon?", answer: "Popular options include SkyJumper at ILD Trade Centre (Sector 47, Sohna Road), Zooper in Ardee City (Sector 52), Boombastic on Golf Course Extension Road (trampolines plus bowling and climbing) and Trumpy in Sector 83 for New Gurgaon." },
+      { question: "Where can I do go-karting in Gurgaon?", answer: "F9 Go Karting near IFFCO Chowk (Sector 17/18 link road) is the most central. Urban Racer and Turbo Track are both in Balola, off Golf Course Extension Road." },
+      { question: "Where can I go bowling in Gurgaon?", answer: "Timezone at Ambience Mall and DLF Cyber Hub, SMAAASH at Airia Mall (Sector 68), Rumble Zone (Sector 57), Skyrider (Sector 70) and Boombastic (Sector 62) all have bowling." },
+      { question: "Is there an escape room in Gurgaon?", answer: "Yes. Mystery Rooms on Golf Course Road (DLF Phase 1) and No Escape at M3M Cosmopolitan (Sector 66) run live escape rooms; plan for about an hour and 4–6 players." },
+      { question: "How do I find people to go with?", answer: "Post the activity as a plan on SyncTrip with a date and time, or join an open plan. People in Gurgaon who want to do the same thing join, and you coordinate in the plan chat." },
+    ],
+    related: ["gaming-board-games", "nightlife", "turf-football-cricket"],
+  },
+  {
+    slug: "cafes-to-meet-people",
+    navLabel: "Cafés",
+    icon: "Coffee",
+    accent: "#B45309",
+    seoTitle: "Best Cafés in Gurgaon to Meet People",
+    seoDescription:
+      "Cafés in Gurgaon's Cyber Hub, Galleria, Sector 29 and Golf Course Road that work for meetups and board-game nights, plus people to share a table with.",
+    keywords: [
+      "cafes in gurgaon", "best cafes in gurgaon", "cafe in cyber hub", "cafes in sector 29 gurgaon",
+      "galleria market cafes", "cafes to hang out with friends in gurgaon", "hangout places in gurgaon",
+    ],
+    h1: "Cafés in Gurgaon where you can actually meet people",
+    kicker: "Cafés & meetups · Gurgaon",
+    intro: [
+      "Gurgaon's café scene runs on four hubs: Cyber Hub for the after-work crowd, Galleria Market and Sector 29 for relaxed weekends, and Golf Course Road for board-game cafés and brunch. These picks work for groups of people who have just met, not only for dates.",
+      "Moved to Gurgaon for work and still eating lunch alone? Join a SyncTrip café meetup and walk in knowing there's a table waiting for you.",
+    ],
+    image: { src: "/city-guides/activity-cafe-friends.jpg", alt: "Coffee on a café table", credit: CC.cafe },
+    venuePages: ["cafes-to-meet-people"],
+    venueActivities: ["cafe"],
+    feed: { activities: ["board_games", "community_space", "mafia"], outings: ["cafe"] },
+    venuesTitle: "Cafés that work for meetups",
+    tips: [
+      { title: "Cyber Hub for weekdays", text: "It's walkable from most Cyber City offices, so after-work meetups get more yeses." },
+      { title: "Sector 29 and Galleria for weekends", text: "Slower brunches, more seating and easy to pair with a Leisure Valley walk." },
+      HOW_SYNCTRIP_WORKS,
+    ],
+    faqs: [
+      { question: "Which are the best cafés in Gurgaon to hang out with friends?", answer: "For groups, Cyber Hub (Cafe Delhi Heights, OLLY, Laidback Cafe, SOCIAL) and Galleria Market (Sakley's The Mountain Café) are the easiest. Roots – Cafe in the Park by Leisure Valley in Sector 29 is great for calm weekend mornings." },
+      { question: "How do I make friends in Gurgaon?", answer: "Do things together rather than just chat: join a SyncTrip board-game night, a café meetup, a run in Aravali Biodiversity Park or a turf game. Most people come alone, so it's normal to turn up without a group." },
+      { question: "Are SyncTrip café meetups free?", answer: "Open plans posted by members are free to join; you pay for your own food and drinks. Club events like board-game nights may have a ticket, shown on the event." },
+    ],
+    related: ["gaming-board-games", "nightlife", "events-this-weekend"],
+  },
+  {
+    slug: "nightlife",
+    navLabel: "Clubs & nightlife",
+    icon: "Music",
+    accent: "#7C3AED",
+    seoTitle: "Clubs in Gurgaon: Nightlife & a Crew to Go With",
+    seoDescription:
+      "The best clubs, pubs and breweries in Gurgaon's Cyber Hub, Sector 29, Golf Course Road and Sohna Road, and how to find a group to go out with on SyncTrip.",
+    keywords: [
+      "clubs in gurgaon", "nightlife in gurgaon", "best clubs in gurgaon", "pubs in gurgaon", "cyber hub nightlife",
+      "sector 29 gurgaon clubs", "breweries in gurgaon", "things to do in gurgaon at night",
+    ],
+    h1: "Clubs in Gurgaon: the best nightlife, and a crew to go with",
+    kicker: "Night out · Gurgaon",
+    intro: [
+      "Gurgaon's nights run in clusters: Cyber Hub for after-work pubs and live music, Sector 29 for the original bar-and-club strip, Golf Course Road's malls for breweries, and Sohna Road for newer bars.",
+      "Clubs are more fun (and often easier to get into) as a group. On SyncTrip you can find people heading out the same night: post a nightlife plan or join one, meet first, and go together.",
+    ],
+    venuePages: ["nightlife"],
+    venueActivities: ["nightlife", "live_music"],
+    feed: { activities: ["music", "karaoke", "party"], outings: ["nightlife"] },
+    venuesTitle: "Clubs, pubs & breweries",
+    tips: [
+      { title: "Start at Cyber Hub, end in Sector 29", text: "Begin with food and a drink at Cyber Hub and move on as one group." },
+      { title: "Check group entry rules", text: "Many Gurgaon clubs have entry rules for groups; going as a mixed group from a SyncTrip plan usually makes it easier." },
+      { title: "Plan the ride home", text: "Agree on cab splits in the plan chat before you go, especially from Sohna Road." },
+    ],
+    faqs: [
+      { question: "Which are the best clubs in Gurgaon?", answer: "Popular picks include Feel Alive in Sector 29, the Cyber Hub pubs (Soi 7, Sutra Gastropub, SOCIAL), Manhattan Bar & Brewery at Global Foyer on Golf Course Road and Vapour Bar Exchange on Sohna Road." },
+      { question: "Where is the nightlife in Gurgaon?", answer: "The main clusters are DLF Cyber Hub, Sector 29, the Golf Course Road malls and Sohna Road. Cyber Hub is the easiest for an after-work group." },
+      { question: "Is it safe to go clubbing with people from an app?", answer: "Meet in a public place first, keep coordination in the plan chat, tell a friend your plans and arrange your own ride home. On SyncTrip you can see who has joined a plan before you go." },
+    ],
+    related: ["cafes-to-meet-people", "events-this-weekend", "fun-activities"],
+  },
+  {
+    slug: "gaming-board-games",
+    navLabel: "Board games & gaming",
+    icon: "Gamepad2",
+    accent: "#2785E7",
+    seoTitle: "Board Game Cafés & Game Nights in Gurgaon",
+    seoDescription:
+      "Board-game cafés, SyncTrip game nights, VR and gaming arenas in Gurgaon. Come alone, sit at a mixed table and meet people who like the same games.",
+    keywords: [
+      "board game cafe gurgaon", "board games gurgaon", "game night gurgaon", "gaming zone gurgaon",
+      "vr games gurgaon", "game on board gurgaon", "things to do in gurgaon with friends",
+    ],
+    h1: "Board game cafés & game nights in Gurgaon",
+    kicker: "Games · Gurgaon",
+    intro: [
+      "A board-game night is the easiest way to meet people in Gurgaon: a mixed table, a host who explains the rules, and nobody needs small talk. SyncTrip has hosted game nights on Golf Course Road, and Gurgaon has dedicated board-game cafés with hundreds of games.",
+      "Prefer screens? The VR and gaming arenas below are better with a squad too. Find players nearby on SyncTrip.",
+    ],
+    venuePages: ["gaming-board-games"],
+    venueActivities: ["board_games", "gaming", "vr"],
+    feed: { activities: ["board_games", "mafia", "gaming", "anime", "community_space"], outings: ["cafe"] },
+    venuesTitle: "Game cafés & arenas",
+    tips: [
+      { title: "First time? Pick a hosted night", text: "Hosts teach the games, so you don't need to know any rules." },
+      { title: "Book early", text: "Popular SyncTrip game nights fill up; book your seat when the event goes live." },
+      HOW_SYNCTRIP_WORKS,
+    ],
+    faqs: [
+      { question: "Is there a board game café in Gurgaon?", answer: "Yes. Game On Board in Ocus Quantum, Sector 51 has 300+ games and game masters, and Unlocked at 32nd Avenue combines a board-game library with a bar and an escape room. SyncTrip has also hosted game nights at The Big Tree on Golf Course Road." },
+      { question: "Do I need to bring friends to a game night?", answer: "No. Most people come alone or with one friend; tables are mixed so everyone meets new people." },
+    ],
+    related: ["cafes-to-meet-people", "fun-activities", "events-this-weekend"],
+  },
+  {
+    slug: "pickleball-badminton",
+    navLabel: "Pickleball & badminton",
+    icon: "Activity",
+    accent: "#059669",
+    seoTitle: "Pickleball & Badminton Courts in Gurgaon",
+    seoDescription:
+      "Where to play pickleball, padel and badminton in Gurgaon, from Golf Course Extension Road to DLF Phase 3, and how to find doubles partners on SyncTrip.",
+    keywords: [
+      "pickleball gurgaon", "pickleball court gurgaon", "badminton court gurgaon", "padel gurgaon",
+      "badminton partner gurgaon", "pickleball near me gurgaon",
+    ],
+    h1: "Pickleball & badminton in Gurgaon: courts and people to play with",
+    kicker: "Racquet sports · Gurgaon",
+    intro: [
+      "Gurgaon has some of NCR's best new courts: dedicated pickleball and padel arenas along Golf Course Extension Road, and indoor badminton complexes in Sector 62 and around Sohna Road.",
+      "All of these are played in doubles, so you need three more people. Book a court, then post a SyncTrip sport plan with your level and time slot and let players nearby fill it.",
+    ],
+    image: { src: "/city-guides/activity-pickleball.jpg", alt: "Pickleball doubles match", credit: CC.pickleball },
+    venuePages: ["pickleball-badminton"],
+    venueActivities: ["pickleball", "badminton", "padel"],
+    feed: { activities: ["badminton", "pickleball", "tennis"], sports: ["badminton", "pickleball", "tennis"] },
+    venuesTitle: "Courts",
+    tips: [
+      { title: "Say your level", text: "Mention beginner, intermediate or advanced in your plan. Matched levels make better games." },
+      HOW_SYNCTRIP_WORKS,
+    ],
+    faqs: [
+      { question: "Where can I play pickleball in Gurgaon?", answer: "Options include CoPlay | The Blue Court (Sector 65), Play Padel at Magnum (Sector 58), The Sports Planet near Badshahpur and Tirang Sports Arena in DLF Phase 3. Most are bookable on Hudle or Playo." },
+      { question: "Where can I play badminton in Gurgaon?", answer: "PlayAll in Sector 62 has multiple indoor courts, and The Sports Planet near Badshahpur also has badminton." },
+      { question: "How do I find badminton or pickleball partners in Gurgaon?", answer: "Post a sport plan on SyncTrip with the game, your level, the court and time. Players nearby join, and you coordinate in the plan chat." },
+    ],
+    related: ["turf-football-cricket", "outdoors-running", "fun-activities"],
+  },
+  {
+    slug: "turf-football-cricket",
+    navLabel: "Turf & box cricket",
+    icon: "Trophy",
+    accent: "#16A34A",
+    seoTitle: "Football Turf & Box Cricket in Gurgaon",
+    seoDescription:
+      "Football turfs and box-cricket arenas in Gurgaon, from DLF Phase 3 to Sohna Road, and how to fill your team on SyncTrip when you're short of players.",
+    keywords: ["turf gurgaon", "football turf gurgaon", "box cricket gurgaon", "turf booking gurgaon", "5 a side football gurgaon", "cricket turf gurgaon"],
+    h1: "Football turfs & box cricket in Gurgaon",
+    kicker: "Team sports · Gurgaon",
+    intro: [
+      "Gurgaon's turfs are busiest on weekday evenings after work, and the most common problem is always the same: two people drop out and nobody wants to pay for an empty slot.",
+      "Book the slot, post it as a SyncTrip sport plan, and let people nearby fill your 5-a-side or box-cricket game.",
+    ],
+    venuePages: ["turf-football-cricket"],
+    venueActivities: ["football", "futsal", "box_cricket", "cricket"],
+    feed: { activities: ["football", "cricket", "box_cricket"], sports: ["football", "cricket"] },
+    venuesTitle: "Turfs & arenas",
+    tips: [
+      { title: "Book late slots in summer", text: "Outdoor turfs are far more pleasant after sunset from April to September." },
+      { title: "Split the slot cost", text: "Mention the per-head cost in your plan so everyone knows before joining." },
+      HOW_SYNCTRIP_WORKS,
+    ],
+    faqs: [
+      { question: "Where can I play football or box cricket in Gurgaon?", answer: "Options include Tirang Sports Arena in DLF Phase 3, Future Forward Sports near Hero Honda Road, The Sports Planet near Badshahpur (box-cricket nets) and PlayAll in Sector 62 (cricket turf)." },
+      { question: "How do I find players for a football match in Gurgaon?", answer: "Create a SyncTrip sport plan with the turf, time and number of players needed. People nearby join, and you settle the slot cost in the plan chat." },
+    ],
+    related: ["pickleball-badminton", "fun-activities", "outdoors-running"],
+  },
+  {
+    slug: "events-this-weekend",
+    navLabel: "Events this weekend",
+    icon: "CalendarDays",
+    accent: "#DC2626",
+    seoTitle: "Events in Gurgaon This Weekend",
+    seoDescription:
+      "What's on in Gurgaon this weekend: SyncTrip club events, open plans, stand-up comedy, theatre and exhibitions, plus people to go with.",
+    keywords: ["events in gurgaon this weekend", "events in gurgaon", "things to do in gurgaon this weekend", "comedy show gurgaon", "epicentre gurgaon events", "events in gurgaon today"],
+    h1: "Events in Gurgaon this weekend",
+    kicker: "Updated daily · Gurgaon",
+    intro: [
+      "This page lists upcoming SyncTrip events and open plans in Gurgaon first (game nights, sports, runs and outings you can join today), followed by the venues where the city's comedy, theatre and exhibitions happen.",
+    ],
+    image: { src: "/city-guides/gurgaon-cyber-hub.jpg", alt: "DLF Cyber Hub, Gurgaon, at night", credit: CC.cyberHub },
+    venuePages: ["events-this-weekend"],
+    venueActivities: ["comedy", "theatre", "exhibitions", "concerts"],
+    feed: { outings: ["cafe", "nightlife", "mall", "other"], sports: ["badminton", "pickleball", "football", "cricket", "tennis"] },
+    venuesTitle: "Where Gurgaon's shows & events happen",
+    tips: [
+      { title: "Don't go alone", text: "Comedy and live shows are better in a group. Post the show as a SyncTrip outing and book seats together." },
+      HOW_SYNCTRIP_WORKS,
+    ],
+    faqs: [
+      { question: "What events are happening in Gurgaon this weekend?", answer: "The list at the top of this page shows upcoming SyncTrip club events and open plans in Gurgaon, updated through the day. For shows, check The Comedy Theatre (Golf Course Road), The Laugh Store (Cyber City) and Epicentre (Sector 44)." },
+      { question: "Where can I watch stand-up comedy in Gurgaon?", answer: "The Comedy Theatre at Central Plaza Mall on Golf Course Road and The Laugh Store in DLF Cyber City host regular shows and open mics." },
+    ],
+    related: ["cafes-to-meet-people", "nightlife", "workshops"],
+  },
+  {
+    slug: "workshops",
+    navLabel: "Pottery & workshops",
+    icon: "Palette",
+    accent: "#EA580C",
+    seoTitle: "Pottery Classes & Workshops in Gurgaon",
+    seoDescription:
+      "Pottery classes, art and resin workshops in Gurgaon, from South City to Sector 54. Learn something new and meet people doing it with SyncTrip.",
+    keywords: ["pottery class gurgaon", "pottery workshop gurgaon", "art workshop gurgaon", "workshops in gurgaon", "things to do in gurgaon for couples"],
+    h1: "Pottery classes & creative workshops in Gurgaon",
+    kicker: "Learn something · Gurgaon",
+    intro: [
+      "A pottery wheel or a resin-art workshop is one of the calmest ways to spend a Gurgaon weekend with new people: hands busy, no pressure to keep a conversation going. Studios here run sessions for complete beginners.",
+      "Found one you like? Post it on SyncTrip and book it with people who want to try it too.",
+    ],
+    venuePages: ["workshops"],
+    venueActivities: ["pottery", "art", "exhibitions"],
+    feed: { activities: ["pottery", "art", "workshop", "dance", "music"] },
+    venuesTitle: "Studios & venues",
+    tips: [{ title: "Beginners welcome", text: "Most studios run beginner sessions where you leave with something you made." }, HOW_SYNCTRIP_WORKS],
+    faqs: [
+      { question: "Where can I take a pottery class in Gurgaon?", answer: "Sona Pottery (Suncity, Sector 54), Zeventien Ceramics (South City I, Sector 41) and Mustard Studio (Sector 31, which also runs painting and resin-art workshops)." },
+      { question: "What can couples or friends do in Gurgaon besides cafés?", answer: "Try a pottery workshop, an escape room on Golf Course Road, bowling at Ambience Mall or Cyber Hub, or a stand-up show at The Comedy Theatre." },
+    ],
+    related: ["events-this-weekend", "cafes-to-meet-people", "fun-activities"],
+  },
+  {
+    slug: "outdoors-running",
+    navLabel: "Runs & cycling",
+    icon: "Footprints",
+    accent: "#0891B2",
+    seoTitle: "Running & Cycling Groups in Gurgaon",
+    seoDescription:
+      "Morning runs in Aravali Biodiversity Park, walks in Leisure Valley and weekend rides to Damdama Lake. Join Gurgaon running and cycling plans on SyncTrip.",
+    keywords: ["running group gurgaon", "running club gurgaon", "cycling group gurgaon", "aravali biodiversity park running", "leisure valley park gurgaon", "morning walk gurgaon"],
+    h1: "Running, cycling & morning walks in Gurgaon",
+    kicker: "Outdoors · Gurgaon",
+    intro: [
+      "Gurgaon's best outdoor spaces are right inside the city: the forested trails of Aravali Biodiversity Park, the long green stretch of Leisure Valley in Sector 29, and Aravalli ride routes out to Damdama Lake.",
+      "Running and riding groups meet early. Join one on SyncTrip and start the week with people who'll get you out of bed.",
+    ],
+    venuePages: ["outdoors-running"],
+    venueActivities: ["running", "cycling", "walks"],
+    feed: { activities: ["running", "cycling", "walk", "yoga"] },
+    venuesTitle: "Where to run & ride",
+    tips: [{ title: "Go early", text: "From April to October, finish runs before 8am to beat the heat." }, HOW_SYNCTRIP_WORKS],
+    faqs: [
+      { question: "Where is the best place to run in Gurgaon?", answer: "Aravali Biodiversity Park in DLF Phase 3 has a jogging track over forested trails and is where many running groups meet. Leisure Valley Park in Sector 29 is the flatter, central option." },
+      { question: "Are there cycling groups in Gurgaon?", answer: "Yes, several groups ride on weekends, and Damdama Lake near Sohna is the classic breakfast-ride destination. Find a ride or post your own on SyncTrip." },
+    ],
+    related: ["pickleball-badminton", "treks-day-trips", "events-this-weekend"],
+  },
+  {
+    slug: "treks-day-trips",
+    navLabel: "Day trips",
+    icon: "Mountain",
+    accent: "#4D7C0F",
+    seoTitle: "Day Trips & Weekend Rides from Gurgaon",
+    seoDescription:
+      "Easy day trips from Gurgaon: Damdama Lake, Sultanpur National Park and Neemrana Fort. Find people to go with and share the ride on SyncTrip.",
+    keywords: ["day trip from gurgaon", "one day trip near gurgaon", "weekend getaways from gurgaon", "damdama lake", "sultanpur national park", "neemrana fort day trip"],
+    h1: "Day trips & weekend rides from Gurgaon",
+    kicker: "Day trips · from Gurgaon",
+    intro: [
+      "You're out of Gurgaon and into the Aravallis in under an hour: Damdama Lake for a breakfast ride, Sultanpur for winter birdwatching, or a 15th-century fort at Neemrana down NH-48.",
+      "Day trips are cheaper and more fun with a car-full of people. Post a trip or ride on SyncTrip, split fuel, and come back with new friends.",
+    ],
+    venuePages: ["treks-day-trips"],
+    venueActivities: ["day_trip", "hike"],
+    feed: { activities: ["trek", "hike", "day_trip", "camping", "riding"] },
+    venuesTitle: "Easy escapes",
+    tips: [{ title: "Leave early", text: "Start by 6–7am on weekends to beat NH-48 and Sohna Road traffic." }, { title: "Share the drive", text: "Post the trip with seats available and split fuel and tolls in the plan chat." }],
+    faqs: [
+      { question: "What is a good one-day trip from Gurgaon?", answer: "Damdama Lake near Sohna, Sultanpur National Park on the Farukhnagar road and Neemrana Fort-Palace on NH-48 all work as same-day trips." },
+    ],
+    related: ["outdoors-running", "fun-activities", "events-this-weekend"],
+  },
+];
+
 export const CITY_GUIDES: CityGuide[] = [
   {
     citySlug: "chandigarh",
@@ -453,6 +771,9 @@ export const CITY_GUIDES: CityGuide[] = [
       "That's what SyncTrip is for. Pick what you want to do below, see what's happening this week, and join a plan or start your own.",
     ],
     image: { src: "/city-guides/landmark-sukhna-lake.jpg", alt: "Shikara boat on Sukhna Lake, Chandigarh", credit: CC.sukhna },
+    areasTitle: "Across the tricity",
+    areasSub: "Chandigarh, Mohali, Zirakpur and Panchkula are one city for plans: most places are within 30 minutes of each other.",
+    placesSub: "Across Chandigarh, Mohali, Zirakpur and Panchkula.",
     areas: [
       { name: "Chandigarh", note: "Sectors 7, 10, 17, 22, 26 and 35 for cafés, nightlife and meetups; Sector 1 for Sukhna and pickleball." },
       { name: "Mohali", note: "Turfs, box cricket, gaming lounges and courts across Sectors 62–69 and Kharar." },
@@ -476,6 +797,53 @@ export const CITY_GUIDES: CityGuide[] = [
       { question: "Is SyncTrip free?", answer: "Joining and creating plans on SyncTrip is free. Some club events, like board-game nights, have a ticket price shown on the event." },
     ],
     activities: CHANDIGARH_ACTIVITIES,
+  },
+  {
+    citySlug: "gurgaon",
+    cityName: "Gurgaon",
+    state: "Gurugram · Haryana",
+    geo: { lat: 28.4595, lng: 77.0266 },
+    seoTitle: "Things to Do in Gurgaon & Make Friends",
+    seoDescription:
+      "Things to do in Gurgaon with people: trampoline parks, go-karting, clubs, cafés, board-game nights, pickleball and day trips, plus a crew to go with.",
+    keywords: [
+      "things to do in gurgaon", "make friends in gurgaon", "fun activities in gurgaon", "things to do in gurgaon with friends",
+      "weekend plans in gurgaon", "places to hangout in gurgaon", "meetups in gurgaon", "gurugram social groups",
+    ],
+    h1: "Things to do in Gurgaon, and people to do them with",
+    kicker: "Gurgaon · Gurugram",
+    intro: [
+      "Gurgaon is full of people who moved here for work and never quite built a circle. The weekends are long, and the group you actually want (the Friday turf slot, the game night, the people who'll drive to Damdama for breakfast) is the hardest thing to find.",
+      "That's what SyncTrip is for. Pick what you feel like doing below, see what's happening this week, and join a plan or start your own.",
+    ],
+    image: { src: "/city-guides/gurgaon-cyber-hub.jpg", alt: "DLF Cyber Hub, Gurgaon, at night", credit: CC.cyberHub },
+    areasTitle: "Across Gurgaon",
+    areasSub: "Plans are pinned to where they happen, so a Sohna Road game doesn't show up as a 7pm option for someone in Cyber City.",
+    placesSub: "From Cyber City and Golf Course Road to Sohna Road and New Gurgaon.",
+    areas: [
+      { name: "Cyber City & DLF", note: "Cyber Hub, Ambience Mall and Galleria: after-work pubs, cafés, bowling and the Aravali Biodiversity Park trails." },
+      { name: "Golf Course Road", note: "Escape rooms, board-game cafés, comedy and the Global Foyer and Central Plaza malls." },
+      { name: "Sohna Road & Golf Course Ext", note: "Trampoline parks, go-karting in Balola, SMAAASH and Gurgaon's newest courts." },
+      { name: "Old Gurgaon & Sector 29", note: "Sector 29's bars, Leisure Valley, 32nd Avenue and Epicentre's events." },
+      { name: "New Gurgaon", note: "Sectors 81–95 along the Dwarka Expressway; Trumpy for trampolines." },
+    ],
+    getaways: [
+      { name: "Neemrana", slug: "things-to-do-in-neemrana-rajasthan", distance: "~2 hrs", note: "Fort palace day trip down NH-48." },
+      { name: "Alwar & Siliserh", slug: "things-to-do-in-alwar-rajasthan", distance: "~3 hrs", note: "Lake, forts and the Sariska road." },
+      { name: "Agra", slug: "things-to-do-in-agra-uttar-pradesh", distance: "~3 hrs", note: "Yamuna Expressway, doable in a day." },
+      { name: "Jaipur", slug: "things-to-do-in-jaipur-rajasthan", distance: "~4 hrs", note: "The standard NCR long weekend." },
+      { name: "Rishikesh", slug: "things-to-do-in-rishikesh-uttarakhand", distance: "~6 hrs", note: "Rafting, camps and river cafés." },
+      { name: "Jim Corbett", slug: "things-to-do-in-jim-corbett-national-park-uttarakhand", distance: "~6 hrs", note: "Safari weekends from NCR." },
+      { name: "Mussoorie", slug: "things-to-do-in-mussoorie-uttarakhand", distance: "~7 hrs", note: "Hills without the Himachal drive." },
+      { name: "Shimla", slug: "things-to-do-in-shimla-himachal-pradesh", distance: "~8 hrs", note: "Overnight bus or an early start." },
+    ],
+    faqs: [
+      { question: "How can I make friends in Gurgaon?", answer: "Do things with people rather than just chat: join a SyncTrip board-game night, a run in Aravali Biodiversity Park, a turf or pickleball game, or a café meetup at Cyber Hub. Most people come alone, so it's normal to show up without a group." },
+      { question: "What are the best things to do in Gurgaon with friends?", answer: "Trampoline parks on Sohna Road, go-karting in Balola, bowling at Ambience Mall or Cyber Hub, an escape room on Golf Course Road, a board-game café in Sector 51, a night out at Cyber Hub or Sector 29, or a breakfast ride to Damdama Lake." },
+      { question: "What can I do in Gurgaon at night?", answer: "Cyber Hub's pubs and live music, Sector 29's bars and clubs, breweries in the Golf Course Road malls, late bowling at SMAAASH or a late turf game." },
+      { question: "Is SyncTrip free?", answer: "Joining and creating plans on SyncTrip is free. Some club events, like board-game nights, have a ticket price shown on the event." },
+    ],
+    activities: GURGAON_ACTIVITIES,
   },
 ];
 

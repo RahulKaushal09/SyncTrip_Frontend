@@ -8,7 +8,10 @@ import type { GuideVenue } from "@/lib/cityGuideApi";
 import GuideIcon from "./GuideIcon";
 import styles from "./CityGuide.module.css";
 
-const AREA_ORDER = ["Chandigarh", "Mohali", "Zirakpur", "Panchkula", "Himachal"];
+const AREA_ORDER = [
+  "Chandigarh", "Mohali", "Zirakpur", "Panchkula", "Himachal",
+  "Cyber City & DLF", "Golf Course Road", "Sohna Road & Golf Course Ext", "Old Gurgaon & Sector 29", "New Gurgaon", "Day trips",
+];
 const BEST_FOR_LABEL: Record<string, string> = {
   "solo-friendly": "Solo-friendly", groups: "Groups", date: "Date", birthdays: "Birthdays", beginners: "Beginners",
   "rainy day": "Rainy day", "late night": "Late night", budget: "Budget", "day out": "Day out", weekend: "Weekend",

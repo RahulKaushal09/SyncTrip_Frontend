@@ -24,11 +24,9 @@ type PageProps = {
 };
 
 export function generateStaticParams() {
-  return [
-    ...CITY_PAGES.map((city) => ({ slug: city.slug })),
-    // City guides (hub + /city/<city>/<activity> pages), e.g. Chandigarh.
-    ...CITY_GUIDES.map((guide) => ({ slug: guide.citySlug })),
-  ];
+  // City guides (hub + /city/<city>/<activity>) take over a city's URL when both exist.
+  const slugs = new Set([...CITY_PAGES.map((city) => city.slug), ...CITY_GUIDES.map((guide) => guide.citySlug)]);
+  return [...slugs].map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {

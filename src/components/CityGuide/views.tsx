@@ -66,7 +66,7 @@ export function ActivityGuideView({
             <div>
               <h2 id="places-title" className={styles.h2}>{guide.venuesTitle} in {city.cityName}</h2>
               <p className={styles.sub}>
-                Across Chandigarh, Mohali, Zirakpur and Panchkula. Tap <b>Go with people</b> on any place to plan it with others on SyncTrip.
+                {city.placesSub} Tap <b>Go with people</b> on any place to plan it with others on SyncTrip.
               </p>
             </div>
           </div>
@@ -153,7 +153,7 @@ export function CityGuideHubView({ city, venues, feed }: { city: CityGuide; venu
           <div className={styles.sectionHead}>
             <div>
               <h2 id="guides-title" className={styles.h2}>What do you feel like doing?</h2>
-              <p className={styles.sub}>Each guide lists the best places in the tricity, and the SyncTrip events and plans happening there.</p>
+              <p className={styles.sub}>Each guide lists the best places in {city.cityName}, and the SyncTrip events and plans happening there.</p>
             </div>
           </div>
           <div className={styles.tileGrid}>
@@ -185,8 +185,8 @@ export function CityGuideHubView({ city, venues, feed }: { city: CityGuide; venu
         <section className={styles.section} aria-labelledby="areas-title">
           <div className={styles.sectionHead}>
             <div>
-              <h2 id="areas-title" className={styles.h2}>Across the tricity</h2>
-              <p className={styles.sub}>Chandigarh, Mohali, Zirakpur and Panchkula are one city for plans: most places are within 30 minutes of each other.</p>
+              <h2 id="areas-title" className={styles.h2}>{city.areasTitle}</h2>
+              <p className={styles.sub}>{city.areasSub}</p>
             </div>
           </div>
           <div className={styles.areaGrid}>

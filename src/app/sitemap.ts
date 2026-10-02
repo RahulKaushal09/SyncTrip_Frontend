@@ -88,7 +88,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     } catch { }
 
     // Delhi NCR launch cluster - the pages we are actively trying to rank.
-    const cityUrls: MetadataRoute.Sitemap = CITY_PAGES.map(city => ({
+    const guideCities = new Set(CITY_GUIDES.map(g => g.citySlug))
+    const cityUrls: MetadataRoute.Sitemap = CITY_PAGES.filter(city => !guideCities.has(city.slug)).map(city => ({
         url: `${base}/city/${city.slug}`,
         lastModified: new Date(),
         changeFrequency: 'weekly',
