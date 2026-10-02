@@ -1,5 +1,5 @@
 // src/app/location/[slug]/page.tsx
-import { notFound } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
 import { Metadata } from 'next';
 import { ApiService } from '@/utils/api.utils';
 import LocationPageDetails from '@/components/PageDetails/LocationPageDetails';
@@ -50,6 +50,34 @@ const getLocation = cache(async (slug: string) => {
     }
 });
 
+/** Legacy "<uuid>_<words>" URLs: still resolve, but only to 301 to the current slug. */
+const isLegacySlug = (slug: string) => slug.includes('_');
+
+/** The current slug for a location id (the by-id endpoint doesn't return it). */
+const getCurrentSlug = cache(async (id: string): Promise<string | null> => {
+    try {
+        const r = await ApiService.fetchLocationByIdServerWithSpecificFields(id, ['slug']);
+        return (r as { slug?: string } | null)?.slug || null;
+    } catch {
+        return null;
+    }
+});
+
+/**
+ * Thin-content rule. A destination with no places to visit (or a stub description)
+ * is a template, not a guide: it stays reachable for users but out of the index,
+ * because a few hundred of these drag down how Google rates the whole site.
+ */
+const isThinLocation = (location: { placesToVisit?: unknown[]; description?: string }) =>
+    (location.placesToVisit?.length ?? 0) === 0 || (location.description || '').trim().split(/\s+/).length < 30;
+
+/** Fit `text` into `max` chars on a word boundary. */
+const clip = (text: string, max: number) => {
+    if (text.length <= max) return text;
+    const cut = text.slice(0, max - 1);
+    return `${cut.slice(0, cut.lastIndexOf(' ')).replace(/[,:;–-]+$/, '')}…`;
+};
+
 // ✅ pre-build all location slugs at deploy time
 export async function generateStaticParams() {
     try {
@@ -73,16 +101,38 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const location = await getLocation(slug); // ✅ cached, shared with the page
     if (!location) return { title: 'Destination not found | SyncTrip', robots: { index: false, follow: true } };
 
-    const placesCount = location.placesToVisit?.length ?? 10;
+    const placesCount = location.placesToVisit?.length ?? 0;
     const destination = location.title;
+
+    // Old uuid URLs are 301'd to the current slug by the page itself; never index them.
+    if (isLegacySlug(slug)) {
+        const current = await getCurrentSlug(location.id);
+        return {
+            title: `Things to Do in ${destination}`,
+            robots: { index: false, follow: true },
+            ...(current ? { alternates: { canonical: `https://synctrip.in/location/${current}` } } : {}),
+        };
+    }
 
     // No `?? 'Destination'` fallback anywhere in here. A page that cannot name
     // its own destination must not publish a title and canonical built out of
     // the placeholder - that is exactly how 776 pages ended up identical.
     if (!destination) return { robots: { index: false, follow: true } };
 
-    const title = `Things to Do in ${destination} – Travel Guide & Trip Companions`;
-    const description = `Plan your ${destination} trip with SyncTrip. Discover ${placesCount}+ attractions, find verified travel companions heading to ${destination}, and join India's traveler community. Free on Android & iOS.`;
+    // ≤ 49 chars: the root layout appends " | SyncTrip". Custom SEO fields win when set.
+    const withCount = `Things to Do in ${destination}: ${placesCount} Places to Visit`;
+    // Stored SEO titles sometimes already end in "| SyncTrip"; the layout adds it again.
+    const customTitle = location.seo?.title?.replace(/\s*[|\-–]\s*SyncTrip\s*$/i, '').trim();
+    const title = customTitle
+        ? clip(customTitle, 49)
+        : placesCount >= 5 && withCount.length <= 49 ? withCount : clip(`Things to Do in ${destination}`, 49);
+    const customDescription = location.seo?.metaDescription?.trim();
+    const description = customDescription ? clip(customDescription, 155) : clip(
+        `${placesCount > 0 ? `${placesCount} places to visit in ${destination}` : `Plan a trip to ${destination}`}`
+        + `${location.best_time ? `, best time: ${location.best_time}` : ''}.`
+        + ` See the top sights and find travel buddies heading to ${destination} on SyncTrip.`,
+        155,
+    );
     // The canonical is the URL being served. It used to be re-derived from the
     // title, which produced a slug no route matched.
     const canonicalURL = `https://synctrip.in/location/${slug}`;
@@ -126,7 +176,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
             creator: '@synctrip44398',
         },
         robots: {
-            index: isIndia,
+            index: isIndia && !isThinLocation(location),
             follow: true,
             'max-snippet': -1,
             'max-image-preview': 'large',
@@ -142,6 +192,12 @@ export default async function LocationPage({ params }: Props) {
     const locationData = await getLocation(slug); // same cached fetch as generateMetadata
 
     if (!locationData) return notFound();
+
+    // Legacy uuid URL → 301 to the current slug, so old links and Google's copy consolidate.
+    if (isLegacySlug(slug)) {
+        const current = await getCurrentSlug(locationData.id);
+        if (current && current !== slug) permanentRedirect(`/location/${current}`);
+    }
 
     // const expectedSlug = CommonServices.generateLocationSlug(
     //     uuid,

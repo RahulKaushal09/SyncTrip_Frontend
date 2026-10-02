@@ -17,6 +17,28 @@ interface BlogDetailProps {
 // generateMetadata and the page component during the same build/request
 
 // Wrap with React cache - guarantees single fetch per slug per render
+
+/**
+ * Google shows ~60 characters of a title and the layout appends " | SyncTrip"
+ * (11). Long titles keep their main clause ("Weather in Goa in May: Complete
+ * Guide (Temperature…)" → "Weather in Goa in May"), then clip on a word.
+ */
+function fitTitle(title: string, max = 49): string {
+  if (title.length <= max) return title;
+  const head = title.split(/\s*[:|–—]\s*|\s+-\s+|\s*\(/)[0].trim();
+  if (head.length >= 20 && head.length <= max) return head;
+  const cut = title.slice(0, max);
+  return cut.slice(0, cut.lastIndexOf(" ")).replace(/[,:;–—-]+$/, "").trim();
+}
+
+/** ≤ 155 chars on a word boundary, whitespace collapsed. */
+function fitDescription(text: string, max = 155): string {
+  const t = text.replace(/\s+/g, " ").trim();
+  if (t.length <= max) return t;
+  const cut = t.slice(0, max - 1);
+  return `${cut.slice(0, cut.lastIndexOf(" ")).replace(/[,:;–—-]+$/, "")}…`;
+}
+
 const getBlog = cache(async (slug: string): Promise<BlogPost | null> => {
   try {
     return await BlogsApiServices.fetchBlogBySlug(slug) ?? null;
@@ -55,15 +77,16 @@ export async function generateMetadata({ params }: BlogDetailProps): Promise<Met
    * characters of the ~60 Google actually displays.
    */
   const rawTitle = blog.seo?.seo_title || blog.title;
-  const title = rawTitle?.replace(/\s*[|\-–]\s*SyncTrip\s*$/i, "").trim() || blog.title;
+  const fullTitle = rawTitle?.replace(/\s*[|\-–]\s*SyncTrip\s*$/i, "").trim() || blog.title;
+  const title = fitTitle(fullTitle);
 
   return {
     title,
-    description: blog.seo?.seo_description || blog.content?.substring(0, 160),
+    description: fitDescription(blog.seo?.seo_description || blog.content?.replace(/<[^>]+>/g, " ") || ""),
     keywords: blog.seo?.seo_keywords?.join(", "),
     openGraph: {
       title,
-      description: blog.seo?.seo_description,
+      description: fitDescription(blog.seo?.seo_description || ""),
       images: [{ url: blog.seo?.seo_image || blog.featuredImage, alt: blog.title }],
       type: "article",
     },

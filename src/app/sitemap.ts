@@ -28,6 +28,33 @@ const INDIAN_REGIONS = [
 const isIndianSlug = (slug: string) =>
     INDIAN_REGIONS.some((region) => slug.endsWith(`-${region}`))
 
+/**
+ * Slugs of destinations with no places to visit or a stub description: those
+ * pages are noindex, so asking Google to crawl them would waste crawl budget.
+ * Needs the backend to allow the `slug` field; until then it returns an empty
+ * set and the sitemap behaves exactly as before.
+ */
+async function getThinLocationSlugs(): Promise<Set<string>> {
+    try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/locations/getAllLocationsDynamicByFields`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ skip: 0, limit: 2000, fields: ['slug', 'description', 'placesToVisit'] }),
+            next: { revalidate: 86400 },
+        })
+        if (!res.ok) return new Set()
+        const data = await res.json()
+        const list: { slug?: string; description?: string; placesToVisit?: unknown[] }[] = data?.locations || []
+        return new Set(
+            list
+                .filter(l => l.slug && ((l.placesToVisit?.length ?? 0) === 0 || (l.description || '').trim().split(/\s+/).length < 30))
+                .map(l => l.slug as string)
+        )
+    } catch {
+        return new Set()
+    }
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Fetch blog slugs
     let blogUrls: MetadataRoute.Sitemap = []
@@ -47,8 +74,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/locations/slugs`, { cache: 'force-cache' })
         const slugs: string[] = await res.json()
+        const thin = await getThinLocationSlugs()
         locationUrls = slugs
             .filter(isIndianSlug)
+            // Same rule as the page's robots meta: empty destinations are noindex.
+            .filter(slug => !thin.has(slug))
             .map(slug => ({
                 url: `${base}/location/${slug}`,
                 lastModified: new Date(),
@@ -84,7 +114,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         ...cityUrls,
         ...guideUrls,
         { url: `${base}/blogs`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.8 },
-        { url: `${base}/how-it-works`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
         { url: `${base}/about`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
         ...blogUrls,
         ...locationUrls,

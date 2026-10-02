@@ -32,6 +32,7 @@ const Footer = () => {
      * reaches them at all.
      */
     const cityLinks = [
+        { name: 'Chandigarh', url: '/city/chandigarh' },
         { name: 'Gurgaon', url: '/city/gurgaon' },
         { name: 'Delhi', url: '/city/delhi' },
         { name: 'Noida', url: '/city/noida' },
@@ -42,7 +43,16 @@ const Footer = () => {
         { name: 'Destinations', url: '/explore' },
         { name: 'Local plans & meetups', url: '/explore/plans' },
         { name: 'Travel blog', url: '/blogs' },
-        { name: 'How it works', url: '/how-it-works' },
+        // /how-it-works only redirects to the homepage; link real content instead.
+        { name: 'Things to do in Chandigarh', url: '/city/chandigarh/fun-activities' },
+    ];
+
+    // Trust signals: crawlers (and Google's brand verification) expect policy links on every page.
+    const legalLinks = [
+        { name: 'Privacy Policy', url: '/policies/privacy-policies' },
+        { name: 'Terms of Service', url: '/policies/terms' },
+        { name: 'Refunds & Cancellation', url: '/policies/refund-cancellation' },
+        { name: 'Child Safety', url: '/policies/child-safety' },
     ];
 
     const contactLinks = [
@@ -176,7 +186,7 @@ const Footer = () => {
 
             <div className="footer-links-row">
                 <div className="footer-links-group">
-                    <span className="footer-links-label">Plans in Delhi NCR</span>
+                    <span className="footer-links-label">Plans near you</span>
                     <div className="footer-links-set">
                         {cityLinks.map((link) => (
                             <Link key={link.url} className="footerTextColorNormal" href={link.url}>
@@ -189,6 +199,16 @@ const Footer = () => {
                     <span className="footer-links-label">Explore</span>
                     <div className="footer-links-set">
                         {exploreLinks.map((link) => (
+                            <Link key={link.url} className="footerTextColorNormal" href={link.url}>
+                                {link.name}
+                            </Link>
+                        ))}
+                    </div>
+                </div>
+                <div className="footer-links-group">
+                    <span className="footer-links-label">Legal</span>
+                    <div className="footer-links-set">
+                        {legalLinks.map((link) => (
                             <Link key={link.url} className="footerTextColorNormal" href={link.url}>
                                 {link.name}
                             </Link>

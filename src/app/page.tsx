@@ -2,7 +2,6 @@
 import "../../styles/home/home.css";
 import { FeaturesSection } from "@/components/Home_new/whyChooseSyncTrip";
 import { Metadata } from "next";
-import Script from "next/script";
 import HomeHeroSectionNew from "@/components/Home_new/NewHome";
 import AppFeatures from "@/components/Home_new/AppFeatures";
 import SyncTripPromo from "@/components/AppPushingComponents/SyncTripPromo";
@@ -91,7 +90,7 @@ export default async function Home() {
 
   return (
     <>
-      <Script
+      <script
         id="ld-1"
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -102,6 +101,7 @@ export default async function Home() {
             url: "https://synctrip.in",
             logo: "https://synctrip.in/logo_main_withoutBG.png",
             areaServed: [
+              { "@type": "City", name: "Chandigarh" },
               { "@type": "City", name: "Gurugram" },
               { "@type": "City", name: "Delhi" },
               { "@type": "City", name: "Noida" },
@@ -115,9 +115,8 @@ export default async function Home() {
           }),
         }}
       />
-      <Script
+      <script
         id="ld-2"
-
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
@@ -140,10 +139,9 @@ export default async function Home() {
           }),
         }}
       />
-      <Script
+      <script
         id="ld-3"
         type="application/ld+json"
-        strategy="beforeInteractive"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
@@ -175,10 +173,9 @@ export default async function Home() {
         }}
       />
 
-      <Script
+      <script
         id="ld-4"
         type="application/ld+json"
-        strategy="beforeInteractive"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",

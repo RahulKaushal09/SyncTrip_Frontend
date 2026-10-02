@@ -92,7 +92,9 @@ const BlogContent = ({ blog, relatedLocations }: BlogContentProps) => {
 
                 <div
                     className="editorial-body-text"
-                    dangerouslySetInnerHTML={{ __html: blog.content }}
+                    // The page already has its H1 (the title). Headings pasted into the editor
+                    // as <h1> are demoted to <h2> so every post has exactly one H1.
+                    dangerouslySetInnerHTML={{ __html: (blog.content || "").replace(/<(\/?)h1(?=[\s>])/gi, "<$1h2") }}
                 />
 
                 {/* ── RELATED LOCATIONS ── */}
