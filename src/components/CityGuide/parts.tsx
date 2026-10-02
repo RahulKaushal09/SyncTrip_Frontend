@@ -1,9 +1,10 @@
 import React from "react";
 import Link from "next/link";
 import { ArrowRight, CalendarDays, ChevronDown, ChevronRight, MapPin, Ticket, Users } from "lucide-react";
-import { APP_LINKS, ROUTES } from "@/constants/config";
+import { ROUTES } from "@/constants/config";
 import type { GuideFaq, GuideImage } from "@/data/cityGuides";
 import type { GuideFeed } from "@/lib/cityGuideApi";
+import { appStoreUrl, playStoreUrl, type StoreTrack } from "@/lib/storeLinks";
 import styles from "./CityGuide.module.css";
 
 export { default as GuideIcon } from "./GuideIcon";
@@ -121,8 +122,10 @@ export function GuideHero({
 /* ---------------- Happening on SyncTrip ---------------- */
 
 export function HappeningRail({
-  feed, cityName, title, sub, emptyTitle,
+  feed, cityName, title, sub, emptyTitle, track,
 }: {
+  /** Store-link attribution for the empty-state CTA. */
+  track: StoreTrack;
   feed: GuideFeed;
   cityName: string;
   title: string;
@@ -153,7 +156,7 @@ export function HappeningRail({
             <h3>{emptyTitle}</h3>
             <p>Be the first: post a plan on SyncTrip and people in {cityName} who want the same thing will join.</p>
           </div>
-          <a className={styles.btnPrimary} href={APP_LINKS.PLAY_STORE} target="_blank" rel="noopener noreferrer">
+          <a className={styles.btnPrimary} href={playStoreUrl({ ...track, content: "rail_empty" })} target="_blank" rel="noopener noreferrer">
             Start a plan <ArrowRight size={16} aria-hidden />
           </a>
         </div>
@@ -255,7 +258,7 @@ export function GuideFaqList({ faqs, title }: { faqs: GuideFaq[]; title: string 
 
 /* ---------------- App CTA ---------------- */
 
-export function AppCtaBand({ cityName }: { cityName: string }) {
+export function AppCtaBand({ cityName, track }: { cityName: string; track: StoreTrack }) {
   return (
     <aside className={styles.ctaBand}>
       <div>
@@ -265,10 +268,10 @@ export function AppCtaBand({ cityName }: { cityName: string }) {
         </p>
       </div>
       <div className={styles.storeRow}>
-        <a className={styles.btnPrimary} href={APP_LINKS.PLAY_STORE} target="_blank" rel="noopener noreferrer">
+        <a className={styles.btnPrimary} href={playStoreUrl({ ...track, content: "cta_band" })} target="_blank" rel="noopener noreferrer">
           Get it on Android
         </a>
-        <a className={styles.btnGhost} href={APP_LINKS.APP_STORE} target="_blank" rel="noopener noreferrer">
+        <a className={styles.btnGhost} href={appStoreUrl({ ...track, content: "cta_band" })} target="_blank" rel="noopener noreferrer">
           Download for iPhone
         </a>
       </div>

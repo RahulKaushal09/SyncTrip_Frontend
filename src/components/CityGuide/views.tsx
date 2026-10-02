@@ -24,6 +24,7 @@ export function ActivityGuideView({
     .map((s) => city.activities.find((a) => a.slug === s))
     .filter((a): a is ActivityGuide => !!a);
   const upcoming = feed.events.length + feed.plans.length;
+  const track = { campaign: `city_guide_${city.citySlug}`, term: `${city.citySlug}/${guide.slug}` };
 
   return (
     <div className={styles.page} style={accentStyle(guide.accent)}>
@@ -54,6 +55,7 @@ export function ActivityGuideView({
 
       <div className={styles.body}>
         <HappeningRail
+          track={track}
           feed={feed}
           cityName={city.cityName}
           title={`Happening on SyncTrip in ${city.cityName}`}
@@ -71,6 +73,7 @@ export function ActivityGuideView({
             </div>
           </div>
           <VenueExplorer
+            track={track}
             venues={venues}
             icon={guide.icon}
             cityName={city.cityName}
@@ -113,7 +116,7 @@ export function ActivityGuideView({
           </div>
         </section>
 
-        <AppCtaBand cityName={city.cityName} />
+        <AppCtaBand cityName={city.cityName} track={track} />
       </div>
     </div>
   );
@@ -123,6 +126,7 @@ export function ActivityGuideView({
 
 export function CityGuideHubView({ city, venues, feed }: { city: CityGuide; venues: GuideVenue[]; feed: GuideFeed }) {
   const counts = new Map(city.activities.map((a) => [a.slug, venuesForGuide(venues, a).length]));
+  const track = { campaign: `city_guide_${city.citySlug}`, term: city.citySlug };
   const areaCounts = new Map<string, number>();
   venues.forEach((v) => areaCounts.set(v.area, (areaCounts.get(v.area) || 0) + 1));
 
@@ -175,6 +179,7 @@ export function CityGuideHubView({ city, venues, feed }: { city: CityGuide; venu
         </section>
 
         <HappeningRail
+          track={track}
           feed={feed}
           cityName={city.cityName}
           title={`This week with SyncTrip in ${city.cityName}`}
@@ -227,7 +232,7 @@ export function CityGuideHubView({ city, venues, feed }: { city: CityGuide; venu
 
         <GuideFaqList faqs={city.faqs} title={`Things to do in ${city.cityName}: FAQs`} />
 
-        <AppCtaBand cityName={city.cityName} />
+        <AppCtaBand cityName={city.cityName} track={track} />
       </div>
     </div>
   );

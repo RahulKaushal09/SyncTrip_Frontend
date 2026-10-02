@@ -3,7 +3,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { BadgeCheck, Clock, ExternalLink, IndianRupee, MapPin, Star, Users, X } from "lucide-react";
-import { APP_LINKS, ROUTES } from "@/constants/config";
+import { ROUTES } from "@/constants/config";
+import { appStoreUrl, playStoreUrl, type StoreTrack } from "@/lib/storeLinks";
 import type { GuideVenue } from "@/lib/cityGuideApi";
 import GuideIcon from "./GuideIcon";
 import styles from "./CityGuide.module.css";
@@ -23,8 +24,10 @@ const BEST_FOR_LABEL: Record<string, string> = {
  * venue copy is in the HTML Google indexes.
  */
 export default function VenueExplorer({
-  venues, icon, cityName, emptyText,
+  venues, icon, cityName, emptyText, track,
 }: {
+  /** Store-link attribution for the "Go with people" sheet. */
+  track: StoreTrack;
   venues: GuideVenue[];
   icon: string;
   cityName: string;
@@ -124,12 +127,12 @@ export default function VenueExplorer({
         })}
       </div>
 
-      {planning && <PlanSheet venue={planning} cityName={cityName} onClose={() => setPlanning(null)} />}
+      {planning && <PlanSheet venue={planning} cityName={cityName} track={track} onClose={() => setPlanning(null)} />}
     </>
   );
 }
 
-function PlanSheet({ venue, cityName, onClose }: { venue: GuideVenue; cityName: string; onClose: () => void }) {
+function PlanSheet({ venue, cityName, track, onClose }: { venue: GuideVenue; cityName: string; track: StoreTrack; onClose: () => void }) {
   const [platform, setPlatform] = useState<"android" | "ios" | "other">("other");
 
   useEffect(() => {
@@ -168,10 +171,10 @@ function PlanSheet({ venue, cityName, onClose }: { venue: GuideVenue; cityName: 
         </ol>
         <div className={styles.sheetStores}>
           {platform !== "ios" && (
-            <a className={styles.storeBtn} href={APP_LINKS.PLAY_STORE} target="_blank" rel="noopener noreferrer">Get it on Android</a>
+            <a className={styles.storeBtn} href={playStoreUrl({ ...track, content: "plan_sheet" })} target="_blank" rel="noopener noreferrer">Get it on Android</a>
           )}
           {platform !== "android" && (
-            <a className={styles.storeBtn} href={APP_LINKS.APP_STORE} target="_blank" rel="noopener noreferrer">Download for iPhone</a>
+            <a className={styles.storeBtn} href={appStoreUrl({ ...track, content: "plan_sheet" })} target="_blank" rel="noopener noreferrer">Download for iPhone</a>
           )}
           <Link className={styles.btnLight} href={ROUTES.PLANS} style={{ gridColumn: "1 / -1" }}>
             Or browse open plans in {cityName}

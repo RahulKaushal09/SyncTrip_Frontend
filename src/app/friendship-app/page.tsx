@@ -4,6 +4,7 @@ import { ArrowRight, CalendarDays, MapPin, MessageCircle, ShieldCheck, Star, Use
 import { APP_LINKS } from "@/constants/config";
 import { CITY_GUIDES } from "@/data/cityGuides";
 import { getCityFeed, type GuideFeed } from "@/lib/cityGuideApi";
+import { appStoreUrl, playStoreUrl } from "@/lib/storeLinks";
 import { AppCtaBand, GuideFaqList, GuideHero, GuideIcon, HappeningRail } from "@/components/CityGuide/parts";
 import styles from "@/components/CityGuide/CityGuide.module.css";
 
@@ -16,6 +17,8 @@ import styles from "@/components/CityGuide/CityGuide.module.css";
  */
 
 export const revalidate = 1800;
+
+const TRACK = { campaign: "friendship_app", term: "friendship-app" };
 
 const URL = "https://synctrip.in/friendship-app";
 const TITLE = "Friendship App to Make Real Friends Offline";
@@ -137,10 +140,10 @@ export default async function FriendshipAppPage() {
           ]}
           actions={
             <>
-              <a className={styles.btnPrimary} href={APP_LINKS.PLAY_STORE} target="_blank" rel="noopener noreferrer">
+              <a className={styles.btnPrimary} href={playStoreUrl({ ...TRACK, content: "hero" })} target="_blank" rel="noopener noreferrer">
                 Get it on Android <ArrowRight size={16} aria-hidden />
               </a>
-              <a className={styles.btnGhost} href={APP_LINKS.APP_STORE} target="_blank" rel="noopener noreferrer">
+              <a className={styles.btnGhost} href={appStoreUrl({ ...TRACK, content: "hero" })} target="_blank" rel="noopener noreferrer">
                 Download for iPhone
               </a>
             </>
@@ -167,6 +170,7 @@ export default async function FriendshipAppPage() {
           </section>
 
           <HappeningRail
+            track={TRACK}
             feed={feed}
             cityName="your city"
             title="Plans people are joining this week"
@@ -211,7 +215,7 @@ export default async function FriendshipAppPage() {
 
           <GuideFaqList faqs={FAQS} title="Friendship app FAQs" />
 
-          <AppCtaBand cityName="your city" />
+          <AppCtaBand cityName="your city" track={TRACK} />
         </div>
       </div>
     </>

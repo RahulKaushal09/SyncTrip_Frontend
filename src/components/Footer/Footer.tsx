@@ -8,7 +8,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { Facebook, Instagram, Linkedin } from 'lucide-react';
 import GetItOnPlaystore from "../../assets/icons/GetOnPlayStoreSVG.svg";
 import GetItOnAppStore from "../../assets/icons/GetOnAppStore.svg";
-import { APP_LINKS } from '@/constants';
+import { appStoreUrl, playStoreUrl } from '@/lib/storeLinks';
 
 const Footer = () => {
     const pathname = usePathname();
@@ -157,7 +157,7 @@ const Footer = () => {
                     </h3>
                     <div className="app-buttons gap-3">
                         <a
-                            href={APP_LINKS.PLAY_STORE} // replace with actual Play Store link
+                            href={playStoreUrl({ campaign: 'site_footer', term: pathname || 'home', content: 'footer' })}
                             className="playstore-btn"
                             target="_blank"
                             rel="noopener noreferrer"
@@ -170,7 +170,7 @@ const Footer = () => {
                             />
                         </a>
                         <a
-                            href={APP_LINKS.APP_STORE} // replace with actual App Store link
+                            href={appStoreUrl({ campaign: 'site_footer', term: pathname || 'home', content: 'footer' })}
                             className="playstore-btn select-none"
                             target="_blank"
                             rel="noopener noreferrer"
