@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   // ↑ "Solo Travel Companion App" = exact transactional query
   // ↑ 60 chars exactly - fits Google title display
 
-  description: 'Find people to do things with in Gurgaon, Delhi NCR & across India. Join bike rides, turf games, movie nights, weekend outings and club events near you. Free app.',
+  description: 'Make friends offline in Gurgaon, Chandigarh, Delhi NCR & across India: game nights, turf games, rides, outings and club events. Free app.',
   // ↑ 168 chars - includes primary kw, social proof (5000+), all 4 activity
   // ↑ categories, CTA (Free), platform (Android & iOS)
 
@@ -59,7 +59,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Find Travel Buddies & Activity Groups in India | SyncTrip',
 
-    description: 'Find people to do things with in Gurgaon, Delhi NCR & across India. Join bike rides, turf games, movie nights, weekend outings and club events near you. Free app.',
+    description: 'Make friends offline in Gurgaon, Chandigarh, Delhi NCR & across India: game nights, turf games, rides, outings and club events. Free app.',
 
     type: 'website',
     url: 'https://synctrip.in',

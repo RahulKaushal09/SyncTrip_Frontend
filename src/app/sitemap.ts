@@ -114,6 +114,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         { url: `${base}/explore/plans`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.9 },
         ...cityUrls,
         ...guideUrls,
+        { url: `${base}/friendship-app`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
         { url: `${base}/blogs`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.8 },
         { url: `${base}/about`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
         ...blogUrls,

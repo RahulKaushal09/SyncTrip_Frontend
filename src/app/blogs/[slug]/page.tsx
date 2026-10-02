@@ -5,6 +5,7 @@ import { Metadata } from "next";
 import { ApiService, BlogsApiServices } from "@/utils";
 import { BlogPost } from "@/types";
 import BlogContent from "@/components/Blogs/BlogContent";
+import GuideLinksStrip, { guideCitiesIn } from "@/components/CityGuide/GuideLinksStrip";
 import "../../../../styles/Blogs/blogDetail.css";
 import { cache } from 'react';
 import { LocationFields } from "@/constants";
@@ -145,6 +146,7 @@ const BlogDetailPage = async ({ params }: BlogDetailProps) => {
       />
       <main className="editorial-blog-container">
         <BlogContent blog={blog} relatedLocations={relatedLocDetails} />
+        <GuideLinksStrip citySlugs={guideCitiesIn(`${blog.title} ${blog.content || ""}`)} />
       </main>
     </div>
   );

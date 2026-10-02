@@ -45,6 +45,8 @@ const Footer = () => {
         { name: 'Travel blog', url: '/blogs' },
         // /how-it-works only redirects to the homepage; link real content instead.
         { name: 'Things to do in Chandigarh', url: '/city/chandigarh/fun-activities' },
+        { name: 'Things to do in Gurgaon', url: '/city/gurgaon/fun-activities' },
+        { name: 'Friendship app', url: '/friendship-app' },
     ];
 
     // Trust signals: crawlers (and Google's brand verification) expect policy links on every page.

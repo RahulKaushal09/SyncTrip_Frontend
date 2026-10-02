@@ -6,8 +6,8 @@ import Image from 'next/image';
 
 /* ================= SEO METADATA ================= */
 export const metadata: Metadata = {
-    title: 'About SyncTrip | Collaborative Travel Planning & Trip Matching Platform',
-    description: 'SyncTrip is a collaborative travel planning and trip matching platform that helps travelers plan itineraries together, find travel buddies, and coordinate group trips in real time.',
+    title: 'About SyncTrip: Meet People & Plans',
+    description: 'SyncTrip helps people in India make friends offline through plans: game nights, sports, outings and group trips, with a group chat for every plan.',
     keywords: [
         'collaborative travel planning',
         'group trip planner',

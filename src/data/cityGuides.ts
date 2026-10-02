@@ -233,7 +233,7 @@ const CHANDIGARH_ACTIVITIES: ActivityGuide[] = [
     faqs: [
       { question: "Is there a board game café in Chandigarh?", answer: "SyncTrip Chandigarh hosts regular board-game nights at cafés like Yazu (Sector 26), Cafe JC (Sector 10), Ketliwala (Sector 22) and My Bake Art Cafe (Sector 36). Upcoming nights are listed on this page." },
       { question: "Where are the gaming cafés in Chandigarh and Mohali?", answer: "Options include Underground Gaming Lounge & Cafe (Sector 125, Kharar), The Gaming Theory (Kharar), High Class VR (Mohali Walk Mall, Sector 62) and the arcade and VR at The Game Palacio, Elante." },
-      { question: "Do I need to bring friends to a board-game night?", answer: "No. Most people come alone or with one friend. Tables are mixed so everyone meets new people." },
+      { question: "Do I need to bring friends to a board-game night?", answer: "No. Many people come alone or with one friend. Tables are mixed so everyone meets new people." },
     ],
     related: ["cafes-to-meet-people", "fun-activities", "events-this-weekend"],
   },
@@ -507,7 +507,7 @@ const GURGAON_ACTIVITIES: ActivityGuide[] = [
     ],
     faqs: [
       { question: "Which are the best cafés in Gurgaon to hang out with friends?", answer: "For groups, Cyber Hub (Cafe Delhi Heights, OLLY, Laidback Cafe, SOCIAL) and Galleria Market (Sakley's The Mountain Café) are the easiest. Roots – Cafe in the Park by Leisure Valley in Sector 29 is great for calm weekend mornings." },
-      { question: "How do I make friends in Gurgaon?", answer: "Do things together rather than just chat: join a SyncTrip board-game night, a café meetup, a run in Aravali Biodiversity Park or a turf game. Most people come alone, so it's normal to turn up without a group." },
+      { question: "How do I make friends in Gurgaon?", answer: "Do things together rather than just chat: join a SyncTrip board-game night, a café meetup, a run in Aravali Biodiversity Park or a turf game. Many people come alone, so it's normal to turn up without a group." },
       { question: "Are SyncTrip café meetups free?", answer: "Open plans posted by members are free to join; you pay for your own food and drinks. Club events like board-game nights may have a ticket, shown on the event." },
     ],
     related: ["gaming-board-games", "nightlife", "events-this-weekend"],
@@ -575,7 +575,7 @@ const GURGAON_ACTIVITIES: ActivityGuide[] = [
     ],
     faqs: [
       { question: "Is there a board game café in Gurgaon?", answer: "Yes. Game On Board in Ocus Quantum, Sector 51 has 300+ games and game masters, and Unlocked at 32nd Avenue combines a board-game library with a bar and an escape room. SyncTrip has also hosted game nights at The Big Tree on Golf Course Road." },
-      { question: "Do I need to bring friends to a game night?", answer: "No. Most people come alone or with one friend; tables are mixed so everyone meets new people." },
+      { question: "Do I need to bring friends to a game night?", answer: "No. Many people come alone or with one friend; tables are mixed so everyone meets new people." },
     ],
     related: ["cafes-to-meet-people", "fun-activities", "events-this-weekend"],
   },
@@ -792,7 +792,7 @@ export const CITY_GUIDES: CityGuide[] = [
     ],
     faqs: [
       { question: "What are the best things to do in Chandigarh with friends?", answer: "Go-karting or trampolines in Zirakpur, bowling at Elante, an escape room in Sector 35, a board-game night at a Sector 26 café, pickleball near Sukhna Lake, a night out in Sector 26 or IT Park, or a day trek to Tikkar Taal in Morni Hills." },
-      { question: "How can I make friends in Chandigarh?", answer: "Do things with people rather than just chat: join a SyncTrip board-game night, a Sukhna run with Oye Runner, a badminton or pickleball plan, or a café meetup. Most people come alone, so it's normal to show up without a group." },
+      { question: "How can I make friends in Chandigarh?", answer: "Do things with people rather than just chat: join a SyncTrip board-game night, a Sukhna run with Oye Runner, a badminton or pickleball plan, or a café meetup. Many people come alone, so it's normal to show up without a group." },
       { question: "What can I do in Chandigarh at night?", answer: "Pubs and breweries along Madhya Marg (Sector 26), live music and clubs around Elante and Industrial Area Phase I, Kitty Su at The Lalit on weekends, bowling at The Game Palacio till midnight, or a late turf game in Mohali." },
       { question: "Is SyncTrip free?", answer: "Joining and creating plans on SyncTrip is free. Some club events, like board-game nights, have a ticket price shown on the event." },
     ],
@@ -838,7 +838,7 @@ export const CITY_GUIDES: CityGuide[] = [
       { name: "Shimla", slug: "things-to-do-in-shimla-himachal-pradesh", distance: "~8 hrs", note: "Overnight bus or an early start." },
     ],
     faqs: [
-      { question: "How can I make friends in Gurgaon?", answer: "Do things with people rather than just chat: join a SyncTrip board-game night, a run in Aravali Biodiversity Park, a turf or pickleball game, or a café meetup at Cyber Hub. Most people come alone, so it's normal to show up without a group." },
+      { question: "How can I make friends in Gurgaon?", answer: "Do things with people rather than just chat: join a SyncTrip board-game night, a run in Aravali Biodiversity Park, a turf or pickleball game, or a café meetup at Cyber Hub. Many people come alone, so it's normal to show up without a group." },
       { question: "What are the best things to do in Gurgaon with friends?", answer: "Trampoline parks on Sohna Road, go-karting in Balola, bowling at Ambience Mall or Cyber Hub, an escape room on Golf Course Road, a board-game café in Sector 51, a night out at Cyber Hub or Sector 29, or a breakfast ride to Damdama Lake." },
       { question: "What can I do in Gurgaon at night?", answer: "Cyber Hub's pubs and live music, Sector 29's bars and clubs, breweries in the Golf Course Road malls, late bowling at SMAAASH or a late turf game." },
       { question: "Is SyncTrip free?", answer: "Joining and creating plans on SyncTrip is free. Some club events, like board-game nights, have a ticket price shown on the event." },

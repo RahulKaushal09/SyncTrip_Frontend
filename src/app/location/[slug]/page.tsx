@@ -3,6 +3,7 @@ import { notFound, permanentRedirect } from 'next/navigation';
 import { Metadata } from 'next';
 import { ApiService } from '@/utils/api.utils';
 import LocationPageDetails from '@/components/PageDetails/LocationPageDetails';
+import GuideLinksStrip, { guideCitiesIn } from '@/components/CityGuide/GuideLinksStrip';
 import { mapPreviousIdsWithNew } from '@/constants/mapPreviousIdsWithNew';
 import { PlacesToVisit } from '@/types';
 import { cache } from 'react';
@@ -280,6 +281,7 @@ export default async function LocationPage({ params }: Props) {
             ))}
             {/* <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} /> */}
             <LocationPageDetails locationData={locationData} uuid={locationData.id} />
+            <GuideLinksStrip citySlugs={guideCitiesIn(slug.replace(/-/g, " "))} />
         </>
     );
 }

@@ -219,7 +219,9 @@ export function AppCtaBand({ cityName }: { cityName: string }) {
     <aside className={styles.ctaBand}>
       <div>
         <h2>Don&apos;t wait for your group chat to agree.</h2>
-        <p>Post what you want to do in {cityName} and people who are free will join. Free on Android and iOS.</p>
+        <p>Post what you want to do in {cityName} and people who are free will join. Free on Android and iOS.{" "}
+          <Link href="/friendship-app" style={{ color: "#fff", textDecoration: "underline" }}>How SyncTrip works</Link>
+        </p>
       </div>
       <div className={styles.storeRow}>
         <a className={styles.btnPrimary} href={APP_LINKS.PLAY_STORE} target="_blank" rel="noopener noreferrer">

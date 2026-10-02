@@ -57,7 +57,7 @@ export function ActivityGuideView({
           feed={feed}
           cityName={city.cityName}
           title={`Happening on SyncTrip in ${city.cityName}`}
-          sub="Club events and open plans you can join. Most people come alone, so you won't be the only new face."
+          sub="Club events and open plans you can join. Many people come alone, so you won't be the only new face."
           emptyTitle={`No ${guide.navLabel.toLowerCase()} plans posted for the next few weeks yet`}
         />
 

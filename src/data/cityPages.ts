@@ -64,7 +64,7 @@ const GURGAON: CityPage = {
   geo: { lat: 28.4595, lng: 77.0266 },
   seoTitle: "Make Friends in Gurgaon – Weekend Plans & Clubs",
   seoDescription:
-    "Find people to do things with in Gurgaon. Join turf games, breakfast rides to Damdama, movie nights and cafe meetups in Cyber Hub, Sector 29 and Golf Course Road.",
+    "Find people to do things with in Gurgaon: turf games, breakfast rides to Damdama, movie nights and cafe meetups in Cyber Hub and Sector 29.",
   keywords: [
     "make friends in gurgaon",
     "things to do in gurgaon",
@@ -208,7 +208,7 @@ const DELHI: CityPage = {
   geo: { lat: 28.6139, lng: 77.209 },
   seoTitle: "Make Friends in Delhi – Weekend Plans & Meetups",
   seoDescription:
-    "Find people to do things with in Delhi. Join weekend meetups, turf games, breakfast rides, movie nights and cafe hangouts from Hauz Khas to Connaught Place.",
+    "Find people to do things with in Delhi: weekend meetups, turf games, breakfast rides, movie nights and cafe hangouts from Hauz Khas to Connaught Place.",
   keywords: [
     "make friends in delhi",
     "things to do in delhi this weekend",
@@ -339,9 +339,9 @@ const NOIDA: CityPage = {
   name: "Noida",
   state: "Uttar Pradesh",
   geo: { lat: 28.5355, lng: 77.391 },
-  seoTitle: "Make Friends in Noida – Weekend Plans & Activities",
+  seoTitle: "Make Friends in Noida – Weekend Plans & Meetups",
   seoDescription:
-    "Find people to do things with in Noida and Greater Noida. Join turf games, weekend rides, movie nights and cafe meetups around Sector 18, Sector 62 and Sector 137.",
+    "Find people to do things with in Noida & Greater Noida: turf games, weekend rides, movie nights and cafe meetups around Sector 18, 62 and 137.",
   keywords: [
     "make friends in noida",
     "things to do in noida",
