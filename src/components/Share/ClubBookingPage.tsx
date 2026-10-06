@@ -395,25 +395,28 @@ export default function ClubBookingPage({ event }: { event: ClubEvent }) {
                   const badge = passBadge(p);
                   return (
                     <article key={p.id} className={`${s.pass} ${qty > 0 ? s.passOn : ""} ${off ? s.passOff : ""}`}>
-                      {p.imageUrl && (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img src={p.imageUrl} alt={p.name} className={s.passImg} />
-                      )}
                       <div className={s.passBody}>
                         <div className={s.passTop}>
-                          <div>
+                          {/* Square photo - opens full size. */}
+                          {p.imageUrl && (
+                            <a href={p.imageFullUrl || p.imageUrl} target="_blank" rel="noopener" className={s.passThumbLink} aria-label={`View photo of ${p.name}`}>
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img src={p.imageUrl} alt={p.name} className={s.passThumb} />
+                            </a>
+                          )}
+                          <div className={s.passInfo}>
                             <h3 className={s.passName}>{p.name}</h3>
                             <div className={s.badges}>
-                              <span className={s.badge}><Users size={12} /> Admits {people(p.admits)}</span>
+                              <span className={s.badge}><Users size={12} /> Entry for {people(p.admits)}</span>
                               {badge && <span className={`${s.badge} ${off ? "" : s.badgeWarn}`}>{badge}</span>}
                             </div>
                           </div>
                           <div className={s.passPrice}>{p.price === 0 ? "Free" : rupees(p.price)}</div>
                         </div>
-                        {p.description && <p className={s.passDesc}>{p.description}</p>}
+                        {p.description && <p className={s.passDesc}><Linkified text={p.description} /></p>}
                         {p.highlights.length > 0 && (
                           <ul className={s.highlights}>
-                            {p.highlights.map((h) => <li key={h}><Check size={14} /> {h}</li>)}
+                            {p.highlights.map((h) => <li key={h}><Check size={14} /> <span><Linkified text={h} /></span></li>)}
                           </ul>
                         )}
                         {!off && (
@@ -613,6 +616,24 @@ export default function ClubBookingPage({ event }: { event: ClubEvent }) {
         </div>
       )}
     </div>
+  );
+}
+
+/** Plain text with http(s) links made clickable (YouTube, Drive…). */
+function Linkified({ text }: { text: string }) {
+  const parts = text.split(/(https?:\/\/[^\s]+)/g);
+  return (
+    <>
+      {parts.map((part, i) =>
+        /^https?:\/\//.test(part) ? (
+          <a key={i} href={part.replace(/[).,!?]+$/, "")} target="_blank" rel="noopener noreferrer nofollow" className={s.inlineLink}>
+            {part}
+          </a>
+        ) : (
+          <React.Fragment key={i}>{part}</React.Fragment>
+        ),
+      )}
+    </>
   );
 }
 

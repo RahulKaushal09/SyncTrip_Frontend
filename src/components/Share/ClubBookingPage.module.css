@@ -143,9 +143,13 @@
 .pass:hover { box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08); }
 .passOn { border-color: var(--primary-1, #3abef5); background: rgba(255, 255, 255, 0.92); box-shadow: 0 10px 30px rgba(58, 190, 245, 0.18); }
 .passOff { opacity: 0.55; }
-.passImg { width: 100%; aspect-ratio: 16 / 7; object-fit: cover; display: block; }
+.passThumbLink { flex-shrink: 0; display: block; border-radius: 14px; overflow: hidden; }
+.passThumb { width: 84px; height: 84px; object-fit: cover; display: block; transition: transform 0.15s ease; }
+.passThumbLink:hover .passThumb { transform: scale(1.05); }
+.passInfo { flex: 1; min-width: 0; }
+.inlineLink { color: var(--primary-hover, #007eb2); font-weight: 600; word-break: break-all; }
 .passBody { padding: 1rem 1.1rem 1.05rem; }
-.passTop { display: flex; justify-content: space-between; gap: 1rem; align-items: flex-start; }
+.passTop { display: flex; justify-content: space-between; gap: 0.9rem; align-items: flex-start; }
 .passName { font-size: 1.05rem; font-weight: 800; margin: 0; }
 .passPrice { font-size: 1.3rem; font-weight: 800; letter-spacing: -0.02em; white-space: nowrap; }
 .passDesc { font-size: 0.9rem; color: #475569; line-height: 1.5; margin: 0.6rem 0 0; }

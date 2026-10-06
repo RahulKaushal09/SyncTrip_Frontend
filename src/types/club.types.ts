@@ -89,6 +89,8 @@ export type EventPass = {
   /** People it admits - a Couple pass is 2. */
   admits: number;
   imageUrl: string | null;
+  /** Larger copy to open full size. */
+  imageFullUrl?: string | null;
   maxPerBooking: number | null;
   salesEndAt: string | null;
   remaining: number | null;

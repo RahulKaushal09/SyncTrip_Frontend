@@ -205,6 +205,7 @@ function toPublicClubEvent(raw: Raw | null | undefined): ClubEvent | null {
           price: num(p.price) ?? 0,
           admits: num(p.admits) ?? 1,
           imageUrl: str(p.imageUrl) ?? null,
+          imageFullUrl: str(p.imageFullUrl) ?? null,
           maxPerBooking: num(p.maxPerBooking) ?? null,
           salesEndAt: str(p.salesEndAt) ?? null,
           remaining: num(p.remaining) ?? null,
