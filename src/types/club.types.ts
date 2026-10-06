@@ -79,6 +79,34 @@ export type ClubEventVenue = {
   location?: GeoPoint | null;
 };
 
+/** A ticket type on a pass event: "Couple (M+F)", "Racer entry"… */
+export type EventPass = {
+  id: string;
+  name: string;
+  description: string | null;
+  highlights: string[];
+  price: number;
+  /** People it admits - a Couple pass is 2. */
+  admits: number;
+  imageUrl: string | null;
+  maxPerBooking: number | null;
+  salesEndAt: string | null;
+  remaining: number | null;
+  state: "on_sale" | "sold_out" | "ended" | "unavailable";
+};
+
+export type EventQuestionType = "short_text" | "long_text" | "single_choice" | "multi_choice" | "yes_no" | "number";
+
+export type EventQuestion = {
+  id: string;
+  label: string;
+  helpText: string | null;
+  type: EventQuestionType;
+  options: string[];
+  required: boolean;
+  passIds: string[];
+};
+
 export type ClubEvent = {
   id: string;
   clubId: string;
@@ -127,6 +155,12 @@ export type ClubEvent = {
   hosts?: { name: string; role?: string | null; avatarUrl?: string | null }[];
   /** Headcount only - no faces or names on a public page. */
   totalAttendees?: number;
+  /** Pass events: ticket types. null/absent = one price per seat. */
+  passes?: EventPass[] | null;
+  /** Asked before booking (pass events). */
+  questions?: EventQuestion[];
+  /** Ask each person's name. */
+  collectAttendeeNames?: boolean;
 };
 
 export type TicketTier = {

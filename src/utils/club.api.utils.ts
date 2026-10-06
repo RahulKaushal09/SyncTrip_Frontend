@@ -194,6 +194,37 @@ function toPublicClubEvent(raw: Raw | null | undefined): ClubEvent | null {
       : null,
     tierInfo: pickTierInfo(raw.pricing?.tierInfo),
     refundPolicyLines: strList(raw.refundPolicyLines),
+    passes: Array.isArray(raw.passes) && raw.passes.length
+      ? raw.passes
+        .filter((p: Raw) => typeof p?.id === "string" && typeof p?.name === "string")
+        .map((p: Raw) => ({
+          id: p.id as string,
+          name: p.name as string,
+          description: str(p.description) ?? null,
+          highlights: strList(p.highlights),
+          price: num(p.price) ?? 0,
+          admits: num(p.admits) ?? 1,
+          imageUrl: str(p.imageUrl) ?? null,
+          maxPerBooking: num(p.maxPerBooking) ?? null,
+          salesEndAt: str(p.salesEndAt) ?? null,
+          remaining: num(p.remaining) ?? null,
+          state: (["on_sale", "sold_out", "ended", "unavailable"].includes(p.state) ? p.state : "on_sale") as "on_sale" | "sold_out" | "ended" | "unavailable",
+        }))
+      : null,
+    questions: Array.isArray(raw.questions)
+      ? raw.questions
+        .filter((q: Raw) => typeof q?.id === "string" && typeof q?.label === "string")
+        .map((q: Raw) => ({
+          id: q.id as string,
+          label: q.label as string,
+          helpText: str(q.helpText) ?? null,
+          type: q.type,
+          options: strList(q.options),
+          required: q.required !== false,
+          passIds: strList(q.passIds),
+        }))
+      : [],
+    collectAttendeeNames: !!raw.collectAttendeeNames,
     // Identity only. `whatsapp` and `userId` are dropped here on purpose.
     hosts: Array.isArray(raw.hosts)
       ? raw.hosts

@@ -65,9 +65,12 @@ type Props = {
 
 export default function ClubTicketCard({ event, bookable, soldOut, closedLabel, appHref, onBook }: Props) {
   const isFree = !!event.pricing?.isFree;
-  const tier = event.tierInfo;
+  const passes = event.passes?.length ? event.passes : null;
+  const tier = passes ? null : event.tierInfo;
   const cur = tier?.current;
-  const price = cur?.price ?? event.pricing?.ticketPrice ?? 0;
+  const onSale = (passes ?? []).filter((p) => p.state === "on_sale").map((p) => p.price);
+  const passFrom = passes ? Math.min(...(onSale.length ? onSale : passes.map((p) => p.price))) : null;
+  const price = passFrom ?? cur?.price ?? event.pricing?.ticketPrice ?? 0;
   const capacity = event.capacity || 0;
   const seatsLeft = Math.max(0, event.seatsLeft ?? 0);
   const filledPct = capacity > 0 ? Math.min(100, Math.round(((capacity - seatsLeft) / capacity) * 100)) : 0;
@@ -76,10 +79,11 @@ export default function ClubTicketCard({ event, bookable, soldOut, closedLabel, 
   return (
     <div className={styles.ticket}>
       <div className={styles.ticketHead}>
-        <span className={styles.tierPill}>{isFree ? "Free entry" : cur ? cur.label : "Ticket"}</span>
+        <span className={styles.tierPill}>{passes ? `${passes.length} ticket type${passes.length === 1 ? "" : "s"}` : isFree ? "Free entry" : cur ? cur.label : "Ticket"}</span>
         <div className={styles.priceRow}>
+          {passes && !isFree && <span className={styles.priceLabel}>from</span>}
           <span className={styles.price}>{isFree ? "Free" : rupees(price)}</span>
-          {!isFree && <span className={styles.priceLabel}>per person</span>}
+          {!isFree && !passes && <span className={styles.priceLabel}>per person</span>}
           {cur?.nextPrice && cur.nextPrice > price && (
             <span className={styles.nextPrice}>
               then {rupees(cur.nextPrice)}{cur.nextLabel ? ` (${cur.nextLabel})` : ""}
@@ -134,9 +138,26 @@ export default function ClubTicketCard({ event, bookable, soldOut, closedLabel, 
           </div>
         )}
 
+        {passes && (
+          <div className={styles.ladder}>
+            {passes.map((p) => (
+              <div key={p.id} className={`${styles.ladderRow} ${p.state !== "on_sale" ? styles.ladderEnded : ""}`}>
+                <div>
+                  <span className={styles.ladderName}>{p.name}</span>
+                  <span className={styles.ladderMeta}>
+                    Admits {p.admits === 1 ? "1 person" : `${p.admits} people`}
+                    {p.state === "sold_out" ? " · Sold out" : p.state === "ended" ? " · Sales ended" : p.remaining != null && p.remaining <= 5 ? ` · Only ${p.remaining} left` : ""}
+                  </span>
+                </div>
+                <span className={`${styles.ladderPrice} ${p.state !== "on_sale" ? styles.struck : ""}`}>{p.price === 0 ? "Free" : rupees(p.price)}</span>
+              </div>
+            ))}
+          </div>
+        )}
+
         {bookable ? (
           <button type="button" className={`${styles.primaryBtn} ${styles.cardBookBtn}`} onClick={onBook}>
-            {isFree ? "Reserve your spot" : `Book now · ${rupees(price)}`}
+            {passes ? "Choose tickets" : isFree ? "Reserve your spot" : `Book now · ${rupees(price)}`}
           </button>
         ) : (
           <button type="button" className={styles.primaryBtn} disabled>

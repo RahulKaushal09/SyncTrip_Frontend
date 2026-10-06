@@ -22,6 +22,26 @@ export type CheckoutQuote = {
   seatsLeft: number;
 };
 
+export type PassCartItem = { passId: string; quantity: number };
+export type PassAnswer = { questionId: string; value: string | number | boolean | string[] };
+
+/** Pass events: price of a cart, and the questions that apply to it. */
+export type PassQuote = {
+  lines: { passId: string; name: string; price: number; admits: number; quantity: number; lineTotal: number }[];
+  summary: string;
+  seats: number;
+  maxPeople: number;
+  currency: string;
+  subtotal: number;
+  isFree: boolean;
+  platformFee: number;
+  amountPayable: number;
+  memberDiscountPercent?: number;
+  seatsLeft: number;
+  questions: import("@/types").EventQuestion[];
+  collectAttendeeNames: boolean;
+};
+
 export type CheckoutOrder = {
   bookingId: string;
   orderId: string;
@@ -65,6 +85,15 @@ export async function getQuote(eventId: string, seats: number): Promise<Checkout
   }
 }
 
+export async function getPassQuote(eventId: string, items: PassCartItem[]): Promise<PassQuote> {
+  try {
+    const r = await http.post<PassQuote>(`/web-checkout/club-events/${encodeURIComponent(eventId)}/quote-passes`, { items });
+    return r.data;
+  } catch (e) {
+    throw toError(e);
+  }
+}
+
 export async function sendOtp(phone: string): Promise<void> {
   try {
     await http.post("/web-checkout/otp/send", { phone });
@@ -74,7 +103,11 @@ export async function sendOtp(phone: string): Promise<void> {
 }
 
 export async function book(eventId: string, body: {
-  phone: string; otp: string; name: string; gender: string; seats: number; attribution: WebAttribution;
+  phone: string; otp: string; name: string; gender: string; seats?: number; attribution: WebAttribution;
+  /** Pass events. */
+  items?: PassCartItem[];
+  answers?: PassAnswer[];
+  attendeeNames?: string[];
 }): Promise<BookResult> {
   try {
     const r = await http.post<BookResult>(`/web-checkout/club-events/${encodeURIComponent(eventId)}/book`, body);

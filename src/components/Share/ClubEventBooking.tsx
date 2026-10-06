@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import type { ClubEvent } from "@/types";
 import { APP_LINKS } from "@/constants/config";
 import { appOpenUrl } from "@/utils/appDeepLink";
 import { captureWebAttribution } from "@/utils/webAttribution";
 import { trackViewContent } from "@/utils/adTracking";
 import ClubTicketCard from "./ClubTicketCard";
-import ClubCheckoutSheet from "./ClubCheckoutSheet";
 import styles from "./ClubBooking.module.css";
 
 /**
@@ -20,8 +20,17 @@ import styles from "./ClubBooking.module.css";
  * the app is a plain link.
  */
 export default function ClubEventBooking({ event }: { event: ClubEvent }) {
-  const [open, setOpen] = useState(false);
+  const router = useRouter();
   const [appHref, setAppHref] = useState<string>(APP_LINKS.PLAY_STORE);
+  // Booking is its own page now (tickets, questions, details, payment).
+  const bookHref = `/share/club-event/${event.id}/book`;
+  const openBooking = () => router.push(bookHref);
+  const passes = event.passes ?? null;
+  // Pass events: the cheapest pass on sale ("from ₹500").
+  const onSalePrices = (passes ?? []).filter((p) => p.state === "on_sale").map((p) => p.price);
+  const fromPrice = passes?.length
+    ? Math.min(...(onSalePrices.length ? onSalePrices : passes.map((p) => p.price)))
+    : null;
 
   const isCancelled = event.status === "cancelled";
   const startMs = new Date(event.startsAt).getTime();
@@ -30,7 +39,7 @@ export default function ClubEventBooking({ event }: { event: ClubEvent }) {
   const bookable = !isCancelled && !started && !soldOut && (event.status === "published");
   const closedLabel = isCancelled ? "Event cancelled" : started ? "Booking closed" : event.status !== "published" && !soldOut ? "Not open for booking" : null;
 
-  const price = event.tierInfo?.current?.price ?? event.pricing?.ticketPrice ?? 0;
+  const price = fromPrice ?? event.tierInfo?.current?.price ?? event.pricing?.ticketPrice ?? 0;
 
   useEffect(() => {
     captureWebAttribution();
@@ -47,14 +56,16 @@ export default function ClubEventBooking({ event }: { event: ClubEvent }) {
         soldOut={soldOut}
         closedLabel={closedLabel}
         appHref={appHref}
-        onBook={() => setOpen(true)}
+        onBook={openBooking}
       />
 
-      {bookable && !open && (
+      {bookable && (
         <div className={styles.mobileBar}>
           <div className={styles.mobilePrice}>
             <span className={styles.mobilePriceValue}>
-              {event.pricing?.isFree ? "Free" : `₹${Math.round(price).toLocaleString("en-IN")}`}
+              {passes?.length
+                ? (price === 0 && event.pricing?.isFree ? "Free" : `from ₹${Math.round(price).toLocaleString("en-IN")}`)
+                : event.pricing?.isFree ? "Free" : `₹${Math.round(price).toLocaleString("en-IN")}`}
             </span>
             {event.tierInfo?.current && !event.pricing?.isFree ? (
               <span className={styles.mobilePriceNote}>{event.tierInfo.current.label}</span>
@@ -62,13 +73,12 @@ export default function ClubEventBooking({ event }: { event: ClubEvent }) {
               <span className={styles.mobilePriceNote}>Filling fast</span>
             ) : null}
           </div>
-          <button type="button" className={styles.primaryBtn} onClick={() => setOpen(true)}>
-            {event.pricing?.isFree ? "Reserve spot" : "Book now"}
+          <button type="button" className={styles.primaryBtn} onClick={openBooking}>
+            {passes?.length ? "Choose tickets" : event.pricing?.isFree ? "Reserve spot" : "Book now"}
           </button>
         </div>
       )}
 
-      {open && <ClubCheckoutSheet event={event} onClose={() => setOpen(false)} />}
     </>
   );
 }
