@@ -151,14 +151,15 @@ export default function ClubBookingPage({ event }: { event: ClubEvent }) {
   }, [event.id, usesPasses, items, seats, classicFree]);
 
   const questions: EventQuestion[] = useMemo(() => {
-    if (!usesPasses) return [];
+    // One-price events ask the club's questions too.
+    if (!usesPasses) return event.questions ?? [];
     if (passQuote) return passQuote.questions;
     const ids = items.map((i) => i.passId);
     return (event.questions ?? []).filter((q) => !q.passIds.length || q.passIds.some((id) => ids.includes(id)));
   }, [usesPasses, passQuote, event.questions, items]);
 
-  const askNames = usesPasses && !!event.collectAttendeeNames;
-  const nameCount = usesPasses ? (passQuote?.seats ?? cartPeople) : 0;
+  const askNames = !!event.collectAttendeeNames;
+  const nameCount = usesPasses ? (passQuote?.seats ?? cartPeople) : seats;
   useEffect(() => {
     if (!askNames) return;
     setNames((prev) => Array.from({ length: nameCount }, (_, i) => prev[i] ?? (i === 0 ? name : "")));
@@ -263,13 +264,9 @@ export default function ClubBookingPage({ event }: { event: ClubEvent }) {
     try {
       const res = await book(event.id, {
         phone: phoneDigits, otp, name: name.trim(), gender: gender as string, attribution: getWebAttribution(),
-        ...(usesPasses
-          ? {
-            items,
-            answers: questions.filter((q) => answered(q, answers[q.id])).map((q) => ({ questionId: q.id, value: answers[q.id] as string })),
-            ...(askNames ? { attendeeNames: names.map((n) => n.trim()) } : {}),
-          }
-          : { seats }),
+        answers: questions.filter((q) => answered(q, answers[q.id])).map((q) => ({ questionId: q.id, value: answers[q.id] as string })),
+        ...(askNames ? { attendeeNames: names.map((n) => n.trim()) } : {}),
+        ...(usesPasses ? { items } : { seats }),
       });
       if (res.free) {
         trackPurchase({ bookingId: "", eventId: event.id, value: 0, seats: res.seats, free: true });
