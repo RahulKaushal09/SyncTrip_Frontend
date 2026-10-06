@@ -75,6 +75,7 @@ export default function ClubTicketCard({ event, bookable, soldOut, closedLabel, 
   const seatsLeft = Math.max(0, event.seatsLeft ?? 0);
   const filledPct = capacity > 0 ? Math.min(100, Math.round(((capacity - seatsLeft) / capacity) * 100)) : 0;
   const hot = capacity > 0 && seatsLeft > 0 && seatsLeft / capacity <= 0.2;
+  const going = event.totalAttendees ?? 0;
 
   return (
     <div className={styles.ticket}>
@@ -104,17 +105,21 @@ export default function ClubTicketCard({ event, bookable, soldOut, closedLabel, 
       </div>
 
       <div className={styles.ticketBody}>
-        {capacity > 0 && (
+        {/* No empty-room counts: "200 of 200 left" / "0 going" scares people off.
+            Only urgency (sold out, last 20%) and real social proof (5+ going). */}
+        {capacity > 0 && (soldOut || hot || going >= 5) && (
           <div>
             <div className={styles.seatsHead}>
               <span className={hot || soldOut ? styles.seatsHot : undefined}>
-                {soldOut ? "Sold out" : hot ? `Only ${seatsLeft} seats left` : `${seatsLeft} of ${capacity} seats left`}
+                {soldOut ? "Sold out" : hot ? `Only ${seatsLeft} seat${seatsLeft === 1 ? "" : "s"} left` : ""}
               </span>
-              {(event.totalAttendees ?? 0) > 0 && <span>{event.totalAttendees} going</span>}
+              {going >= 5 && <span>{going} going</span>}
             </div>
-            <div className={styles.seatsBar}>
-              <div className={styles.seatsFill} style={{ width: `${filledPct}%` }} />
-            </div>
+            {(soldOut || hot) && (
+              <div className={styles.seatsBar}>
+                <div className={styles.seatsFill} style={{ width: `${filledPct}%` }} />
+              </div>
+            )}
           </div>
         )}
 
