@@ -40,6 +40,8 @@ export type GuideEvent = {
   skillLevel: string;
   isFree: boolean;
   price: number;
+  /** Missing on older API responses. */
+  capacity?: number;
   seatsLeft: number;
   soldOut: boolean;
   image: string | null;
