@@ -69,7 +69,7 @@ const VIBES = [
   { title: "Board games & gaming", img: "/city-guides/friendship-game-night.jpg", accent: "#2785E7", slug: "gaming-board-games" },
   { title: "Pickleball & badminton", img: "/city-guides/activity-pickleball.jpg", accent: "#059669", slug: "pickleball-badminton" },
   { title: "Turf & box cricket", img: "/city-guides/chandigarh-box-cricket.jpg", accent: "#16A34A", slug: "turf-football-cricket" },
-  { title: "Cafés to meet people", img: "/city-guides/activity-cafe-friends.jpg", accent: "#B45309", slug: "cafes-to-meet-people" },
+  { title: "Cafés to meet people", img: "/city-guides/activity-cafe-meetup.webp", accent: "#B45309", slug: "cafes-to-meet-people" },
   { title: "Nightlife", img: "/city-guides/chandigarh-nightlife.jpg", accent: "#7C3AED", slug: "nightlife" },
   { title: "Trampoline, karting & bowling", img: "/city-guides/activity-fun-hopup.jpg", accent: "#F3359E", slug: "fun-activities" },
   { title: "Pottery & workshops", img: "/city-guides/workshops-pottery.jpg", accent: "#EA580C", slug: "workshops" },
