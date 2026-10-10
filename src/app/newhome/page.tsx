@@ -1,15 +1,21 @@
 import type React from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { CalendarCheck, Coins, Smartphone, Star, Ticket } from "lucide-react";
+import { Plus_Jakarta_Sans } from "next/font/google";
+import {
+  ArrowRight, Check, Compass, Image as ImageIcon, ListChecks, Map, MapPin, MessageCircle, Mic, Mountain, QrCode,
+  ShieldCheck, Smartphone, Star, Ticket, Users, Wallet,
+} from "lucide-react";
 import { CITY_GUIDES } from "@/data/cityGuides";
 import { getAllGuideVenues, getCityFeed, type GuideFeed, type GuideVenue } from "@/lib/cityGuideApi";
 import { appStoreUrl, playStoreUrl } from "@/lib/storeLinks";
 import styles from "@/components/HomeV3/HomeV3.module.css";
 
 /**
- * /newhome: candidate homepage (clean, tripbff-style). Hidden from Google while it is
- * reviewed (noindex + canonical to /); swap it into / when approved.
+ * /newhome: candidate homepage. Shows everything SyncTrip does (plans, club events,
+ * group trips, SyncMap, chats, SyncTrust, rewards), one clear section each, with real
+ * app screens. Hidden from Google while it is reviewed (noindex + canonical to /);
+ * swap it into / when approved.
  *
  * Keyword job (Keyword Planner India, Oct 2026): brand + make friends / meet new
  * people / meetups near you ("meetup groups" 18.1k, "friends near me" 2.9k, "social
@@ -19,9 +25,12 @@ import styles from "@/components/HomeV3/HomeV3.module.css";
 
 export const revalidate = 600;
 
+// Bold display face for headings, closer to the app than the site-wide serif.
+const display = Plus_Jakarta_Sans({ subsets: ["latin"], weight: ["800"], variable: "--font-home-display", display: "swap" });
+
 const TITLE = "SyncTrip: Make Friends & Meetups Near You";
 const DESCRIPTION =
-  "Make real friends offline. Join game nights, sports, café meetups, nights out and weekend trips with people near you in Gurgaon, Delhi NCR and Chandigarh.";
+  "Meet new people through real plans near you: sports, game nights, movies, rides, club events and weekend trips. Free app for Gurgaon, Delhi NCR and Chandigarh.";
 
 export const metadata: Metadata = {
   title: { absolute: TITLE },
@@ -34,14 +43,26 @@ export const metadata: Metadata = {
 const TRACK = { campaign: "home_v3", term: "home" };
 
 const IDEAS = [
-  { kind: "Idea", title: "Need 3 for badminton at 7", meta: "Sports plan" },
-  { kind: "Idea", title: "Sunday brunch, anyone?", meta: "Café meetup" },
-  { kind: "Idea", title: "Board-game night this Friday", meta: "Club event" },
-  { kind: "Idea", title: "Night out in Cyber Hub", meta: "Nightlife" },
-  { kind: "Idea", title: "Breakfast ride to Damdama", meta: "Ride plan" },
-  { kind: "Idea", title: "5-a-side, short of 2 players", meta: "Turf game" },
-  { kind: "Idea", title: "Pottery class, first timers", meta: "Workshop" },
-  { kind: "Idea", title: "Weekend trip to Kasauli", meta: "Group trip" },
+  { title: "Need 3 for badminton at 7", meta: "Sports plan" },
+  { title: "Sunday brunch, anyone?", meta: "Hangout" },
+  { title: "Board-game night this Friday", meta: "Club event" },
+  { title: "Breakfast ride to Damdama", meta: "Ride" },
+  { title: "5-a-side, short of 2 players", meta: "Sports plan" },
+  { title: "First-day-first-show, who's in?", meta: "Movie plan" },
+  { title: "Weekend trip to Kasauli", meta: "Group trip" },
+  { title: "Pottery class, first timers", meta: "Club event" },
+];
+
+/** The overview grid: one tile per thing SyncTrip does, each jumping to its section. */
+const FEATURES = [
+  { id: "plans", icon: Users, title: "Plans", text: "Join or post sports, movies, rides and hangouts." },
+  { id: "clubs", icon: Ticket, title: "Club events", text: "Game nights, open mics and socials by verified clubs." },
+  { id: "trips", icon: Mountain, title: "Group trips", text: "Weekend getaways with people going your way." },
+  { id: "syncmap", icon: Map, title: "SyncMap", text: "See plans and events around you on a map." },
+  { id: "chats", icon: MessageCircle, title: "Chats & communities", text: "Group chats for every plan, open chats for your city." },
+  { id: "synctrust", icon: ShieldCheck, title: "SyncTrust", text: "Scan to confirm you met. Reviews from real meetups." },
+  { id: "rewards", icon: Wallet, title: "Rewards", text: "Earn wallet credit for going out and meeting people." },
+  { id: "guides", icon: Compass, title: "City guides", text: "The best places to go with friends in your city." },
 ];
 
 const VIBES = [
@@ -63,11 +84,14 @@ const CITIES = [
 ];
 
 const FAQS = [
-  { q: "What is SyncTrip?", a: "SyncTrip is a free app for making real friends offline. You join or post plans (board-game nights, sports, café meetups, nights out, rides and weekend trips) with people near you, chat in the group, and meet at the venue." },
+  { q: "What is SyncTrip?", a: "SyncTrip is a free app for meeting new people through real plans. Join or post plans (sports, movies, bike rides, hangouts and weekend trips), book club events like board-game nights and open mics, chat with the group, and meet at the venue." },
   { q: "How do I make new friends in a new city?", a: "Do things with people regularly: a weekly game night, a sports group or a running club. On SyncTrip you can join those plans from day one, even if you don't know anyone yet. Many people join alone." },
   { q: "Is SyncTrip a dating app?", a: "No. SyncTrip is for friendships and plans. You join because of the activity, usually in a group, at a real venue." },
+  { q: "Is it safe to meet people from SyncTrip?", a: "Plans happen in groups at public venues. When you meet, you scan each other's SyncTrust QR, so reviews only come from people who actually met you. SyncMap shows approximate locations only, and if something felt off you can report it privately to our safety team." },
+  { q: "How do SyncTrip rewards work?", a: "You earn wallet credit for real meetups: ₹5 for each new person you meet and scan at a plan, up to ₹25 for reviewing a club event, and ₹20 when 3 people show up to a plan you host. Use it on club event tickets and SyncTrip Plus. Credit isn't cash, lasts 20 days, and is capped at ₹150 a month." },
   { q: "Which cities is SyncTrip in?", a: "SyncTrip is active in Gurgaon, Delhi NCR, Chandigarh (with Mohali, Panchkula and Zirakpur) and Bangalore, with more cities coming." },
-  { q: "Is SyncTrip free?", a: "Yes. Downloading the app and joining or creating plans is free. Some hosted club events are ticketed, and you can earn wallet credit for reviewing events you attend." },
+  { q: "Is SyncTrip free?", a: "Yes. Downloading the app and joining or creating plans is free. Some club events are ticketed, and the club sets the price." },
+  { q: "I run a club or host events. Can I list them?", a: "Yes. Verified clubs can publish events, sell tickets and keep a community chat for their members in the SyncTrip app. Get in touch through the Contact page and we'll help you get verified." },
 ];
 
 const IST = "Asia/Kolkata";
@@ -84,6 +108,7 @@ function jsonLd() {
         name: "SyncTrip: Meet People & Plans",
         operatingSystem: "Android, iOS",
         applicationCategory: "SocialNetworkingApplication",
+        featureList: FEATURES.map((f) => f.title).join(", "),
         offers: { "@type": "Offer", price: 0, priceCurrency: "INR" },
         publisher: { "@id": "https://synctrip.in/#org" },
       },
@@ -92,9 +117,9 @@ function jsonLd() {
   };
 }
 
-function StoreButtons({ content }: { content: string }) {
+function StoreButtons({ content, light }: { content: string; light?: boolean }) {
   return (
-    <div className={styles.storeRow}>
+    <div className={`${styles.storeRow} ${light ? styles.storeLight : ""}`}>
       <a className={styles.storeBtn} href={appStoreUrl({ ...TRACK, content })} target="_blank" rel="noopener noreferrer">
         <Smartphone size={22} aria-hidden />
         <span><small>Download on the</small><b>App Store</b></span>
@@ -107,6 +132,57 @@ function StoreButtons({ content }: { content: string }) {
   );
 }
 
+/** A phone with a real app screen. */
+function Phone({ src, alt, children, eager }: { src: string; alt: string; children?: React.ReactNode; eager?: boolean }) {
+  return (
+    <div className={styles.phoneStage}>
+      <div className={styles.phone}>
+        {/* eslint-disable-next-line @next/next/no-img-element -- static, pre-compressed screenshot */}
+        <img src={src} alt={alt} width={640} height={1387} loading={eager ? "eager" : "lazy"} fetchPriority={eager ? "high" : undefined} />
+      </div>
+      {children}
+    </div>
+  );
+}
+
+/** One feature section: copy on one side, the app on the other. */
+function Feature({
+  id, eyebrow, title, lead, points, links, visual, flip, tint,
+}: {
+  id: string;
+  eyebrow: string;
+  title: string;
+  lead: string;
+  points: string[];
+  links?: { href: string; label: string }[];
+  visual: React.ReactNode;
+  flip?: boolean;
+  tint: string;
+}) {
+  return (
+    <section id={id} className={`${styles.feature} ${flip ? styles.flip : ""}`} style={{ ["--tint" as string]: tint } as React.CSSProperties} aria-labelledby={`${id}-h`}>
+      <div className={styles.featureCopy}>
+        <span className={styles.eyebrow}>{eyebrow}</span>
+        <h2 id={`${id}-h`} className={styles.h2}>{title}</h2>
+        <p className={styles.lead}>{lead}</p>
+        <ul className={styles.points}>
+          {points.map((p) => (
+            <li key={p}><Check size={18} aria-hidden /> <span>{p}</span></li>
+          ))}
+        </ul>
+        {links && (
+          <div className={styles.featureLinks}>
+            {links.map((l) => (
+              <Link key={l.href} href={l.href} className={styles.textLink}>{l.label} <ArrowRight size={15} aria-hidden /></Link>
+            ))}
+          </div>
+        )}
+      </div>
+      <div className={styles.featureVisual}>{visual}</div>
+    </section>
+  );
+}
+
 export default async function NewHomePage() {
   const citySlugs = CITY_GUIDES.map((c) => c.citySlug);
   const [feeds, venues] = await Promise.all([
@@ -115,12 +191,12 @@ export default async function NewHomePage() {
   ]);
   const feed: GuideFeed = { events: feeds.flatMap((f) => f.events), plans: feeds.flatMap((f) => f.plans) };
 
-  // Real plans first (marked Live), then generic ideas so the strip is never empty.
+  // Real plans first (marked live), then generic ideas so the strip is never empty.
   const live = [
-    ...feed.events.map((e) => ({ kind: "Live", title: e.title, meta: `${day(e.startsAt)} · ${e.venueName || e.locality}`, href: e.url })),
-    ...feed.plans.map((p) => ({ kind: "Live", title: p.title, meta: `${day(p.date)}${p.venueName ? ` · ${p.venueName}` : ""}`, href: p.url })),
+    ...feed.events.map((e) => ({ live: true, title: e.title, meta: `${day(e.startsAt)} · ${e.venueName || e.locality}`, href: e.url as string | undefined })),
+    ...feed.plans.map((p) => ({ live: true, title: p.title, meta: `${day(p.date)}${p.venueName ? ` · ${p.venueName}` : ""}`, href: p.url as string | undefined })),
   ];
-  const strip = [...live, ...IDEAS.map((i) => ({ ...i, href: undefined as string | undefined }))].slice(0, 12);
+  const strip = [...live, ...IDEAS.map((i) => ({ ...i, live: false, href: undefined as string | undefined }))].slice(0, 12);
 
   // Popular places: hosted/featured first, then a spread across both cities.
   const rank = (v: GuideVenue) => (v.featured ? 4 : 0) + (v.syncTripHosted ? 2 : 0) + (v.photos.length ? 1 : 0);
@@ -131,44 +207,38 @@ export default async function NewHomePage() {
     .slice(0, 8);
 
   return (
-    <div className={styles.page}>
+    <div className={`${styles.page} ${display.variable}`}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd()) }} />
 
       {/* ---------- Hero ---------- */}
       <header className={styles.hero}>
-        {/* eslint-disable @next/next/no-img-element -- static, pre-compressed assets */}
-        <figure className={`${styles.polaroid} ${styles.p1}`}><img src="/city-guides/friendship-game-night.jpg" alt="" /><span>game night</span></figure>
-        <figure className={`${styles.polaroid} ${styles.p2}`}><img src="/city-guides/chandigarh-box-cricket.jpg" alt="" /><span>box cricket</span></figure>
-        <figure className={`${styles.polaroid} ${styles.p3}`}><img src="/city-guides/workshops-pottery.jpg" alt="" /><span>pottery</span></figure>
-        <figure className={`${styles.polaroid} ${styles.p4}`}><img src="/city-guides/chandigarh-gaming-theory.jpg" alt="" /><span>gaming</span></figure>
-        {/* eslint-enable @next/next/no-img-element */}
-
-        <div className={styles.wrap}>
-          <span className={styles.pill}><span className={styles.liveDot} /> Plans happening near you this week</span>
-          <h1 className={styles.h1}>
-            Make real friends,{" "}
-            <span className={styles.circled}>
-              offline.
-              <svg viewBox="0 0 200 80" preserveAspectRatio="none" aria-hidden>
-                <path d="M10 44 C 12 12, 186 6, 192 38 C 198 70, 30 78, 14 52" fill="none" stroke="#4bbef5" strokeWidth="3" strokeLinecap="round" />
-              </svg>
-            </span>
-          </h1>
-          <p className={styles.heroSub}>
-            Join game nights, sports, café meetups, nights out and weekend trips with people near you. Not dating. No awkward
-            one-on-ones. Just plans, and people to do them with.
-          </p>
-          <div className={styles.trustRow}>
-            <span className={styles.trust}><span className={styles.stars}>★★★★★</span> 4.8 on Google Play</span>
-            <span className={styles.trust}><Star size={14} aria-hidden /> Free on Android &amp; iOS</span>
+        <div className={`${styles.wrap} ${styles.heroGrid}`}>
+          <div className={styles.heroCopy}>
+            <span className={styles.pill}><span className={styles.liveDot} /> Plans happening near you this week</span>
+            <h1 className={styles.h1}>
+              Make friends near you. Do <span className={styles.grad}>real plans</span> together.
+            </h1>
+            <p className={styles.heroSub}>
+              SyncTrip is the free app for meeting new people through plans in your city: sports, movies, bike rides, hangouts,
+              club events and weekend trips. Join one or post your own, chat with the group, and meet for real.
+            </p>
+            <StoreButtons content="hero" />
+            <div className={styles.trustRow}>
+              <span className={styles.trust}><span className={styles.stars}>★★★★★</span> 4.8 on Google Play</span>
+              <span className={styles.trust}><Star size={14} aria-hidden /> Free · Not a dating app</span>
+            </div>
           </div>
-          <StoreButtons content="hero" />
-          <nav className={styles.cityRow} aria-label="Cities">
-            Plans in
-            {CITIES.map((c) => (
-              <Link key={c.name} href={c.href} className={styles.cityLink}>{c.name}</Link>
-            ))}
-          </nav>
+
+          <Phone src="/home/app-home.webp" alt="SyncTrip app home screen with trips, rides, movies, hangouts, sports and open chat" eager>
+            <div className={`${styles.float} ${styles.fA}`}>
+              <span className={styles.floatIcon} style={{ background: "#10b981" }}><QrCode size={16} aria-hidden /></span>
+              <span><b>+₹5 · You met Rahul</b><small>Scanned at Sunday Smash Social</small></span>
+            </div>
+            <div className={`${styles.float} ${styles.fB}`}>
+              <span className={styles.floatIcon} style={{ background: "#2785e7" }}><Users size={16} aria-hidden /></span>
+              <span><b>Badminton · 3/6 joined</b><small>Thu, 8 Oct · Evening</small></span>
+            </div>
+          </Phone>
         </div>
 
         {/* ---------- What people are planning ---------- */}
@@ -177,9 +247,7 @@ export default async function NewHomePage() {
             {[...strip, ...strip].map((p, i) => {
               const body = (
                 <>
-                  <span className={styles.planTop}>
-                    <span className={`${styles.planTag} ${p.kind === "Live" ? styles.planTagLive : ""}`}>{p.kind === "Live" ? "● On SyncTrip" : "Plan idea"}</span>
-                  </span>
+                  <span className={`${styles.planTag} ${p.live ? styles.planTagLive : ""}`}>{p.live ? "● On SyncTrip" : "Plan idea"}</span>
                   <span className={styles.planTitle}>{p.title}</span>
                   <span className={styles.planMeta}>{p.meta}</span>
                 </>
@@ -196,23 +264,195 @@ export default async function NewHomePage() {
       </header>
 
       <main className={styles.wrap}>
-        {/* ---------- How it works ---------- */}
-        <section className={`${styles.section} ${styles.center}`} aria-labelledby="how">
-          <span className={styles.eyebrow}>How it works</span>
-          <h2 id="how" className={styles.h2}>Meet new people by doing things together</h2>
-          <p className={styles.lead}>Making friends as an adult is hard because nobody plans anything. SyncTrip fixes the planning part.</p>
-          <div className={styles.steps}>
-            <div className={styles.step}><span className={styles.stepNum}>01</span><h3>Pick something to do</h3><p>Board games, badminton, a café, a night out or a weekend trip. Join a plan people near you already posted.</p></div>
-            <div className={styles.step}><span className={styles.stepNum}>02</span><h3>Or post your own</h3><p>&ldquo;Need 3 for pickleball at 7.&rdquo; People who are free and up for it join in.</p></div>
-            <div className={styles.step}><span className={styles.stepNum}>03</span><h3>Chat, then meet</h3><p>Talk in the group, see who&apos;s coming, and meet at the venue. Many people come alone.</p></div>
-          </div>
+        {/* ---------- Everything in one place ---------- */}
+        <section className={`${styles.section} ${styles.center}`} aria-labelledby="all">
+          <span className={styles.eyebrow}>One app for your social life</span>
+          <h2 id="all" className={styles.h2}>Everything you need to meet new people</h2>
+          <p className={styles.lead}>Making friends as an adult is hard because nobody makes the plan. SyncTrip gives you the plan, the people and the place.</p>
+          <nav className={styles.bento} aria-label="SyncTrip features">
+            {FEATURES.map(({ id, icon: Icon, title, text }) => (
+              <a key={id} href={`#${id}`} className={styles.bentoTile}>
+                <span className={styles.bentoIcon}><Icon size={20} aria-hidden /></span>
+                <b>{title}</b>
+                <span>{text}</span>
+              </a>
+            ))}
+          </nav>
         </section>
 
-        {/* ---------- Pick your vibe ---------- */}
-        <section className={`${styles.section} ${styles.center}`} aria-labelledby="vibes">
-          <span className={styles.eyebrow}>Things to do with friends</span>
-          <h2 id="vibes" className={styles.h2}>What do you feel like doing?</h2>
-          <p className={styles.lead}>City guides with the best places, and the SyncTrip plans happening there this week.</p>
+        <Feature
+          id="plans"
+          tint="#eaf4ff"
+          eyebrow="Plans"
+          title="Join a plan near you, or post your own in a minute"
+          lead="Short of players for badminton? Want company for a movie or a Sunday ride? Pick what you want to do, add when and where, and people nearby who are up for it join in."
+          points={[
+            "Trips, bike rides, movies, hangouts, sports and community plans",
+            "Set the time, place and how many people you need",
+            "Free to join and free to post. Many people come alone",
+          ]}
+          links={[{ href: "/explore/plans", label: "Browse plans near you" }]}
+          visual={
+            <Phone src="/home/app-create.webp" alt="Creating a plan on SyncTrip: plan a trip, start a ride, movie plan, casual outing, sports match or community">
+              <div className={`${styles.float} ${styles.fC}`}>
+                <span className={styles.floatIcon} style={{ background: "#f3359e" }}><Users size={16} aria-hidden /></span>
+                <span><b>Need 3 for pickleball at 7</b><small>2 people joined</small></span>
+              </div>
+            </Phone>
+          }
+        />
+
+        <Feature
+          id="clubs"
+          flip
+          tint="#f4efff"
+          eyebrow="Club events"
+          title="Meetups and events by verified clubs"
+          lead="Board-game nights, open mics, sports socials and workshops, run by local clubs. Book a seat in the app, show up, and you're in the club's community chat afterwards."
+          points={[
+            "Verified clubs only, with tickets and entry codes in the app",
+            "Follow clubs to hear about their next event first",
+            "Pay part of a ticket with your SyncTrip wallet credit",
+          ]}
+          links={[
+            { href: "/city/chandigarh", label: "Events in Chandigarh" },
+            { href: "/city/gurgaon", label: "Events in Gurgaon" },
+          ]}
+          visual={
+            <Phone src="/home/app-clubs.webp" alt="SyncTrip clubs list: table tennis, poetry and bowling clubs in Chandigarh">
+              <div className={`${styles.float} ${styles.fD}`}>
+                <span className={styles.floatIcon} style={{ background: "#7c3aed" }}><Ticket size={16} aria-hidden /></span>
+                <span><b>Board Games Night</b><small>Sun, 11 Oct · Get tickets</small></span>
+              </div>
+            </Phone>
+          }
+        />
+
+        <Feature
+          id="trips"
+          tint="#ecfbf6"
+          eyebrow="Group trips"
+          title="Weekend trips with people going your way"
+          lead="Join a group trip someone already planned, or post yours and find travel buddies. Split the plan, share the ride, and come back with new friends."
+          points={[
+            "Hill getaways, heritage stays and day trips from your city",
+            "See who's going before you join",
+            "Plan the itinerary together in the group chat",
+          ]}
+          links={[
+            { href: "/trips", label: "See group trips" },
+            { href: "/explore", label: "Explore destinations" },
+          ]}
+          visual={
+            <div className={styles.collage}>
+              {/* eslint-disable @next/next/no-img-element -- static, pre-compressed assets */}
+              <img className={styles.cA} src="/city-guides/landmark-kasauli.jpg" alt="Hills at Kasauli, a weekend trip from Chandigarh" loading="lazy" />
+              <img className={styles.cB} src="/city-guides/gurgaon-neemrana.jpg" alt="Neemrana Fort, a day trip from Gurgaon" loading="lazy" />
+              <img className={styles.cC} src="/city-guides/landmark-morni-tikkar-taal.jpg" alt="Tikkar Taal lake in the Morni Hills" loading="lazy" />
+              {/* eslint-enable @next/next/no-img-element */}
+              <div className={`${styles.float} ${styles.fE}`}>
+                <span className={styles.floatIcon} style={{ background: "#059669" }}><Mountain size={16} aria-hidden /></span>
+                <span><b>Weekend in Kasauli</b><small>5 of 8 going</small></span>
+              </div>
+            </div>
+          }
+        />
+
+        <Feature
+          id="syncmap"
+          flip
+          tint="#eef7ff"
+          eyebrow="SyncMap"
+          title="See what's happening around you"
+          lead="SyncMap puts plans, club events and people nearby on one map, so you can find something to do tonight in a couple of taps."
+          points={[
+            "Filter by plans, club events, rides and more",
+            "Tap a pin to see the plan and who's going",
+            "Approximate locations only. Your exact spot stays private",
+          ]}
+          visual={<Phone src="/home/app-syncmap.webp" alt="SyncMap showing plans and a board-games club event on a map of Chandigarh" />}
+        />
+
+        <Feature
+          id="chats"
+          tint="#fff4ec"
+          eyebrow="Chats & communities"
+          title="Group chats for every plan, open chats for your city"
+          lead="Every plan gets its own group chat, so you can sort the details and say hi before you meet. City rooms and interest groups keep the conversation going after."
+          points={[
+            "Photos, voice notes, polls, GIFs and location sharing",
+            "City open chats and interest groups like riders and travel lovers",
+            "Mute and report, built in",
+          ]}
+          visual={
+            <div className={styles.phoneStage}>
+              <div className={`${styles.phone} ${styles.chat}`} role="img" aria-label="Example SyncTrip group chat with a poll, a voice note and a shared location">
+                <div className={styles.chatHead}><b>Sunday Smash Social</b><small>6 members</small></div>
+                <div className={styles.chatBody}>
+                  <span className={styles.sys}>Riya joined the group</span>
+                  <p className={styles.them}><i>Arjun</i>Court&apos;s booked for 9. Bring your racquets 🏸</p>
+                  <div className={`${styles.them} ${styles.poll}`}>
+                    <i>Riya</i>
+                    <span className={styles.pollQ}><ListChecks size={15} aria-hidden /> Brunch after?</span>
+                    <span className={styles.pollBar} style={{ ["--w" as string]: "80%" } as React.CSSProperties}><span>Yes, obviously</span><b>4</b></span>
+                    <span className={styles.pollBar} style={{ ["--w" as string]: "20%" } as React.CSSProperties}><span>Can&apos;t today</span><b>1</b></span>
+                  </div>
+                  <p className={`${styles.me} ${styles.voice}`}><Mic size={15} aria-hidden /><span className={styles.wave} />0:07</p>
+                  <div className={`${styles.them} ${styles.loc}`}>
+                    <i>Arjun</i>
+                    <span><MapPin size={15} aria-hidden /> Sector 17 Smash Club</span>
+                    <small>Shared location</small>
+                  </div>
+                  <p className={styles.me}>See you all there! <ImageIcon size={14} aria-hidden /></p>
+                </div>
+                <div className={styles.chatInput}>Message…</div>
+              </div>
+            </div>
+          }
+        />
+
+        <Feature
+          id="synctrust"
+          flip
+          tint="#eefbf3"
+          eyebrow="SyncTrust"
+          title="Know who's real before you meet"
+          lead="When you meet someone at a plan, you scan each other's SyncTrust QR. It proves you met in person, builds your trust level, and unlocks a review."
+          points={[
+            "Reviews only from people who actually met you",
+            "Trust levels grow with every real meetup",
+            "\"Felt unsafe\" reports go privately to our safety team",
+          ]}
+          visual={<Phone src="/home/app-synced.webp" alt="SyncTrust scan result: ₹5 added to wallet for meeting someone new and a trust level up" />}
+        />
+
+        <Feature
+          id="rewards"
+          tint="#fdf0f7"
+          eyebrow="Rewards"
+          title="Go out, meet people, earn credit"
+          lead="SyncTrip rewards real meetups, not screen time. Credit lands in your wallet and pays for part of your next event."
+          points={[
+            "₹5 for every new person you meet and scan",
+            "Up to ₹25 for reviewing a club event you went to",
+            "₹20 when 3 people show up to a plan you host",
+          ]}
+          visual={
+            <Phone src="/home/app-wallet.webp" alt="SyncTrip wallet with reward credit and transaction history">
+              <div className={`${styles.float} ${styles.fF}`}>
+                <span className={styles.floatIcon} style={{ background: "#f59e0b" }}><Wallet size={16} aria-hidden /></span>
+                <span><b>Use it on tickets</b><small>Club events & SyncTrip Plus</small></span>
+              </div>
+            </Phone>
+          }
+        />
+        <p className={`${styles.fine} ${styles.center}`}>Up to ₹150 a month. Credit is for use in SyncTrip, isn&apos;t cash, and lasts 20 days.</p>
+
+        {/* ---------- City guides ---------- */}
+        <section id="guides" className={`${styles.section} ${styles.center}`} aria-labelledby="vibes">
+          <span className={styles.eyebrow}>City guides</span>
+          <h2 id="vibes" className={styles.h2}>Things to do with friends near you</h2>
+          <p className={styles.lead}>The best places in Gurgaon and Chandigarh for each plan, and the SyncTrip plans happening there this week.</p>
           <div className={styles.vibes}>
             {VIBES.map((v) => (
               <div key={v.slug} className={styles.vibe} style={{ ["--accent" as string]: v.accent } as React.CSSProperties}>
@@ -226,44 +466,26 @@ export default async function NewHomePage() {
               </div>
             ))}
           </div>
-        </section>
 
-        {/* ---------- Rewards ---------- */}
-        <section className={styles.rewards} aria-labelledby="rewards">
-          <div>
-            <span className={styles.eyebrow}>New</span>
-            <h2 id="rewards" className={styles.h2}>Go out. Review. Earn credit.</h2>
-            <p className={styles.lead}>Every event you attend can pay for part of the next one.</p>
-            <p className={styles.fine}>Credit is for use in SyncTrip, isn&apos;t cash and expires if unused.</p>
-          </div>
-          <div className={styles.rewardList}>
-            <div className={styles.rewardItem}><span className={styles.rewardIcon}><CalendarCheck size={20} aria-hidden /></span><span><b>Attend an event</b><span>Board-game nights, sports sessions, socials.</span></span></div>
-            <div className={styles.rewardItem}><span className={styles.rewardIcon}><Star size={20} aria-hidden /></span><span><b>Share a quick review</b><span>Add a few words or a photo to earn more.</span></span></div>
-            <div className={styles.rewardItem}><span className={styles.rewardIcon}><Ticket size={20} aria-hidden /></span><span><b>Use credit on your next ticket</b><span>Straight from your SyncTrip wallet.</span></span></div>
-            <div className={styles.rewardItem}><span className={styles.rewardIcon}><Coins size={20} aria-hidden /></span><span><b>Host? Earn a bonus</b><span>When people show up to your event.</span></span></div>
-          </div>
+          {places.length > 0 && (
+            <>
+              <h3 className={styles.h3}>Popular places for plans</h3>
+              <div className={styles.places}>
+                {places.map(({ venue }) => (
+                  <Link key={venue.slug} href={`/places/${venue.slug}`} className={styles.place}>
+                    <b>{venue.name}</b>
+                    <span>{[venue.locality, venue.area].filter(Boolean).join(", ")}</span>
+                  </Link>
+                ))}
+              </div>
+            </>
+          )}
         </section>
-
-        {/* ---------- Popular places ---------- */}
-        {places.length > 0 && (
-          <section className={`${styles.section} ${styles.center}`} aria-labelledby="places">
-            <span className={styles.eyebrow}>Popular places</span>
-            <h2 id="places" className={styles.h2}>Where SyncTrip plans happen</h2>
-            <div className={styles.places}>
-              {places.map(({ venue }) => (
-                <Link key={venue.slug} href={`/places/${venue.slug}`} className={styles.place}>
-                  <b>{venue.name}</b>
-                  <span>{[venue.locality, venue.area].filter(Boolean).join(", ")}</span>
-                </Link>
-              ))}
-            </div>
-          </section>
-        )}
 
         {/* ---------- Cities ---------- */}
         <section className={`${styles.section} ${styles.center}`} aria-labelledby="cities">
           <span className={styles.eyebrow}>Cities</span>
-          <h2 id="cities" className={styles.h2}>Find meetups and people near you</h2>
+          <h2 id="cities" className={styles.h2}>Find meetups and friends near you</h2>
           <div className={styles.cities}>
             {CITIES.map((c) => (
               <Link key={c.name} href={c.href} className={styles.city}>
@@ -283,7 +505,7 @@ export default async function NewHomePage() {
         <section className={`${styles.section} ${styles.center}`} aria-labelledby="faq">
           <span className={styles.eyebrow}>FAQ</span>
           <h2 id="faq" className={styles.h2}>Questions, answered</h2>
-          <div className={styles.faq} style={{ textAlign: "left" }}>
+          <div className={styles.faq}>
             {FAQS.map((f, i) => (
               <details key={f.q} className={styles.faqItem} open={i === 0}>
                 <summary>{f.q}</summary>
@@ -297,7 +519,7 @@ export default async function NewHomePage() {
         <section className={styles.final} aria-labelledby="final">
           <h2 id="final" className={styles.h2}>Your next plan is one tap away.</h2>
           <p>Join a game night, find a doubles partner or plan a weekend trip with people near you. Free on Android and iOS.</p>
-          <div className={styles.btnRow}><StoreButtons content="final_cta" /></div>
+          <StoreButtons content="final_cta" light />
         </section>
       </main>
     </div>
