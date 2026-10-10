@@ -71,7 +71,7 @@ const VIBES = [
   { title: "Turf & box cricket", img: "/city-guides/chandigarh-box-cricket.jpg", accent: "#16A34A", slug: "turf-football-cricket" },
   { title: "Cafés to meet people", img: "/city-guides/activity-cafe-friends.jpg", accent: "#B45309", slug: "cafes-to-meet-people" },
   { title: "Nightlife", img: "/city-guides/chandigarh-nightlife.jpg", accent: "#7C3AED", slug: "nightlife" },
-  { title: "Trampoline, karting & bowling", img: "/city-guides/activity-go-karting.jpg", accent: "#F3359E", slug: "fun-activities" },
+  { title: "Trampoline, karting & bowling", img: "/city-guides/activity-fun-hopup.jpg", accent: "#F3359E", slug: "fun-activities" },
   { title: "Pottery & workshops", img: "/city-guides/workshops-pottery.jpg", accent: "#EA580C", slug: "workshops" },
   { title: "Runs & day trips", img: "/city-guides/gurgaon-running.jpg", accent: "#0891B2", slug: "outdoors-running" },
 ];
