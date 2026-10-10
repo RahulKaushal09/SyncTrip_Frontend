@@ -65,8 +65,8 @@ const FEATURES = [
   { id: "guides", icon: Compass, title: "City guides", text: "The best places to go with friends in your city." },
 ];
 
-const VIBES = [
-  { title: "Board games & gaming", img: "/city-guides/friendship-game-night.jpg", accent: "#2785E7", slug: "gaming-board-games" },
+const VIBES: { title: string; img: string; video?: string; accent: string; slug: string }[] = [
+  { title: "Board games & gaming", img: "/city-guides/gaming-loop-poster.webp", video: "/city-guides/gaming-loop.mp4", accent: "#2785E7", slug: "gaming-board-games" },
   { title: "Pickleball & badminton", img: "/city-guides/activity-pickleball.jpg", accent: "#059669", slug: "pickleball-badminton" },
   { title: "Turf & box cricket", img: "/city-guides/chandigarh-box-cricket.jpg", accent: "#16A34A", slug: "turf-football-cricket" },
   { title: "Cafés to meet people", img: "/city-guides/activity-cafe-meetup.webp", accent: "#B45309", slug: "cafes-to-meet-people" },
@@ -458,6 +458,8 @@ export default async function NewHomePage() {
               <div key={v.slug} className={styles.vibe} style={{ ["--accent" as string]: v.accent } as React.CSSProperties}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={v.img} alt="" loading="lazy" />
+                {/* Muted loop over its first frame; hidden for reduced motion. */}
+                {v.video && <video src={v.video} poster={v.img} autoPlay muted loop playsInline preload="metadata" aria-hidden />}
                 <h3>{v.title}</h3>
                 <div className={styles.vibeLinks}>
                   <Link href={`/city/gurgaon/${v.slug}`}>Gurgaon</Link>

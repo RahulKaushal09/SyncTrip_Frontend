@@ -619,7 +619,8 @@
   text-align: left;
   background: linear-gradient(135deg, var(--accent, var(--blue)), #0b1b2e);
 }
-.vibe img {
+.vibe img,
+.vibe video {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -628,7 +629,8 @@
   z-index: -2;
   transition: transform 0.4s ease;
 }
-.vibe:hover img {
+.vibe:hover img,
+.vibe:hover video {
   transform: scale(1.05);
 }
 .vibe::before {
@@ -852,5 +854,6 @@
 
 @media (prefers-reduced-motion: reduce) {
   .marquee, .float, .liveDot { animation: none; }
+  .vibe video { display: none; }
   .vibe img, .storeBtn, .place, .bentoTile { transition: none; }
 }
