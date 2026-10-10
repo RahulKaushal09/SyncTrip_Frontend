@@ -115,3 +115,23 @@ export function venuesForGuide(all: GuideVenue[], guide: ActivityGuide): GuideVe
   const secondary = all.filter((v) => !primary.includes(v) && v.activities.some((a) => acts.has(a)));
   return [...primary, ...secondary];
 }
+
+/* ───────────────────────── Venue pages (/places/<slug>) ───────────────────────── */
+
+/** Every venue across the guide cities, tagged with its city guide slug. */
+export async function getAllGuideVenues(citySlugs: string[]): Promise<{ citySlug: string; venue: GuideVenue }[]> {
+  const lists = await Promise.all(citySlugs.map((c) => getCityVenues(c).catch(() => [] as GuideVenue[])));
+  return lists.flatMap((venues, i) => venues.map((venue) => ({ citySlug: citySlugs[i], venue })));
+}
+
+/** Upcoming events/plans at one venue, matched on the venue name the host typed. */
+export function feedAtVenue(feed: GuideFeed, venue: GuideVenue): GuideFeed {
+  const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+  const name = norm(venue.name);
+  const first = name.split(" ").slice(0, 2).join(" ");
+  const match = (v: string) => {
+    const n = norm(v || "");
+    return !!n && (n.includes(name) || name.includes(n) || (first.length > 4 && n.includes(first)));
+  };
+  return { events: feed.events.filter((e) => match(e.venueName)), plans: feed.plans.filter((p) => match(p.venueName)) };
+}

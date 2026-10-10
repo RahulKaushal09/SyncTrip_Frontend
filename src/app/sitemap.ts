@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next'
 import { CITY_PAGES } from '@/data/cityPages'
 import { CITY_GUIDES, MIN_INDEXABLE_VENUES } from '@/data/cityGuides'
-import { getCityVenues, venuesForGuide } from '@/lib/cityGuideApi'
+import { getAllGuideVenues, getCityVenues, venuesForGuide } from '@/lib/cityGuideApi'
 
 const base = 'https://synctrip.in'
 
@@ -108,12 +108,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         }
     }
 
+    // One page per venue (/places/<slug>), only once it has real copy.
+    const venueUrls: MetadataRoute.Sitemap = (await getAllGuideVenues(CITY_GUIDES.map(g => g.citySlug)).catch(() => []))
+        .filter(({ venue }) => (venue.description || '').split(/\s+/).length >= 25)
+        .map(({ venue }) => ({ url: `${base}/places/${venue.slug}`, lastModified: new Date(), changeFrequency: 'weekly' as const, priority: 0.7 }))
+
     return [
         { url: base, lastModified: new Date(), changeFrequency: 'weekly', priority: 1.0 },
         { url: `${base}/explore`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.9 },
         { url: `${base}/explore/plans`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.9 },
         ...cityUrls,
         ...guideUrls,
+        ...venueUrls,
         { url: `${base}/friendship-app`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
         { url: `${base}/blogs`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.8 },
         { url: `${base}/about`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },

@@ -94,7 +94,9 @@ export default function VenueExplorer({
               </div>
 
               <div className={styles.venueBody}>
-                <h3 className={styles.venueName}>{v.name}</h3>
+                <h3 className={styles.venueName}>
+                  <Link href={`/places/${v.slug}`} className={styles.venueNameLink}>{v.name}</Link>
+                </h3>
                 <span className={styles.venueWhere}>
                   <MapPin size={14} aria-hidden />
                   {[v.locality, v.area].filter(Boolean).join(", ")}
@@ -115,6 +117,9 @@ export default function VenueExplorer({
                   <button type="button" className={styles.btnOutline} onClick={() => setPlanning(v)}>
                     <Users size={15} aria-hidden /> Go with people
                   </button>
+                  <Link className={styles.btnLight} href={`/places/${v.slug}`}>
+                    Details
+                  </Link>
                   {v.mapsUrl && (
                     <a className={styles.btnLight} href={v.mapsUrl} target="_blank" rel="noopener noreferrer nofollow">
                       <ExternalLink size={14} aria-hidden /> Directions
@@ -132,7 +137,7 @@ export default function VenueExplorer({
   );
 }
 
-function PlanSheet({ venue, cityName, track, onClose }: { venue: GuideVenue; cityName: string; track: StoreTrack; onClose: () => void }) {
+export function PlanSheet({ venue, cityName, track, onClose }: { venue: GuideVenue; cityName: string; track: StoreTrack; onClose: () => void }) {
   const [platform, setPlatform] = useState<"android" | "ios" | "other">("other");
 
   useEffect(() => {
