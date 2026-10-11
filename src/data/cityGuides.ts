@@ -11,6 +11,8 @@
  * member counts or ratings. Seasonal claims stay generic so pages don't date.
  */
 
+import { cityImage } from "@/lib/cityImages";
+
 export type GuideFaq = { question: string; answer: string };
 
 export type GuideImage = {
@@ -780,7 +782,7 @@ export const CITY_GUIDES: CityGuide[] = [
       "Go-karting in Zirakpur, a board-game night in Sector 26, pickleball by Sukhna Lake, a club night at IT Park or a trek to Tikkar Taal: the tricity has plenty to do. The hard part is usually finding people who are free and up for it.",
       "That's what SyncTrip is for. Pick what you want to do below, see what's happening this week, and join a plan or start your own.",
     ],
-    image: { src: "/city-guides/landmark-sukhna-lake.jpg", alt: "Shikara boat on Sukhna Lake, Chandigarh", credit: CC.sukhna },
+    image: cityImage("chandigarh")!,
     areasTitle: "Across the tricity",
     areasSub: "Chandigarh, Mohali, Zirakpur and Panchkula are one city for plans: most places are within 30 minutes of each other.",
     placesSub: "Across Chandigarh, Mohali, Zirakpur and Panchkula.",
@@ -826,7 +828,7 @@ export const CITY_GUIDES: CityGuide[] = [
       "Gurgaon is full of people who moved here for work and never quite built a circle. The weekends are long, and the group you actually want (the Friday turf slot, the game night, the people who'll drive to Damdama for breakfast) is the hardest thing to find.",
       "That's what SyncTrip is for. Pick what you feel like doing below, see what's happening this week, and join a plan or start your own.",
     ],
-    image: { src: "/city-guides/gurgaon-cyber-hub.jpg", alt: "DLF Cyber Hub, Gurgaon, at night", credit: CC.cyberHub },
+    image: cityImage("gurgaon")!,
     areasTitle: "Across Gurgaon",
     areasSub: "Plans are pinned to where they happen, so a Sohna Road game doesn't show up as a 7pm option for someone in Cyber City.",
     placesSub: "From Cyber City and Golf Course Road to Sohna Road and New Gurgaon.",

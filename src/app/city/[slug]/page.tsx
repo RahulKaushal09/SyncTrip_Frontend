@@ -6,6 +6,7 @@ import { CITY_GUIDES, getCityGuide } from "@/data/cityGuides";
 import { getCityFeed, getCityVenues } from "@/lib/cityGuideApi";
 import { CityGuideHubView } from "@/components/CityGuide/views";
 import { hubJsonLd } from "@/components/CityGuide/jsonLd";
+import { absImage } from "@/lib/cityImages";
 
 /**
  * /city/:slug — the Delhi NCR launch cluster.
@@ -34,7 +35,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const guide = getCityGuide(slug);
   if (guide) {
     const canonical = `https://synctrip.in/city/${guide.citySlug}`;
-    const image = `https://synctrip.in${guide.image.src}`;
+    const image = absImage(guide.image.src);
     return {
       title: guide.seoTitle,
       description: guide.seoDescription,

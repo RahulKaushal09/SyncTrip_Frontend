@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowRight, MapPin } from "lucide-react";
 import { CityPage, getCityPage } from "@/data/cityPages";
 import { ROUTES } from "@/constants";
+import { cityImage } from "@/lib/cityImages";
 import styles from "./CityLanding.module.css";
 
 type Props = {
@@ -21,10 +22,20 @@ type Props = {
  */
 export default function CityLanding({ city }: Props) {
   const nearby = city.nearby.map(getCityPage).filter((c): c is CityPage => c !== null);
+  // The city's photo from the backend, when it has one (Faridabad doesn't yet).
+  const photo = cityImage(city.slug);
 
   return (
     <div className={styles.page}>
-      <header className={styles.hero}>
+      <header className={`${styles.hero} ${photo ? styles.heroPhoto : ""}`}>
+        {photo && (
+          <>
+            {/* LCP image; Gumlet resizes and picks the format. */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img className={styles.heroImg} src={photo.src} alt={photo.alt} fetchPriority="high" />
+            <div className={styles.heroShade} />
+          </>
+        )}
         <div className={styles.heroInner}>
           <div className={styles.kickerWrap}>
             <span className={styles.kickerDot} />

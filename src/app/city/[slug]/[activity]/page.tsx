@@ -4,6 +4,7 @@ import { CITY_GUIDES, MIN_INDEXABLE_VENUES, getActivityGuide } from "@/data/city
 import { getCityFeed, getCityVenues, venuesForGuide } from "@/lib/cityGuideApi";
 import { ActivityGuideView } from "@/components/CityGuide/views";
 import { activityJsonLd } from "@/components/CityGuide/jsonLd";
+import { absImage } from "@/lib/cityImages";
 
 /**
  * /city/:city/:activity: "plan it with people" activity guides (e.g. /city/chandigarh/fun-activities).
@@ -31,7 +32,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const venues = venuesForGuide(await getCityVenues(city.citySlug), guide);
   const indexable = venues.length >= MIN_INDEXABLE_VENUES;
   const canonical = `https://synctrip.in/city/${city.citySlug}/${guide.slug}`;
-  const image = `https://synctrip.in${guide.image?.src || city.image.src}`;
+  const image = absImage(guide.image?.src || city.image.src);
 
   return {
     title: guide.seoTitle,

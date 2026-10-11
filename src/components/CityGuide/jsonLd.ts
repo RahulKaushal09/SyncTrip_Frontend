@@ -1,5 +1,6 @@
 import type { ActivityGuide, CityGuide, GuideFaq } from "@/data/cityGuides";
 import type { GuideFeed, GuideVenue } from "@/lib/cityGuideApi";
+import { absImage } from "@/lib/cityImages";
 
 const SITE = "https://synctrip.in";
 
@@ -66,7 +67,7 @@ export function activityJsonLd(city: CityGuide, guide: ActivityGuide, venues: Gu
         inLanguage: "en-IN",
         isPartOf: { "@type": "WebSite", name: "SyncTrip", url: SITE },
         about: { "@type": "City", name: city.cityName },
-        ...(guide.image ? { primaryImageOfPage: { "@type": "ImageObject", url: `${SITE}${guide.image.src}` } } : {}),
+        ...(guide.image ? { primaryImageOfPage: { "@type": "ImageObject", url: absImage(guide.image.src) } } : {}),
       },
       {
         "@type": "BreadcrumbList",
@@ -118,7 +119,7 @@ export function hubJsonLd(city: CityGuide, feed: GuideFeed) {
           name: city.cityName,
           geo: { "@type": "GeoCoordinates", latitude: city.geo.lat, longitude: city.geo.lng },
         },
-        primaryImageOfPage: { "@type": "ImageObject", url: `${SITE}${city.image.src}` },
+        primaryImageOfPage: { "@type": "ImageObject", url: absImage(city.image.src) },
       },
       {
         "@type": "BreadcrumbList",
