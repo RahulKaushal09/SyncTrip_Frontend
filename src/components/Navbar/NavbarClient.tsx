@@ -29,7 +29,9 @@ const NavbarClient = ({ }) => {
   const { user, isLoggedIn, logout, openLogin } = useLogin(); // ⬅️ use context directly
   const pathname = usePathname();
   const shouldHideNavbar = (pathname.includes('userTrip/') && pathname.includes('/planner')) || (pathname.includes('userTrip/') && pathname.includes('/matching')) || pathname.includes('/chats') || pathname.includes('/careers/linkedin/march-2026/assessment');
-  const isHomePage = pathname === '/' || pathname === '/blogs';
+  // White, transparent navbar over a dark hero. The current homepage has a light hero, so
+  // only /blogs needs it; if reverting to the old homepage (src/app/_old), add '/' back.
+  const isHomePage = pathname === '/blogs';
 
   // const cookie = Cookies.get('userInfo');
   // const [user, setUser] = useState<User | null>(() => {

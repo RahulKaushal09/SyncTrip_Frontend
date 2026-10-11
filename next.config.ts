@@ -72,6 +72,9 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
 
+      // The new homepage was previewed at /newhome before it replaced /.
+      { source: "/newhome", destination: "/", permanent: true },
+
       // 2. Your existing app-shell redirects (unchanged)
       {
         source: "/(chats|user|create|userTrip|userTrips|trips|notifications|how-it-works)/:path*",

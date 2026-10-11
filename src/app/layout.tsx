@@ -55,12 +55,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en">
       <body>
-        <link
-          rel="preload"
-          as="image"
-          href="https://synctrip.gumlet.io/compressed/Images/HomePageBg.png"
-          fetchPriority="high"
-        />
+        {/* The old homepage preloaded its hero image (Images/HomePageBg.png) here, on every
+            page. Restore it only if reverting to src/app/_old. */}
         <Script
           id="clarity-script"
           strategy="lazyOnload"

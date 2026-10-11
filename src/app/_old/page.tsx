@@ -1,0 +1,223 @@
+// src/app/_old/page.tsx (previous homepage, kept for an easy revert; see README.md here)
+import "../../../styles/home/home.css";
+import { FeaturesSection } from "@/components/Home_new/whyChooseSyncTrip";
+import { Metadata } from "next";
+import HomeHeroSectionNew from "@/components/Home_new/NewHome";
+import AppFeatures from "@/components/Home_new/AppFeatures";
+import SyncTripPromo from "@/components/AppPushingComponents/SyncTripPromo";
+import ChoiceFeatureSectionV2 from "@/components/Home_new/ChoiceSection_v2";
+import CommunityShowcaseV2 from "@/components/Home_new/CommunityShowcase_v2";
+import ClubEvents from "@/components/Home_new/ClubEvents";
+import InfiniteTripMarquee from "@/components/Home_new/InfinteTripMarquee";
+import TestimonialsV2 from "@/components/Home_new/Testimonials_V2";
+import CommunityBento from "@/components/Home_new/CommunityBento";
+
+
+export const metadata: Metadata = {
+  title: 'Find Travel Buddies & Activity Groups in India | SyncTrip',
+  // ↑ Primary keyword "find travel buddies in India" front-loaded
+  // ↑ "Solo Travel Companion App" = exact transactional query
+  // ↑ 60 chars exactly - fits Google title display
+
+  description: 'Make friends offline in Gurgaon, Chandigarh, Delhi NCR & across India: game nights, turf games, rides, outings and club events. Free app.',
+  // ↑ 168 chars - includes primary kw, social proof (5000+), all 4 activity
+  // ↑ categories, CTA (Free), platform (Android & iOS)
+
+  keywords: [
+    'find travel buddy India',
+    'solo travel companion app',
+    'travel partner India',
+    'solo travel groups India',
+    'trip planning app India',
+    'find people for trips India',
+    'bike ride groups India',
+    'weekend plans India',
+    'sports group near me',
+    'find movie partner',
+    'SyncTrip',
+    'travel community app',
+    'plan trips with friends India',
+    'group travel app India',
+    'verified travel companions',
+    'local activity groups India',
+    'find travel companions India',
+    // Delhi NCR is the launch city cluster - these are the terms /city/* pages
+    // target, repeated here so the homepage supports rather than competes.
+    'things to do in gurgaon',
+    'make friends in gurgaon',
+    'weekend plans in delhi ncr',
+    'clubs in gurgaon',
+    'riders club gurgaon',
+    'turf booking partners gurgaon',
+    'meetups in delhi ncr',
+  ].join(', '),
+
+  authors: [{ name: 'SyncTrip', url: 'https://synctrip.in' }],
+  robots: 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1',
+  alternates: { canonical: 'https://synctrip.in' },
+
+  openGraph: {
+    title: 'Find Travel Buddies & Activity Groups in India | SyncTrip',
+
+    description: 'Make friends offline in Gurgaon, Chandigarh, Delhi NCR & across India: game nights, turf games, rides, outings and club events. Free app.',
+
+    type: 'website',
+    url: 'https://synctrip.in',
+    siteName: 'SyncTrip',
+    locale: 'en_IN',
+    images: [{
+      url: 'https://synctrip.in/og-home.png',
+      // ↑ Create this: 1200×630, dark navy bg, app screenshot left,
+      // ↑ "Find Your Travel Buddy in India" white text right, SyncTrip logo
+      width: 1200,
+      height: 630,
+      alt: 'SyncTrip – Find Travel Buddies & Plan Trips in India',
+    }],
+  },
+
+  twitter: {
+    card: 'summary_large_image',
+    site: '@synctrip44398',
+    creator: '@synctrip44398',
+    title: 'Find Your Travel Buddy in India | SyncTrip',
+    description: 'Verified solo travel matching + local activity groups across India. Free app.',
+    images: ['https://synctrip.in/og-home.png'],
+  },
+};
+
+export default async function Home() {
+
+
+  return (
+    <>
+      <script
+        id="ld-1"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: "SyncTrip",
+            url: "https://synctrip.in",
+            logo: "https://synctrip.in/logo_main_withoutBG.png",
+            areaServed: [
+              { "@type": "City", name: "Chandigarh" },
+              { "@type": "City", name: "Gurugram" },
+              { "@type": "City", name: "Delhi" },
+              { "@type": "City", name: "Noida" },
+              { "@type": "Country", name: "India" }
+            ],
+            sameAs: [
+              // "https://www.facebook.com/synctrip",
+              // "https://twitter.com/synctrip",
+              "https://www.instagram.com/synctrips"
+            ]
+          }),
+        }}
+      />
+      <script
+        id="ld-2"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              {
+                "@type": "ListItem",
+                position: 1,
+                name: "Home",
+                item: "https://synctrip.in"
+              },
+              {
+                "@type": "ListItem",
+                position: 2,
+                name: "Explore",
+                item: "https://synctrip.in/explore"
+              }
+            ]
+          }),
+        }}
+      />
+      <script
+        id="ld-3"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "MobileApplication",
+            "name": "SyncTrip",
+            "operatingSystem": "Android, iOS",
+            "applicationCategory": "TravelApplication",
+            "description": "Find verified travel buddies, plan group trips, and join local activity plans across India. Connect for rides, sports, movies and weekend hangouts.",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "INR"
+            },
+            // aggregateRating deliberately omitted. Google's structured-data
+            // policy requires ratings to reflect reviews shown ON this page;
+            // a hardcoded 4.9/5000 with no visible reviews is a manual-action
+            // risk for the whole domain. Re-add it only when the real Play
+            // Store rating is fetched AND the reviews are rendered here.
+            "author": {
+              "@type": "Organization",
+              "name": "SyncTrip",
+              "url": "https://synctrip.in"
+            },
+            "url": "https://synctrip.in",
+            "downloadUrl": "https://play.google.com/store/apps/details?id=com.synctrip",
+            "installUrl": "https://play.google.com/store/apps/details?id=com.synctrip",
+            "screenshot": "https://synctrip.in/og-home.png"
+          })
+        }}
+      />
+
+      <script
+        id="ld-4"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": "SyncTrip",
+            "url": "https://synctrip.in",
+            "description": "India's solo travel companion app - find travel buddies, plan trips, join local activity groups.",
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": "https://synctrip.in/explore?q={search_term_string}"
+              },
+              "query-input": "required name=search_term_string"
+            }
+          })
+        }}
+      />
+      {/* <HomeWrapper version="v2" /> */}
+      <HomeHeroSectionNew />
+      {/* <ChoiceSection /> */}
+      {/* <ChoiceFeatureSectionV2 /> */}
+      <InfiniteTripMarquee />
+      {/* <ChoiceFeatureSectionV3 /> */}
+      {/* <CommunityShowcase /> */}
+      <CommunityShowcaseV2 />
+      <ClubEvents />
+      <AppFeatures />
+      <CommunityBento />
+      {/* <FeatureScroll /> */}
+      {/* <FeatureHighlight /> */}
+      {/* <HomeWrapper version="v1" /> */}
+      {/* <ActiveDestinations /> */}
+      {/* <ExploreNearbySection /> */}
+      {/* <HowItWorksSectionHome /> */}
+      {/* <SoftLoginTrigger> */}
+      {/* <Testimonials /> */}
+      <TestimonialsV2 />
+      <FeaturesSection />
+      {/* </SoftLoginTrigger> */}
+      {/* <BlogsHomePage posts={enriched} categories={categories} /> */}
+      <SyncTripPromo />
+    </>
+  );
+}
