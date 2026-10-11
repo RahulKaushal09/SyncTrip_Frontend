@@ -4,12 +4,14 @@ import Link from "next/link";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import {
   ArrowRight, Check, Compass, Image as ImageIcon, ListChecks, Map, MapPin, MessageCircle, Mic, Mountain, QrCode,
-  ShieldCheck, Smartphone, Star, Ticket, Users, Wallet,
+  ShieldCheck, Star, Ticket, Users, Wallet,
 } from "lucide-react";
 import { CITY_GUIDES } from "@/data/cityGuides";
 import { getAllGuideVenues, getCityFeed, type GuideFeed, type GuideVenue } from "@/lib/cityGuideApi";
 import { appStoreUrl, playStoreUrl } from "@/lib/storeLinks";
 import styles from "@/components/HomeV3/HomeV3.module.css";
+import GetItOnPlayStore from "@/assets/icons/GetOnPlayStoreSVG.svg";
+import GetItOnAppStore from "@/assets/icons/GetOnAppStore.svg";
 
 /**
  * /newhome: candidate homepage. Shows everything SyncTrip does (plans, club events,
@@ -119,16 +121,17 @@ function jsonLd() {
   };
 }
 
+/** Official store badges (same artwork as the footer), Google Play first since most users are on Android. */
 function StoreButtons({ content, light }: { content: string; light?: boolean }) {
   return (
     <div className={`${styles.storeRow} ${light ? styles.storeLight : ""}`}>
-      <a className={styles.storeBtn} href={appStoreUrl({ ...TRACK, content })} target="_blank" rel="noopener noreferrer">
-        <Smartphone size={22} aria-hidden />
-        <span><small>Download on the</small><b>App Store</b></span>
-      </a>
       <a className={styles.storeBtn} href={playStoreUrl({ ...TRACK, content })} target="_blank" rel="noopener noreferrer">
-        <Smartphone size={22} aria-hidden />
-        <span><small>Get it on</small><b>Google Play</b></span>
+        {/* eslint-disable-next-line @next/next/no-img-element -- static SVG badge */}
+        <img src={GetItOnPlayStore.src} alt="Get it on Google Play" width={160} height={48} />
+      </a>
+      <a className={styles.storeBtn} href={appStoreUrl({ ...TRACK, content })} target="_blank" rel="noopener noreferrer">
+        {/* eslint-disable-next-line @next/next/no-img-element -- static SVG badge */}
+        <img src={GetItOnAppStore.src} alt="Download on the App Store" width={144} height={48} />
       </a>
     </div>
   );
