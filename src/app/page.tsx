@@ -520,7 +520,7 @@ export default async function NewHomePage() {
         <section id="guides" className={`${styles.section} ${styles.center}`} data-reveal-head aria-labelledby="vibes">
           <span className={styles.eyebrow}>City guides</span>
           <h2 id="vibes" className={styles.h2}>Things to do with friends near you</h2>
-          <p className={styles.lead}>The best places in Gurgaon and Chandigarh for each plan, and the SyncTrip plans happening there this week.</p>
+          <p className={styles.lead}>The best places in Gurgaon, Delhi, Noida and Chandigarh for each plan, and the SyncTrip plans happening there this week.</p>
           <div className={styles.vibes}>
             {VIBES.map((v, i) => (
               <div key={v.slug} className={styles.vibe} data-reveal style={{ ["--accent" as string]: v.accent, ["--i" as string]: i } as React.CSSProperties}>
@@ -531,6 +531,8 @@ export default async function NewHomePage() {
                 <h3>{v.title}</h3>
                 <div className={styles.vibeLinks}>
                   <Link href={`/city/gurgaon/${v.slug}`}>Gurgaon</Link>
+                  <Link href={`/city/delhi/${v.slug}`}>Delhi</Link>
+                  <Link href={`/city/noida/${v.slug}`}>Noida</Link>
                   <Link href={`/city/chandigarh/${v.slug}`}>Chandigarh</Link>
                 </div>
               </div>

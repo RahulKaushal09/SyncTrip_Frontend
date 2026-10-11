@@ -46,6 +46,8 @@ const Footer = () => {
         // /how-it-works only redirects to the homepage; link real content instead.
         { name: 'Things to do in Chandigarh', url: '/city/chandigarh/fun-activities' },
         { name: 'Things to do in Gurgaon', url: '/city/gurgaon/fun-activities' },
+        { name: 'Things to do in Delhi', url: '/city/delhi/fun-activities' },
+        { name: 'Things to do in Noida', url: '/city/noida/fun-activities' },
         { name: 'Friendship app', url: '/friendship-app' },
     ];
 

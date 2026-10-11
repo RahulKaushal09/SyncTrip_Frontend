@@ -10,7 +10,9 @@ import { CITY_GUIDES } from "@/data/cityGuides";
 
 const CITY_MATCHERS: Record<string, RegExp> = {
   chandigarh: /\b(chandigarh|mohali|panchkula|zirakpur|tricity)\b/i,
-  gurgaon: /\b(gurgaon|gurugram|delhi[\s-]?ncr)\b/i,
+  gurgaon: /\b(gurgaon|gurugram)\b/i,
+  delhi: /\b(delhi|new delhi|delhi[\s-]?ncr)\b/i,
+  noida: /\b(noida|greater noida)\b/i,
 };
 
 /** Guide city slugs mentioned in a piece of text, in CITY_GUIDES order. */
