@@ -10,6 +10,7 @@ import { CITY_GUIDES } from "@/data/cityGuides";
 import { getAllGuideVenues, getCityFeed, type GuideFeed, type GuideVenue } from "@/lib/cityGuideApi";
 import { appStoreUrl, playStoreUrl } from "@/lib/storeLinks";
 import styles from "@/components/HomeV3/HomeV3.module.css";
+import LazyLoopVideo from "@/components/HomeV3/LazyLoopVideo";
 import GetItOnPlayStore from "@/assets/icons/GetOnPlayStoreSVG.svg";
 import GetItOnAppStore from "@/assets/icons/GetOnAppStore.svg";
 
@@ -38,6 +39,16 @@ export const metadata: Metadata = {
   title: { absolute: TITLE },
   description: DESCRIPTION,
   alternates: { canonical: "https://synctrip.in" },
+  openGraph: {
+    title: TITLE,
+    description: DESCRIPTION,
+    url: "https://synctrip.in",
+    siteName: "SyncTrip",
+    locale: "en_IN",
+    type: "website",
+    images: [{ url: "https://synctrip.in/og-home.png", alt: "SyncTrip: make friends through real plans near you" }],
+  },
+  twitter: { card: "summary_large_image", site: "@synctrip44398", title: TITLE, description: DESCRIPTION, images: ["https://synctrip.in/og-home.png"] },
   // Preview only until it replaces the homepage.
   robots: { index: false, follow: true },
 };
@@ -93,7 +104,7 @@ const FAQS = [
   { q: "Is SyncTrip a dating app?", a: "No. SyncTrip is for friendships and plans. You join because of the activity, usually in a group, at a real venue." },
   { q: "Is it safe to meet people from SyncTrip?", a: "Plans happen in groups at public venues. When you meet, you scan each other's SyncTrust QR, so reviews only come from people who actually met you. SyncMap shows approximate locations only, and if something felt off you can report it privately to our safety team." },
   { q: "How do SyncTrip rewards work?", a: "You earn wallet credit for real meetups: ₹5 for each new person you meet and scan at a plan, up to ₹25 for reviewing a club event, and ₹20 when 3 people show up to a plan you host. Use it on club event tickets and SyncTrip Plus. Credit isn't cash, lasts 20 days, and is capped at ₹150 a month." },
-  { q: "Which cities is SyncTrip in?", a: "SyncTrip is active in Gurgaon, Delhi NCR, Chandigarh (with Mohali, Panchkula and Zirakpur) and Bangalore, with more cities coming." },
+  { q: "Which cities is SyncTrip in?", a: "SyncTrip is active in Gurgaon, Delhi, Noida and Chandigarh (with Mohali, Panchkula and Zirakpur), with more cities coming." },
   { q: "Is SyncTrip free?", a: "Yes. Downloading the app and joining or creating plans is free. Some club events are ticketed, and the club sets the price." },
   { q: "I run a club or host events. Can I list them?", a: "Yes. Verified clubs can publish events, sell tickets and keep a community chat for their members in the SyncTrip app. Get in touch through the Contact page and we'll help you get verified." },
 ];
@@ -464,7 +475,7 @@ export default async function NewHomePage() {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={v.img} alt="" loading="lazy" />
                 {/* Muted loop over its first frame; hidden for reduced motion. */}
-                {v.video && <video src={v.video} poster={v.img} autoPlay muted loop playsInline preload="metadata" aria-hidden />}
+                {v.video && <LazyLoopVideo src={v.video} poster={v.img} />}
                 <h3>{v.title}</h3>
                 <div className={styles.vibeLinks}>
                   <Link href={`/city/gurgaon/${v.slug}`}>Gurgaon</Link>
