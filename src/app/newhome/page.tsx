@@ -315,6 +315,16 @@ export default async function NewHomePage() {
       </header>
 
       <main className={styles.wrap}>
+        {/* ---------- Real meetups ---------- */}
+        <section className={styles.reel} data-reveal aria-labelledby="reel-h">
+          <LazyLoopVideo src="/home/meetup-reel.mp4" poster="/home/meetup-reel-poster.webp" />
+          <div className={styles.reelCopy}>
+            <span className={styles.eyebrow}>Real meetups</span>
+            <h2 id="reel-h" className={styles.h2}>This is what a SyncTrip game night looks like</h2>
+            <p>Strangers at 7, a group chat by 10. Board games, chess and card nights, hosted by SyncTrip clubs.</p>
+          </div>
+        </section>
+
         {/* ---------- Everything in one place ---------- */}
         <section className={`${styles.section} ${styles.center}`} data-reveal-head aria-labelledby="all">
           <span className={styles.eyebrow}>One app for your social life</span>
@@ -329,16 +339,6 @@ export default async function NewHomePage() {
               </a>
             ))}
           </nav>
-        </section>
-
-        {/* ---------- Real meetups ---------- */}
-        <section className={styles.reel} data-reveal aria-labelledby="reel-h">
-          <LazyLoopVideo src="/home/meetup-reel.mp4" poster="/home/meetup-reel-poster.webp" />
-          <div className={styles.reelCopy}>
-            <span className={styles.eyebrow}>Real meetups</span>
-            <h2 id="reel-h" className={styles.h2}>This is what a SyncTrip game night looks like</h2>
-            <p>Strangers at 7, a group chat by 10. Board games, chess and card nights, hosted by SyncTrip clubs.</p>
-          </div>
         </section>
 
         <Feature
