@@ -230,17 +230,18 @@
   filter: blur(10px);
 }
 
+/* App screen shown as a clean rounded card (status bar cropped), no device bezel. */
 .phone {
   position: relative;
   z-index: 1;
-  aspect-ratio: 9 / 19.5;
-  border-radius: 44px;
-  padding: 10px;
-  background: #0b1b2e;
+  aspect-ratio: 640 / 1306;
+  border-radius: 34px;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid rgba(11, 27, 46, 0.08);
   box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.08) inset,
-    0 40px 80px -20px rgba(11, 27, 46, 0.35),
-    0 18px 36px -18px rgba(11, 27, 46, 0.3);
+    0 50px 90px -30px rgba(11, 27, 46, 0.32),
+    0 24px 48px -24px rgba(11, 27, 46, 0.2);
 }
 
 .phone>img {
@@ -249,7 +250,6 @@
   height: 100%;
   object-fit: cover;
   object-position: top;
-  border-radius: 34px;
   background: #fff;
 }
 
@@ -582,8 +582,7 @@
 
 .chatHead {
   background: #fff;
-  border-radius: 34px 34px 0 0;
-  padding: 34px 18px 12px;
+  padding: 18px 18px 12px;
   border-bottom: 1px solid var(--line);
 }
 
@@ -710,7 +709,6 @@
 
 .chatInput {
   background: #fff;
-  border-radius: 0 0 34px 34px;
   padding: 12px 18px 22px;
   font-size: 0.78rem;
   color: var(--muted);
@@ -1402,5 +1400,177 @@
   .heroGrid .float,
   .polaroid {
     animation: none;
+  }
+}
+
+
+/* ---------- Real photos and chat bubbles around app screens (TripBFF-style) ---------- */
+.polaroidWide img {
+  aspect-ratio: 4 / 3;
+}
+
+/* Feature polaroids: pop in when the section scrolls into view, then stay still. */
+.snap {
+  z-index: 2;
+  width: 46%;
+  animation: none;
+}
+
+.s1 {
+  left: -46%;
+  top: 4%;
+  rotate: -7deg;
+}
+
+.s2 {
+  right: -44%;
+  top: 38%;
+  rotate: 6deg;
+}
+
+.s3 {
+  left: -38%;
+  bottom: 6%;
+  rotate: 4deg;
+}
+
+.bubble {
+  position: absolute;
+  z-index: 2;
+  padding: 10px 16px;
+  border-radius: 18px 18px 18px 6px;
+  background: #fff;
+  border: 1px solid var(--line);
+  color: var(--ink);
+  font-size: 0.9rem;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 14px 30px rgba(11, 27, 46, 0.12);
+  rotate: var(--rot, 0deg);
+}
+
+.bubbleMine {
+  border: 0;
+  border-radius: 18px 18px 6px 18px;
+  color: #fff;
+  background: linear-gradient(135deg, var(--sky), var(--blue));
+}
+
+/* Children of the stage: 1 is the screen, bubbles start at 2. */
+.bubble:nth-child(2) { left: -48%; top: 8%; --rot: -4deg; }
+.bubble:nth-child(3) { right: -34%; top: 17%; --rot: 4deg; }
+.bubble:nth-child(4) { left: -54%; top: 42%; --rot: 3deg; }
+.bubble:nth-child(5) { right: -40%; top: 53%; --rot: -3deg; }
+.bubble:nth-child(6) { left: -36%; bottom: 13%; --rot: -2deg; }
+.bubble:nth-child(7) { right: -50%; bottom: 4%; --rot: 3deg; }
+
+/* ---------- Real meetups video banner ---------- */
+.reel {
+  position: relative;
+  margin-top: 104px;
+  min-height: 440px;
+  aspect-ratio: 16 / 7;
+  display: flex;
+  align-items: flex-end;
+  border-radius: 36px;
+  overflow: hidden;
+  isolation: isolate;
+  background: #0b1b2e;
+}
+
+.reel video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+}
+
+.reel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(180deg, rgba(7, 16, 24, 0) 30%, rgba(7, 16, 24, 0.8) 100%);
+}
+
+.reelCopy {
+  max-width: 640px;
+  padding: 40px 44px;
+  color: #fff;
+}
+
+.reelCopy .eyebrow {
+  color: #9ddcff;
+}
+
+.reelCopy .h2 {
+  color: #fff;
+}
+
+.reelCopy p {
+  margin: 10px 0 0;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 1.04rem;
+  line-height: 1.6;
+}
+
+/* Pop-in for bubbles and feature polaroids, driven by ScrollReveal */
+.page[data-motion="on"] .feature .bubble,
+.page[data-motion="on"] .feature .snap {
+  transition:
+    opacity 0.5s ease,
+    scale 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+    translate 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition-delay: calc(0.4s + var(--i, 0) * 0.12s);
+}
+
+.page[data-motion="on"] .feature .s2 { transition-delay: 0.55s; }
+.page[data-motion="on"] .feature .s3 { transition-delay: 0.7s; }
+
+.page[data-motion="on"] .feature:not([data-shown]) .bubble,
+.page[data-motion="on"] .feature:not([data-shown]) .snap {
+  opacity: 0;
+  scale: 0.35;
+  translate: 0 18px;
+}
+
+@media (max-width: 700px) {
+  .snap {
+    display: block;
+    width: 38%;
+  }
+
+  .s1 { left: -14%; top: 3%; }
+  .s2 { right: -14%; top: 44%; }
+  .s3 { display: none; }
+}
+
+@media (max-width: 560px) {
+  .bubble {
+    padding: 8px 12px;
+    font-size: 0.76rem;
+  }
+
+  .bubble:nth-child(4),
+  .bubble:nth-child(5),
+  .bubble:nth-child(7) {
+    display: none;
+  }
+
+  .bubble:nth-child(2) { left: -10%; top: 6%; }
+  .bubble:nth-child(3) { right: -8%; top: 20%; }
+  .bubble:nth-child(6) { left: -10%; bottom: 10%; }
+
+  .reel {
+    margin-top: 72px;
+    aspect-ratio: auto;
+    min-height: 460px;
+    border-radius: 28px;
+  }
+
+  .reelCopy {
+    padding: 24px 20px;
   }
 }

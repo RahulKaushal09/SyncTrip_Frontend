@@ -81,6 +81,16 @@ const FEATURES = [
   { id: "guides", icon: Compass, title: "City guides", text: "The best places to go with friends in your city." },
 ];
 
+/** Chat bubbles around the "post a plan" screen (TripBFF-style). */
+const BUBBLES = [
+  { text: "anyone for badminton at 7? 🏸" },
+  { text: "I'm in 🙌", mine: true },
+  { text: "board games tonight?" },
+  { text: "let's meet at 8", mine: true },
+  { text: "chai after? ☕" },
+  { text: "ride to Kasauli on Sunday?", mine: true },
+];
+
 const VIBES: { title: string; img: string; video?: string; accent: string; slug: string }[] = [
   { title: "Board games & gaming", img: "/city-guides/gaming-loop-poster.webp", video: "/city-guides/gaming-loop.mp4", accent: "#2785E7", slug: "gaming-board-games" },
   { title: "Pickleball & badminton", img: "/city-guides/activity-pickleball.jpg", accent: "#059669", slug: "pickleball-badminton" },
@@ -268,8 +278,8 @@ export default async function NewHomePage() {
 
           <Phone src="/home/app-home.webp" alt="SyncTrip app home screen with trips, rides, movies, hangouts, sports and open chat" eager>
             {/* eslint-disable @next/next/no-img-element -- static, pre-compressed photos */}
-            <figure className={`${styles.polaroid} ${styles.pA}`}><img src="/city-guides/activity-cafe-meetup.webp" alt="" /><figcaption>café meetup</figcaption></figure>
-            <figure className={`${styles.polaroid} ${styles.pB}`}><img src="/city-guides/gaming-loop-poster.webp" alt="" /><figcaption>gaming night</figcaption></figure>
+            <figure className={`${styles.polaroid} ${styles.pA}`}><img src="/home/real-roundtable.webp" alt="" /><figcaption>meetup night</figcaption></figure>
+            <figure className={`${styles.polaroid} ${styles.pB} ${styles.polaroidWide}`}><img src="/home/real-dinner.webp" alt="" /><figcaption>dinner meetup</figcaption></figure>
             {/* eslint-enable @next/next/no-img-element */}
             <div className={`${styles.float} ${styles.fA}`}>
               <span className={styles.floatIcon} style={{ background: "#10b981" }}><QrCode size={16} aria-hidden /></span>
@@ -321,6 +331,16 @@ export default async function NewHomePage() {
           </nav>
         </section>
 
+        {/* ---------- Real meetups ---------- */}
+        <section className={styles.reel} data-reveal aria-labelledby="reel-h">
+          <LazyLoopVideo src="/home/meetup-reel.mp4" poster="/home/meetup-reel-poster.webp" />
+          <div className={styles.reelCopy}>
+            <span className={styles.eyebrow}>Real meetups</span>
+            <h2 id="reel-h" className={styles.h2}>This is what a SyncTrip game night looks like</h2>
+            <p>Strangers at 7, a group chat by 10. Board games, chess and card nights, hosted by SyncTrip clubs.</p>
+          </div>
+        </section>
+
         <Feature
           id="plans"
           tint="#eaf4ff"
@@ -335,10 +355,11 @@ export default async function NewHomePage() {
           links={[{ href: "/explore/plans", label: "Browse plans near you" }]}
           visual={
             <Phone src="/home/app-create.webp" alt="Creating a plan on SyncTrip: plan a trip, start a ride, movie plan, casual outing, sports match or community">
-              <div className={`${styles.float} ${styles.fC}`}>
-                <span className={styles.floatIcon} style={{ background: "#f3359e" }}><Users size={16} aria-hidden /></span>
-                <span><b>Need 3 for pickleball at 7</b><small>2 people joined</small></span>
-              </div>
+              {BUBBLES.map((b, i) => (
+                <span key={b.text} className={`${styles.bubble} ${b.mine ? styles.bubbleMine : ""}`} style={{ ["--i" as string]: i } as React.CSSProperties} aria-hidden>
+                  {b.text}
+                </span>
+              ))}
             </Phone>
           }
         />
@@ -361,10 +382,11 @@ export default async function NewHomePage() {
           ]}
           visual={
             <Phone src="/home/app-clubs.webp" alt="SyncTrip clubs list: table tennis, poetry and bowling clubs in Chandigarh">
-              <div className={`${styles.float} ${styles.fD}`}>
-                <span className={styles.floatIcon} style={{ background: "#7c3aed" }}><Ticket size={16} aria-hidden /></span>
-                <span><b>Board Games Night</b><small>Sun, 11 Oct · Get tickets</small></span>
-              </div>
+              {/* eslint-disable @next/next/no-img-element -- real SyncTrip club events, pre-compressed */}
+              <figure className={`${styles.polaroid} ${styles.snap} ${styles.s1}`}><img src="/home/real-boardgame-cafe.webp" alt="Board-game night at a café, hosted by a SyncTrip club" loading="lazy" /><figcaption>board-game night</figcaption></figure>
+              <figure className={`${styles.polaroid} ${styles.snap} ${styles.s2}`}><img src="/home/real-chess.webp" alt="Players at a SyncTrip chess meetup" loading="lazy" /><figcaption>chess meetup</figcaption></figure>
+              <figure className={`${styles.polaroid} ${styles.snap} ${styles.s3}`}><img src="/home/real-cardgame.webp" alt="A table of new friends playing a card game" loading="lazy" /><figcaption>card games</figcaption></figure>
+              {/* eslint-enable @next/next/no-img-element */}
             </Phone>
           }
         />
