@@ -162,12 +162,14 @@ function StoreButtons({ content, light }: { content: string; light?: boolean }) 
 }
 
 /** A phone with a real app screen. */
-function Phone({ src, alt, children, eager }: { src: string; alt: string; children?: React.ReactNode; eager?: boolean }) {
+function Phone({ src, alt, children, eager, video }: { src: string; alt: string; children?: React.ReactNode; eager?: boolean; video?: string }) {
   return (
     <div className={styles.phoneStage}>
       <div className={styles.phone}>
         {/* eslint-disable-next-line @next/next/no-img-element -- static, pre-compressed screenshot */}
-        <img src={src} alt={alt} width={640} height={1387} loading={eager ? "eager" : "lazy"} fetchPriority={eager ? "high" : undefined} />
+        <img src={src} alt={alt} width={640} height={1306} loading={eager ? "eager" : "lazy"} fetchPriority={eager ? "high" : undefined} />
+        {/* Optional screen recording over the still (which stays as poster, alt text and reduced-motion view). */}
+        {video && <LazyLoopVideo src={video} poster={src} />}
       </div>
       {children}
     </div>
@@ -276,7 +278,7 @@ export default async function NewHomePage() {
             </div>
           </div>
 
-          <Phone src="/home/app-home.webp" alt="SyncTrip app home screen with trips, rides, movies, hangouts, sports and open chat" eager>
+          <Phone src="/home/hero-home-poster.webp" video="/home/hero-home.mp4" alt="SyncTrip app home screen: event carousel, plan categories, and new chat notifications arriving" eager>
             {/* eslint-disable @next/next/no-img-element -- static, pre-compressed photos */}
             <figure className={`${styles.polaroid} ${styles.pA}`}><img src="/home/real-roundtable.webp" alt="" /><figcaption>meetup night</figcaption></figure>
             <figure className={`${styles.polaroid} ${styles.pB} ${styles.polaroidWide}`}><img src="/home/real-dinner.webp" alt="" /><figcaption>dinner meetup</figcaption></figure>
