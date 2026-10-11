@@ -9,8 +9,11 @@ import {
 import { CITY_GUIDES } from "@/data/cityGuides";
 import { getAllGuideVenues, getCityFeed, type GuideFeed, type GuideVenue } from "@/lib/cityGuideApi";
 import { appStoreUrl, playStoreUrl } from "@/lib/storeLinks";
+import { cityImage } from "@/lib/cityImages";
 import styles from "@/components/HomeV3/HomeV3.module.css";
 import LazyLoopVideo from "@/components/HomeV3/LazyLoopVideo";
+import ScrollReveal from "@/components/HomeV3/ScrollReveal";
+import WordCycle from "@/components/HomeV3/WordCycle";
 import GetItOnPlayStore from "@/assets/icons/GetOnPlayStoreSVG.svg";
 import GetItOnAppStore from "@/assets/icons/GetOnAppStore.svg";
 
@@ -90,12 +93,12 @@ const VIBES: { title: string; img: string; video?: string; accent: string; slug:
 ];
 
 // City photos are the backend's `cities.imageUrl` (same images as the app), resized by Gumlet.
-const cityImg = (id: string) => `https://synctrip.gumlet.io/compressed/cities/${id}.jpg?w=640&format=auto`;
+const cityImg = (slug: string) => cityImage(slug, 640)!.src;
 const CITIES = [
-  { name: "Gurgaon", href: "/city/gurgaon", img: cityImg("7b4eb1dc-f1c8-48ab-9c23-420eb00bb486"), note: "Cyber Hub · Golf Course Rd · Sohna Rd" },
-  { name: "Chandigarh", href: "/city/chandigarh", img: cityImg("3e3a15a4-b7db-4e21-9793-0893f5cf052e"), note: "Tricity · Mohali · Zirakpur" },
-  { name: "Delhi", href: "/city/delhi", img: cityImg("ccb264d4-ed82-4033-8046-9424a6503a4b"), note: "Hauz Khas · CP · South Delhi" },
-  { name: "Noida", href: "/city/noida", img: cityImg("d7756f45-1d1b-4ec6-ad10-acc743cbb5f0"), note: "Sector 18 · 62 · Greater Noida" },
+  { name: "Gurgaon", href: "/city/gurgaon", img: cityImg("gurgaon"), note: "Cyber Hub · Golf Course Rd · Sohna Rd" },
+  { name: "Chandigarh", href: "/city/chandigarh", img: cityImg("chandigarh"), note: "Tricity · Mohali · Zirakpur" },
+  { name: "Delhi", href: "/city/delhi", img: cityImg("delhi"), note: "Hauz Khas · CP · South Delhi" },
+  { name: "Noida", href: "/city/noida", img: cityImg("noida"), note: "Sector 18 · 62 · Greater Noida" },
 ];
 
 const FAQS = [
@@ -176,7 +179,7 @@ function Feature({
   tint: string;
 }) {
   return (
-    <section id={id} className={`${styles.feature} ${flip ? styles.flip : ""}`} style={{ ["--tint" as string]: tint } as React.CSSProperties} aria-labelledby={`${id}-h`}>
+    <section id={id} data-reveal className={`${styles.feature} ${flip ? styles.flip : ""}`} style={{ ["--tint" as string]: tint } as React.CSSProperties} aria-labelledby={`${id}-h`}>
       <div className={styles.featureCopy}>
         <span className={styles.eyebrow}>{eyebrow}</span>
         <h2 id={`${id}-h`} className={styles.h2}>{title}</h2>
@@ -223,16 +226,34 @@ export default async function NewHomePage() {
     .slice(0, 8);
 
   return (
-    <div className={`${styles.page} ${display.variable}`}>
+    <div className={`${styles.page} ${display.variable}`} data-motion-root>
+      <ScrollReveal />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd()) }} />
 
       {/* ---------- Hero ---------- */}
       <header className={styles.hero}>
         <div className={`${styles.wrap} ${styles.heroGrid}`}>
           <div className={styles.heroCopy}>
-            <span className={styles.pill}><span className={styles.liveDot} /> Plans happening near you this week</span>
+            <span className={styles.pill}>
+              <span className={styles.liveDot} /> Find people for{" "}
+              <WordCycle words={["board-game nights", "badminton", "movie plans", "bike rides", "café hangouts", "open mics", "weekend trips"]} />
+            </span>
             <h1 className={styles.h1}>
-              Make friends near you. Do <span className={styles.grad}>real plans</span> together.
+              Make friends{" "}
+              <span className={styles.underlined}>
+                near you.
+                <svg viewBox="0 0 200 20" preserveAspectRatio="none" aria-hidden>
+                  <path pathLength={1} d="M3 13 C 50 5, 120 4, 197 10" />
+                </svg>
+              </span>{" "}
+              Do{" "}
+              <span className={styles.circled}>
+                <span className={styles.grad}>real plans</span>
+                <svg viewBox="0 0 300 100" preserveAspectRatio="none" aria-hidden>
+                  <path pathLength={1} d="M150 8 C 60 6, 8 22, 10 52 C 12 84, 110 94, 196 90 C 268 86, 296 64, 290 40 C 284 14, 214 2, 120 10" />
+                </svg>
+              </span>{" "}
+              together.
             </h1>
             <p className={styles.heroSub}>
               SyncTrip is the free app for meeting new people through plans in your city: sports, movies, bike rides, hangouts,
@@ -246,6 +267,10 @@ export default async function NewHomePage() {
           </div>
 
           <Phone src="/home/app-home.webp" alt="SyncTrip app home screen with trips, rides, movies, hangouts, sports and open chat" eager>
+            {/* eslint-disable @next/next/no-img-element -- static, pre-compressed photos */}
+            <figure className={`${styles.polaroid} ${styles.pA}`}><img src="/city-guides/activity-cafe-meetup.webp" alt="" /><figcaption>café meetup</figcaption></figure>
+            <figure className={`${styles.polaroid} ${styles.pB}`}><img src="/city-guides/gaming-loop-poster.webp" alt="" /><figcaption>gaming night</figcaption></figure>
+            {/* eslint-enable @next/next/no-img-element */}
             <div className={`${styles.float} ${styles.fA}`}>
               <span className={styles.floatIcon} style={{ background: "#10b981" }}><QrCode size={16} aria-hidden /></span>
               <span><b>+₹5 · You met Rahul</b><small>Scanned at Sunday Smash Social</small></span>
@@ -281,13 +306,13 @@ export default async function NewHomePage() {
 
       <main className={styles.wrap}>
         {/* ---------- Everything in one place ---------- */}
-        <section className={`${styles.section} ${styles.center}`} aria-labelledby="all">
+        <section className={`${styles.section} ${styles.center}`} data-reveal-head aria-labelledby="all">
           <span className={styles.eyebrow}>One app for your social life</span>
           <h2 id="all" className={styles.h2}>Everything you need to meet new people</h2>
           <p className={styles.lead}>Making friends as an adult is hard because nobody makes the plan. SyncTrip gives you the plan, the people and the place.</p>
           <nav className={styles.bento} aria-label="SyncTrip features">
-            {FEATURES.map(({ id, icon: Icon, title, text }) => (
-              <a key={id} href={`#${id}`} className={styles.bentoTile}>
+            {FEATURES.map(({ id, icon: Icon, title, text }, i) => (
+              <a key={id} href={`#${id}`} className={styles.bentoTile} data-reveal style={{ ["--i" as string]: i } as React.CSSProperties}>
                 <span className={styles.bentoIcon}><Icon size={20} aria-hidden /></span>
                 <b>{title}</b>
                 <span>{text}</span>
@@ -465,13 +490,13 @@ export default async function NewHomePage() {
         <p className={`${styles.fine} ${styles.center}`}>Up to ₹150 a month. Credit is for use in SyncTrip, isn&apos;t cash, and lasts 20 days.</p>
 
         {/* ---------- City guides ---------- */}
-        <section id="guides" className={`${styles.section} ${styles.center}`} aria-labelledby="vibes">
+        <section id="guides" className={`${styles.section} ${styles.center}`} data-reveal-head aria-labelledby="vibes">
           <span className={styles.eyebrow}>City guides</span>
           <h2 id="vibes" className={styles.h2}>Things to do with friends near you</h2>
           <p className={styles.lead}>The best places in Gurgaon and Chandigarh for each plan, and the SyncTrip plans happening there this week.</p>
           <div className={styles.vibes}>
-            {VIBES.map((v) => (
-              <div key={v.slug} className={styles.vibe} style={{ ["--accent" as string]: v.accent } as React.CSSProperties}>
+            {VIBES.map((v, i) => (
+              <div key={v.slug} className={styles.vibe} data-reveal style={{ ["--accent" as string]: v.accent, ["--i" as string]: i } as React.CSSProperties}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={v.img} alt="" loading="lazy" />
                 {/* Muted loop over its first frame; hidden for reduced motion. */}
@@ -489,8 +514,8 @@ export default async function NewHomePage() {
             <>
               <h3 className={styles.h3}>Popular places for plans</h3>
               <div className={styles.places}>
-                {places.map(({ venue }) => (
-                  <Link key={venue.slug} href={`/places/${venue.slug}`} className={styles.place}>
+                {places.map(({ venue }, i) => (
+                  <Link key={venue.slug} href={`/places/${venue.slug}`} className={styles.place} data-reveal style={{ ["--i" as string]: i } as React.CSSProperties}>
                     <b>{venue.name}</b>
                     <span>{[venue.locality, venue.area].filter(Boolean).join(", ")}</span>
                   </Link>
@@ -501,12 +526,12 @@ export default async function NewHomePage() {
         </section>
 
         {/* ---------- Cities ---------- */}
-        <section className={`${styles.section} ${styles.center}`} aria-labelledby="cities">
+        <section className={`${styles.section} ${styles.center}`} data-reveal-head aria-labelledby="cities">
           <span className={styles.eyebrow}>Cities</span>
           <h2 id="cities" className={styles.h2}>Find meetups and friends near you</h2>
           <div className={styles.cities}>
-            {CITIES.map((c) => (
-              <Link key={c.name} href={c.href} className={styles.city}>
+            {CITIES.map((c, i) => (
+              <Link key={c.name} href={c.href} className={styles.city} data-reveal style={{ ["--i" as string]: i } as React.CSSProperties}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={c.img} alt={`${c.name} city`} loading="lazy" />
                 <b>{c.name}</b>
@@ -520,10 +545,10 @@ export default async function NewHomePage() {
         </section>
 
         {/* ---------- FAQ ---------- */}
-        <section className={`${styles.section} ${styles.center}`} aria-labelledby="faq">
+        <section className={`${styles.section} ${styles.center}`} data-reveal-head aria-labelledby="faq">
           <span className={styles.eyebrow}>FAQ</span>
           <h2 id="faq" className={styles.h2}>Questions, answered</h2>
-          <div className={styles.faq}>
+          <div className={styles.faq} data-reveal>
             {FAQS.map((f, i) => (
               <details key={f.q} className={styles.faqItem} open={i === 0}>
                 <summary>{f.q}</summary>
@@ -534,7 +559,7 @@ export default async function NewHomePage() {
         </section>
 
         {/* ---------- Final CTA ---------- */}
-        <section className={styles.final} aria-labelledby="final">
+        <section className={styles.final} data-reveal aria-labelledby="final">
           <h2 id="final" className={styles.h2}>Your next plan is one tap away.</h2>
           <p>Join a game night, find a doubles partner or plan a weekend trip with people near you. Free on Android and iOS.</p>
           <StoreButtons content="final_cta" light />
