@@ -117,7 +117,7 @@ export default function InfiniteTripMarquee() {
       {/* <div className={styles.fadeLeft} aria-hidden="true" />
       <div className={styles.fadeRight} aria-hidden="true" /> */}
       {/* Scrolling Track */}
-      <div onClick={redirectToStore} className={styles.trackWrap}>
+      <div onClick={() => redirectToStore({ campaign: "home_trip_marquee", term: typeof window !== "undefined" ? window.location.pathname : "home", content: "marquee" })} className={styles.trackWrap}>
         <div className={styles.track}>
           {row1.map((trip, idx) => (
             <TripCard key={`r1-${trip.id}-${idx}`} data={trip} />

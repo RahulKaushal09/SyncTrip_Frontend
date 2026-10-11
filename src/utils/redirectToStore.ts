@@ -1,4 +1,5 @@
 import { APP_LINKS } from "@/constants";
+import { appStoreUrl, playStoreUrl, type StoreTrack } from "@/lib/storeLinks";
 
 /**
  * Returns the correct store URL for the current platform without navigating.
@@ -23,21 +24,24 @@ export const getStoreUrl = (): string => {
     return APP_LINKS.WEB_HOME;
 };
 
-export const redirectToStore = () => {
-    const playStoreUrl = APP_LINKS.PLAY_STORE;
-    const appStoreUrl = APP_LINKS.APP_STORE;
+const isTrack = (t: unknown): t is StoreTrack => !!t && typeof t === "object" && "campaign" in t;
+
+/**
+ * Opens the right store for this device, with UTM tags so the install is attributed
+ * to the page and button that sent it (see src/lib/storeLinks.ts). Safe to pass
+ * straight to onClick: the click event is ignored and a default tag is used.
+ */
+export const redirectToStore = (track?: StoreTrack | unknown) => {
+    const path = typeof window !== "undefined" ? window.location.pathname : "";
+    const t: StoreTrack = isTrack(track)
+        ? track
+        : { campaign: "site_button", term: path || "home", content: "store_redirect" };
 
     const userAgent = navigator.userAgent || navigator.vendor;
+    const isIOS =
+        /iPhone|iPad|iPod/i.test(userAgent) ||
+        (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
-    const isAndroid = /android/i.test(userAgent);
-    const isIOS = /iPhone|iPad|iPod/i.test(userAgent);
-
-    if (isAndroid) {
-        window.open(playStoreUrl, "_blank");
-    } else if (isIOS) {
-        window.open(appStoreUrl, "_blank");
-    } else {
-        // Desktop fallback (usually Play Store)
-        window.open(playStoreUrl, "_blank");
-    }
+    // Android and desktop both go to Play (desktop visitors can install from the web).
+    window.open(isIOS ? appStoreUrl(t) : playStoreUrl(t), "_blank");
 };

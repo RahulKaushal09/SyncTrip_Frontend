@@ -449,7 +449,7 @@ const NavbarClient = ({ }) => {
           </div>
 
           {!ismobile && (
-            <button onClick={redirectToStore} className="btn-download-premium ms-2">
+            <button onClick={() => redirectToStore({ campaign: "site_navbar", term: pathname || "home", content: "download_now" })} className="btn-download-premium ms-2">
               <span className="btn-download-shine"></span>
               <span style={{ position: "relative", zIndex: 1 }}>Download Now!</span>
               {/* <Sparkles className="btn-download-icon" size={16} style={{ position: "relative", zIndex: 1 }} /> */}
@@ -700,7 +700,7 @@ const NavbarClient = ({ }) => {
               </li>
             ) : (
               <li className="nav-item">
-                <button onClick={redirectToStore} className="btn-download-premium mt-2" style={{ width: "100%" }}>
+                <button onClick={() => redirectToStore({ campaign: "site_navbar", term: pathname || "home", content: "menu_download" })} className="btn-download-premium mt-2" style={{ width: "100%" }}>
                   <span className="btn-download-shine"></span>
                   <span style={{ position: "relative", zIndex: 1 }}>Download App</span>
                 </button>
@@ -712,7 +712,7 @@ const NavbarClient = ({ }) => {
               // </li>
             )} */}
             <li className="nav-item">
-              <button onClick={redirectToStore} className="btn-download-premium mt-2" style={{ width: "100%" }}>
+              <button onClick={() => redirectToStore({ campaign: "site_navbar", term: pathname || "home", content: "menu_download" })} className="btn-download-premium mt-2" style={{ width: "100%" }}>
                 <span className="btn-download-shine"></span>
                 <span style={{ position: "relative", zIndex: 1 }}>Download App</span>
               </button>

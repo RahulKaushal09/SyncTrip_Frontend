@@ -138,7 +138,7 @@ const BlogContent = ({ blog, relatedLocations }: BlogContentProps) => {
                     </section>
                 )}
 
-                <button onClick={redirectToStore} className="btn btn-primary !w-full !text-xl">
+                <button onClick={() => redirectToStore({ campaign: "blog", term: typeof window !== "undefined" ? window.location.pathname : "home", content: "post_cta" })} className="btn btn-primary !w-full !text-xl">
                     Download SyncTrip App
                 </button>
 

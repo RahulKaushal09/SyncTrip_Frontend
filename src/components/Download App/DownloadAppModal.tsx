@@ -196,7 +196,7 @@ export const DownloadAppModal: React.FC<Props> = ({ isOpen, onClose }) => {
                 {/* Actions */}
                 <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                     <button
-                        onClick={redirectToStore}
+                        onClick={() => redirectToStore({ campaign: "download_modal", term: typeof window !== "undefined" ? window.location.pathname : "home", content: "modal" })}
                         className="app-btn-primary"
                         style={{
                             background: 'black', border: 'none',

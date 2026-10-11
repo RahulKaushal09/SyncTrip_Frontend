@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import NavbarClient from "@/components/Navbar/NavbarClient";
+import { redirectToStore } from "@/utils/redirectToStore";
 import { useRouter } from "next/navigation";
 import path from "path";
 
@@ -26,10 +27,11 @@ export default function LayoutUIController({ children }: { children: React.React
       {!hideUI && <NavbarClient />}
 
       {!hideUI && (
-        <div onClick={() => window.open("https://play.google.com/store/apps/details?id=com.synctrip", "_blank")} className="announcement-bar cursor-pointer" style={{ height: 25 }}>
+        <div onClick={() => redirectToStore({ campaign: "site_announcement", term: pathname || "home", content: "bar" })} className="announcement-bar cursor-pointer" style={{ height: 25 }}>
           <div className="announcement-track">
             <div className="announcement-content">
-              <span className="uppercase">Stop planning, start packing. SyncTrip App is now live!</span>
+              {/* Wallet credit, not cash: it can't be withdrawn and only pays for club events and SyncTrip Plus. */}
+              <span className="uppercase">Meet new people, earn up to ₹150 a month in SyncTrip credit · Spend it on club events near you</span>
             </div>
           </div>
         </div>
