@@ -76,11 +76,13 @@ const VIBES: { title: string; img: string; video?: string; accent: string; slug:
   { title: "Runs & day trips", img: "/city-guides/activity-rafting.jpg", accent: "#0891B2", slug: "outdoors-running" },
 ];
 
+// City photos are the backend's `cities.imageUrl` (same images as the app), resized by Gumlet.
+const cityImg = (id: string) => `https://synctrip.gumlet.io/compressed/cities/${id}.jpg?w=640&format=auto`;
 const CITIES = [
-  { name: "Gurgaon", href: "/city/gurgaon", img: "/city-guides/gurgaon-cyber-hub.jpg", note: "Cyber Hub · Golf Course Rd · Sohna Rd" },
-  { name: "Chandigarh", href: "/city/chandigarh", img: "/city-guides/landmark-sukhna-lake.jpg", note: "Tricity · Mohali · Zirakpur" },
-  { name: "Delhi", href: "/city/delhi", note: "Hauz Khas · CP · South Delhi" },
-  { name: "Noida", href: "/city/noida", note: "Sector 18 · 62 · Greater Noida" },
+  { name: "Gurgaon", href: "/city/gurgaon", img: cityImg("7b4eb1dc-f1c8-48ab-9c23-420eb00bb486"), note: "Cyber Hub · Golf Course Rd · Sohna Rd" },
+  { name: "Chandigarh", href: "/city/chandigarh", img: cityImg("3e3a15a4-b7db-4e21-9793-0893f5cf052e"), note: "Tricity · Mohali · Zirakpur" },
+  { name: "Delhi", href: "/city/delhi", img: cityImg("ccb264d4-ed82-4033-8046-9424a6503a4b"), note: "Hauz Khas · CP · South Delhi" },
+  { name: "Noida", href: "/city/noida", img: cityImg("d7756f45-1d1b-4ec6-ad10-acc743cbb5f0"), note: "Sector 18 · 62 · Greater Noida" },
 ];
 
 const FAQS = [
@@ -492,7 +494,7 @@ export default async function NewHomePage() {
             {CITIES.map((c) => (
               <Link key={c.name} href={c.href} className={styles.city}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                {c.img && <img src={c.img} alt="" loading="lazy" />}
+                <img src={c.img} alt={`${c.name} city`} loading="lazy" />
                 <b>{c.name}</b>
                 <span>{c.note}</span>
               </Link>
