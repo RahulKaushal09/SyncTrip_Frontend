@@ -20,7 +20,8 @@ export function GameView({ game, feed }: { game: Game; feed: GuideFeed }) {
         kicker={`Social deduction · ${game.players}`}
         title={game.h1}
         intro={game.intro}
-        tone="brand"
+        image={game.image}
+        tone={game.image ? undefined : "brand"}
         stats={[
           { icon: <Users size={15} aria-hidden />, label: game.players },
           { icon: <Clock size={15} aria-hidden />, label: game.time },
@@ -149,7 +150,7 @@ export function GamesHubView({ feed }: { feed: GuideFeed }) {
           "Mafia, Werewolf, Secret Hitler, Blood on the Clocktower: the best games for a group are the ones where someone at the table is lying. Below are simple rules for each, so you can teach them in five minutes.",
           "No group to play with? SyncTrip game nights put you at a table with people near you who love the same games. Most people come alone.",
         ]}
-        image={{ src: "/home/meetup-reel-poster.webp", alt: "A SyncTrip board-game night: a full table of new friends" }}
+        image={{ src: "/home/games-hero-secret-hitler.jpg", alt: "A SyncTrip game night: ten new friends playing Secret Hitler at a café" }}
       />
       <div className={styles.body}>
         <section className={styles.section} aria-labelledby="games-title">

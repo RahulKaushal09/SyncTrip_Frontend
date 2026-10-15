@@ -11,6 +11,8 @@
 
 export type Game = {
   slug: string;
+  /** Hero photo: CC-licensed (credited) or our own game-night photo. None = brand gradient. */
+  image?: { src: string; alt: string; credit?: { author: string; license: string; url: string } };
   name: string;
   /** <= 49 chars: the layout appends " | SyncTrip". */
   seoTitle: string;
@@ -34,6 +36,7 @@ export type Game = {
 export const GAMES: Game[] = [
   {
     slug: "mafia",
+    image: { src: "/home/game-mafia.jpg", alt: "Players around a table during a Mafia game night", credit: { author: "Tony the Maf", license: "CC BY-SA 4.0", url: "https://commons.wikimedia.org/wiki/File:Mafia_Game_in_Krakow_01.jpg" } },
     name: "Mafia",
     seoTitle: "Mafia Game Rules: How to Play (Roles & Tips)",
     seoDescription:
@@ -80,6 +83,7 @@ export const GAMES: Game[] = [
   },
   {
     slug: "secret-hitler",
+    image: { src: "/home/games-hero-secret-hitler.jpg", alt: "A SyncTrip game night playing Secret Hitler, with Ja! and Nein! ballot cards on the table" },
     name: "Secret Hitler",
     seoTitle: "Secret Hitler Rules: How to Play the Game",
     seoDescription:
@@ -123,6 +127,7 @@ export const GAMES: Game[] = [
   },
   {
     slug: "blood-on-the-clocktower",
+    image: { src: "/home/game-blood-on-the-clocktower.jpg", alt: "A Blood on the Clocktower grimoire with players seated in a circle behind it", credit: { author: "Daniel Mizieliński", license: "CC BY-SA 3.0", url: "https://commons.wikimedia.org/wiki/File:Blood_on_the_Clocktower_game_in_progress.jpg" } },
     name: "Blood on the Clocktower",
     seoTitle: "Blood on the Clocktower: Rules & How to Play",
     seoDescription:
@@ -169,6 +174,7 @@ export const GAMES: Game[] = [
   },
   {
     slug: "werewolf",
+    image: { src: "/home/game-werewolf.jpg", alt: "A group of players accusing each other in a Werewolf-style party game", credit: { author: "Alexnevzorov", license: "Public domain", url: "https://commons.wikimedia.org/wiki/File:Playing_mafia_game.jpg" } },
     name: "Werewolf",
     seoTitle: "Werewolf Game Rules: Roles & How to Play",
     seoDescription:
@@ -253,6 +259,7 @@ export const GAMES: Game[] = [
   },
   {
     slug: "coup",
+    image: { src: "/home/game-coup.jpg", alt: "Coup character cards and coins on the table during a game", credit: { author: "El Pantera", license: "CC BY-SA 4.0", url: "https://commons.wikimedia.org/wiki/File:Playing_board_game_-_Play_351_1690369753634.jpg" } },
     name: "Coup",
     seoTitle: "Coup Card Game Rules: How to Play",
     seoDescription:
@@ -293,6 +300,7 @@ export const GAMES: Game[] = [
   },
   {
     slug: "avalon",
+    image: { src: "/home/game-avalon.jpg", alt: "The Resistance: Avalon cards on the table during a game", credit: { author: "El Pantera", license: "CC BY-SA 4.0", url: "https://commons.wikimedia.org/wiki/File:Playing_board_game_-_Play_1521_1745100006682.jpg" } },
     name: "Avalon",
     seoTitle: "Avalon Board Game Rules: How to Play",
     seoDescription:
