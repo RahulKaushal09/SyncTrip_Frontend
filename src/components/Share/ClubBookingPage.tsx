@@ -36,6 +36,19 @@ const people = (n: number) => `${n} ${n === 1 ? "person" : "people"}`;
 type Gender = "male" | "female" | "other";
 type Phase = "form" | "otp" | "paying" | "done" | "blocked";
 
+/**
+ * Seconds until the seat hold runs out, minus a little for the network -
+ * Razorpay's `timeout` closes checkout then, so nobody pays for seats that
+ * were already released. At least a minute; undefined if we don't know.
+ * (A payment that still lands late: the server re-takes the seats when it can
+ * and only refunds when they're gone.)
+ */
+function checkoutTimeout(holdExpiresAt?: string | null): number | undefined {
+  if (!holdExpiresAt) return undefined;
+  const left = Math.floor((new Date(holdExpiresAt).getTime() - Date.now()) / 1000) - 15;
+  return Number.isFinite(left) ? Math.max(60, left) : undefined;
+}
+
 function loadRazorpay(): Promise<boolean> {
   if (typeof window === "undefined") return Promise.resolve(false);
   if (window.Razorpay) return Promise.resolve(true);
@@ -221,6 +234,7 @@ export default function ClubBookingPage({ event }: { event: ClubEvent }) {
     const rzp = new window.Razorpay({
       key: sess.order.razorpayKeyId || process.env.NEXT_PUBLIC_RAZORPAY_KEY || "",
       order_id: sess.order.orderId,
+      timeout: checkoutTimeout((sess.order as { holdExpiresAt?: string | null }).holdExpiresAt),
       amount: Math.round(sess.order.amount * 100),
       currency: sess.order.currency || "INR",
       name: event.club?.name || "SyncTrip",

@@ -123,6 +123,8 @@ export interface RazorpayOptions {
     prefill?: { name?: string; email?: string; contact?: string };
     notes?: Record<string, string>;
     theme?: { color?: string };
+    /** Seconds until checkout closes itself (Razorpay Checkout option). */
+    timeout?: number;
     handler?: (response: RazorpayCheckoutResponse) => void;
     modal?: { ondismiss?: () => void; escape?: boolean; backdropclose?: boolean };
 }
