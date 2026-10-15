@@ -48,6 +48,7 @@ const Footer = () => {
         { name: 'Things to do in Gurgaon', url: '/city/gurgaon/fun-activities' },
         { name: 'Things to do in Delhi', url: '/city/delhi/fun-activities' },
         { name: 'Things to do in Noida', url: '/city/noida/fun-activities' },
+        { name: 'Party & social deduction games', url: '/games' },
         { name: 'Friendship app', url: '/friendship-app' },
     ];
 

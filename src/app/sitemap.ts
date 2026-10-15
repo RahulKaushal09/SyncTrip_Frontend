@@ -1,7 +1,8 @@
 import { MetadataRoute } from 'next'
 import { CITY_PAGES } from '@/data/cityPages'
 import { CITY_GUIDES, MIN_INDEXABLE_VENUES } from '@/data/cityGuides'
-import { getAllGuideVenues, getCityVenues, venuesForGuide } from '@/lib/cityGuideApi'
+import { GAMES } from '@/data/games'
+import { getAllGuideVenues, getCityFeed, getCityVenues, venuesForGuide } from '@/lib/cityGuideApi'
 
 const base = 'https://synctrip.in'
 
@@ -113,6 +114,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         .filter(({ venue }) => (venue.description || '').split(/\s+/).length >= 25)
         .map(({ venue }) => ({ url: `${base}/places/${venue.slug}`, lastModified: new Date(), changeFrequency: 'weekly' as const, priority: 0.7 }))
 
+    // Upcoming SyncTrip club events (/share/club-event/<id>): indexable pages with Event
+    // JSON-LD that answer "events today / this weekend" searches. Past events drop out of the
+    // feed, so they leave the sitemap on their own.
+    const eventFeeds = await Promise.all(CITY_GUIDES.map(g => getCityFeed(g.citySlug, {}, 30).catch(() => ({ events: [], plans: [] }))))
+    const eventUrls: MetadataRoute.Sitemap = [...new Set(eventFeeds.flatMap(f => f.events.map(e => e.url)).filter(u => u?.startsWith('/share/club-event/')))]
+        .map(u => ({ url: `${base}${u}`, lastModified: new Date(), changeFrequency: 'daily' as const, priority: 0.8 }))
+
     return [
         { url: base, lastModified: new Date(), changeFrequency: 'weekly', priority: 1.0 },
         { url: `${base}/explore`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.9 },
@@ -120,6 +128,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         ...cityUrls,
         ...guideUrls,
         ...venueUrls,
+        ...eventUrls,
+        { url: `${base}/games`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
+        ...GAMES.map(g => ({ url: `${base}/games/${g.slug}`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.7 })),
         { url: `${base}/friendship-app`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
         { url: `${base}/blogs`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.8 },
         { url: `${base}/about`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },

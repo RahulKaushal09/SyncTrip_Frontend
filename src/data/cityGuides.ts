@@ -105,7 +105,7 @@ const CHANDIGARH_ACTIVITIES: ActivityGuide[] = [
     navLabel: "Fun activities",
     icon: "Zap",
     accent: "#F3359E",
-    seoTitle: "Fun Activities in Chandigarh with Friends",
+    seoTitle: "Fun Activities in Chandigarh: Friends & Couples",
     seoDescription:
       "Trampoline parks, go-karting, bowling, escape rooms and paintball in Chandigarh, Mohali and Zirakpur, plus people to go with on SyncTrip.",
     keywords: [
@@ -246,9 +246,9 @@ const CHANDIGARH_ACTIVITIES: ActivityGuide[] = [
     navLabel: "Pickleball & badminton",
     icon: "Activity",
     accent: "#059669",
-    seoTitle: "Pickleball & Badminton Courts in Chandigarh",
+    seoTitle: "Pickleball in Chandigarh & Mohali: Where to Play",
     seoDescription:
-      "Where to play pickleball and badminton in Chandigarh, Mohali and Panchkula, and how to find doubles partners at your level on SyncTrip.",
+      "Where to play pickleball in Chandigarh, Mohali and Panchkula: courts by sector, badminton halls, and doubles partners at your level on SyncTrip.",
     keywords: [
       "pickleball chandigarh", "pickleball court chandigarh", "pickleball mohali", "badminton court chandigarh",
       "badminton court in chandigarh", "badminton partner chandigarh", "padel chandigarh", "pickleball panchkula",
@@ -281,7 +281,7 @@ const CHANDIGARH_ACTIVITIES: ActivityGuide[] = [
     navLabel: "Turf & box cricket",
     icon: "Trophy",
     accent: "#16A34A",
-    seoTitle: "Football Turf & Box Cricket in Chandigarh, Mohali",
+    seoTitle: "Turf in Chandigarh & Box Cricket in Mohali",
     seoDescription:
       "Football turfs and box cricket arenas in Chandigarh, Mohali and Zirakpur, and how to fill your team on SyncTrip when you're short of players.",
     keywords: [
@@ -316,9 +316,9 @@ const CHANDIGARH_ACTIVITIES: ActivityGuide[] = [
     navLabel: "Events this weekend",
     icon: "CalendarDays",
     accent: "#DC2626",
-    seoTitle: "Events in Chandigarh This Weekend",
+    seoTitle: "Events in Chandigarh Today & This Weekend",
     seoDescription:
-      "What's on in Chandigarh this weekend: SyncTrip club events, open plans, comedy shows, exhibitions and fairs, plus people to go with.",
+      "What's on in Chandigarh today and this weekend: SyncTrip club events, Kalagram fairs, Tagore Theatre shows, comedy and free events, plus people to go with.",
     keywords: [
       "events in chandigarh", "events in chandigarh this weekend", "chandigarh today events", "upcoming events in chandigarh",
       "things to do in chandigarh this weekend", "exhibition in chandigarh", "comedy show in chandigarh", "kalagram chandigarh events",
@@ -558,9 +558,9 @@ const GURGAON_ACTIVITIES: ActivityGuide[] = [
     navLabel: "Board games & gaming",
     icon: "Gamepad2",
     accent: "#2785E7",
-    seoTitle: "Board Game Cafés & Game Nights in Gurgaon",
+    seoTitle: "Board Game Cafés in Gurgaon & Gamer's Theory",
     seoDescription:
-      "Board-game cafés, SyncTrip game nights, VR and gaming arenas in Gurgaon. Come alone, sit at a mixed table and meet people who like the same games.",
+      "Board game cafés in Gurgaon, from Gamer's Theory in Sector 51 to VR and gaming arenas, plus SyncTrip game nights. Come alone and join a mixed table.",
     keywords: [
       "board game cafe gurgaon", "board games gurgaon", "game night gurgaon", "gaming zone gurgaon",
       "vr games gurgaon", "game on board gurgaon", "things to do in gurgaon with friends",
@@ -592,7 +592,7 @@ const GURGAON_ACTIVITIES: ActivityGuide[] = [
     navLabel: "Pickleball & badminton",
     icon: "Activity",
     accent: "#059669",
-    seoTitle: "Pickleball & Badminton Courts in Gurgaon",
+    seoTitle: "Badminton & Pickleball Courts in Gurgaon",
     seoDescription:
       "Where to play pickleball, padel and badminton in Gurgaon, from Golf Course Extension Road to DLF Phase 3, and how to find doubles partners on SyncTrip.",
     keywords: [
@@ -886,7 +886,7 @@ const DELHI_ACTIVITIES: ActivityGuide[] = [
     navLabel: "Board games & gaming",
     icon: "Gamepad2",
     accent: "#2785E7",
-    seoTitle: "Gaming Cafés & Board Game Nights in Delhi",
+    seoTitle: "Gaming Cafés & Board Game Cafés in Delhi",
     seoDescription:
       "Gaming cafés in Delhi with PS5, VR and gaming PCs, from Malviya Nagar to Preet Vihar, plus board-game nights on SyncTrip. Find a squad near you.",
     keywords: [
@@ -956,7 +956,7 @@ const DELHI_ACTIVITIES: ActivityGuide[] = [
     navLabel: "Turf & box cricket",
     icon: "Trophy",
     accent: "#16A34A",
-    seoTitle: "Box Cricket & Football Turfs in Delhi",
+    seoTitle: "Football Turf & Box Cricket in Delhi",
     seoDescription:
       "Box cricket and football turfs in Delhi: Dwarka, Rohini, Pitampura and Saket, with floodlit evening slots, plus players to fill your team on SyncTrip.",
     keywords: [
@@ -1140,7 +1140,7 @@ const NOIDA_ACTIVITIES: ActivityGuide[] = [
     accent: "#F3359E",
     seoTitle: "Go-Karting, Trampoline Parks & Bowling Noida",
     seoDescription:
-      "Go-karting at Formula 11, trampoline parks, bowling and escape rooms in Noida, from Sector 18 to Greater Noida West, plus people to go with on SyncTrip.",
+      "Go-karting at Formula 11 next to Gardens Galleria (the nearest track to Gaur City), plus trampoline parks, bowling and escape rooms in Noida.",
     keywords: [
       "go karting noida", "trampoline park noida", "bowling noida", "escape room noida",
       "game zone noida", "fun activities in noida", "fun places in noida",
@@ -1162,6 +1162,7 @@ const NOIDA_ACTIVITIES: ActivityGuide[] = [
     ],
     faqs: [
       { question: "Where can I go go-karting in Noida?", answer: "Formula 11 Karting at Worlds of Wonder, Entertainment City, Sector 38A is one of India's biggest go-karting facilities, with a 700-metre, 11-turn track. It's near the Botanical Garden metro." },
+      { question: "Is there go-karting near Gaur City Mall or Gardens Galleria?", answer: "Gaur City Mall has bowling and arcades at Timezone but no karting track. The nearest track is Formula 11 at Worlds of Wonder in Sector 38A, in the same Entertainment City complex as Gardens Galleria." },
       { question: "Which is the best trampoline park in Noida?", answer: "SkyJumper at Wave Mall, Sector 18 is the most central, and The Game Palacio at DLF Mall of India has trampolines alongside bowling and VR." },
       { question: "Where can I go bowling in Noida?", answer: "The Game Palacio at DLF Mall of India (Sector 18) and Timezone at Gaur City Mall (Greater Noida West) both have bowling lanes and arcades." },
       { question: "Is there an escape room in Noida?", answer: "Yes. Mystery Rooms runs themed escape rooms at Spectrum Metro in Sector 75; plan for a team of 4–6." },

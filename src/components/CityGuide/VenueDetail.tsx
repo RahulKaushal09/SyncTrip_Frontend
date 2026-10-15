@@ -32,6 +32,19 @@ export default function VenueDetail({
   const where = [venue.locality, venue.area].filter(Boolean).join(", ");
   const track = { campaign: `venue_${city.citySlug}`, term: venue.slug };
   const cover = venue.photos[0];
+  // Event venues (Kalagram, theatres, comedy and music rooms): people search "events today",
+  // so what's on there leads the page instead of sitting below the details.
+  const eventVenue = venue.activities.some((a) => ["events", "exhibitions", "theatre", "concerts", "comedy", "live_music", "open_mic"].includes(a));
+  const rail = (
+    <HappeningRail
+      track={track}
+      feed={feed}
+      cityName={city.cityName}
+      title={eventVenue ? `What's on at ${venue.name}` : `Plans at ${venue.name}`}
+      sub={eventVenue ? `SyncTrip club events and open plans at ${venue.name} today and this week.` : `Upcoming SyncTrip club events and open plans at ${venue.name}.`}
+      emptyTitle={eventVenue ? `Nothing on SyncTrip at ${venue.name} this week` : `No plans at ${venue.name} yet`}
+    />
+  );
 
   return (
     <div className={styles.page} style={guide ? ({ ["--accent" as string]: guide.accent } as React.CSSProperties) : undefined}>
@@ -57,6 +70,7 @@ export default function VenueDetail({
       />
 
       <div className={styles.body}>
+        {eventVenue && rail}
         <div className={styles.venueLayout}>
           <div>
             <section className={styles.venuePanel} aria-labelledby="about-title">
@@ -112,14 +126,7 @@ export default function VenueDetail({
           </aside>
         </div>
 
-        <HappeningRail
-          track={track}
-          feed={feed}
-          cityName={city.cityName}
-          title={`Plans at ${venue.name}`}
-          sub={`Upcoming SyncTrip club events and open plans at ${venue.name}.`}
-          emptyTitle={`No plans at ${venue.name} yet`}
-        />
+        {!eventVenue && rail}
 
         {related.length > 0 && guide && (
           <section className={styles.section} aria-labelledby="more-title">
