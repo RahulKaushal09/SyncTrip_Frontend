@@ -26,6 +26,8 @@ export type HeroSideImage = {
   badgeText?: string;
   /** Floating chip in the top corner, e.g. a rating. */
   chip?: React.ReactNode;
+  /** "product": box art on a white card, never cropped; shown above the copy on phones. */
+  variant?: "product";
 };
 
 export function GuideHero({
@@ -90,7 +92,7 @@ export function GuideHero({
       {sideImage ? (
         <div className={`${styles.heroInner} ${styles.heroSplit}`}>
           <div className={styles.heroCopy}>{copy}</div>
-          <figure className={styles.heroFigure}>
+          <figure className={`${styles.heroFigure} ${sideImage.variant === "product" ? styles.heroFigureProduct : ""}`}>
             {/* Static, pre-compressed asset; eager because it shares the first viewport. */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={sideImage.src} alt={sideImage.alt} fetchPriority="high" />

@@ -1,0 +1,82 @@
+/* /games hub: game cards with box art. */
+.gameGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 0.75rem;
+}
+
+.gameCard {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.gameThumb {
+  flex: none;
+  width: 72px;
+  height: 90px;
+  object-fit: contain;
+  border-radius: 10px;
+  background: #fff;
+  border: 1px solid var(--line);
+}
+
+.gameText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.gameName {
+  font-weight: 800;
+  font-size: 1.02rem;
+}
+
+/* Phone layout for the game pages: tighter cards, numbers beside the text, two chips per row. */
+@media (max-width: 640px) {
+  .gameGrid {
+    grid-template-columns: 1fr;
+    gap: 0.6rem;
+  }
+
+  .gameThumb {
+    width: 60px;
+    height: 75px;
+  }
+
+  .grid {
+    gap: 0.6rem;
+  }
+
+  .card {
+    padding: 0.9rem 1rem;
+  }
+
+  .step {
+    display: grid;
+    grid-template-columns: 28px minmax(0, 1fr);
+    gap: 0.75rem;
+    align-items: start;
+  }
+
+  .step > span:first-child {
+    width: 28px;
+    height: 28px;
+    margin: 0;
+  }
+
+  .step p {
+    font-size: 0.95rem;
+    line-height: 1.55;
+  }
+
+  .chips {
+    gap: 0.5rem;
+  }
+
+  .chips a {
+    padding: 8px 12px;
+    font-size: 0.82rem;
+  }
+}

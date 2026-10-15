@@ -1445,3 +1445,31 @@
   font-size: 0.78rem;
   color: var(--muted);
 }
+
+/* Box art (games): show the whole box on a white card at its own shape, never crop it. */
+.heroFigureProduct img {
+  aspect-ratio: auto;
+  object-fit: contain;
+  background: #fff;
+  padding: 0.5rem;
+}
+
+@media (max-width: 900px) {
+  .heroFigureProduct {
+    order: -1;
+    justify-self: start;
+    width: auto;
+    max-width: 100%;
+  }
+
+  .heroFigureProduct img {
+    aspect-ratio: auto;
+    width: auto;
+    height: 180px;
+    max-width: 100%;
+    border-radius: 18px;
+    border-width: 4px;
+    padding: 0.3rem;
+    box-shadow: 0 16px 36px rgba(2, 8, 23, 0.45);
+  }
+}

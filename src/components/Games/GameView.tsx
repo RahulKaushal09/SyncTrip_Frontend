@@ -7,6 +7,7 @@ import { CITY_GUIDES } from "@/data/cityGuides";
 import type { GuideFeed } from "@/lib/cityGuideApi";
 import { AppCtaBand, GuideFaqList, GuideHero, HappeningRail } from "@/components/CityGuide/parts";
 import styles from "@/components/CityGuide/CityGuide.module.css";
+import gs from "./Games.module.css";
 
 /** One game: what it is, sides, how a round works, how to win, tips, live game nights, FAQ. */
 export function GameView({ game, feed }: { game: Game; feed: GuideFeed }) {
@@ -21,7 +22,7 @@ export function GameView({ game, feed }: { game: Game; feed: GuideFeed }) {
         title={game.h1}
         intro={game.intro}
         image={game.boxArt ? undefined : game.image}
-        sideImage={game.boxArt}
+        sideImage={game.boxArt && { ...game.boxArt, variant: "product" }}
         tone={game.image && !game.boxArt ? undefined : "brand"}
         stats={[
           { icon: <Users size={15} aria-hidden />, label: game.players },
@@ -37,9 +38,9 @@ export function GameView({ game, feed }: { game: Game; feed: GuideFeed }) {
               <p className={styles.sub}>{game.tagline}</p>
             </div>
           </div>
-          <div className={styles.tipGrid}>
+          <div className={`${styles.tipGrid} ${gs.grid}`}>
             {game.sides.map((s) => (
-              <div key={s.name} className={styles.tip}>
+              <div key={s.name} className={`${styles.tip} ${gs.card}`}>
                 <h3>{s.name}</h3>
                 <p>{s.text}</p>
               </div>
@@ -51,9 +52,9 @@ export function GameView({ game, feed }: { game: Game; feed: GuideFeed }) {
           <div className={styles.sectionHead}>
             <h2 id="how-title" className={styles.h2}>How to play {game.name}</h2>
           </div>
-          <div className={styles.tipGrid}>
+          <div className={`${styles.tipGrid} ${gs.grid}`}>
             {game.howToPlay.map((step, i) => (
-              <div key={i} className={styles.tip}>
+              <div key={i} className={`${styles.tip} ${gs.card} ${gs.step}`}>
                 <span className={styles.tipNum}>{i + 1}</span>
                 <p>{step}</p>
               </div>
@@ -76,9 +77,9 @@ export function GameView({ game, feed }: { game: Game; feed: GuideFeed }) {
           <div className={styles.sectionHead}>
             <h2 id="tips-title" className={styles.h2}>Tips for your first game</h2>
           </div>
-          <div className={styles.tipGrid}>
+          <div className={`${styles.tipGrid} ${gs.grid}`}>
             {game.tips.map((t, i) => (
-              <div key={i} className={styles.tip}>
+              <div key={i} className={`${styles.tip} ${gs.card} ${gs.step}`}>
                 <span className={styles.tipNum}>{i + 1}</span>
                 <p>{t}</p>
               </div>
@@ -99,7 +100,7 @@ export function GameView({ game, feed }: { game: Game; feed: GuideFeed }) {
           <div className={styles.sectionHead}>
             <h2 id="cities-title" className={styles.h2}>Game cafés and game nights by city</h2>
           </div>
-          <div className={styles.relatedRow}>
+          <div className={`${styles.relatedRow} ${gs.chips}`}>
             {CITY_GUIDES.map((c) => (
               <Link key={c.citySlug} href={`/city/${c.citySlug}/gaming-board-games`} className={styles.relatedLink}>
                 Board games in {c.cityName}
@@ -118,15 +119,9 @@ export function GameView({ game, feed }: { game: Game; feed: GuideFeed }) {
               </div>
               <Link href="/games" className={styles.btnOutline}>All games</Link>
             </div>
-            <div className={styles.linkGrid}>
+            <div className={gs.gameGrid}>
               {related.map((g) => (
-                <Link key={g.slug} href={`/games/${g.slug}`} className={styles.linkCard}>
-                  <span className={styles.linkTop}>
-                    {g.name}
-                    <span className={styles.linkDist}>{g.players}</span>
-                  </span>
-                  <span className={styles.linkNote}>{g.tagline}</span>
-                </Link>
+                <GameCard key={g.slug} game={g} />
               ))}
             </div>
           </section>
@@ -135,6 +130,24 @@ export function GameView({ game, feed }: { game: Game; feed: GuideFeed }) {
         <AppCtaBand cityName="your city" track={track} />
       </div>
     </div>
+  );
+}
+
+/** A game with its box art, players and time; used on the hub and in "try next". */
+function GameCard({ game }: { game: Game }) {
+  return (
+    <Link href={`/games/${game.slug}`} className={`${styles.linkCard} ${gs.gameCard}`}>
+      {game.boxArt && (
+        // Static, pre-compressed box art.
+        // eslint-disable-next-line @next/next/no-img-element
+        <img className={gs.gameThumb} src={game.boxArt.src} alt={game.boxArt.alt} loading="lazy" width={72} height={90} />
+      )}
+      <span className={gs.gameText}>
+        <span className={gs.gameName}>{game.name}</span>
+        <span className={styles.linkDist}>{game.players} · {game.time}</span>
+        <span className={styles.linkNote}>{game.tagline}</span>
+      </span>
+    </Link>
   );
 }
 
@@ -161,15 +174,9 @@ export function GamesHubView({ feed }: { feed: GuideFeed }) {
               <p className={styles.sub}>Pick a game to learn how it works, how to win, and where to play it.</p>
             </div>
           </div>
-          <div className={styles.linkGrid}>
+          <div className={gs.gameGrid}>
             {GAMES.map((g) => (
-              <Link key={g.slug} href={`/games/${g.slug}`} className={styles.linkCard}>
-                <span className={styles.linkTop}>
-                  {g.name}
-                  <span className={styles.linkDist}>{g.players} · {g.time}</span>
-                </span>
-                <span className={styles.linkNote}>{g.tagline}</span>
-              </Link>
+              <GameCard key={g.slug} game={g} />
             ))}
           </div>
         </section>
@@ -187,7 +194,7 @@ export function GamesHubView({ feed }: { feed: GuideFeed }) {
           <div className={styles.sectionHead}>
             <h2 id="cities-title" className={styles.h2}>Board-game cafés by city</h2>
           </div>
-          <div className={styles.relatedRow}>
+          <div className={`${styles.relatedRow} ${gs.chips}`}>
             {CITY_GUIDES.map((c) => (
               <Link key={c.citySlug} href={`/city/${c.citySlug}/gaming-board-games`} className={styles.relatedLink}>
                 Board games in {c.cityName}

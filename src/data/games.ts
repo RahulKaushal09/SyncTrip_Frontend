@@ -85,7 +85,7 @@ export const GAMES: Game[] = [
   },
   {
     slug: "secret-hitler",
-    boxArt: { src: "/home/game-secret-hitler-table.webp", alt: "A SyncTrip game night playing Secret Hitler: policy boards and Ja! and Nein! ballot cards on the table" },
+    boxArt: { src: "/home/game-secret-hitler-box.webp", alt: "Secret Hitler board game box" },
     name: "Secret Hitler",
     seoTitle: "Secret Hitler Rules: How to Play the Game",
     seoDescription:
@@ -176,7 +176,7 @@ export const GAMES: Game[] = [
   },
   {
     slug: "werewolf",
-    image: { src: "/home/game-werewolf.jpg", alt: "A group of players accusing each other in a Werewolf-style party game", credit: { author: "Alexnevzorov", license: "Public domain", url: "https://commons.wikimedia.org/wiki/File:Playing_mafia_game.jpg" } },
+    boxArt: { src: "/home/game-werewolf-box.webp", alt: "Ultimate Werewolf Deluxe Edition box and role cards" },
     name: "Werewolf",
     seoTitle: "Werewolf Game Rules: Roles & How to Play",
     seoDescription:
@@ -220,6 +220,7 @@ export const GAMES: Game[] = [
   },
   {
     slug: "spyfall",
+    boxArt: { src: "/home/game-spyfall-box.webp", alt: "Spyfall party game box" },
     name: "Spyfall",
     seoTitle: "Spyfall Rules: How to Play the Spy Game",
     seoDescription:
@@ -261,7 +262,7 @@ export const GAMES: Game[] = [
   },
   {
     slug: "coup",
-    image: { src: "/home/game-coup.jpg", alt: "Coup character cards and coins on the table during a game", credit: { author: "El Pantera", license: "CC BY-SA 4.0", url: "https://commons.wikimedia.org/wiki/File:Playing_board_game_-_Play_351_1690369753634.jpg" } },
+    boxArt: { src: "/home/game-coup-box.webp", alt: "Coup card game box" },
     name: "Coup",
     seoTitle: "Coup Card Game Rules: How to Play",
     seoDescription:
@@ -302,7 +303,7 @@ export const GAMES: Game[] = [
   },
   {
     slug: "avalon",
-    image: { src: "/home/game-avalon.jpg", alt: "The Resistance: Avalon cards on the table during a game", credit: { author: "El Pantera", license: "CC BY-SA 4.0", url: "https://commons.wikimedia.org/wiki/File:Playing_board_game_-_Play_1521_1745100006682.jpg" } },
+    boxArt: { src: "/home/game-avalon-box.webp", alt: "The Resistance: Avalon board game box" },
     name: "Avalon",
     seoTitle: "Avalon Board Game Rules: How to Play",
     seoDescription:
