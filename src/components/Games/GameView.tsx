@@ -20,8 +20,9 @@ export function GameView({ game, feed }: { game: Game; feed: GuideFeed }) {
         kicker={`Social deduction · ${game.players}`}
         title={game.h1}
         intro={game.intro}
-        image={game.image}
-        tone={game.image ? undefined : "brand"}
+        image={game.boxArt ? undefined : game.image}
+        sideImage={game.boxArt}
+        tone={game.image && !game.boxArt ? undefined : "brand"}
         stats={[
           { icon: <Users size={15} aria-hidden />, label: game.players },
           { icon: <Clock size={15} aria-hidden />, label: game.time },

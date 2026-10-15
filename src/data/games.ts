@@ -13,6 +13,8 @@ export type Game = {
   slug: string;
   /** Hero photo: CC-licensed (credited) or our own game-night photo. None = brand gradient. */
   image?: { src: string; alt: string; credit?: { author: string; license: string; url: string } };
+  /** Box or cover art, shown beside the heading (whole image visible) instead of a background photo. */
+  boxArt?: { src: string; alt: string };
   name: string;
   /** <= 49 chars: the layout appends " | SyncTrip". */
   seoTitle: string;
@@ -36,7 +38,7 @@ export type Game = {
 export const GAMES: Game[] = [
   {
     slug: "mafia",
-    image: { src: "/home/game-mafia.jpg", alt: "Players around a table during a Mafia game night", credit: { author: "Tony the Maf", license: "CC BY-SA 4.0", url: "https://commons.wikimedia.org/wiki/File:Mafia_Game_in_Krakow_01.jpg" } },
+    boxArt: { src: "/home/game-mafia-box.webp", alt: "Mafia: Vendetta party game box" },
     name: "Mafia",
     seoTitle: "Mafia Game Rules: How to Play (Roles & Tips)",
     seoDescription:
@@ -83,7 +85,7 @@ export const GAMES: Game[] = [
   },
   {
     slug: "secret-hitler",
-    image: { src: "/home/games-hero-secret-hitler.jpg", alt: "A SyncTrip game night playing Secret Hitler, with Ja! and Nein! ballot cards on the table" },
+    boxArt: { src: "/home/game-secret-hitler-table.webp", alt: "A SyncTrip game night playing Secret Hitler: policy boards and Ja! and Nein! ballot cards on the table" },
     name: "Secret Hitler",
     seoTitle: "Secret Hitler Rules: How to Play the Game",
     seoDescription:
@@ -127,7 +129,7 @@ export const GAMES: Game[] = [
   },
   {
     slug: "blood-on-the-clocktower",
-    image: { src: "/home/game-blood-on-the-clocktower.jpg", alt: "A Blood on the Clocktower grimoire with players seated in a circle behind it", credit: { author: "Daniel Mizieliński", license: "CC BY-SA 3.0", url: "https://commons.wikimedia.org/wiki/File:Blood_on_the_Clocktower_game_in_progress.jpg" } },
+    boxArt: { src: "/home/game-botc-cover.webp", alt: "Blood on the Clocktower grimoire cover" },
     name: "Blood on the Clocktower",
     seoTitle: "Blood on the Clocktower: Rules & How to Play",
     seoDescription:
