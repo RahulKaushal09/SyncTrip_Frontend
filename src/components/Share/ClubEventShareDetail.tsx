@@ -28,7 +28,6 @@ export default function ClubEventShareDetail({ event }: Props) {
   const isCancelled = event.status === "cancelled";
   const hasEnded = !isCancelled && isPast(event.endsAt || event.startsAt);
   const whenLine = formatWhen(event.startsAt, event.endsAt);
-  const seatsLeft = event.seatsLeft;
   const tags = (event.tags ?? []).slice(0, 8);
 
   return (
@@ -54,8 +53,6 @@ export default function ClubEventShareDetail({ event }: Props) {
               <span className={`${styles.badge} ${styles.badgeWarn}`}>Cancelled</span>
             ) : hasEnded ? (
               <span className={styles.badge}>Past event</span>
-            ) : event.isFillingFast ? (
-              <span className={`${styles.badge} ${styles.badgeAccent}`}>Filling fast</span>
             ) : null}
           </div>
 
@@ -115,9 +112,6 @@ export default function ClubEventShareDetail({ event }: Props) {
                 <div>
                   <p className={styles.factLabel}>Entry</p>
                   <p className={styles.factValue}>{price}</p>
-                  {!isCancelled && !hasEnded && typeof seatsLeft === "number" && seatsLeft > 0 && seatsLeft <= 10 && (
-                    <p className={styles.factNote}>Only {seatsLeft} left</p>
-                  )}
                 </div>
               </div>
               {typeof event.ageMin === "number" && event.ageMin > 0 && (

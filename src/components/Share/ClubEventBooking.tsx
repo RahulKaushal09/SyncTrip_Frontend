@@ -69,8 +69,6 @@ export default function ClubEventBooking({ event }: { event: ClubEvent }) {
             </span>
             {event.tierInfo?.current && !event.pricing?.isFree ? (
               <span className={styles.mobilePriceNote}>{event.tierInfo.current.label}</span>
-            ) : event.isFillingFast ? (
-              <span className={styles.mobilePriceNote}>Filling fast</span>
             ) : null}
           </div>
           <button type="button" className={styles.primaryBtn} onClick={openBooking}>

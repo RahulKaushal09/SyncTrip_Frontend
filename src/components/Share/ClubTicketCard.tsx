@@ -45,13 +45,10 @@ function Countdown({ endsAt }: { endsAt: string }) {
   );
 }
 
-function tierRule(t: { untilSeatsSold?: number | null; endsAt?: string | null }): string | null {
-  const bits: string[] = [];
-  if (t.untilSeatsSold) bits.push(`first ${t.untilSeatsSold} seats`);
-  if (t.endsAt) {
-    bits.push(`till ${new Date(t.endsAt).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" })}`);
-  }
-  return bits.length ? bits.join(" · ") : null;
+/** Date rule only: seat counts are never shown on the website. */
+function tierRule(t: { endsAt?: string | null }): string | null {
+  if (!t.endsAt) return null;
+  return `till ${new Date(t.endsAt).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" })}`;
 }
 
 type Props = {
@@ -71,11 +68,6 @@ export default function ClubTicketCard({ event, bookable, soldOut, closedLabel, 
   const onSale = (passes ?? []).filter((p) => p.state === "on_sale").map((p) => p.price);
   const passFrom = passes ? Math.min(...(onSale.length ? onSale : passes.map((p) => p.price))) : null;
   const price = passFrom ?? cur?.price ?? event.pricing?.ticketPrice ?? 0;
-  const capacity = event.capacity || 0;
-  const seatsLeft = Math.max(0, event.seatsLeft ?? 0);
-  const filledPct = capacity > 0 ? Math.min(100, Math.round(((capacity - seatsLeft) / capacity) * 100)) : 0;
-  const hot = capacity > 0 && seatsLeft > 0 && seatsLeft / capacity <= 0.2;
-  const going = event.totalAttendees ?? 0;
 
   return (
     <div className={styles.ticket}>
@@ -97,29 +89,13 @@ export default function ClubTicketCard({ event, bookable, soldOut, closedLabel, 
             <Countdown endsAt={cur.endsAt} />
           </div>
         )}
-        {cur?.seatsLeft != null && cur.seatsLeft > 0 && bookable && (
-          <div className={styles.countdownLabel} style={{ marginTop: "0.75rem", marginBottom: 0 }}>
-            Only {cur.seatsLeft} seat{cur.seatsLeft === 1 ? "" : "s"} left at this price
-          </div>
-        )}
       </div>
 
       <div className={styles.ticketBody}>
-        {/* No empty-room counts: "200 of 200 left" / "0 going" scares people off.
-            Only urgency (sold out, last 20%) and real social proof (5+ going). */}
-        {capacity > 0 && (soldOut || hot || going >= 5) && (
-          <div>
-            <div className={styles.seatsHead}>
-              <span className={hot || soldOut ? styles.seatsHot : undefined}>
-                {soldOut ? "Sold out" : hot ? `Only ${seatsLeft} seat${seatsLeft === 1 ? "" : "s"} left` : ""}
-              </span>
-              {going >= 5 && <span>{going} going</span>}
-            </div>
-            {(soldOut || hot) && (
-              <div className={styles.seatsBar}>
-                <div className={styles.seatsFill} style={{ width: `${filledPct}%` }} />
-              </div>
-            )}
+        {/* The website never shows how many are going or how many seats are left. */}
+        {soldOut && (
+          <div className={styles.seatsHead}>
+            <span className={styles.seatsHot}>Sold out</span>
           </div>
         )}
 
@@ -151,7 +127,7 @@ export default function ClubTicketCard({ event, bookable, soldOut, closedLabel, 
                   <span className={styles.ladderName}>{p.name}</span>
                   <span className={styles.ladderMeta}>
                     Admits {p.admits === 1 ? "1 person" : `${p.admits} people`}
-                    {p.state === "sold_out" ? " · Sold out" : p.state === "ended" ? " · Sales ended" : p.remaining != null && p.remaining <= 5 ? ` · Only ${p.remaining} left` : ""}
+                    {p.state === "sold_out" ? " · Sold out" : p.state === "ended" ? " · Sales ended" : ""}
                   </span>
                 </div>
                 <span className={`${styles.ladderPrice} ${p.state !== "on_sale" ? styles.struck : ""}`}>{p.price === 0 ? "Free" : rupees(p.price)}</span>

@@ -75,7 +75,6 @@ function passBadge(p: EventPass): string | null {
   if (p.state === "sold_out") return "Sold out";
   if (p.state === "ended") return "Sales ended";
   if (p.state === "unavailable") return "Not available";
-  if (p.remaining != null && p.remaining <= 5) return `Only ${p.remaining} left`;
   if (p.salesEndAt) {
     const ms = new Date(p.salesEndAt).getTime() - Date.now();
     if (ms > 0 && ms < 3 * 86400e3) return ms > 86400e3 ? `Ends in ${Math.floor(ms / 86400e3)}d` : "Ends today";

@@ -12,9 +12,6 @@ export { default as GuideIcon } from "./GuideIcon";
 const IST = "Asia/Kolkata";
 const fmt = (d: string, o: Intl.DateTimeFormatOptions) => new Intl.DateTimeFormat("en-IN", { timeZone: IST, ...o }).format(new Date(d));
 const TIME_OF_DAY: Record<string, string> = { morning: "Morning", afternoon: "Afternoon", evening: "Evening", night: "Night" };
-/** Last 20% of spots (or <= 5 when the API didn't send capacity). */
-const isFillingFast = (e: { capacity?: number; seatsLeft: number }) =>
-  e.seatsLeft > 0 && (e.capacity ? e.seatsLeft / e.capacity <= 0.2 : e.seatsLeft <= 5);
 
 /* ---------------- Hero ---------------- */
 
@@ -199,12 +196,8 @@ export function HappeningRail({
                   )}
                   <div className={styles.eventFoot}>
                     <span className={styles.price}>{it.e.isFree || !it.e.price ? "Free" : `₹${it.e.price}`}</span>
-                    {/* Only urgency - never "200 seats left" on an empty event. */}
-                    {(it.e.soldOut || isFillingFast(it.e)) && (
-                      <span className={`${styles.seats} ${styles.seatsLow}`}>
-                        {it.e.soldOut ? "Sold out" : `Only ${it.e.seatsLeft} left`}
-                      </span>
-                    )}
+                    {/* Club events never show seat or attendee numbers on the website. */}
+                    {it.e.soldOut && <span className={`${styles.seats} ${styles.seatsLow}`}>Sold out</span>}
                   </div>
                 </div>
               </Link>
