@@ -179,27 +179,52 @@ export default function EventsNearby({ upcoming, past, clubs }: Props) {
         <section aria-labelledby="clubs-title" className={styles.block}>
           <h2 id="clubs-title" className={styles.h2}>{cityName ? `Clubs in ${cityName}` : "Clubs hosting events"}</h2>
           <div className={styles.clubs}>
-            {clubsShown.map((c) => (
-              <Link key={c.id} href={`/share/club/${c.id}`} className={styles.clubCard}>
-                {c.logoUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={c.logoUrl} alt={`${c.name} logo`} loading="lazy" />
-                ) : (
-                  <span className={styles.clubInitial} aria-hidden>{c.name.charAt(0)}</span>
-                )}
-                <span className={styles.clubText}>
-                  <b>
-                    {c.name}
-                    {c.isVerified && <BadgeCheck size={14} aria-label="Verified club" className={styles.tick} />}
-                  </b>
-                  <span>
-                    {[c.city ? CITIES[c.city].name : null, c.categories.filter((x) => x !== "multi_activity").slice(0, 2).map(humanize).join(", ")]
-                      .filter(Boolean)
-                      .join(" · ")}
-                  </span>
-                </span>
-              </Link>
-            ))}
+            {clubsShown.map((c) => {
+              const next = upcoming.find((e) => e.clubId === c.id);
+              const tags = c.categories.filter((x) => !/^(multi_activity|community_space|other)$/.test(x)).slice(0, 3);
+              return (
+                <Link key={c.id} href={`/share/club/${c.id}`} className={styles.clubCard}>
+                  <div className={styles.clubCover}>
+                    {c.coverImageUrl || c.logoUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element -- Gumlet CDN, already sized
+                      <img
+                        src={(c.coverImageUrl || c.logoUrl) as string}
+                        alt=""
+                        aria-hidden
+                        loading="lazy"
+                        className={`${styles.coverImg} ${c.coverImageUrl ? "" : styles.coverBlur}`}
+                      />
+                    ) : null}
+                    {c.logoUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={c.logoUrl} alt={`${c.name} logo`} className={styles.clubLogo} loading="lazy" />
+                    ) : (
+                      <span className={styles.clubLogo} aria-hidden>{c.name.charAt(0)}</span>
+                    )}
+                  </div>
+                  <div className={styles.clubBody}>
+                    <h3 className={styles.clubName}>
+                      {c.name}
+                      {c.isVerified && <BadgeCheck size={17} aria-label="Verified club" className={styles.tick} />}
+                    </h3>
+                    {c.city && (
+                      <p className={styles.clubPlace}>
+                        <MapPin size={14} aria-hidden /> {CITIES[c.city].name}
+                      </p>
+                    )}
+                    {tags.length > 0 && (
+                      <div className={styles.clubTags}>
+                        {tags.map((x) => <span key={x}>{humanize(x)}</span>)}
+                      </div>
+                    )}
+                    <div className={styles.clubFoot}>
+                      {next && <span className={styles.clubNext}>Next: {formatDayTile(next.startsAt).day} {formatDayTile(next.startsAt).month.charAt(0) + formatDayTile(next.startsAt).month.slice(1).toLowerCase()}</span>}
+                      <span className={styles.clubCta}>View club →</span>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </section>
       )}

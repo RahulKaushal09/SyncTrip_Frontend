@@ -116,7 +116,14 @@ export default async function EventsPage() {
       if (city) counts.set(city, (counts.get(city) ?? 0) + 1);
     });
     const city = [...counts.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? cityOf({ lat: null, lng: null, locality: c.locality });
-    return { ...c, city };
+    const own = [...pastByClub[i], ...upcoming.filter((e) => e.clubId === c.id)];
+    return {
+      ...c,
+      city,
+      // No cover or tags on the club yet: borrow from its most recent event.
+      coverImageUrl: c.coverImageUrl ?? own.find((e) => e.imageUrl)?.imageUrl ?? null,
+      categories: c.categories.length ? c.categories : [...new Set(own.map((e) => e.category).filter((x): x is string => !!x))],
+    };
   });
 
   return (

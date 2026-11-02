@@ -1,6 +1,6 @@
 /* /events: upcoming club events, city filter, recent events and clubs. */
 .page {
-  margin-top: -50px;
+  padding-top: 0.5rem;
   background: linear-gradient(180deg, #f7fafc 0%, #ffffff 40%, #f6f9fb 100%);
   color: #0f172a;
   overflow-x: hidden;
@@ -10,7 +10,10 @@
 .hero {
   position: relative;
   isolation: isolate;
-  padding: 7rem 1.5rem 3rem;
+  margin: 0 12px;
+  border-radius: 28px;
+  overflow: hidden;
+  padding: 3.25rem 1.5rem 3rem;
   background:
     radial-gradient(800px 420px at 85% 0%, rgba(243, 53, 158, 0.3), transparent 60%),
     radial-gradient(700px 420px at 5% 100%, rgba(61, 187, 245, 0.35), transparent 62%),
@@ -308,55 +311,131 @@
 
 .clubs {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
 }
 
 .clubCard {
   display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  padding: 0.85rem;
-  border-radius: 16px;
+  flex-direction: column;
+  border-radius: 22px;
+  overflow: hidden;
   background: #fff;
   border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.06);
   text-decoration: none !important;
-  transition: border-color 0.15s ease, transform 0.15s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .clubCard:hover {
-  border-color: #3dbbf5;
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  box-shadow: 0 22px 44px rgba(15, 23, 42, 0.1);
 }
 
-.clubCard img,
-.clubInitial {
-  flex: none;
-  width: 52px;
-  height: 52px;
-  border-radius: 14px;
+.clubCover {
+  position: relative;
+  aspect-ratio: 16 / 7;
+  background: linear-gradient(135deg, #16324f, #1d4f86);
+}
+
+.coverImg {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
+  display: block;
+}
+
+.coverBlur {
+  filter: blur(14px) saturate(1.3);
+  opacity: 0.85;
+}
+
+.clubCover::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(6, 17, 30, 0.35), transparent 60%);
+}
+
+.clubLogo {
+  position: absolute;
+  left: 16px;
+  bottom: -26px;
+  z-index: 1;
+  width: 60px;
+  height: 60px;
+  border-radius: 16px;
+  border: 3px solid #fff;
   background: #eef6fd;
+  object-fit: cover;
+  box-shadow: 0 8px 18px rgba(2, 8, 23, 0.18);
   display: grid;
   place-items: center;
   font-weight: 800;
+  font-size: 1.4rem;
   color: #16324f;
 }
 
-.clubText {
+.clubBody {
+  padding: 2.1rem 1.1rem 1.1rem;
   display: flex;
   flex-direction: column;
-  min-width: 0;
+  gap: 0.45rem;
+  flex: 1;
 }
 
-.clubText b {
+.clubName {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 1.08rem;
+  font-weight: 800;
   color: #0f172a;
-  font-size: 0.98rem;
 }
 
-.clubText span {
+.clubPlace {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.86rem;
   color: #64748b;
-  font-size: 0.82rem;
+}
+
+.clubTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.clubTags span {
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: #eef6fd;
+  color: #16324f;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.clubFoot {
+  margin-top: auto;
+  padding-top: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+}
+
+.clubNext {
+  font-weight: 700;
+  color: #0f766e;
+}
+
+.clubCta {
+  margin-left: auto;
+  font-weight: 800;
+  color: #0284c7;
 }
 
 .seo {
@@ -415,8 +494,14 @@
 }
 
 @media (max-width: 640px) {
+  .page {
+    padding-top: 2.25rem;
+  }
+
   .hero {
-    padding: 6rem 1rem 2.25rem;
+    margin: 0 8px;
+    border-radius: 22px;
+    padding: 2.25rem 1rem 2rem;
   }
 
   .body {
