@@ -2,6 +2,7 @@ import { MetadataRoute } from 'next'
 import { CITY_PAGES } from '@/data/cityPages'
 import { CITY_GUIDES, MIN_INDEXABLE_VENUES } from '@/data/cityGuides'
 import { GAMES } from '@/data/games'
+import { ClubApiService } from '@/utils/club.api.utils'
 import { getAllGuideVenues, getCityFeed, getCityVenues, venuesForGuide } from '@/lib/cityGuideApi'
 
 const base = 'https://synctrip.in'
@@ -121,6 +122,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const eventUrls: MetadataRoute.Sitemap = [...new Set(eventFeeds.flatMap(f => f.events.map(e => e.url)).filter(u => u?.startsWith('/share/club-event/')))]
         .map(u => ({ url: `${base}${u}`, lastModified: new Date(), changeFrequency: 'daily' as const, priority: 0.8 }))
 
+    // Every public club profile (/share/club/<id>): club info plus its past-events timeline.
+    const clubUrls: MetadataRoute.Sitemap = (await ClubApiService.getPublicClubs().catch(() => []))
+        .map(c => ({ url: `${base}/share/club/${c.id}`, lastModified: new Date(), changeFrequency: 'weekly' as const, priority: 0.7 }))
+
     return [
         { url: base, lastModified: new Date(), changeFrequency: 'weekly', priority: 1.0 },
         { url: `${base}/explore`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.9 },
@@ -129,6 +134,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         ...guideUrls,
         ...venueUrls,
         ...eventUrls,
+        ...clubUrls,
+        { url: `${base}/events`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.9 },
         { url: `${base}/games`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
         ...GAMES.map(g => ({ url: `${base}/games/${g.slug}`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.7 })),
         { url: `${base}/friendship-app`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },

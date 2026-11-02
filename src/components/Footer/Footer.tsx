@@ -17,6 +17,7 @@ const Footer = () => {
 
     const companyLinks = [
         { name: 'About', url: '/about' },
+        { name: 'Founder & team', url: '/about#team' },
         // { name: 'Explore', url: '/explore' },
         { name: 'Blog', url: '/blogs' },
         // { name: 'Plans', url: '/explore/plans' },
@@ -48,6 +49,7 @@ const Footer = () => {
         { name: 'Things to do in Gurgaon', url: '/city/gurgaon/fun-activities' },
         { name: 'Things to do in Delhi', url: '/city/delhi/fun-activities' },
         { name: 'Things to do in Noida', url: '/city/noida/fun-activities' },
+        { name: 'Events near me', url: '/events' },
         { name: 'Party & social deduction games', url: '/games' },
         { name: 'Friendship app', url: '/friendship-app' },
     ];

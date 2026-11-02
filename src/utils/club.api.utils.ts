@@ -302,8 +302,8 @@ const getClub = cache(async (idOrSlug: string): Promise<Club | null> => {
 /**
  * GET /clubs/:clubId/events?filter=upcoming
  *
- * Only the club's own next few events, for its own page. There is no all-clubs
- * or all-events listing on the website by design.
+ * Only the club's own next few events, for its own page. The cross-club
+ * listing is /events (getUpcomingEventCards below).
  */
 const getClubUpcomingEvents = cache(async (clubId: string, limit = 6): Promise<ClubEvent[]> => {
   const data = await getJson<{ events: Raw[] }>(
@@ -326,9 +326,106 @@ const getMegaEvent = cache(async (eventId: string): Promise<MegaEvent | null> =>
   return toPublicMegaEvent(data?.event);
 });
 
+/**
+ * The slim, public shape used for event cards on the club page timeline, the
+ * organiser card and /events. Built field by field like everything else here:
+ * no seat counts, no attendees, no hosts.
+ */
+export type EventCard = {
+  id: string;
+  title: string;
+  startsAt: string;
+  category: string | null;
+  imageUrl: string | null;
+  venueName: string | null;
+  locality: string | null;
+  lat: number | null;
+  lng: number | null;
+  clubId: string;
+  clubName: string | null;
+  clubLogoUrl: string | null;
+  clubVerified: boolean;
+  isFree: boolean;
+  /** Lowest price a person pays; 0 when free or unknown. */
+  price: number;
+};
+
+function toEventCard(raw: Raw | null | undefined): EventCard | null {
+  if (!raw || typeof raw.id !== "string" || typeof raw.title !== "string") return null;
+  const firstImage = Array.isArray(raw.media) ? raw.media.find((m: Raw) => m?.type !== "video" && typeof m?.url === "string") : null;
+  const passPrices = Array.isArray(raw.passes) ? raw.passes.map((p: Raw) => num(p?.price)).filter((n: number | undefined): n is number => n !== undefined && n > 0) : [];
+  const price = num(raw.ticketPrice) ?? num(raw.pricing?.ticketPrice) ?? (passPrices.length ? Math.min(...passPrices) : 0);
+  const isFree = !!(raw.isFree ?? raw.pricing?.isFree);
+  return {
+    id: raw.id,
+    title: raw.title,
+    startsAt: typeof raw.startsAt === "string" ? raw.startsAt : new Date(raw.startsAt ?? 0).toISOString(),
+    category: str(raw.category),
+    imageUrl: str(raw.coverImageUrl) ?? str(firstImage?.url),
+    venueName: str(raw.venue?.name),
+    locality: str(raw.venue?.locality),
+    lat: num(raw.venue?.location?.lat) ?? null,
+    lng: num(raw.venue?.location?.lng) ?? null,
+    clubId: typeof raw.clubId === "string" ? raw.clubId : "",
+    clubName: str(raw.club?.name),
+    clubLogoUrl: str(raw.club?.logoUrl),
+    clubVerified: !!raw.club?.isVerified,
+    isFree: isFree || price <= 0,
+    price: isFree ? 0 : price,
+  };
+}
+
+const toCards = (list: Raw[] | undefined | null): EventCard[] =>
+  (list ?? []).map(toEventCard).filter((e): e is EventCard => e !== null);
+
+/** GET /clubs/:clubId/events?filter=past - newest first. Cancelled events are dropped. */
+const getClubPastEvents = cache(async (clubId: string, limit = 24): Promise<EventCard[]> => {
+  const data = await getJson<{ events: Raw[] }>(
+    `/clubs/${encodeURIComponent(clubId)}/events?filter=past&limit=${limit}`
+  );
+  return toCards((data?.events ?? []).filter((e) => e?.status !== "cancelled"));
+});
+
+/** GET /club-events/feed - every upcoming public club event, soonest first. */
+const getUpcomingEventCards = cache(async (limit = 50): Promise<EventCard[]> => {
+  const data = await getJson<{ events: Raw[] }>(`/club-events/feed?limit=${limit}`);
+  return toCards(data?.events).sort((a, b) => a.startsAt.localeCompare(b.startsAt));
+});
+
+export type ClubCard = {
+  id: string;
+  name: string;
+  logoUrl: string | null;
+  coverImageUrl: string | null;
+  locality: string | null;
+  tagline: string | null;
+  categories: string[];
+  isVerified: boolean;
+};
+
+/** GET /clubs/discovery/clubs - the public club directory. */
+const getPublicClubs = cache(async (limit = 50): Promise<ClubCard[]> => {
+  const data = await getJson<{ clubs: Raw[] }>(`/clubs/discovery/clubs?limit=${limit}`);
+  return (data?.clubs ?? [])
+    .filter((c) => typeof c?.id === "string" && typeof c?.name === "string")
+    .map((c) => ({
+      id: c.id as string,
+      name: c.name as string,
+      logoUrl: str(c.logoUrl),
+      coverImageUrl: str(c.coverImageUrl),
+      locality: str(c.locality),
+      tagline: str(c.tagline),
+      categories: strList(c.categories),
+      isVerified: !!c.isVerified,
+    }));
+});
+
 export class ClubApiService {
   static getClub = getClub;
   static getClubUpcomingEvents = getClubUpcomingEvents;
+  static getClubPastEvents = getClubPastEvents;
+  static getUpcomingEventCards = getUpcomingEventCards;
+  static getPublicClubs = getPublicClubs;
   static getClubEvent = getClubEvent;
   static getMegaEvent = getMegaEvent;
 }

@@ -3,11 +3,12 @@ import { Metadata } from 'next';
 import TeamImage from '../../assets/images/teamImage.png';
 import MapPlanner from '../../assets/images/InviteOnlyScreenMapView.png';
 import Image from 'next/image';
+import Team from '@/components/About/Team';
 
 /* ================= SEO METADATA ================= */
 export const metadata: Metadata = {
-    title: 'About SyncTrip: Meet People & Plans',
-    description: 'SyncTrip helps people in India make friends offline through plans: game nights, sports, outings and group trips, with a group chat for every plan.',
+    title: 'About SyncTrip: Founder, Team & Company',
+    description: 'SyncTrip, by SyncTrip Digital Private Limited, helps people in India make friends offline through plans and club events. Meet founder Rahul Kaushal and the team.',
     keywords: [
         'collaborative travel planning',
         'group trip planner',
@@ -17,8 +18,8 @@ export const metadata: Metadata = {
         'social travel platform',
         'synctrip'
     ], openGraph: {
-        title: 'About SyncTrip',
-        description: 'Planning trips together, simplified. Meet the team behind the best group travel tool.',
+        title: 'About SyncTrip: Founder, Team & Company',
+        description: 'SyncTrip helps people in India make friends offline through plans and club events. Meet founder Rahul Kaushal and the team.',
         type: 'website',
         url: 'https://synctrip.in/about',
         siteName: 'SyncTrip',
@@ -178,6 +179,7 @@ const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: 'SyncTrip',
+    legalName: 'SyncTrip Digital Private Limited',
     url: 'https://synctrip.in',
     logo: "https://synctrip.in/logo_main_withoutBG.png",
     sameAs: [
@@ -188,7 +190,16 @@ const jsonLd = {
         'https://instagram.com/synctrips'
     ],
     foundingDate: '2025',
-    description: 'A collaborative travel planning platform allowing groups to synchronize itineraries in real-time.',
+    description: 'A social app for meeting people in India through plans and club events, with a group chat for every plan.',
+    founder: {
+        '@type': 'Person',
+        name: 'Rahul Kaushal',
+        jobTitle: 'Founder & Director',
+        image: 'https://synctrip.in/home/founder-rahul-kaushal.webp',
+        alumniOf: 'Punjab Engineering College, Chandigarh',
+    },
+    email: 'synctripofficial@gmail.com',
+    address: { '@type': 'PostalAddress', addressLocality: 'Chandigarh', addressCountry: 'IN' },
 };
 const faqSchema = {
     '@context': 'https://schema.org',
@@ -345,17 +356,17 @@ export default function AboutPage() {
                                 About Us
                             </span>
                             <h1 className="h2 text-secondary-1" style={{ marginTop: '15px' }}>
-                                Building the Future of <br />
-                                <span className="text-primary-1 italic">Connected Travel</span>
+                                Helping people make <br />
+                                <span className="text-primary-1 italic">real friends, offline</span>
                             </h1>
                             <p className="r1 text-neutral-1" style={{ marginTop: '20px', lineHeight: '1.6' }}>
-                                Most trips die in the planning phase, lost in a mess of fragmented docs and endless group chats.
+                                Most plans die in the group chat. SyncTrip lets you post what you want to do, see who nearby wants to do it too, and meet up.
                             </p>
                             {/* <p className="r1 text-neutral-1" style={{ marginTop: '15px', lineHeight: '1.6' }}>
                                 <strong>SyncTrip</strong> is the collaborative engine that turns travel chaos into synchronized itineraries. We are a team of engineers and explorers dedicated to building a seamless, real-time platform where solo travelers and groups can plan, budget, and explore with total confidence!
                             </p> */}
                             <p className="r1 text-neutral-1" style={{ marginTop: '15px', lineHeight: '1.6' }}>
-                                SyncTrip is a collaborative travel planning platform that helps people find travel buddies, coordinate group trips, and build shared itineraries in real time across destinations worldwide.
+                                SyncTrip is a social app for meeting people through plans and club events: board game nights, sports, outings and group trips, each with its own group chat. It is built by SyncTrip Digital Private Limited, a DPIIT-recognised startup from Chandigarh. <a href="#team" style={{ textDecoration: 'underline' }}>Meet the founder and team</a>.
                             </p>
 
                             <div style={{ marginTop: '30px', display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
@@ -365,7 +376,7 @@ export default function AboutPage() {
                                     alignItems: "center",
                                     justifyContent: "center"
                                 }}>
-                                    Start planning your trip
+                                    Find plans near you
                                 </a>
                                 <a href="/how-it-works" className="btn btn-secondary text-primary-1 underline" style={{
                                     width: "100%",
@@ -398,6 +409,7 @@ export default function AboutPage() {
 
                 </div>
             </section>
+            <Team />
             <section className="bg-white" style={{}}>
                 <div className="container-custom">
                     <div className="marginSectionLeftRight paddingSectionLeftRight">

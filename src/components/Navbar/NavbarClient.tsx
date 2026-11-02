@@ -287,6 +287,15 @@ const NavbarClient = ({ }) => {
                   </span>
                 </Link>
               </li>
+              <li className="nav-item"
+                style={{ borderBottom: isActive("/events") ? "2px solid var(--secondary-1)" : "" }}
+              >
+                <Link href="/events" className="nav-link">
+                  <span style={{ color: (!isSticky && isHomePage) ? "white" : "" }}>
+                    Events
+                  </span>
+                </Link>
+              </li>
               {/* <li className="nav-item"
               onClick={() => {
                 if (!isActive(ROUTES.BLOGS)) {
@@ -610,6 +619,11 @@ const NavbarClient = ({ }) => {
             // onClick={() => { redirectBtnClick(ROUTES.EXPLORE); closeDrawer(); }}
             >
               <Link href={ROUTES.PLANS} className="nav-link" onClick={closeDrawer}>Plans</Link>
+            </li>
+            <li className="nav-item"
+              style={{ borderBottom: isActive("/events") ? "2px solid var(--secondary-1)" : "" }}
+            >
+              <Link href="/events" className="nav-link" onClick={closeDrawer}>Events</Link>
             </li>
             <li className="nav-item"
               onClick={() => {

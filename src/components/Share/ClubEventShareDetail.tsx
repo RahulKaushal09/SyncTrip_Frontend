@@ -1,7 +1,10 @@
 import React from "react";
 import Link from "next/link";
 import { BadgeCheck, CalendarDays, ChevronDown, Languages, MapPin, RotateCcw, Ticket, Users } from "lucide-react";
-import { ClubEvent } from "@/types";
+import { Club, ClubEvent } from "@/types";
+import type { EventCard } from "@/utils/club.api.utils";
+import EventTimeline from "./EventTimeline";
+import clubStyles from "./ClubPage.module.css";
 import styles from "./ShareDetail.module.css";
 import GetAppCta from "./GetAppCta";
 import ClubEventBooking from "./ClubEventBooking";
@@ -11,6 +14,10 @@ import RichText from "@/components/common/RichText";
 
 type Props = {
   event: ClubEvent;
+  /** The organiser's public profile, for the organiser card. */
+  club?: Club | null;
+  /** The organiser's other past events, newest first. */
+  moreFromClub?: EventCard[];
 };
 
 /**
@@ -20,7 +27,7 @@ type Props = {
  * who are entitled to them. Neither is rendered here at all - a public URL is
  * not a place to publish who is going.
  */
-export default function ClubEventShareDetail({ event }: Props) {
+export default function ClubEventShareDetail({ event, club = null, moreFromClub = [] }: Props) {
   const heroImage = event.coverImageUrl || event.media?.find((m) => m.type === "image")?.url || null;
   const venue = event.venue ?? null;
   const venueLine = [venue?.name, venue?.address || venue?.locality].filter(Boolean).join(" · ");
@@ -29,6 +36,7 @@ export default function ClubEventShareDetail({ event }: Props) {
   const hasEnded = !isCancelled && isPast(event.endsAt || event.startsAt);
   const whenLine = formatWhen(event.startsAt, event.endsAt);
   const tags = (event.tags ?? []).slice(0, 8);
+  const orgLogo = club?.logoUrl || event.club?.logoUrl || null;
 
   return (
     <div className={styles.page}>
@@ -63,9 +71,9 @@ export default function ClubEventShareDetail({ event }: Props) {
                 <img src={event.club.logoUrl} alt="" className={styles.heroLogo} aria-hidden="true" />
               ) : null}
               <span>
-                Hosted by {event.club.name}
-                {event.club.isVerified ? " ✓" : ""}
+                Hosted by <Link href={`/share/club/${event.clubId}`} style={{ color: "#fff", fontWeight: 800 }}>{event.club.name}</Link>
               </span>
+              {event.club.isVerified && <BadgeCheck size={16} aria-label="Verified club" style={{ color: "#7dd3fc" }} />}
             </div>
           )}
 
@@ -136,16 +144,44 @@ export default function ClubEventShareDetail({ event }: Props) {
           </div>
 
           {event.club?.name && (
-            <Link href={`/share/club/${event.clubId}`} className={styles.card} style={{ textDecoration: "none" }}>
-              <h2 className={styles.cardTitle}>Organiser</h2>
-              <div className={styles.fact}>
-                <span className={styles.factIcon} aria-hidden="true"><BadgeCheck size={18} /></span>
+            <section className={`${styles.card} ${clubStyles.organiser}`} aria-labelledby="organiser-title">
+              <h2 id="organiser-title" className={styles.cardTitle} style={{ margin: 0 }}>Organiser</h2>
+              <div className={clubStyles.orgHead}>
+                {orgLogo ? (
+                  // eslint-disable-next-line @next/next/no-img-element -- Gumlet CDN, already sized
+                  <img src={orgLogo} alt={`${event.club.name} logo`} className={clubStyles.orgLogo} />
+                ) : (
+                  <span className={clubStyles.orgLogo} aria-hidden>{event.club.name.charAt(0)}</span>
+                )}
                 <div>
-                  <p className={styles.factValue}>{event.club.name}</p>
-                  <p className={styles.factNote}>See the club and its other events →</p>
+                  <p className={clubStyles.orgName}>
+                    {event.club.name}
+                    {event.club.isVerified && <BadgeCheck size={18} className={clubStyles.orgVerified} aria-label="Verified club" />}
+                  </p>
+                  <p className={clubStyles.orgMeta}>
+                    {[event.club.isVerified ? "Verified club" : "Club", club?.locality].filter(Boolean).join(" · ")}
+                  </p>
                 </div>
               </div>
-            </Link>
+              {(club?.tagline || club?.description) && (
+                <p className={clubStyles.orgTagline}>
+                  {club.tagline && club.tagline.length >= 60 ? club.tagline : (club.description || club.tagline || "").split(/(?<=[.!?])\s/)[0]}
+                </p>
+              )}
+              {(club?.categories?.length ?? 0) > 0 && (
+                <div className={clubStyles.orgChips}>
+                  {club!.categories!.filter((c) => c !== "multi_activity").slice(0, 5).map((c) => (
+                    <span key={c}>{humanize(c)}</span>
+                  ))}
+                </div>
+              )}
+              <div className={clubStyles.orgActions}>
+                <Link href={`/share/club/${event.clubId}`} className={clubStyles.orgBtn}>View club</Link>
+                {moreFromClub.length > 0 && (
+                  <a href="#more-from-club" className={clubStyles.orgBtnGhost}>Past events</a>
+                )}
+              </div>
+            </section>
           )}
 
           {event.description && (
@@ -280,6 +316,17 @@ export default function ClubEventShareDetail({ event }: Props) {
 
         </aside>
       </div>
+
+      {moreFromClub.length > 0 && (
+        <div id="more-from-club">
+          <EventTimeline
+            events={moreFromClub}
+            headingId="more-from-club-title"
+            title={`More from ${event.club?.name || "this club"}`}
+            subtitle="Events this club has hosted before. Tap one to see how it went."
+          />
+        </div>
+      )}
 
       <p className={styles.footerNote}>
         Book here or in the SyncTrip app - your ticket and the event chat live in the app.{" "}

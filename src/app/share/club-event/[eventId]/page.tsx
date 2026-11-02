@@ -178,6 +178,10 @@ export default async function ClubEventSharePage({ params }: PageProps) {
   if (!event) notFound();
 
   const canonical = absoluteUrl(`/share/club-event/${event.id}`);
+  const [club, clubPast] = event.clubId
+    ? await Promise.all([ClubApiService.getClub(event.clubId), ClubApiService.getClubPastEvents(event.clubId, 13)])
+    : [null, []];
+  const moreFromClub = clubPast.filter((e) => e.id !== event.id).slice(0, 12);
 
   return (
     <>
@@ -185,7 +189,7 @@ export default async function ClubEventSharePage({ params }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(buildJsonLd(event, canonical)) }}
       />
-      <ClubEventShareDetail event={event} />
+      <ClubEventShareDetail event={event} club={club} moreFromClub={moreFromClub} />
     </>
   );
 }

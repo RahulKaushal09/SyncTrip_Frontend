@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import ClubShareDetail from "@/components/Share/ClubShareDetail";
 import { humanize } from "@/components/Share/shareFormat";
 import { Club, ClubEvent } from "@/types";
-import { ClubApiService } from "@/utils/club.api.utils";
+import { ClubApiService, type EventCard } from "@/utils/club.api.utils";
 import {
   OG_IMAGE_HEIGHT,
   OG_IMAGE_WIDTH,
@@ -29,20 +29,40 @@ type PageProps = {
   params: Promise<{ idOrSlug: string }>;
 };
 
-function clubHeadline(club: Club): string {
-  const category = humanize(club.categories?.[0]);
-  const where = club.locality;
-  if (category && where) return `${club.name} - ${category} club in ${where}`;
-  if (category) return `${club.name} - ${category} club on SyncTrip`;
-  if (where) return `${club.name} - club in ${where}`;
+/** "Board Games, Badminton & Running" - the club's real activities, not "Multi Activity". */
+function activityList(club: Club, max = 3): string {
+  const list = (club.categories ?? [])
+    .filter((c) => !/^(multi_activity|community_space|other)$/.test(c))
+    .slice(0, max)
+    .map(humanize);
+  return list.length > 1 ? `${list.slice(0, -1).join(", ")} & ${list[list.length - 1]}` : list[0] ?? "";
+}
+
+/** Where the club meets: its own locality, else the area most of its events were held in. */
+function clubPlace(club: Club, events: EventCard[]): string | null {
+  if (club.locality) return club.locality;
+  const counts = new Map<string, number>();
+  events.forEach((e) => e.locality && counts.set(e.locality, (counts.get(e.locality) ?? 0) + 1));
+  return [...counts.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
+}
+
+function clubHeadline(club: Club, place: string | null): string {
+  const activities = activityList(club);
+  if (activities && place) return `${club.name}: ${activities} in ${place}`;
+  if (activities) return `${club.name}: ${activities} Meetups`;
+  if (place) return `${club.name}: Club Events in ${place}`;
   return `${club.name} on SyncTrip`;
 }
 
-function clubDescription(club: Club): string {
-  const fromClub = toPreviewText(club.tagline || club.description, 155);
+function clubDescription(club: Club, place: string | null, pastCount: number): string {
+  // A one-line tagline ("Your weekend fun loving club") is too thin for a search snippet.
+  const tagline = club.tagline && club.tagline.length >= 70 ? club.tagline : null;
+  const fromClub = toPreviewText(tagline || club.description, 155);
   if (fromClub) return fromClub;
-  const where = club.locality ? ` in ${club.locality}` : "";
-  return `Follow ${club.name}${where} on SyncTrip - join the club chat room and get notified about upcoming club events and meetups.`;
+  const where = place ? ` in ${place}` : "";
+  const what = activityList(club, 4).toLowerCase() || "meetups";
+  const track = pastCount > 0 ? " See past events and" : "";
+  return `${club.name} hosts ${what}${where}.${track} join the next one on SyncTrip.`;
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -53,8 +73,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return { title: "Club not found | SyncTrip", robots: { index: false, follow: true } };
   }
 
-  const title = clubHeadline(club);
-  const description = clubDescription(club);
+  const [upcoming, past] = await Promise.all([
+    ClubApiService.getClubUpcomingEvents(club.id, 6),
+    ClubApiService.getClubPastEvents(club.id, 24),
+  ]);
+  const place = clubPlace(club, [...past, ...upcoming.map((e) => ({ locality: e.venue?.locality ?? null }) as EventCard)]);
+  const title = clubHeadline(club, place);
+  const description = clubDescription(club, place, past.length);
   const canonical = absoluteUrl(`/share/club/${club.id}`);
   const image = toOgImageUrl(club.coverImageUrl || club.logoUrl);
 
@@ -160,7 +185,10 @@ export default async function ClubSharePage({ params }: PageProps) {
 
   if (!club) notFound();
 
-  const upcomingEvents = await ClubApiService.getClubUpcomingEvents(club.id, 6);
+  const [upcomingEvents, pastEvents] = await Promise.all([
+    ClubApiService.getClubUpcomingEvents(club.id, 6),
+    ClubApiService.getClubPastEvents(club.id, 24),
+  ]);
   const canonical = absoluteUrl(`/share/club/${club.id}`);
 
   return (
@@ -169,7 +197,7 @@ export default async function ClubSharePage({ params }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(buildJsonLd(club, upcomingEvents, canonical)) }}
       />
-      <ClubShareDetail club={club} upcomingEvents={upcomingEvents} />
+      <ClubShareDetail club={club} upcomingEvents={upcomingEvents} pastEvents={pastEvents} />
     </>
   );
 }

@@ -4,12 +4,16 @@ import { BadgeCheck, CalendarDays, Clock, Gift, MapPin, Star, Users } from "luci
 import { Club, ClubEvent } from "@/types";
 import styles from "./ShareDetail.module.css";
 import GetAppCta from "./GetAppCta";
-import { formatDayTile, formatTime, humanize } from "./shareFormat";
+import EventTimeline from "./EventTimeline";
+import clubStyles from "./ClubPage.module.css";
+import type { EventCard } from "@/utils/club.api.utils";
+import { formatDayTile, formatPrice, formatTime, humanize } from "./shareFormat";
 import RichText from "@/components/common/RichText";
 
 type Props = {
   club: Club;
   upcomingEvents: ClubEvent[];
+  pastEvents?: EventCard[];
 };
 
 /**
@@ -19,7 +23,7 @@ type Props = {
  * app shows those to signed-in users; a page that anyone can reach by guessing
  * a slug is the wrong place for them.
  */
-export default function ClubShareDetail({ club, upcomingEvents }: Props) {
+export default function ClubShareDetail({ club, upcomingEvents, pastEvents = [] }: Props) {
   const place = [club.locality, club.address].filter(Boolean).join(" · ");
   const categories = (club.categories ?? []).slice(0, 6);
   const stats = club.stats ?? {};
@@ -27,6 +31,7 @@ export default function ClubShareDetail({ club, upcomingEvents }: Props) {
   const whatWeDo = club.whatWeDo ?? [];
   const perks = club.perks ?? [];
   const faqs = club.faqs ?? [];
+  const gallery = (club.gallery ?? []).filter((m) => m.type === "image").slice(0, 8);
 
   return (
     <div className={styles.page}>
@@ -66,8 +71,63 @@ export default function ClubShareDetail({ club, upcomingEvents }: Props) {
 
           <h1 className={styles.heroTitle}>{club.name}</h1>
           {club.tagline && <p className={styles.heroSubtitle}>{club.tagline}</p>}
+          <div className={clubStyles.heroActions}>
+            {upcomingEvents.length > 0 && (
+              <a href="#upcoming" className={clubStyles.heroBtnPrimary}>See upcoming events</a>
+            )}
+            {pastEvents.length > 0 && (
+              <a href="#past-events" className={clubStyles.heroBtn}>Past events</a>
+            )}
+          </div>
         </div>
       </header>
+
+      {upcomingEvents.length > 0 && (
+        <section id="upcoming" className={clubStyles.upcoming} aria-labelledby="upcoming-title">
+          <h2 id="upcoming-title" className={clubStyles.sectionTitle}>Upcoming events</h2>
+          <div className={clubStyles.upGrid}>
+            {upcomingEvents.map((event) => {
+              const tile = formatDayTile(event.startsAt);
+              const image = event.coverImageUrl || event.media?.find((m) => m.type === "image")?.url;
+              const venue = event.venue?.name || event.venue?.locality || club.locality;
+              const minPass = event.passes?.length ? Math.min(...event.passes.map((p) => p.price)) : null;
+              return (
+                <Link key={event.id} href={`/share/club-event/${event.id}`} className={clubStyles.upCard}>
+                  <div className={clubStyles.upMedia}>
+                    {image ? (
+                      // eslint-disable-next-line @next/next/no-img-element -- Gumlet CDN, already sized
+                      <img src={image} alt={event.title} loading="lazy" />
+                    ) : null}
+                    <span className={clubStyles.upDate}>
+                      <b>{tile.day}</b>
+                      <span>{tile.month}</span>
+                    </span>
+                  </div>
+                  <div className={clubStyles.upBody}>
+                    {event.category && <span className={clubStyles.upCat}>{humanize(event.category)}</span>}
+                    <h3>{event.title}</h3>
+                    <p>{[formatTime(event.startsAt), venue].filter(Boolean).join(" · ")}</p>
+                    <div className={clubStyles.upFoot}>
+                      <span className={clubStyles.upPrice}>
+                        {minPass !== null && minPass > 0 ? `from ₹${minPass.toLocaleString("en-IN")}` : formatPrice(event.pricing?.isFree, event.pricing?.ticketPrice)}
+                      </span>
+                      <span className={clubStyles.upCta}>Book →</span>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </section>
+      )}
+
+      <div id="past-events">
+        <EventTimeline
+          events={pastEvents}
+          title={`Past events by ${club.name}`}
+          subtitle="Scroll back through what this club has hosted. Tap any event to see the details and photos."
+        />
+      </div>
 
       <div className={styles.container}>
         <main className={styles.main}>
@@ -102,6 +162,18 @@ export default function ClubShareDetail({ club, upcomingEvents }: Props) {
             <section className={styles.card}>
               <h2 className={styles.cardTitle}>About {club.name}</h2>
               <RichText text={club.description} className={styles.prose} />
+            </section>
+          )}
+
+          {gallery.length > 0 && (
+            <section className={styles.card}>
+              <h2 className={styles.cardTitle}>Photos</h2>
+              <div className={clubStyles.gallery}>
+                {gallery.map((m, i) => (
+                  // eslint-disable-next-line @next/next/no-img-element -- Gumlet CDN, already sized
+                  <img key={m.url} src={m.thumbnailUrl || m.url} alt={`${club.name} photo ${i + 1}`} loading="lazy" />
+                ))}
+              </div>
             </section>
           )}
 
@@ -140,32 +212,6 @@ export default function ClubShareDetail({ club, upcomingEvents }: Props) {
                     </div>
                   </div>
                 ))}
-              </div>
-            </section>
-          )}
-
-          {upcomingEvents.length > 0 && (
-            <section className={styles.card}>
-              <h2 className={styles.cardTitle}>Upcoming events</h2>
-              <div className={styles.rowList}>
-                {upcomingEvents.map((event) => {
-                  const tile = formatDayTile(event.startsAt);
-                  const venue = event.venue?.name || event.venue?.locality || club.locality;
-                  return (
-                    <Link key={event.id} href={`/share/club-event/${event.id}`} className={styles.row}>
-                      <div className={styles.rowDate}>
-                        <span className={styles.rowDay}>{tile.day}</span>
-                        <span className={styles.rowMonth}>{tile.month}</span>
-                      </div>
-                      <div className={styles.rowBody}>
-                        <h3 className={styles.rowTitle}>{event.title}</h3>
-                        <p className={styles.rowMeta}>
-                          {[formatTime(event.startsAt), venue].filter(Boolean).join(" · ")}
-                        </p>
-                      </div>
-                    </Link>
-                  );
-                })}
               </div>
             </section>
           )}
