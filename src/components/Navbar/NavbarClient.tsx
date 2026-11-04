@@ -338,9 +338,12 @@ const NavbarClient = ({ }) => {
               <li className="nav-item"
                 onClick={() => setFeedbackFormOpen(true)}
                 style={{ cursor: "pointer" }}>
-                <span style={{ color: (!isSticky && isHomePage) ? "white" : "" }} className="nav-link">
-                  {isLoggedIn ? 'Feedback' : 'Contact'}
-                </span>
+                <Link href="/feedback" className="nav-link">
+                  <span style={{ color: (!isSticky && isHomePage) ? "white" : "" }} className="">
+                    {isLoggedIn ? 'Feedback' : 'Contact'}
+                  </span>
+                </Link>
+
               </li>
               <li className="nav-item"
                 onClick={() => {
@@ -702,9 +705,11 @@ const NavbarClient = ({ }) => {
             <li className="nav-item"
               onClick={() => { closeDrawer(); setFeedbackFormOpen(true) }}
               style={{ cursor: "pointer" }}>
-              <span className="nav-link">
-                {isLoggedIn ? 'Feedback' : 'Contact'}
-              </span>
+              <div className="nav-link">
+                <span style={{ color: "#212529" }} className="">
+                  {isLoggedIn ? 'Feedback' : 'Contact'}
+                </span>
+              </div>
             </li>
 
             {/* {user ? (

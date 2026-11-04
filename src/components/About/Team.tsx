@@ -22,7 +22,7 @@ export const FOUNDERS = [
     name: "Rahul Kaushal",
     role: "Founder & Director",
     photo: "/home/founder-rahul-kaushal.webp",
-    bio: "Full-stack engineer and SyncTrip’s technical founder. Before SyncTrip he was an SDE-1 at EduRev (Y Combinator S20). B.Tech in Aerospace Engineering from Punjab Engineering College, Chandigarh (2024). He built SyncTrip’s app, website and backend in-house and leads product, engineering and partnerships.",
+    bio: "Full-stack engineer and SyncTrip’s technical founder. Worked as an SDE for past 5 years. Built SyncTrip’s app, website and backend in-house and leads product, engineering and partnerships.",
     focus: ["Product & engineering", "Club partnerships", "Company strategy"],
   },
 ];

@@ -7,6 +7,7 @@ import { APP_LINKS } from "@/constants/config";
 import { appOpenUrl } from "@/utils/appDeepLink";
 import { captureWebAttribution } from "@/utils/webAttribution";
 import { trackViewContent } from "@/utils/adTracking";
+import { useClubPixel } from "@/hooks/useClubPixel";
 import ClubTicketCard from "./ClubTicketCard";
 import styles from "./ClubBooking.module.css";
 
@@ -40,6 +41,8 @@ export default function ClubEventBooking({ event }: { event: ClubEvent }) {
   const closedLabel = isCancelled ? "Event cancelled" : started ? "Booking closed" : event.status !== "published" && !soldOut ? "Not open for booking" : null;
 
   const price = fromPrice ?? event.tierInfo?.current?.price ?? event.pricing?.ticketPrice ?? 0;
+  // The club's own Meta Pixel, if it connected one (also covers the checkout sheet on this page).
+  useClubPixel({ id: event.id, title: event.title, price });
 
   useEffect(() => {
     captureWebAttribution();

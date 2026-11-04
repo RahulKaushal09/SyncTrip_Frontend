@@ -13,6 +13,7 @@ import {
 } from "@/utils/clubCheckout.api";
 import { captureWebAttribution, getWebAttribution } from "@/utils/webAttribution";
 import { trackInitiateCheckout, trackPurchase } from "@/utils/adTracking";
+import { useClubPixel } from "@/hooks/useClubPixel";
 import type { RazorpayCheckoutResponse } from "@/app/checkout/checkout.types";
 import { formatWhen } from "./shareFormat";
 import s from "./ClubBookingPage.module.css";
@@ -122,6 +123,8 @@ export default function ClubBookingPage({ event }: { event: ClubEvent }) {
   const [pendingConfirm, setPendingConfirm] = useState(false);
 
   useEffect(() => { captureWebAttribution(); }, []);
+  // The club's own Meta Pixel, if it connected one.
+  useClubPixel({ id: event.id, title: event.title, price: event.pricing?.ticketPrice ?? 0 });
   useEffect(() => {
     if (resendIn <= 0) return;
     const t = setTimeout(() => setResendIn((v) => v - 1), 1000);
@@ -439,7 +442,7 @@ export default function ClubBookingPage({ event }: { event: ClubEvent }) {
                             </span>
                             <Stepper
                               value={qty}
-                              max={qty + cap}
+                              max={cap}
                               onChange={(v) => { setError(null); setCart((c) => ({ ...c, [p.id]: Math.max(0, v) })); }}
                               label={p.name}
                             />

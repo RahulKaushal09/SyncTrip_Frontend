@@ -85,13 +85,14 @@
 }
 
 .track {
+
   margin-top: 1.25rem;
   overflow-x: auto;
   overscroll-behavior-x: contain;
   scroll-snap-type: x proximity;
   scrollbar-width: thin;
   cursor: grab;
-  padding-bottom: 0.75rem;
+  padding-bottom: 20px;
   -webkit-overflow-scrolling: touch;
 }
 
@@ -215,11 +216,25 @@
   color: #16324f;
 }
 
-.toneSky { background: #dbeefe; }
-.toneSun { background: #fde68a; }
-.toneRose { background: #fecdd3; }
-.toneMint { background: #bbf7d0; }
-.toneLilac { background: #e9d5ff; }
+.toneSky {
+  background: #dbeefe;
+}
+
+.toneSun {
+  background: #fde68a;
+}
+
+.toneRose {
+  background: #fecdd3;
+}
+
+.toneMint {
+  background: #bbf7d0;
+}
+
+.toneLilac {
+  background: #e9d5ff;
+}
 
 .cardTitle {
   margin: 0.15rem 0 0;

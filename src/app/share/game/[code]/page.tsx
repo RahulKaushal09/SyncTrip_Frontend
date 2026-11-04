@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import apiClient from "@/utils/apiClient";
 import { absoluteUrl } from "@/utils/og.utils";
 
 /**
@@ -20,14 +19,22 @@ export const revalidate = 15;
 type Room = { code: string; name: string | null; status: string; round: number; players: number; maxPlayers: number; host: string | null; startsAt: number | null };
 type PageProps = { params: Promise<{ code: string }> };
 
-// Game art is served by the backend (same origin as the API, without /api).
-const mediaBase = () => String(process.env.NEXT_PUBLIC_BACKEND_BASE_URL || "https://synctrip.in/api").replace(/\/api\/?$/, "").replace(/\/$/, "");
-const media = (f: string) => `${mediaBase()}/games/blindshot/media/${f}?v=2`;
+// The MAIN backend, without /api or /web-api. Game art (/games/blindshot/...) and
+// live rooms live there. /web-api is a separate backend copy: it has neither the
+// game files nor the rooms (rooms are kept in the main backend's memory).
+// NEXT_PUBLIC_GAME_BASE_URL can override (e.g. https://synctrip.in).
+const gameBase = () =>
+  String(process.env.NEXT_PUBLIC_GAME_BASE_URL || process.env.NEXT_PUBLIC_BACKEND_BASE_URL || "https://synctrip.in")
+    .replace(/\/$/, "")
+    .replace(/\/(web-)?api$/, "");
+const media = (f: string) => `${gameBase()}/games/blindshot/media/${f}?v=2`;
 
 async function getRoom(code: string): Promise<Room | null> {
   try {
-    const res = await apiClient.get<{ room: Room }>(`/games/blindshot/public/${encodeURIComponent(code.toUpperCase())}`);
-    return res.data?.room ?? null;
+    const res = await fetch(`${gameBase()}/api/games/blindshot/public/${encodeURIComponent(code.toUpperCase())}`, { next: { revalidate: 15 } });
+    if (!res.ok) return null;
+    const data = (await res.json()) as { room?: Room };
+    return data?.room ?? null;
   } catch {
     return null; // ended / unknown code / backend briefly down - the page still sells the game
   }
