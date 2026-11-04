@@ -263,7 +263,7 @@ const NavbarClient = ({ }) => {
               >
                 <Link href={ROUTES.EXPLORE} className="nav-link">
                   <span style={{ color: (!isSticky && isHomePage) ? "white" : "" }}>
-                    Explore
+                    Trips
                   </span>
                 </Link>
               </li>
@@ -604,7 +604,7 @@ const NavbarClient = ({ }) => {
               }}
             // onClick={() => { redirectBtnClick(ROUTES.EXPLORE); closeDrawer(); }}
             >
-              <Link href={ROUTES.EXPLORE} className="nav-link" onClick={closeDrawer}>Explore</Link>
+              <Link href={ROUTES.EXPLORE} className="nav-link" onClick={closeDrawer}>Trips</Link>
             </li>
             <li className="nav-item"
               onClick={() => {

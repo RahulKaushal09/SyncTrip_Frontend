@@ -39,8 +39,8 @@ export default function ClubEventShareDetail({ event, club = null, moreFromClub 
   const orgLogo = club?.logoUrl || event.club?.logoUrl || null;
 
   return (
-    <div className={styles.page}>
-      <header className={`${styles.hero} ${styles.heroTall}`}>
+    <div className={`${styles.page} ${styles.pageInset}`}>
+      <header className={`${styles.hero} ${styles.heroTall} ${styles.heroCard}`}>
         {heroImage ? (
           // eslint-disable-next-line @next/next/no-img-element -- remote CDN art, already sized by Gumlet
           <img

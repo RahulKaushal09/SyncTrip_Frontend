@@ -27,6 +27,43 @@
   min-height: 460px;
 }
 
+/* Club and club event: the cover sits as a rounded card under the navbar instead of
+   bleeding edge to edge behind it, so the nav stays on the light page. */
+.pageInset {
+  margin-top: 0;
+  /* The navbar is fixed and ends ~85px down at every width, but the space the
+     layout reserves for it varies (globals.css .App), so pad each range to
+     land the card ~12px under it. */
+  padding-top: 27px;
+  /* Start white, like the strip behind the navbar, so there is no seam. */
+  background: linear-gradient(180deg, #FFFFFF 0%, #FFFFFF 380px, #F6F9FB 100%);
+}
+
+@media (max-width: 1050px) and (min-width: 990px) {
+  .pageInset {
+    padding-top: 0;
+  }
+}
+
+@media (max-width: 989px) {
+  .pageInset {
+    padding-top: 47px;
+  }
+}
+
+.heroCard {
+  width: calc(100% - 3rem);
+  max-width: calc(1080px - 3rem);
+  margin: 0 auto;
+  border-radius: 28px;
+  min-height: 420px;
+  box-shadow: 0 24px 48px rgba(15, 23, 42, 0.12);
+}
+
+.heroCard .heroInner {
+  padding: 2.25rem 2.25rem;
+}
+
 .heroImage {
   position: absolute;
   inset: 0;
@@ -503,5 +540,19 @@ a.row:hover {
 
   .heroInner {
     padding: 2rem 1.25rem;
+  }
+
+  .heroCard {
+    width: calc(100% - 24px);
+    min-height: 300px;
+    border-radius: 20px;
+  }
+
+  .heroCard .heroInner {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .pageInset .container {
+    margin-top: 0;
   }
 }

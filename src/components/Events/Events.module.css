@@ -1,7 +1,10 @@
 /* /events: upcoming club events, city filter, recent events and clubs. */
 .page {
-  padding-top: 0.5rem;
-  background: linear-gradient(180deg, #f7fafc 0%, #ffffff 40%, #f6f9fb 100%);
+  /* Same inset as the club and club event pages (ShareDetail.module.css
+     .pageInset): the fixed navbar ends ~85px down, the space reserved for it
+     varies by width, so land the hero ~12px under it. */
+  padding-top: 27px;
+  background: linear-gradient(180deg, #ffffff 0%, #ffffff 380px, #f6f9fb 100%);
   color: #0f172a;
   overflow-x: hidden;
   padding-bottom: 4rem;
@@ -10,10 +13,14 @@
 .hero {
   position: relative;
   isolation: isolate;
-  margin: 0 12px;
+  /* Lined up with the content below it (.body). */
+  width: calc(100% - 3rem);
+  max-width: calc(1080px - 3rem);
+  margin: 0 auto;
   border-radius: 28px;
   overflow: hidden;
-  padding: 3.25rem 1.5rem 3rem;
+  padding: 3rem 2.25rem 2.75rem;
+  box-shadow: 0 24px 48px rgba(15, 23, 42, 0.12);
   background:
     radial-gradient(800px 420px at 85% 0%, rgba(243, 53, 158, 0.3), transparent 60%),
     radial-gradient(700px 420px at 5% 100%, rgba(61, 187, 245, 0.35), transparent 62%),
@@ -22,8 +29,7 @@
 }
 
 .heroInner {
-  max-width: 1080px;
-  margin: 0 auto;
+  max-width: 760px;
 }
 
 .crumbs {
@@ -493,15 +499,23 @@
   margin-top: 0.6rem;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 1050px) and (min-width: 990px) {
   .page {
-    padding-top: 2.25rem;
+    padding-top: 0;
   }
+}
 
+@media (max-width: 989px) {
+  .page {
+    padding-top: 47px;
+  }
+}
+
+@media (max-width: 640px) {
   .hero {
-    margin: 0 8px;
-    border-radius: 22px;
-    padding: 2.25rem 1rem 2rem;
+    width: calc(100% - 2rem);
+    border-radius: 20px;
+    padding: 2rem 1.25rem 1.75rem;
   }
 
   .body {
