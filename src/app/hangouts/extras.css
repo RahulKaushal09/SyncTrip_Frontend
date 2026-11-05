@@ -1,0 +1,39 @@
+/* Additions for the Next.js port (form fields, "you're in" page). Scoped under .stl like landing.css. */
+.stl .fields{display:grid;gap:16px}
+.stl .field{display:block;margin:0}
+.stl .field>span{display:block;font:700 13px Satoshi;color:var(--text-3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.stl .field input{width:100%;border:1.5px solid var(--border);border-radius:14px;padding:12px 14px;font:500 16px Satoshi,system-ui,sans-serif!important;color:var(--text);background:#fff;outline:none}
+.stl .field input:focus{border-color:var(--primary)}
+.stl .field em{display:block;font-style:normal;color:var(--cinema);font-size:13px;margin-top:6px}
+.stl .field small{display:block;color:var(--text-3);font-size:13px;margin-top:6px}
+.stl .phone-in{display:flex;align-items:center;border:1.5px solid var(--border);border-radius:14px;background:#fff;overflow:hidden}
+.stl .phone-in:focus-within{border-color:var(--primary)}
+.stl .phone-in b{padding:0 4px 0 14px;color:var(--text-2)}
+.stl .phone-in input{border:0;border-radius:0;padding-left:6px}
+.stl .wiz-error{margin-top:14px;background:var(--pink-light);color:var(--pink-dark);border-radius:14px;padding:12px 14px;font-size:14px;font-weight:500}
+.stl .opt{background:#fff}
+.stl .rail-empty{max-width:1180px;margin:30px auto 0;padding:0 20px;color:rgba(255,255,255,.7)}
+
+/* "You're in" page */
+.stl .joined{min-height:100vh;display:flex;align-items:center;padding:60px 0;background:radial-gradient(900px 500px at 85% -10%,var(--primary-4),transparent 70%),radial-gradient(700px 400px at -10% 30%,#FBEAF0,transparent 70%),var(--bg-2)}
+.stl .joined .jgrid{display:grid;grid-template-columns:1.1fr .9fr;gap:56px;align-items:center}
+.stl .joined .ok{width:72px;height:72px;border-radius:24px;background:var(--success-bg);color:var(--success);display:grid;place-items:center;margin-bottom:22px}
+.stl .joined .ok .ico{width:38px;height:38px;stroke-width:2.4}
+.stl .joined h1{font-family:"Clash Display",Satoshi,sans-serif;font-weight:600;font-size:clamp(40px,5.4vw,64px);line-height:1.02;color:var(--navy)}
+.stl .joined .lead{margin-top:16px}
+.stl .jsteps{display:grid;gap:12px;margin:30px 0}
+.stl .jstep{display:flex;gap:14px;align-items:flex-start;background:#fff;border:1px solid var(--border);border-radius:18px;padding:14px 16px}
+.stl .jstep .num{flex:none;width:30px;height:30px;border-radius:50%;background:var(--primary);color:#fff;display:grid;place-items:center;font:700 14px Satoshi}
+.stl .jstep b{display:block;color:var(--navy)}
+.stl .jstep span{color:var(--text-2);font-size:15px}
+.stl .store-row{display:flex;gap:10px;flex-wrap:wrap}
+.stl .store-row .sbtn{padding:14px 22px}
+.stl .jphone{position:relative;max-width:300px;margin:0 auto}
+.stl .jphone .frame{border-radius:36px;border:8px solid #0b1f33;overflow:hidden;box-shadow:0 40px 80px -30px rgba(5,22,33,.55);transform:rotate(3deg)}
+.stl .jphone .note{position:absolute;left:-40px;bottom:60px;background:#fff;border-radius:18px;padding:12px 14px;display:flex;gap:10px;align-items:center;box-shadow:var(--shadow),0 24px 40px -24px rgba(5,22,33,.5);max-width:260px}
+.stl .jphone .note b{display:block;color:var(--navy);font-size:14px}
+.stl .jphone .note small{color:var(--text-2);font-size:13px}
+@media (max-width:900px){.stl .joined .jgrid{grid-template-columns:1fr}.stl .jphone .note{left:0}}
+.stl .live.light{background:#fff;border-color:var(--border);color:var(--text)}
+.stl .live.light i{background:var(--success);box-shadow:0 0 0 4px rgba(43,154,102,.2)}
+.stl .store-row .sbtn .ico{width:20px;height:20px}

@@ -36,7 +36,7 @@ export default function LayoutUIController({ children }: { children: React.React
           </div>
         </div>
       )}
-      <div style={{ height: "25px" }}></div>
+      <div className="layout-spacer" style={{ height: "25px" }}></div>
       {children}
     </>
   );
