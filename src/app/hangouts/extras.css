@@ -37,3 +37,6 @@
 .stl .live.light{background:#fff;border-color:var(--border);color:var(--text)}
 .stl .live.light i{background:var(--success);box-shadow:0 0 0 4px rgba(43,154,102,.2)}
 .stl .store-row .sbtn .ico{width:20px;height:20px}
+/* .App has overflow-x:hidden on small screens, which breaks position:sticky on our nav. clip keeps it sticky. */
+body:has(.stl) .App{overflow-x:clip!important}
+.stl .chip{color:var(--text)}
