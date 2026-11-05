@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Ico } from "./Shell";
 import { useMoviePicks } from "./MoviePicks";
 import { portrait } from "../_lib/api";
+import type { RazorpayCheckoutResponse } from "@/app/checkout/checkout.types";
 
 export type Variant = "movies" | "hangouts" | "sports";
 type Pass = "solo" | "ladies" | "duo";
@@ -50,11 +51,53 @@ const PASS_HINT: Record<Variant, string> = {
   sports: "Your court fee is included in every pass.",
 };
 
+type CreateResponse = {
+  requestId: string;
+  token: string;
+  checkout: { orderId: string; amount: number; currency: string; keyId: string; name: string; description: string; prefill: { name: string; contact: string } };
+};
+
+/** POST to the backend; throws the backend's own message on failure. */
+async function api<T = unknown>(path: string, body: unknown): Promise<T> {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${path}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  const json = await res.json().catch(() => ({}));
+  if (!res.ok || json.success === false) throw new Error(json.message || json.error || "Something went wrong. Try again.");
+  return json as T;
+}
+
+const RAZORPAY_SRC = "https://checkout.razorpay.com/v1/checkout.js";
+function loadRazorpay(): Promise<boolean> {
+  if (window.Razorpay) return Promise.resolve(true);
+  return new Promise((resolve) => {
+    const s = document.createElement("script");
+    s.src = RAZORPAY_SRC;
+    s.async = true;
+    s.onload = () => resolve(true);
+    s.onerror = () => resolve(false);
+    document.body.appendChild(s);
+  });
+}
+
+/** utm_* from the landing URL, so the backend knows which ad brought them. */
+function utm() {
+  const q = new URLSearchParams(window.location.search);
+  const out: Record<string, string> = {};
+  ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"].forEach((k) => { const v = q.get(k); if (v) out[k] = v.slice(0, 120); });
+  return Object.keys(out).length ? out : undefined;
+}
+
 const TICK = (
   <svg width="12" height="12" viewBox="0 0 20 20" aria-hidden="true">
     <path d="M5 10.5l3.2 3.2L15 7" fill="none" stroke="#fff" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 );
+
+/** Indian mobile; in dev also the backend's built-in test numbers (OTP 6345). */
+const validPhone = (p: string) => /^[6-9]\d{9}$/.test(p) || (process.env.NODE_ENV !== "production" && /^1234512\d{3}$/.test(p));
 
 /** 18th birthday on or before today. */
 function isAdult(dob: string) {
@@ -102,6 +145,8 @@ export default function JoinWizard({ variant }: { variant: Variant }) {
   const [pass, setPass] = useState<Pass>("solo");
   const [womenOnly, setWomenOnly] = useState(false);
 
+  const [otpSent, setOtpSent] = useState(false);
+  const [otp, setOtp] = useState("");
   const [cur, setCur] = useState(0);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
@@ -129,7 +174,7 @@ export default function JoinWizard({ variant }: { variant: Variant }) {
     s.push({ name: "When", valid: whenAnswered && anyDay });
     s.push({ name: "Area", valid: !!area });
     if (variant === "hangouts") s.push({ name: "Vibe", valid: !!food && vibes.length > 0 });
-    s.push({ name: "You", valid: name.trim().length >= 2 && !!gender && isAdult(dob) && /^[6-9]\d{9}$/.test(phone) });
+    s.push({ name: "You", valid: name.trim().length >= 2 && !!gender && isAdult(dob) && validPhone(phone) });
     s.push({ name: "Pass", valid: true });
     return s;
   }, [variant, picks, sports, level, gear, whenAnswered, anyDay, area, food, vibes, name, gender, dob, phone]);
@@ -191,18 +236,48 @@ export default function JoinWizard({ variant }: { variant: Variant }) {
       pass,
       groupType: pass === "ladies" && womenOnly ? "women_only" : "mixed",
     };
+    // Flow (backend: routes/hangouts.routes.js):
+    //   1. POST /hangouts/web/otp       → SMS code
+    //   2. POST /hangouts/requests      form + OTP → user + request + Razorpay order
+    //   3. Razorpay checkout → POST /hangouts/requests/:id/verify → "You're in" page
     try {
-      // HangoutRequest endpoint (see synctrip-tables/HANGOUTS_REQUEST_POOL_PLAN.md). The backend
-      // answers with the phone OTP + Razorpay step; until it exists this fails and we say so.
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/hangouts/requests`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
+      if (!otpSent) {
+        await api("/hangouts/web/otp", { phone });
+        setOtpSent(true);
+        setSending(false);
+        return;
+      }
+      const created = await api<CreateResponse>("/hangouts/requests", { ...body, otp, attribution: utm() });
+      const finish = async (resp: RazorpayCheckoutResponse) => {
+        try {
+          await api(`/hangouts/requests/${created.requestId}/verify`, { token: created.token, ...resp });
+        } catch {
+          // Money went through Razorpay; the team re-checks it from the panel. Don't show a scary error.
+        }
+        window.location.href = `${window.location.pathname.replace(/\/$/, "")}/joined`;
+      };
+      if (created.checkout.keyId === "dev") {
+        // Local backend with HANGOUTS_DEV_PAYMENTS=1: no real payment.
+        await finish({ razorpay_order_id: created.checkout.orderId, razorpay_payment_id: "dev_pay", razorpay_signature: "dev" });
+        return;
+      }
+      if (!(await loadRazorpay()) || !window.Razorpay) throw new Error("Payment couldn't load. Check your connection and try again.");
+      const rzp = new window.Razorpay({
+        key: created.checkout.keyId,
+        order_id: created.checkout.orderId,
+        amount: created.checkout.amount,
+        currency: created.checkout.currency,
+        name: created.checkout.name,
+        description: created.checkout.description,
+        prefill: created.checkout.prefill,
+        theme: { color: "#3ABEF5" },
+        handler: finish,
+        modal: { ondismiss: () => { setError("Payment not completed. Tap pay to try again."); setSending(false); } },
       });
-      if (!res.ok) throw new Error(String(res.status));
-      window.location.href = `${window.location.pathname.replace(/\/$/, "")}/joined`;
-    } catch {
-      setError("Sign-ups for this aren't open yet. Download the SyncTrip app and we'll tell you the moment they are.");
+      rzp.on("payment.failed", () => setError("The payment failed. No money was taken. Try again or use another method."));
+      rzp.open();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Something went wrong. Try again.");
       setSending(false);
     }
   }
@@ -342,7 +417,7 @@ export default function JoinWizard({ variant }: { variant: Variant }) {
             </label>
             <label className="field"><span>Phone number</span>
               <div className="phone-in"><b>+91</b>
-                <input inputMode="numeric" value={phone} onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))} placeholder="10-digit mobile" autoComplete="tel-national" />
+                <input inputMode="numeric" value={phone} onChange={(e) => { setPhone(e.target.value.replace(/\D/g, "").slice(0, 10)); setOtpSent(false); setOtp(""); }} placeholder="10-digit mobile" autoComplete="tel-national" />
               </div>
               <small>We&apos;ll send a one-time code to verify it.</small>
             </label>
@@ -376,15 +451,28 @@ export default function JoinWizard({ variant }: { variant: Variant }) {
             <div><Ico name="i-pin" /><span><b>From:</b> {area}{food ? ` · ${food}` : ""}</span></div>
             <div><Ico name="i-users" /><span><b>{name}</b> · +91 {phone}</span></div>
           </div>
+          {otpSent && (
+            <label className="field" style={{ marginTop: 16 }}>
+              <span>Code sent to +91 {phone}</span>
+              <input inputMode="numeric" autoComplete="one-time-code" value={otp} placeholder="Enter the OTP"
+                onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))} />
+              <small>
+                Didn&apos;t get it?{" "}
+                <button type="button" className="sbtn-text" style={{ padding: 0, fontSize: 13 }} onClick={() => { setOtpSent(false); setOtp(""); }}>Send again</button>
+              </small>
+            </label>
+          )}
           {error && <p className="wiz-error">{error}</p>}
         </div>
       )}
 
       <div className="wiz-foot">
         <button className="sbtn-text" type="button" style={{ visibility: cur === 0 ? "hidden" : "visible" }} onClick={() => setCur((c) => Math.max(0, c - 1))}>← Back</button>
-        <button className="sbtn sbtn-primary" type="button" disabled={!step.valid || sending}
+        <button className="sbtn sbtn-primary" type="button" disabled={!step.valid || sending || (last && otpSent && otp.length < 4)}
           onClick={() => (last ? submit() : setCur((c) => c + 1))}>
-          {last ? (sending ? "Sending…" : `Verify phone & pay ${passes[pass].price}`) : "Next"}
+          {last
+            ? sending ? "Please wait…" : otpSent ? `Confirm & pay ${passes[pass].price}` : `Verify phone & pay ${passes[pass].price}`
+            : "Next"}
         </button>
       </div>
     </form>
