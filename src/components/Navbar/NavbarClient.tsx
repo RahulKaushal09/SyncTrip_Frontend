@@ -338,12 +338,13 @@ const NavbarClient = ({ }) => {
               <li className="nav-item"
                 onClick={() => setFeedbackFormOpen(true)}
                 style={{ cursor: "pointer" }}>
-                <Link href="/feedback" className="nav-link">
-                  <span style={{ color: (!isSticky && isHomePage) ? "white" : "" }} className="">
+                {/* Opens FeedbackModal (onClick on the <li>). It used to wrap a <Link href="/feedback">,
+                    which also navigated to a route that doesn't exist. */}
+                <span className="nav-link">
+                  <span style={{ color: "#212529" }} className="">
                     {isLoggedIn ? 'Feedback' : 'Contact'}
                   </span>
-                </Link>
-
+                </span>
               </li>
               <li className="nav-item"
                 onClick={() => {
