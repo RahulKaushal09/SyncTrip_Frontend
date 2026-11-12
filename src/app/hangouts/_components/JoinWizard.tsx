@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Ico } from "./Shell";
 import { useMoviePicks } from "./MoviePicks";
 import { portrait } from "../_lib/api";
@@ -143,7 +143,11 @@ export default function JoinWizard({ variant }: { variant: Variant }) {
   const [dob, setDob] = useState("");
   const [phone, setPhone] = useState("");
   const [pass, setPass] = useState<Pass>("solo");
+  // The pass tapped on a price card. The Ladies' Pass can't apply until the gender is "Woman",
+  // so it is remembered here instead of being reset to Solo straight away.
+  const [want, setWant] = useState<Pass | null>(null);
   const [womenOnly, setWomenOnly] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
 
   const [otpSent, setOtpSent] = useState(false);
   const [otp, setOtp] = useState("");
@@ -189,19 +193,45 @@ export default function JoinWizard({ variant }: { variant: Variant }) {
     if (pass === "ladies" && gender !== "female") setPass("solo");
   }, [gender, pass]);
 
+  // A remembered Ladies' Pass applies as soon as the person says they are a woman.
+  useEffect(() => {
+    if (want === "ladies" && gender === "female") setPass("ladies");
+  }, [want, gender]);
+
+  // Bring the form card (not the section heading above it) to just under the sticky bar.
+  const showForm = useCallback(() => {
+    formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, []);
+
   // Price cards link to #join-solo / #join-ladies / #join-duo.
   useEffect(() => {
     const onHash = () => {
       const m = window.location.hash.match(/^#join-(solo|ladies|duo)$/);
       if (!m) return;
-      setPass(m[1] as Pass);
-      document.getElementById("join")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      const p = m[1] as Pass;
+      setWant(p);
+      // Ladies waits for the gender step; until then show Solo's price rather than a stale Duo.
+      if (p === "ladies") setPass((prev) => (prev === "duo" ? "solo" : prev));
+      else setPass(p);
+      showForm();
       history.replaceState(null, "", window.location.pathname + window.location.search);
     };
     onHash();
     window.addEventListener("hashchange", onHash);
     return () => window.removeEventListener("hashchange", onHash);
-  }, []);
+  }, [showForm]);
+
+  // Next / Back change the card's height. If its top has scrolled up under the sticky bar, bring it
+  // back, so people stay at the form instead of having to scroll up to find it.
+  const firstRender = useRef(true);
+  useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false;
+      return;
+    }
+    const top = formRef.current?.getBoundingClientRect().top ?? 0;
+    if (top < 80) showForm();
+  }, [cur, showForm]);
 
   // "Continue with my picks" under the movie rail.
   useEffect(() => {
@@ -288,12 +318,20 @@ export default function JoinWizard({ variant }: { variant: Variant }) {
   const dayText = [...weekdays, ...weekends].filter((d) => d !== "none").join(", ");
 
   return (
-    <form className="scard" id="wiz" onSubmit={(e) => e.preventDefault()}>
+    <form className="scard" id="wiz" ref={formRef} onSubmit={(e) => e.preventDefault()}>
       <div className="wiz-top">
         <span>Step <b>{cur + 1}</b> of {steps.length}</span>
         <span>{step.name}</span>
       </div>
       <div className="wiz-bar"><i style={{ width: `${((cur + 1) / steps.length) * 100}%` }} /></div>
+      {want && !last && (
+        <div className="pass-chip">
+          <Ico name="i-check" />
+          {want === "ladies" && gender !== "female"
+            ? "Ladies' Pass saved. It applies when you choose Woman."
+            : `${passes[pass].name} selected · ${passes[pass].price}`}
+        </div>
+      )}
 
       {step.name === "Movies" && picks && (
         <div className="wstep on">

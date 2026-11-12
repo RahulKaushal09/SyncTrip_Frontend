@@ -7,6 +7,20 @@ import { getAllGuideVenues, getCityFeed, getCityVenues, venuesForGuide } from '@
 
 const base = 'https://synctrip.in'
 
+// Category subdomains (src/middleware.ts serves them from src/app/hangouts/*).
+// Listed here because each subdomain serves THIS robots.txt / sitemap.xml: the middleware
+// skips paths with a file extension. The property is the Domain property
+// (sc-domain:synctrip.in), so these other-host URLs are allowed; if Search Console warns
+// about them, use URL Inspection > Request indexing instead. /joined pages are noindex.
+const SUBDOMAIN_PAGES: MetadataRoute.Sitemap = [
+    { url: 'https://movies.synctrip.in/', lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
+    { url: 'https://hangouts.synctrip.in/', lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
+    { url: 'https://sports.synctrip.in/', lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
+    // Overlaps synctrip.in/events, which already has its own SEO. Lower priority until it's decided
+    // which of the two should be the main one.
+    { url: 'https://events.synctrip.in/', lastModified: new Date(), changeFrequency: 'daily', priority: 0.6 },
+]
+
 /**
  * Indian states and union territories, as they appear at the end of a location
  * slug ("things-to-do-in-udaipur-rajasthan").
@@ -141,6 +155,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         { url: `${base}/friendship-app`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
         { url: `${base}/blogs`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.8 },
         { url: `${base}/about`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
+        ...SUBDOMAIN_PAGES,
         ...blogUrls,
         ...locationUrls,
     ]

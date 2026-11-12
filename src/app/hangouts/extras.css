@@ -40,3 +40,36 @@
 /* .App has overflow-x:hidden on small screens, which breaks position:sticky on our nav. clip keeps it sticky. */
 body:has(.stl) .App{overflow-x:clip!important}
 .stl .chip{color:var(--text)}
+
+/* ── Join section ───────────────────────────────────────────────────────────
+   On phones the left column used to sit ABOVE the form, so "Find my group" landed on a title, a
+   4-step list and a spinner card, with the form far below the fold. Now the title is followed
+   straight away by the form; the how-it-works list and the app preview come after it. */
+.stl #wiz{scroll-margin-top:88px}
+.stl .waiting .wait-ico{flex:none;width:44px;height:44px;border-radius:14px;background:var(--primary-bg);color:var(--surface-primary);display:grid;place-items:center}
+.stl .waiting .wait-ico .ico{width:22px;height:22px}
+.stl .pass-chip{display:flex;align-items:center;gap:8px;margin:-8px 0 18px;padding:9px 12px;border-radius:12px;background:var(--success-bg);color:var(--success);font:700 13px Satoshi,system-ui,sans-serif;line-height:1.3}
+.stl .pass-chip .ico{width:16px;height:16px;flex:none}
+@media (max-width:1000px){
+  .stl .join-grid{gap:16px}
+  .stl .join-aside{display:contents}
+  .stl .join-aside>.eyebrow{order:1}
+  .stl .join-aside>.h2{order:2;margin:0 0 4px}
+  .stl .join-grid>#wiz{order:3}
+  .stl .join-aside>.list{order:4;margin:18px 0 0}
+  .stl .join-aside>.waiting{order:5}
+}
+
+/* ── Overlays must never catch taps ─────────────────────────────────────────
+   The logo watermark in the closing card (.final::after) was painted OVER its button and swallowed
+   the tap. Decorative layers now ignore pointer events, and the card's content sits above the logo.
+   Its headline also picked up the main site's global h2 colour (dark blue on blue); force white. */
+.stl .final::after,.stl .showing::before,.stl .photo::after{pointer-events:none}
+.stl .final::after{z-index:0}
+.stl .final h2,.stl .final p,.stl .final .sbtn{position:relative;z-index:1}
+.stl .final h2{color:#fff}
+/* Store buttons on the dark app card: white pill, always-visible navy label */
+.stl .appcard .store a{display:inline-flex;align-items:center;background:#fff;color:#003b59!important;-webkit-text-fill-color:#003b59;text-decoration:none;font:700 14px Satoshi,system-ui,sans-serif;padding:11px 18px;border-radius:12px;line-height:1.2}
+/* Snap must respect the rail's side padding, or the first poster sticks to the card edge */
+.stl .rail{scroll-padding-inline:20px}
+@media (max-width:600px){.stl .rail{padding-inline:16px;scroll-padding-inline:16px}}

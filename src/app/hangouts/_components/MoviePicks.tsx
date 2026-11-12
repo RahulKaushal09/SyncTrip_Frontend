@@ -38,7 +38,8 @@ export function MoviePicksProvider({ movies, children }: { movies: Movie[]; chil
   }, []);
   const continueToForm = useCallback(() => {
     setJump((j) => j + 1);
-    document.getElementById("join")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    // The form card itself (not the section heading above it).
+    document.getElementById("wiz")?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, []);
 
   return <Ctx.Provider value={{ movies, picked, anyMovie, toggle, toggleAny, jump, continueToForm }}>{children}</Ctx.Provider>;

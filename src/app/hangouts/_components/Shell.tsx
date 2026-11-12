@@ -177,7 +177,7 @@ export function CategoryFooter({ current, blurb }: { current: Category; blurb: s
 /** Left column next to the join form. */
 export function JoinAside({ eyebrow, title, last }: { eyebrow: string; title: string; last: [string, string, string] }) {
   return (
-    <div>
+    <div className="join-aside">
       <div className="eyebrow">{eyebrow}</div>
       <h2 className="h2">{title}</h2>
       <div className="list">
@@ -186,9 +186,11 @@ export function JoinAside({ eyebrow, title, last }: { eyebrow: string; title: st
         <div><IBox name="i-users" /><div><b>We make your group</b>Usually within 3-5 days. Full refund if not in 14.</div></div>
         <div><IBox name={last[0]} /><div><b>{last[1]}</b>{last[2]}</div></div>
       </div>
+      {/* A preview of the app, not a loading state: no spinner, and it is labelled "In the app". */}
       <div className="waiting">
-        <span className="spin" />
-        <div><b>Finding your group…</b><small>What you&apos;ll see in the app while we match you</small></div>
+        <span className="wait-ico"><Ico name="i-clock" /></span>
+        <div><b>Finding your group</b><small>This is what you&apos;ll see in the app while we match you.</small></div>
+        <span className="pill">In the app</span>
       </div>
     </div>
   );
