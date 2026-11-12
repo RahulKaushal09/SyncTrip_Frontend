@@ -82,9 +82,9 @@
 .stl .stoast{position:absolute;z-index:5;background:#fff;border-radius:16px;padding:10px 14px 10px 10px;display:flex;gap:10px;align-items:center;font-size:13px;color:var(--text-2);box-shadow:var(--shadow),0 20px 40px -24px rgba(5,22,33,.45)}
 .stl .stoast img{width:34px;height:34px}
 .stl .stoast b{display:block;color:var(--text);font-size:14px}
-.stl .t1{right:-10px;top:40px;animation:bob 6s ease-in-out infinite}
-.stl .t2{left:20px;bottom:150px;animation:bob 7s ease-in-out infinite reverse}
-@keyframes bob{50%{transform:translateY(-8px)}}
+.stl .t1{right:-10px;top:40px;animation:stl-bob 6s ease-in-out infinite}
+.stl .t2{left:20px;bottom:150px;animation:stl-bob 7s ease-in-out infinite reverse}
+@keyframes stl-bob{50%{transform:translateY(-8px)}}
 .stl section{padding:96px 0}
 .stl section,.stl #showing,.stl #safety{scroll-margin-top:72px}
 .stl .eyebrow{display:inline-flex;align-items:center;gap:8px;font:700 13px Satoshi;letter-spacing:.08em;text-transform:uppercase;color:var(--primary-hover)}
@@ -100,8 +100,8 @@
 .stl .showing .eyebrow{color:var(--gold)}
 .stl .showing .eyebrow::before{background:var(--gold)}
 .stl .live{display:inline-flex;align-items:center;gap:8px;font:700 13px Satoshi;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);padding:8px 14px;border-radius:999px}
-.stl .live i{width:8px;height:8px;border-radius:50%;background:var(--cinema);box-shadow:0 0 0 4px rgba(229,72,77,.25);animation:pulse 1.6s infinite}
-@keyframes pulse{50%{box-shadow:0 0 0 8px rgba(229,72,77,0)}}
+.stl .live i{width:8px;height:8px;border-radius:50%;background:var(--cinema);box-shadow:0 0 0 4px rgba(229,72,77,.25);animation:stl-pulse 1.6s infinite}
+@keyframes stl-pulse{50%{box-shadow:0 0 0 8px rgba(229,72,77,0)}}
 .stl .rail{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;padding:40px 20px 24px;margin:0 auto;max-width:1180px;scrollbar-width:none}
 .stl .rail::-webkit-scrollbar{display:none}
 .stl .movie{flex:0 0 176px;scroll-snap-align:start;cursor:pointer;user-select:none}
@@ -184,8 +184,8 @@
 .stl .list b{display:block;color:var(--text)}
 .stl .list .dot{flex:none;width:40px;height:40px;border-radius:12px;background:var(--primary-bg);display:grid;place-items:center;font-size:18px}
 .stl .waiting{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:16px;display:flex;gap:14px;align-items:center;box-shadow:var(--shadow)}
-.stl .waiting .spin{flex:none;width:44px;height:44px;border-radius:50%;border:4px solid var(--primary-4);border-top-color:var(--primary);animation:sp 1.2s linear infinite}
-@keyframes sp{to{transform:rotate(360deg)}}
+.stl .waiting .spin{flex:none;width:44px;height:44px;border-radius:50%;border:4px solid var(--primary-4);border-top-color:var(--primary);animation:stl-sp 1.2s linear infinite}
+@keyframes stl-sp{to{transform:rotate(360deg)}}
 .stl .waiting b{display:block;color:var(--navy)}
 .stl .waiting small{color:var(--text-2);font-size:13px}
 .stl .waiting .pill{margin-left:auto;font:700 12px Satoshi;color:var(--primary-hover);background:var(--primary-bg);padding:5px 10px;border-radius:999px;white-space:nowrap}
@@ -227,9 +227,9 @@
 .stl .wiz-top b{color:var(--primary-hover)}
 .stl .wiz-bar{height:6px;border-radius:9px;background:var(--border);overflow:hidden;margin-bottom:24px}
 .stl .wiz-bar i{display:block;height:100%;width:20%;background:var(--primary);border-radius:9px;transition:width .3s}
-.stl .wstep{display:none;animation:fade .25s ease}
+.stl .wstep{display:none;animation:stl-fade .25s ease}
 .stl .wstep.on{display:block}
-@keyframes fade{from{opacity:0;transform:translateY(6px)}}
+@keyframes stl-fade{from{opacity:0;transform:translateY(6px)}}
 .stl .wstep h3{font:700 22px Satoshi;color:var(--navy);margin-bottom:4px}
 .stl .wstep .hint{color:var(--text-2);font-size:15px;margin-bottom:18px}
 .stl .wgroup{margin-bottom:18px}
