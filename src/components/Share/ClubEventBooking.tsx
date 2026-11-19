@@ -8,7 +8,9 @@ import { appOpenUrl } from "@/utils/appDeepLink";
 import { captureWebAttribution } from "@/utils/webAttribution";
 import { trackViewContent } from "@/utils/adTracking";
 import { useClubPixel } from "@/hooks/useClubPixel";
+import { useNow } from "@/hooks/useNow";
 import ClubTicketCard from "./ClubTicketCard";
+import { deadlineLabel, isLowStock, leadPass } from "./shareFormat";
 import styles from "./ClubBooking.module.css";
 
 /**
@@ -51,6 +53,21 @@ export default function ClubEventBooking({ event }: { event: ClubEvent }) {
     trackViewContent({ eventId: event.id, title: event.title, price });
   }, [event.id, event.title, price, startMs]);
 
+  // One short line under the price on the phone bar - the most urgent thing
+  // that's true: few left at this price, sales ending soon, few seats left.
+  const now = useNow();
+  const lead = leadPass(passes, event);
+  const tier = event.tierInfo?.current;
+  const seatsLeft = (event.capacity ?? 0) > 0 ? event.seatsLeft ?? null : null;
+  const leadEnds = lead?.pass.salesEndAt && now != null ? deadlineLabel(lead.pass.salesEndAt, now) : null;
+  const mobileNote = event.pricing?.isFree && !passes?.length
+    ? (isLowStock(seatsLeft) ? `Only ${seatsLeft} left` : null)
+    : lead && isLowStock(lead.left) ? `Only ${lead.left} left${lead.pass.price > 0 ? ` at ₹${Math.round(lead.pass.price).toLocaleString("en-IN")}` : ""}`
+    : leadEnds ? `Ends ${leadEnds}`
+    : tier && isLowStock(tier.seatsLeft) ? `Only ${tier.seatsLeft} left at this price`
+    : isLowStock(seatsLeft) ? `Only ${seatsLeft} spot${seatsLeft === 1 ? "" : "s"} left`
+    : tier?.label ?? null;
+
   return (
     <>
       <ClubTicketCard
@@ -70,9 +87,7 @@ export default function ClubEventBooking({ event }: { event: ClubEvent }) {
                 ? (price === 0 && event.pricing?.isFree ? "Free" : `from ₹${Math.round(price).toLocaleString("en-IN")}`)
                 : event.pricing?.isFree ? "Free" : `₹${Math.round(price).toLocaleString("en-IN")}`}
             </span>
-            {event.tierInfo?.current && !event.pricing?.isFree ? (
-              <span className={styles.mobilePriceNote}>{event.tierInfo.current.label}</span>
-            ) : null}
+            {mobileNote && <span className={styles.mobilePriceNote}>{mobileNote}</span>}
           </div>
           <button type="button" className={styles.primaryBtn} onClick={openBooking}>
             {passes?.length ? "Choose tickets" : event.pricing?.isFree ? "Reserve spot" : "Book now"}

@@ -109,6 +109,13 @@
   color: #e11d48;
 }
 
+.urgentLine {
+  margin-top: 0.6rem;
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #e11d48;
+}
+
 .ticketBody {
   padding: 1.25rem 1.5rem 1.5rem;
   display: flex;
@@ -179,6 +186,11 @@
   font-weight: 600;
   color: #64748b;
   margin-top: 0.1rem;
+}
+
+.ladderHot {
+  color: #e11d48;
+  font-weight: 700;
 }
 
 .ladderPrice {

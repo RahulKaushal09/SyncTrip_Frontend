@@ -156,7 +156,7 @@ export default async function HangoutsPage() {
         ["How does the meal work?", "When you reach the café, check in on SyncTrip with your group. Your meal pass unlocks in the app. Show it at the counter and order anything up to ₹250. The café bills SyncTrip, not you. If your order costs more, you pay only the difference."],
         ["Can I choose what we do or where?", "No, and that's the fun part. We plan the hangout (chai, games, dinner or brunch) at a café we've hosted at, close to everyone in your group."],
         ["How does the Ladies' Pass work?", "Your meal is free. You pay a ₹99 holding deposit so tables don't go empty. When you check in with your group, the ₹99 comes back as SyncTrip credit for your next plan."],
-        ["What if you can't find my group?", "If we can't match you within 14 days, you get a full refund. You can also cancel any time before you're matched."],
+        ["What if you can't find my group?", "If we can't match you within 14 days, you get a full refund. Changed your mind before you're matched? Cancel in the SyncTrip app: get the full amount back as SyncTrip credit instantly, or to your bank minus a 3% processing fee."],
       ]} />
 
       <Final title={<>Your next table<br />is already waiting.</>} text="Tell us when you're free. We'll handle the group, the plan, the café and your meal." cta="Find my hangout group" />

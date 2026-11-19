@@ -3,6 +3,8 @@
 import React, { useEffect, useState } from "react";
 import { ShieldCheck, Smartphone } from "lucide-react";
 import type { ClubEvent } from "@/types";
+import { useNow } from "@/hooks/useNow";
+import { deadlineLabel, isLowStock, leadPass, passesLeft } from "./shareFormat";
 import styles from "./ClubBooking.module.css";
 
 const rupees = (n: number) => `₹${Math.round(n || 0).toLocaleString("en-IN")}`;
@@ -45,10 +47,10 @@ function Countdown({ endsAt }: { endsAt: string }) {
   );
 }
 
-/** Date rule only: seat counts are never shown on the website. */
+/** Date rule for a price tier ("till 18 Nov, 7:30 pm"), in IST. */
 function tierRule(t: { endsAt?: string | null }): string | null {
   if (!t.endsAt) return null;
-  return `till ${new Date(t.endsAt).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" })}`;
+  return `till ${new Date(t.endsAt).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit", timeZone: "Asia/Kolkata" })}`;
 }
 
 type Props = {
@@ -68,6 +70,18 @@ export default function ClubTicketCard({ event, bookable, soldOut, closedLabel, 
   const onSale = (passes ?? []).filter((p) => p.state === "on_sale").map((p) => p.price);
   const passFrom = passes ? Math.min(...(onSale.length ? onSale : passes.map((p) => p.price))) : null;
   const price = passFrom ?? cur?.price ?? event.pricing?.ticketPrice ?? 0;
+  const now = useNow();
+  const seatsLeft = (event.capacity ?? 0) > 0 ? event.seatsLeft ?? null : null;
+
+  // Pass events: the cheapest ticket still buyable leads the urgency - how
+  // few are left at that price, what it goes up to, and when it stops.
+  const leading = leadPass(passes, event);
+  const lead = leading?.pass ?? null;
+  const leadLeft = leading?.left ?? null;
+  const leadNext = leading?.next ?? null;
+  const showSeatsLeft = bookable && isLowStock(seatsLeft);
+  const leadEndsMs = lead?.salesEndAt ? new Date(lead.salesEndAt).getTime() : null;
+  const leadCountdown = now != null && leadEndsMs != null && leadEndsMs > now && leadEndsMs - now < 86400e3;
 
   return (
     <div className={styles.ticket}>
@@ -89,15 +103,39 @@ export default function ClubTicketCard({ event, bookable, soldOut, closedLabel, 
             <Countdown endsAt={cur.endsAt} />
           </div>
         )}
+        {bookable && isLowStock(cur?.seatsLeft) && (
+          <div className={styles.urgentLine}>Only {cur!.seatsLeft} left at this price</div>
+        )}
+
+        {bookable && lead && isLowStock(leadLeft) && (
+          <div className={styles.urgentLine}>
+            Only {leadLeft} {lead.name} left{lead.price > 0 ? ` at ${rupees(lead.price)}` : ""}
+            {leadNext ? `, then ${rupees(leadNext.price)}` : ""}
+          </div>
+        )}
+        {bookable && lead?.salesEndAt && (leadCountdown ? (
+          <div className={styles.countdownWrap}>
+            <div className={styles.countdownLabel}>{lead.name} sales end in</div>
+            <Countdown endsAt={lead.salesEndAt} />
+          </div>
+        ) : now != null && deadlineLabel(lead.salesEndAt, now) ? (
+          <div className={styles.countdownLabel} style={{ marginTop: "0.6rem", marginBottom: 0 }}>
+            {lead.name} sales end {deadlineLabel(lead.salesEndAt, now)}
+          </div>
+        ) : null)}
       </div>
 
       <div className={styles.ticketBody}>
-        {/* The website never shows how many are going or how many seats are left. */}
-        {soldOut && (
+        {/* Seats left only when low (urgency) - never "N going" or "N of M left". */}
+        {soldOut ? (
           <div className={styles.seatsHead}>
             <span className={styles.seatsHot}>Sold out</span>
           </div>
-        )}
+        ) : showSeatsLeft ? (
+          <div className={styles.seatsHead}>
+            <span className={styles.seatsHot}>Only {seatsLeft} spot{seatsLeft === 1 ? "" : "s"} left for this event</span>
+          </div>
+        ) : null}
 
         {tier && tier.tiers.length > 1 && (
           <div className={styles.ladder}>
@@ -121,18 +159,27 @@ export default function ClubTicketCard({ event, bookable, soldOut, closedLabel, 
 
         {passes && (
           <div className={styles.ladder}>
-            {passes.map((p) => (
-              <div key={p.id} className={`${styles.ladderRow} ${p.state !== "on_sale" ? styles.ladderEnded : ""}`}>
-                <div>
-                  <span className={styles.ladderName}>{p.name}</span>
-                  <span className={styles.ladderMeta}>
-                    Admits {p.admits === 1 ? "1 person" : `${p.admits} people`}
-                    {p.state === "sold_out" ? " · Sold out" : p.state === "ended" ? " · Sales ended" : ""}
-                  </span>
+            {passes.map((p) => {
+              const left = passesLeft(p, event);
+              const gone = p.state === "sold_out" || (p.state === "on_sale" && left === 0);
+              const off = gone || p.state !== "on_sale";
+              const ends = !off && p.salesEndAt && now != null ? deadlineLabel(p.salesEndAt, now) : null;
+              return (
+                <div key={p.id} className={`${styles.ladderRow} ${off ? styles.ladderEnded : ""}`}>
+                  <div>
+                    <span className={styles.ladderName}>{p.name}</span>
+                    <span className={styles.ladderMeta}>
+                      Admits {p.admits === 1 ? "1 person" : `${p.admits} people`}
+                      {gone ? " · Sold out" : p.state === "ended" ? " · Sales ended" : ""}
+                      {/* Not when it only repeats the event's own "Only N spots left" above. */}
+                      {!off && isLowStock(left) && !(showSeatsLeft && left === seatsLeft) && <span className={styles.ladderHot}> · Only {left} left</span>}
+                      {ends && <span className={styles.ladderHot}> · Ends {ends}</span>}
+                    </span>
+                  </div>
+                  <span className={`${styles.ladderPrice} ${off ? styles.struck : ""}`}>{p.price === 0 ? "Free" : rupees(p.price)}</span>
                 </div>
-                <span className={`${styles.ladderPrice} ${p.state !== "on_sale" ? styles.struck : ""}`}>{p.price === 0 ? "Free" : rupees(p.price)}</span>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
 

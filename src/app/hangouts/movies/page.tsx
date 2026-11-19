@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getActiveMovies, portrait } from "../_lib/api";
 import { categoryUrl } from "../_lib/links";
+import { appStoreUrl, playStoreUrl } from "@/lib/storeLinks";
 import { MoviePicksProvider, ShowingRail } from "../_components/MoviePicks";
 import JoinWizard from "../_components/JoinWizard";
 import {
@@ -99,7 +100,7 @@ export default async function MoviesPage() {
                 <div>
                   <h3>Your group lives in the app</h3>
                   <p>Group chat, show details, seat numbers, and the people you met, all in one place.</p>
-                  <div className="store"><a href="https://synctrip.in">Google Play</a><a href="https://synctrip.in">App Store</a></div>
+                  <div className="store"><a href={playStoreUrl({ campaign: "movies_landing", term: "movies", content: "app_card" })}>Google Play</a><a href={appStoreUrl({ campaign: "movies_landing", term: "movies", content: "app_card" })}>App Store</a></div>
                 </div>
                 <div className="phone"><img src="/home/app-home.webp" alt="SyncTrip app home screen" /></div>
               </div>
@@ -145,7 +146,7 @@ export default async function MoviesPage() {
         ["When will I know my group?", "Usually within 3-5 days. You'll get a notification and your group chat opens in the SyncTrip app with the movie, cinema, show time and seats."],
         ["How do I get my ticket?", "We book seats for the whole group together and send your ticket to the BookMyShow app on your phone number. Your seat number shows in SyncTrip too."],
         ["How does the Ladies' Pass work?", "Your ticket is free and we book it for you. You pay a ₹99 holding deposit so seats don't go empty. When you check in with your group, the ₹99 comes back as SyncTrip credit."],
-        ["What if you can't find my group?", "If we can't match you within 14 days, you get a full refund. You can also cancel any time before you're matched."],
+        ["What if you can't find my group?", "If we can't match you within 14 days, you get a full refund. Changed your mind before you're matched? Cancel in the SyncTrip app: get the full amount back as SyncTrip credit instantly, or to your bank minus a 3% processing fee."],
       ]} />
 
       <Final title={<>Your next movie night<br />is one tap away.</>} text="Pick your movies and days. We'll handle the group, the seats and the chat." cta="Find my movie group" />

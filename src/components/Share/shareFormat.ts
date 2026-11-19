@@ -92,3 +92,68 @@ export function humanize(value?: string | null): string {
     .trim()
     .replace(/\b\w/g, (c) => c.toUpperCase());
 }
+
+// ── Urgency ────────────────────────────────────────────────────────────────
+// Low stock and close deadlines only. Never "N going" or "N of M left": a
+// near-empty room scares people off, a nearly gone ticket gets them to buy.
+
+/** "Only N left" shows at this many or fewer. */
+export const LOW_STOCK = 5;
+
+/** A deadline closer than this is worth showing. */
+const SOON_MS = 3 * 86400e3;
+
+/**
+ * Tickets of one type that can still be sold: its own stock, capped by the
+ * seats left in the event (a pass with 7 left can't sell 7 into 3 seats).
+ * null = no limit we know of.
+ */
+export function passesLeft(
+  pass: { remaining?: number | null; admits?: number | null },
+  event: { capacity?: number | null; seatsLeft?: number | null },
+): number | null {
+  let n = pass.remaining ?? Infinity;
+  if ((event.capacity ?? 0) > 0 && event.seatsLeft != null) {
+    n = Math.min(n, Math.floor(Math.max(0, event.seatsLeft) / Math.max(1, pass.admits ?? 1)));
+  }
+  return Number.isFinite(n) ? n : null;
+}
+
+export const isLowStock = (n: number | null | undefined): n is number => n != null && n > 0 && n <= LOW_STOCK;
+
+/**
+ * "today, 7:30 pm" / "tomorrow, 7:30 pm" / "Thu, 7:30 pm" when the deadline is
+ * within 3 days of `now`, else null. Takes `now` so callers render it only
+ * after mount (see useNow) - the server's clock must never reach the HTML.
+ */
+export function deadlineLabel(value: DateInput, now: number): string | null {
+  const d = toDate(value);
+  if (!d) return null;
+  const ms = d.getTime() - now;
+  if (ms <= 0 || ms > SOON_MS) return null;
+  const day = (t: number) => new Date(t).toLocaleDateString("en-IN", { timeZone: IST });
+  const when = day(d.getTime()) === day(now)
+    ? "today"
+    : day(d.getTime()) === day(now + 86400e3)
+      ? "tomorrow"
+      : d.toLocaleDateString("en-IN", { weekday: "short", timeZone: IST });
+  return `${when}, ${formatTime(d)}`;
+}
+
+type PassLike = { price: number; admits: number; state: string; remaining?: number | null; salesEndAt?: string | null };
+
+/**
+ * The cheapest ticket type still buyable - the one urgency is worded around
+ * ("Only 1 left at ₹249, then ₹349") - and the next price up for the same
+ * group size. null when nothing is on sale.
+ */
+export function leadPass<P extends PassLike>(
+  passes: P[] | null | undefined,
+  event: { capacity?: number | null; seatsLeft?: number | null },
+): { pass: P; left: number | null; next: P | null } | null {
+  const buyable = (passes ?? []).filter((p) => p.state === "on_sale" && passesLeft(p, event) !== 0);
+  if (!buyable.length) return null;
+  const pass = buyable.reduce((a, b) => (b.price < a.price ? b : a));
+  const next = buyable.filter((p) => p.admits === pass.admits && p.price > pass.price).sort((a, b) => a.price - b.price)[0] ?? null;
+  return { pass, left: passesLeft(pass, event), next };
+}

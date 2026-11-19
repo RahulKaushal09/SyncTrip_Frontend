@@ -164,6 +164,7 @@ export default async function SportsPage() {
           <div className="eyebrow">Pricing</div>
           <h2 className="h2">Your court fee is included.</h2>
           <p className="sub" style={{ margin: "0 auto" }}>You pay us once. We book and pay for the court or turf for the whole game.</p>
+          <p className="sub" style={{ margin: "6px auto 0", fontSize: 14 }}>Your pass covers a standard court. If your game ends up at a court that costs more, we&apos;ll ask you for the small difference before we book - or you can cancel for a full refund.</p>
           <Included items={[
             { icon: "i-court", label: "Your share of the court" },
             { icon: "i-ball", label: "Shuttles / balls" },
@@ -200,10 +201,10 @@ export default async function SportsPage() {
 
       <Faq items={[
         ["I'm a beginner. Is this for me?", "Yes. Pick \"Beginner\" and you'll only play with other beginners. Lots of people use SyncTrip to get back into a sport after years."],
-        ["Is the court really included?", "Yes. We book and pay for the court or turf for the whole game. Your pass covers your share. Shuttles or balls are provided. Bring your own racket and shoes, or tell us if you need to rent."],
+        ["Is the court really included?", "Yes. We book and pay for the court or turf for the whole game. Your pass covers your share of a standard court. If the court we find costs more, we'll tell you before booking and ask for the small difference - or you can cancel for a full refund. Shuttles or balls are provided. Bring your own racket and shoes, or tell us if you need to rent."],
         ["How many people are in a game?", "It depends on the sport: 4 for badminton, pickleball and tennis doubles, 3-4 for squash, 8-12 for box cricket, and 10 for 5-a-side football."],
         ["What if someone doesn't show up?", "We keep a short waitlist for every game and fill gaps where we can. Players who miss a game without telling us lose their fee and get a strike."],
-        ["What if you can't find my game?", "If we can't match you within 14 days, you get a full refund. You can also cancel any time before you're matched."],
+        ["What if you can't find my game?", "If we can't match you within 14 days, you get a full refund. Changed your mind before you're matched? Cancel in the SyncTrip app: get the full amount back as SyncTrip credit instantly, or to your bank minus a 3% processing fee."],
       ]} />
 
       <Final title={<>Your next game<br />is one tap away.</>} text="Pick your sport, level and days. We'll handle the players, the court and the chat." cta="Find my game" />

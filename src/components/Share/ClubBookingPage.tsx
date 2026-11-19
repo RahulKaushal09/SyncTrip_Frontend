@@ -15,7 +15,8 @@ import { captureWebAttribution, getWebAttribution } from "@/utils/webAttribution
 import { trackInitiateCheckout, trackPurchase } from "@/utils/adTracking";
 import { useClubPixel } from "@/hooks/useClubPixel";
 import type { RazorpayCheckoutResponse } from "@/app/checkout/checkout.types";
-import { formatWhen } from "./shareFormat";
+import { deadlineLabel, formatWhen, isLowStock, passesLeft } from "./shareFormat";
+import { useNow } from "@/hooks/useNow";
 import s from "./ClubBookingPage.module.css";
 
 /**
@@ -72,15 +73,19 @@ const answered = (q: EventQuestion, v: unknown) => {
   return v != null && String(v).trim() !== "";
 };
 
-function passBadge(p: EventPass): string | null {
-  if (p.state === "sold_out") return "Sold out";
-  if (p.state === "ended") return "Sales ended";
-  if (p.state === "unavailable") return "Not available";
-  if (p.salesEndAt) {
-    const ms = new Date(p.salesEndAt).getTime() - Date.now();
-    if (ms > 0 && ms < 3 * 86400e3) return ms > 86400e3 ? `Ends in ${Math.floor(ms / 86400e3)}d` : "Ends today";
-  }
-  return null;
+/**
+ * Status, then urgency: "Only 1 left", "Ends today, 7:30 pm". `now` is null
+ * on the server, so time-based badges only appear after mount.
+ */
+function passBadges(p: EventPass, left: number | null, now: number | null): string[] {
+  if (p.state === "sold_out" || (p.state === "on_sale" && left === 0)) return ["Sold out"];
+  if (p.state === "ended") return ["Sales ended"];
+  if (p.state === "unavailable") return ["Not available"];
+  const out: string[] = [];
+  if (isLowStock(left)) out.push(`Only ${left} left`);
+  const ends = p.salesEndAt && now != null ? deadlineLabel(p.salesEndAt, now) : null;
+  if (ends) out.push(`Ends ${ends}`);
+  return out;
 }
 
 export default function ClubBookingPage({ event }: { event: ClubEvent }) {
@@ -90,6 +95,7 @@ export default function ClubBookingPage({ event }: { event: ClubEvent }) {
   const hero = event.coverImageUrl || event.media?.find((m) => m.type === "image")?.url || null;
   const maxPeople = Math.max(0, Math.min(event.pricing?.maxSeatsPerBooking ?? 4, event.seatsLeft ?? 0));
   const classicFree = !usesPasses && !!event.pricing?.isFree;
+  const now = useNow();
 
   // ── Selection ───────────────────────────────────────────────────────────
   const [cart, setCart] = useState<Record<string, number>>(() => {
@@ -407,8 +413,9 @@ export default function ClubBookingPage({ event }: { event: ClubEvent }) {
                   let cap = Math.floor(Math.max(0, maxPeople - others) / Math.max(1, p.admits));
                   if (p.maxPerBooking != null) cap = Math.min(cap, p.maxPerBooking);
                   if (p.remaining != null) cap = Math.min(cap, p.remaining);
-                  const off = p.state !== "on_sale";
-                  const badge = passBadge(p);
+                  const left = passesLeft(p, event);
+                  const off = p.state !== "on_sale" || left === 0;
+                  const badges = passBadges(p, left, now);
                   return (
                     <article key={p.id} className={`${s.pass} ${qty > 0 ? s.passOn : ""} ${off ? s.passOff : ""}`}>
                       <div className={s.passBody}>
@@ -424,7 +431,7 @@ export default function ClubBookingPage({ event }: { event: ClubEvent }) {
                             <h3 className={s.passName}>{p.name}</h3>
                             <div className={s.badges}>
                               <span className={s.badge}><Users size={12} /> Entry for {people(p.admits)}</span>
-                              {badge && <span className={`${s.badge} ${off ? "" : s.badgeWarn}`}>{badge}</span>}
+                              {badges.map((b) => <span key={b} className={`${s.badge} ${off ? "" : s.badgeWarn}`}>{b}</span>)}
                             </div>
                           </div>
                           <div className={s.passPrice}>{p.price === 0 ? "Free" : rupees(p.price)}</div>
