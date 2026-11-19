@@ -14,7 +14,8 @@ function CompareTable({ compare, venues }: { compare: NonNullable<ActivityGuide[
   const rows = compare.rows
     .map((r) => ({ ...r, venue: venues.find((v) => v.slug === r.slug) }))
     .filter((r): r is typeof r & { venue: GuideVenue } => !!r.venue);
-  if (!rows.length) return null;
+  // A table of "Call to confirm" is worse than no table: wait until real hours or prices are on the venues.
+  if (!rows.some((r) => r.venue.priceNote || r.venue.hours)) return null;
   return (
     <section className={styles.section} aria-labelledby="compare-title">
       <div className={styles.sectionHead}>
