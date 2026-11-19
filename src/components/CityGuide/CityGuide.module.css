@@ -1473,3 +1473,121 @@
     box-shadow: 0 16px 36px rgba(2, 8, 23, 0.45);
   }
 }
+
+/* ---------- Comparison table (activity guides) ---------- */
+.compareWrap {
+  overflow-x: auto;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: #fff;
+}
+
+.compare {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.93rem;
+}
+
+.compare th,
+.compare td {
+  padding: 0.85rem 1rem;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--line);
+}
+
+.compare thead th {
+  background: #f8fafc;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.compare tbody tr:last-child th,
+.compare tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.compare tbody th a {
+  display: block;
+  font-weight: 800;
+  color: var(--ink) !important;
+}
+
+.compare tbody th span {
+  display: block;
+  margin-top: 2px;
+  font-weight: 500;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.compare td {
+  color: var(--ink-2);
+}
+
+.compare em {
+  font-style: normal;
+  color: var(--muted);
+}
+
+.compareNote {
+  margin: 0.75rem 0 0;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.compareNote a {
+  color: var(--brand) !important;
+  text-decoration: underline !important;
+}
+
+@media (max-width: 640px) {
+  .compareWrap {
+    border: none;
+    background: transparent;
+  }
+
+  .compare thead {
+    display: none;
+  }
+
+  .compare,
+  .compare tbody,
+  .compare tr,
+  .compare th,
+  .compare td {
+    display: block;
+    width: 100%;
+  }
+
+  .compare tr {
+    margin-bottom: 0.75rem;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: #fff;
+    overflow: hidden;
+  }
+
+  .compare th,
+  .compare td {
+    border-bottom: none;
+    padding: 0.4rem 1rem;
+  }
+
+  .compare tbody th {
+    padding-top: 0.85rem;
+  }
+
+  .compare td:last-child {
+    padding-bottom: 0.85rem;
+  }
+
+  .compare td::before {
+    content: attr(data-label) ": ";
+    font-weight: 700;
+    color: var(--muted);
+  }
+}

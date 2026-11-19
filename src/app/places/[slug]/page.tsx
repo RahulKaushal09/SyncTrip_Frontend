@@ -39,7 +39,7 @@ async function findVenue(slug: string) {
  * where that differs from our listing name: "mystery rooms cp", "smash2play", "kalagram
  * events today", "timezone dwarka", "go karting sector 38". Titles stay <= 49 chars.
  */
-const VENUE_SEO: Record<string, { title: string; description?: string }> = {
+const VENUE_SEO: Record<string, { title: string; titleWithHours?: string; description?: string }> = {
   "mystery-rooms-connaught-place-delhi": { title: "Mystery Rooms CP: Escape Room, Connaught Place", description: "Mystery Rooms in CP (Connaught Place) runs live escape rooms for teams of 4–6: about an hour to crack the clues. Find a team to play with on SyncTrip." },
   "mystery-rooms-golf-course-road-gurugram": { title: "Mystery Rooms Golf Course Road: Escape Room" },
   "mystery-rooms-spectrum-mall-noida": { title: "Mystery Rooms Spectrum Mall Noida: Escape Room" },
@@ -47,13 +47,18 @@ const VENUE_SEO: Record<string, { title: string; description?: string }> = {
   "smash2play-saket-delhi": { title: "Smash2Play Saket: Badminton, Turf & Box Cricket", description: "Smash2Play in Saket, South Delhi, has badminton courts, a football turf and box cricket in one venue. Find players for your next game on SyncTrip." },
   "kalagram-chandigarh": { title: "Kalagram Chandigarh: Events, Fairs & Things to Do", description: "Kalagram, Chandigarh's crafts and culture complex near Manimajra, hosts fairs, exhibitions and festivals. See what's on and go with people from SyncTrip." },
   "timezone-vegas-mall-delhi": { title: "Timezone Vegas Mall Dwarka: Bowling & Arcade", description: "Timezone at Vegas Mall, Dwarka has bowling lanes, VR and dozens of arcade games. Fill a bowling lane with people from a SyncTrip plan." },
-  "timezone-pacific-mall-delhi": { title: "Timezone Pacific Mall: Bowling & Arcade, Delhi" },
+  "timezone-pacific-mall-delhi": { title: "Timezone Pacific Mall: Bowling & Arcade, Delhi", titleWithHours: "Timezone Pacific Mall Delhi: Timings & Bowling" },
+  // GSC Nov 2026: 859 / 626 impressions a week, no clicks. Name the place and, once hours are on the page, the timings.
+  "the-game-palacio-chandigarh": { title: "The Game Palacio Elante: Bowling, Chandigarh", titleWithHours: "The Game Palacio Elante Chandigarh: Timings" },
+  "toy-room-aerocity-delhi": { title: "Toy Room Aerocity, Delhi: Nightclub", titleWithHours: "Toy Room Aerocity Delhi: Club Nights & Timings" },
   "formula-11-karting-noida": { title: "Formula 11 Go Karting Noida, Sector 38A", description: "Formula 11 at Worlds of Wonder, Sector 38A, next to Gardens Galleria, is one of India's biggest go-karting tracks (700 m, 11 turns). Race with a group." },
   "skyjumper-trampoline-park-rohini-delhi": { title: "SkyJumper Trampoline Park Rohini, Delhi" },
 };
 
 function fitTitle(venue: GuideVenue) {
-  if (VENUE_SEO[venue.slug]) return VENUE_SEO[venue.slug].title;
+  const seo = VENUE_SEO[venue.slug];
+  // "Timings" only when the page actually shows hours with a time in them.
+  if (seo) return seo.titleWithHours && /\d/.test(venue.hours || "") ? seo.titleWithHours : seo.title;
   const place = venue.area && !/day trips/i.test(venue.area) && !venue.name.toLowerCase().includes(venue.area.toLowerCase().split(" ")[0]) ? `, ${venue.area.split(" & ")[0]}` : "";
   const base = `${venue.name}${place}`;
   // Only promise timings/price when the page actually has them.

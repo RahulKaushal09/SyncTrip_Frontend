@@ -9,6 +9,59 @@ import styles from "./CityGuide.module.css";
 
 const accentStyle = (accent: string) => ({ ["--accent" as string]: accent }) as React.CSSProperties;
 
+/** Side-by-side table of the guide's main places: setup from the guide, hours and price from each venue record. */
+function CompareTable({ compare, venues }: { compare: NonNullable<ActivityGuide["compare"]>; venues: GuideVenue[] }) {
+  const rows = compare.rows
+    .map((r) => ({ ...r, venue: venues.find((v) => v.slug === r.slug) }))
+    .filter((r): r is typeof r & { venue: GuideVenue } => !!r.venue);
+  if (!rows.length) return null;
+  return (
+    <section className={styles.section} aria-labelledby="compare-title">
+      <div className={styles.sectionHead}>
+        <div>
+          <h2 id="compare-title" className={styles.h2}>{compare.title}</h2>
+          <p className={styles.sub}>{compare.sub}</p>
+        </div>
+      </div>
+      <div className={styles.compareWrap}>
+        <table className={styles.compare}>
+          <thead>
+            <tr>
+              <th scope="col">Café</th>
+              <th scope="col">Setup</th>
+              <th scope="col">Price</th>
+              <th scope="col">Timings</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map(({ slug, setup, venue }) => (
+              <tr key={slug}>
+                <th scope="row">
+                  <Link href={`/places/${venue.slug}`}>{venue.name}</Link>
+                  <span>{venue.locality}</span>
+                </th>
+                <td data-label="Setup">{setup}</td>
+                <td data-label="Price">{venue.priceNote || <em>Call to confirm</em>}</td>
+                <td data-label="Timings">{venue.hours || <em>Call to confirm</em>}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p className={styles.compareNote}>
+        Checked {compare.checked}. Sources:{" "}
+        {compare.sources.map((s, i) => (
+          <React.Fragment key={s.url}>
+            {i > 0 && ", "}
+            <a href={s.url} target="_blank" rel="noopener noreferrer nofollow">{s.label}</a>
+          </React.Fragment>
+        ))}
+        .
+      </p>
+    </section>
+  );
+}
+
 /* ======================= /city/<city>/<activity> ======================= */
 
 export function ActivityGuideView({
@@ -54,6 +107,8 @@ export function ActivityGuideView({
       />
 
       <div className={styles.body}>
+        {guide.compare && <CompareTable compare={guide.compare} venues={venues} />}
+
         <HappeningRail
           track={track}
           feed={feed}

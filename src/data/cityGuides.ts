@@ -54,6 +54,19 @@ export type ActivityGuide = {
   tips: { title: string; text: string }[];
   faqs: GuideFaq[];
   related: string[];
+  /**
+   * Optional comparison table at the top of the page. Hours and price come from
+   * each venue record (hours / priceNote), so they stay in step with the venue
+   * pages; only the setup is written here. Missing values show "Call to confirm".
+   */
+  compare?: {
+    title: string;
+    sub: string;
+    rows: { slug: string; setup: string }[];
+    /** When the hours and prices were last checked, e.g. "19 Nov 2026". */
+    checked: string;
+    sources: { label: string; url: string }[];
+  };
 };
 
 export type CityGuide = {
@@ -912,9 +925,28 @@ const DELHI_ACTIVITIES: ActivityGuide[] = [
     faqs: [
       { question: "Which is the best gaming café in Delhi?", answer: "Gamer's Den in Malviya Nagar (PS5, VR and PCs), Squad Gaming near South Extension, Underground Vault in Lajpat Nagar, Immortal Gaming Cafe in Satya Niketan and Lan Shack in Preet Vihar are popular with Delhi gamers." },
       { question: "Is there a board game café in Delhi?", answer: "Dedicated board-game cafés are rare in Delhi. SyncTrip members run board-game nights at cafés across the city; join one or post your own." },
-      { question: "How much does a gaming café cost in Delhi?", answer: "Most Delhi gaming cafés charge by the hour, roughly ₹50–200 depending on the setup, with consoles at the higher end. Check the café's current rates before you go." },
+      { question: "How much does a gaming café cost in Delhi?", answer: "Most Delhi gaming cafés charge by the hour: PCs about ₹80-120 an hour and PS5 about ₹150 an hour at the cafés listed above (rates listed online, Nov 2026). Check the café's current rates before you go." },
+      { question: "Which gaming café in Delhi is open 24 hours?", answer: "Squad Gaming near South Extension is listed as open round the clock, but listings disagree, so call before a late-night session." },
+      { question: "Where can I play PS5 in Delhi?", answer: "Gamer's Den in Malviya Nagar has PS5 stations (about ₹150 an hour as listed online) alongside VR, gaming PCs and pool." },
     ],
     related: ["fun-activities", "cafes-to-meet-people", "events-this-weekend"],
+    compare: {
+      title: "Delhi gaming cafés compared: price, setup and timings",
+      sub: "Hourly rates and hours as listed online. They change, so call the café before you go.",
+      rows: [
+        { slug: "gamers-den-malviya-nagar-delhi", setup: "PS5, gaming PCs, VR, driving sim, pool" },
+        { slug: "squad-gaming-internet-cafe-delhi", setup: "Gaming PCs" },
+        { slug: "underground-vault-gaming-cafe-delhi", setup: "Gaming PCs" },
+        { slug: "immortal-gaming-cafe-delhi", setup: "High-refresh gaming PCs" },
+      ],
+      checked: "19 Nov 2026",
+      sources: [
+        { label: "HangOn (Gamer's Den rates)", url: "https://hangon.live/ps5-gaming-cafe-near-me" },
+        { label: "Gaming Nation Delhi guide", url: "https://gamingnation.in/best-gaming-cafe-in-delhi/" },
+        { label: "Gaming Nation: Squad Gaming", url: "https://gamingnation.in/squad-gaming-cafe-delhi-review/" },
+        { label: "Wanderlog: Underground Vault", url: "https://wanderlog.com/place/details/12599727/underground-vault-the-gaming-arena" },
+      ],
+    },
   },
   {
     slug: "pickleball-badminton",
