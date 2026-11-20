@@ -183,13 +183,13 @@ export function JoinAside({ eyebrow, title, last }: { eyebrow: string; title: st
       <div className="list">
         <div><IBox name="i-phone" /><div><b>Tell us about you</b>Name, birthday and phone. We create your SyncTrip profile.</div></div>
         <div><IBox name="i-shield" /><div><b>Pay securely</b>UPI, cards and wallets via Razorpay.</div></div>
-        <div><IBox name="i-users" /><div><b>We make your group</b>Usually within 3-5 days. Full refund if not in 14.</div></div>
+        <div><IBox name="i-users" /><div><b>We make your group</b>On WhatsApp the evening before your date. Full refund if we can&apos;t.</div></div>
         <div><IBox name={last[0]} /><div><b>{last[1]}</b>{last[2]}</div></div>
       </div>
       {/* A preview of the app, not a loading state: no spinner, and it is labelled "In the app". */}
       <div className="waiting">
         <span className="wait-ico"><Ico name="i-clock" /></span>
-        <div><b>Finding your group</b><small>This is what you&apos;ll see in the app while we match you.</small></div>
+        <div><b>Your group chat</b><small>Opens in the SyncTrip app once your group is made.</small></div>
         <span className="pill">In the app</span>
       </div>
     </div>

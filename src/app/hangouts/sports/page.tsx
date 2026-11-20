@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { getChandigarhVenues, getClubEvents, CHANDIGARH_CITY_ID } from "../_lib/api";
+import { getChandigarhVenues, getClubEvents, getSlots, CHANDIGARH_CITY_ID } from "../_lib/api";
 import { categoryUrl, SITE } from "../_lib/links";
 import JoinWizard from "../_components/JoinWizard";
+import NextDate from "../_components/NextDate";
 import {
   CategoryFooter, Faq, Final, Highlight, Ico, Included, JoinAside, Nav, PriceCards, SafetyGrid,
 } from "../_components/Shell";
@@ -10,7 +11,7 @@ export const revalidate = 600;
 
 const TITLE = "SyncTrip Sports · Find players, we book the court · Chandigarh";
 const DESCRIPTION =
-  "Badminton, football, pickleball, cricket, tennis and squash with new people in Chandigarh, Mohali & Panchkula. Pick your sport, level and days. SyncTrip makes a balanced game and books the court.";
+  "Badminton, football, pickleball, cricket, tennis and squash with new people in Chandigarh, Mohali & Panchkula. Pick a game date, your sport and level. SyncTrip makes a balanced game and books the court.";
 
 export const metadata: Metadata = {
   title: { absolute: TITLE },
@@ -36,7 +37,7 @@ const when = (d: string) =>
   new Date(d).toLocaleString("en-IN", { timeZone: "Asia/Kolkata", weekday: "short", day: "numeric", month: "short", hour: "numeric", minute: "2-digit" });
 
 export default async function SportsPage() {
-  const [venues, events] = await Promise.all([getChandigarhVenues(), getClubEvents(60, CHANDIGARH_CITY_ID)]);
+  const [venues, events, slots] = await Promise.all([getChandigarhVenues(), getClubEvents(60, CHANDIGARH_CITY_ID), getSlots("sports")]);
   const courts = venues.filter((v) => v.activities?.some((a) => SPORT_OF[a])).slice(0, 9);
   const clubGames = events.filter((e) => e.category === "sports");
 
@@ -49,7 +50,8 @@ export default async function SportsPage() {
           <div>
             <span className="chip"><img src="/hangouts/icons/sportIcon.png" alt="" />Sports in Chandigarh · Mohali · Panchkula</span>
             <h1>Find players.<br />We book <Highlight color="#2E7D4F">the court.</Highlight></h1>
-            <p className="lead">No more &quot;anyone up for badminton?&quot; in five WhatsApp groups. Pick your sport, your level and when you&apos;re free. We&apos;ll make a balanced game near you, book the court, and open your team chat on SyncTrip.</p>
+            <p className="lead">No more &quot;anyone up for badminton?&quot; in five WhatsApp groups. Pick a game date, your sport and your level. We&apos;ll make a balanced game, book the court, and share your team on WhatsApp the evening before.</p>
+            <NextDate slots={slots} />
             <div className="hero-ctas">
               <a className="sbtn sbtn-primary" href="#join">Find my game</a>
               <a className="sbtn sbtn-light" href="#sports">See the sports</a>
@@ -195,7 +197,7 @@ export default async function SportsPage() {
       <section id="join">
         <div className="wrap join-grid">
           <JoinAside eyebrow="Join the next game" title="2 minutes, then get your shoes ready." last={["i-bell", "Get notified", "Court, time and team chat in the SyncTrip app."]} />
-          <JoinWizard variant="sports" />
+          <JoinWizard variant="sports" slots={slots} />
         </div>
       </section>
 
@@ -204,10 +206,10 @@ export default async function SportsPage() {
         ["Is the court really included?", "Yes. We book and pay for the court or turf for the whole game. Your pass covers your share of a standard court. If the court we find costs more, we'll tell you before booking and ask for the small difference - or you can cancel for a full refund. Shuttles or balls are provided. Bring your own racket and shoes, or tell us if you need to rent."],
         ["How many people are in a game?", "It depends on the sport: 4 for badminton, pickleball and tennis doubles, 3-4 for squash, 8-12 for box cricket, and 10 for 5-a-side football."],
         ["What if someone doesn't show up?", "We keep a short waitlist for every game and fill gaps where we can. Players who miss a game without telling us lose their fee and get a strike."],
-        ["What if you can't find my game?", "If we can't match you within 14 days, you get a full refund. Changed your mind before you're matched? Cancel in the SyncTrip app: get the full amount back as SyncTrip credit instantly, or to your bank minus a 3% processing fee."],
+        ["What if you can't find my game?", "If we can't make a game for your date, you get a full refund within 48 hours, or move to the next date if you prefer. Changed your mind before your game is made? Cancel in the SyncTrip app: get the full amount back as SyncTrip credit instantly, or to your bank minus a 3% processing fee."],
       ]} />
 
-      <Final title={<>Your next game<br />is one tap away.</>} text="Pick your sport, level and days. We'll handle the players, the court and the chat." cta="Find my game" />
+      <Final title={<>Your next game<br />is one tap away.</>} text="Pick a game date and your level. We'll handle the players, the court and the chat." cta="Find my game" />
       <CategoryFooter current="sports" blurb="Meet new people at fun plans every week in Chandigarh, Mohali & Panchkula." />
     </div>
   );

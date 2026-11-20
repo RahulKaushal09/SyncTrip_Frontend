@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
-import { getActiveMovies, portrait } from "../_lib/api";
+import { getActiveMovies, getSlots, portrait } from "../_lib/api";
 import { categoryUrl } from "../_lib/links";
 import { appStoreUrl, playStoreUrl } from "@/lib/storeLinks";
 import { MoviePicksProvider, ShowingRail } from "../_components/MoviePicks";
 import JoinWizard from "../_components/JoinWizard";
+import NextDate from "../_components/NextDate";
 import {
   CategoryFooter, Faq, Final, Highlight, Included, JoinAside, Nav, PriceCards, Proof, SafetyGrid, Steps, WOMEN_SAFETY,
 } from "../_components/Shell";
@@ -12,7 +13,7 @@ export const revalidate = 600;
 
 const TITLE = "SyncTrip Movies · Watch together, meet new people in Chandigarh";
 const DESCRIPTION =
-  "Pick the movies you'd watch and the days you're free. SyncTrip makes a group of 4-6 people in Chandigarh, Mohali & Panchkula, books your seats together, and opens your group chat.";
+  "Pick a movie night and book your seat. SyncTrip makes a group of 4-6 people in Chandigarh, Mohali & Panchkula, books your seats together, and shares your group on WhatsApp and in the SyncTrip app.";
 
 export const metadata: Metadata = {
   title: { absolute: TITLE },
@@ -22,7 +23,7 @@ export const metadata: Metadata = {
 };
 
 export default async function MoviesPage() {
-  const movies = await getActiveMovies();
+  const [movies, slots] = await Promise.all([getActiveMovies(), getSlots("movies")]);
   const [heroA, heroB] = movies;
 
   return (
@@ -35,7 +36,8 @@ export default async function MoviesPage() {
             <div>
               <span className="chip"><img src="/hangouts/icons/movieIcon.png" alt="" />Movie nights in Chandigarh · Mohali · Panchkula</span>
               <h1>Watch together.<br />Meet <Highlight color="#3ABEF5">new people.</Highlight></h1>
-              <p className="lead">Pick the movies you&apos;d watch and the days you&apos;re free. We&apos;ll make a group of 4-6 people near you, book your seats together, and open your group chat on SyncTrip.</p>
+              <p className="lead">Pick a movie night and book your seat. We&apos;ll make a group of 4-6 people, book your seats together, and share your group on WhatsApp the evening before.</p>
+              <NextDate slots={slots} />
               <div className="hero-ctas">
                 <a className="sbtn sbtn-primary" href="#join">Find my movie group</a>
                 <a className="sbtn sbtn-light" href="#showing">See what&apos;s showing</a>
@@ -73,7 +75,7 @@ export default async function MoviesPage() {
               <div>
                 <div className="eyebrow">Now showing</div>
                 <h2 className="h2">Which ones would you watch?</h2>
-                <p className="sub">Tap every movie you&apos;re up for. We&apos;ll match you with people who picked the same.</p>
+                <p className="sub">Tap every movie you&apos;re up for. When a date&apos;s film isn&apos;t fixed yet, we pick it from what your group chose.</p>
               </div>
               <span className="live"><i />Live from the SyncTrip app</span>
             </div>
@@ -82,7 +84,7 @@ export default async function MoviesPage() {
         </div>
 
         <Steps items={[
-          ["movieIcon", "Pick movies & days", "Choose the films you'd watch and when you're free. Add a backup day to get matched faster."],
+          ["movieIcon", "Pick a movie night", "Choose one of our fixed dates. Everyone who books it goes to the same show."],
           ["vibe-Friendly", "Tell us about you", "Where you'll come from, your name and birthday. Takes a minute."],
           ["communityIcon", "We make your group", "Once 4-6 people fit, we pick the cinema and show near you and book your seats together."],
           ["outingIcon", "Chat, watch, chai", "Your group chat opens in the SyncTrip app. Meet at the cinema, grab chai after."],
@@ -136,20 +138,20 @@ export default async function MoviesPage() {
         <section id="join">
           <div className="wrap join-grid">
             <JoinAside eyebrow="Join the next group" title="2 minutes, then we take it from here." last={["i-bell", "Get your ticket", "Seat details and the ticket arrive in the app."]} />
-            <JoinWizard variant="movies" />
+            <JoinWizard variant="movies" slots={slots} />
           </div>
         </section>
       </MoviePicksProvider>
 
       <Faq items={[
         ["Is this a dating app?", "No. It's a way to make new friends in Tricity over a movie. Groups are 4-6 people, matched on movies, languages, age and where you live."],
-        ["When will I know my group?", "Usually within 3-5 days. You'll get a notification and your group chat opens in the SyncTrip app with the movie, cinema, show time and seats."],
+        ["When will I know my group?", "The evening before your date, once bookings close. We send your group, the cinema, show time and seats on WhatsApp, and your group chat opens in the SyncTrip app."],
         ["How do I get my ticket?", "We book seats for the whole group together and send your ticket to the BookMyShow app on your phone number. Your seat number shows in SyncTrip too."],
         ["How does the Ladies' Pass work?", "Your ticket is free and we book it for you. You pay a ₹99 holding deposit so seats don't go empty. When you check in with your group, the ₹99 comes back as SyncTrip credit."],
-        ["What if you can't find my group?", "If we can't match you within 14 days, you get a full refund. Changed your mind before you're matched? Cancel in the SyncTrip app: get the full amount back as SyncTrip credit instantly, or to your bank minus a 3% processing fee."],
+        ["What if you can't find my group?", "If we can't make a group for your date, you get a full refund within 48 hours, or move to the next date if you prefer. Changed your mind before your group is made? Cancel in the SyncTrip app: get the full amount back as SyncTrip credit instantly, or to your bank minus a 3% processing fee."],
       ]} />
 
-      <Final title={<>Your next movie night<br />is one tap away.</>} text="Pick your movies and days. We'll handle the group, the seats and the chat." cta="Find my movie group" />
+      <Final title={<>Your next movie night<br />is one tap away.</>} text="Pick your movie night. We'll handle the group, the seats and the chat." cta="Find my movie group" />
       <CategoryFooter current="movies" blurb="Meet new people at fun plans every week in Chandigarh, Mohali & Panchkula." />
     </div>
   );

@@ -9,9 +9,9 @@ const BASE = process.env.NEXT_PUBLIC_BACKEND_BASE_URL || "https://synctrip.in/ap
 /** Movies, hangouts and sports are open in Chandigarh Tricity only for now. */
 export const CHANDIGARH_CITY_ID = "b536b222-3661-4c60-9695-f34c7a5519d4";
 
-async function get<T>(path: string): Promise<T | null> {
+async function get<T>(path: string, revalidate = 600): Promise<T | null> {
   try {
-    const res = await fetch(`${BASE}${path}`, { next: { revalidate: 600 } });
+    const res = await fetch(`${BASE}${path}`, { next: { revalidate } });
     if (!res.ok) return null;
     return (await res.json()) as T;
   } catch (error) {
@@ -21,6 +21,21 @@ async function get<T>(path: string): Promise<T | null> {
 }
 
 export type Movie = { id: string; title: string; image: string };
+/** A fixed date to book (panel → Hangouts → Dates). Labels are India time, e.g. "Sat 5 Dec · 1 pm". */
+export type Slot = {
+  id: string;
+  category: "movies" | "hangouts" | "sports";
+  startsAt: string;
+  cutoffAt: string;
+  label: string;
+  cutoffLabel: string;
+  title: string;
+  area: string;
+  venueName: string;
+  movie: { movieId: string | null; name: string; image: string | null } | null;
+  sport: string | null;
+  full: boolean;
+};
 export type Venue = { id: string; name: string; locality: string; activities: string[]; syncTripHosted: boolean };
 export type City = { id: string; title: string };
 export type ClubEvent = {
@@ -55,6 +70,12 @@ export type Club = {
 export async function getActiveMovies(): Promise<Movie[]> {
   const data = await get<{ data?: { id: string; title: string; mainImage: string }[] }>("/movies/collections/active");
   return (data?.data || []).map((m) => ({ id: m.id, title: m.title, image: m.mainImage }));
+}
+
+/** GET /hangouts/slots - open dates for one category, soonest first. Refreshed every minute. */
+export async function getSlots(category: Slot["category"]): Promise<Slot[]> {
+  const data = await get<{ slots?: Slot[] }>(`/hangouts/slots?category=${category}&cityId=${CHANDIGARH_CITY_ID}`, 60);
+  return data?.slots || [];
 }
 
 /** GET /city-guide/chandigarh/venues - cafés, courts and turfs in the Chandigarh city guide. */

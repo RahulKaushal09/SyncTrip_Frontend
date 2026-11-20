@@ -73,3 +73,14 @@ body:has(.stl) .App{overflow-x:clip!important}
 /* Snap must respect the rail's side padding, or the first poster sticks to the card edge */
 .stl .rail{scroll-padding-inline:20px}
 @media (max-width:600px){.stl .rail{padding-inline:16px;scroll-padding-inline:16px}}
+
+/* Fixed dates: hero "Next:" line, date cards in the form, no-date state */
+.stl .next-date{display:inline-flex;align-items:center;gap:10px;margin-top:18px;background:#fff;border:1.5px solid var(--primary);border-radius:16px;padding:10px 16px;color:var(--navy);text-decoration:none;font-size:15px;max-width:100%}
+.stl .next-date .ico{width:22px;height:22px;flex:none;color:var(--primary)}
+.stl .next-date small{display:block;color:var(--text-3);font-size:13px;margin-top:2px}
+.stl .next-date.soon{border-color:var(--border)}
+.stl .pass.slot .txt b{font-size:17px}
+.stl .pass.slot.full{opacity:.5;cursor:not-allowed}
+.stl .wiz-closed{text-align:center;padding:28px 10px}
+.stl .wiz-closed h3{font-family:"Clash Display",Satoshi,sans-serif;color:var(--navy);margin-bottom:8px}
+.stl .wiz-closed p{color:var(--text-2)}

@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { getChandigarhVenues } from "./_lib/api";
+import { getChandigarhVenues, getSlots } from "./_lib/api";
 import { categoryUrl } from "./_lib/links";
 import JoinWizard from "./_components/JoinWizard";
+import NextDate from "./_components/NextDate";
 import {
   CategoryFooter, Faq, Final, Highlight, Ico, Included, JoinAside, Nav, PriceCards, Proof, SafetyGrid, Steps, WOMEN_SAFETY,
 } from "./_components/Shell";
@@ -10,7 +11,7 @@ export const revalidate = 600;
 
 const TITLE = "SyncTrip Hangouts · Meet new people over food & games in Chandigarh";
 const DESCRIPTION =
-  "Tell us when you're free. SyncTrip matches you with 4-6 people in Chandigarh, Mohali & Panchkula, plans a hangout at a café we've hosted at, and your meal is included.";
+  "Pick a date and book your seat. SyncTrip puts you at a table with 4-6 people in Chandigarh, Mohali & Panchkula, at a café we've hosted at, and your meal is included.";
 
 export const metadata: Metadata = {
   title: { absolute: TITLE },
@@ -29,6 +30,7 @@ const CAFE_ACTS = ["cafe", "restaurant", "board_games", "gaming"];
 const iconFor = (a: string[]) => (a.includes("restaurant") ? "place-Restaurant" : a.includes("board_games") || a.includes("gaming") ? "clubsIcon" : "place-Cafe");
 
 export default async function HangoutsPage() {
+  const slots = await getSlots("hangouts");
   const venues = (await getChandigarhVenues())
     .filter((v) => v.syncTripHosted && v.activities?.some((a) => CAFE_ACTS.includes(a)))
     .slice(0, 6);
@@ -42,7 +44,8 @@ export default async function HangoutsPage() {
           <div>
             <span className="chip"><img src="/hangouts/icons/outingIcon.png" alt="" />Hangouts in Chandigarh · Mohali · Panchkula</span>
             <h1>New people.<br />Good food. <Highlight color="#3ABEF5">Every week.</Highlight></h1>
-            <p className="lead">Tell us when you&apos;re free. We&apos;ll match you with 4-6 people near you, plan a hangout at a café we&apos;ve hosted at, and open your group chat on SyncTrip. Your meal is included.</p>
+            <p className="lead">Pick a date and book your seat. We&apos;ll put you at a table with 4-6 people at a café we&apos;ve hosted at, and share your group on WhatsApp the evening before. Your meal is included.</p>
+            <NextDate slots={slots} />
             <div className="hero-ctas">
               <a className="sbtn sbtn-primary" href="#join">Find my hangout group</a>
               <a className="sbtn sbtn-light" href="#types">What&apos;s a hangout?</a>
@@ -73,7 +76,7 @@ export default async function HangoutsPage() {
         <div className="wrap">
           <div className="eyebrow">What a hangout looks like</div>
           <h2 className="h2">You bring yourself.<br />We plan the rest.</h2>
-          <p className="sub">You don&apos;t choose the activity. We plan something that suits your group and the time you&apos;re free: chai, a board-game café, dinner, brunch. Always 4-6 people at a public café we know.</p>
+          <p className="sub">You don&apos;t choose the activity. We plan something that suits your group and the date: chai, a board-game café, dinner, brunch. Always 4-6 people at a public café we know.</p>
           <div className="types">
             {EXAMPLES.map(([img, icon, title, text]) => (
               <div className="type" key={title}>
@@ -113,7 +116,7 @@ export default async function HangoutsPage() {
       )}
 
       <Steps items={[
-        ["outingIcon", "Tell us when you're free", "Weekdays, weekends, and the time of day that suits you."],
+        ["outingIcon", "Pick a date", "Choose one of our fixed dates. Everyone who books it shares a table."],
         ["vibe-Friendly", "Tell us about you", "Food, your vibe at a table, your name and birthday."],
         ["communityIcon", "We plan your hangout", "Once 4-6 people fit, we pick the plan and a café near all of you."],
         ["place-Restaurant", "Chat, meet, eat", "Your group chat opens in the app. Check in at the café and your meal is on us."],
@@ -147,7 +150,7 @@ export default async function HangoutsPage() {
       <section id="join">
         <div className="wrap join-grid">
           <JoinAside eyebrow="Join the next group" title="2 minutes, then we take it from here." last={["i-qr", "Check in, eat", "Scan in at the café and your meal pass unlocks."]} />
-          <JoinWizard variant="hangouts" />
+          <JoinWizard variant="hangouts" slots={slots} />
         </div>
       </section>
 
@@ -156,10 +159,10 @@ export default async function HangoutsPage() {
         ["How does the meal work?", "When you reach the café, check in on SyncTrip with your group. Your meal pass unlocks in the app. Show it at the counter and order anything up to ₹250. The café bills SyncTrip, not you. If your order costs more, you pay only the difference."],
         ["Can I choose what we do or where?", "No, and that's the fun part. We plan the hangout (chai, games, dinner or brunch) at a café we've hosted at, close to everyone in your group."],
         ["How does the Ladies' Pass work?", "Your meal is free. You pay a ₹99 holding deposit so tables don't go empty. When you check in with your group, the ₹99 comes back as SyncTrip credit for your next plan."],
-        ["What if you can't find my group?", "If we can't match you within 14 days, you get a full refund. Changed your mind before you're matched? Cancel in the SyncTrip app: get the full amount back as SyncTrip credit instantly, or to your bank minus a 3% processing fee."],
+        ["What if you can't find my group?", "If we can't make a group for your date, you get a full refund within 48 hours, or move to the next date if you prefer. Changed your mind before your group is made? Cancel in the SyncTrip app: get the full amount back as SyncTrip credit instantly, or to your bank minus a 3% processing fee."],
       ]} />
 
-      <Final title={<>Your next table<br />is already waiting.</>} text="Tell us when you're free. We'll handle the group, the plan, the café and your meal." cta="Find my hangout group" />
+      <Final title={<>Your next table<br />is already waiting.</>} text="Pick a date. We'll handle the group, the plan, the café and your meal." cta="Find my hangout group" />
       <CategoryFooter current="hangouts" blurb="Meet new people at fun plans every week in Chandigarh, Mohali & Panchkula." />
     </div>
   );

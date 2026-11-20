@@ -3,16 +3,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Ico } from "./Shell";
 import { useMoviePicks } from "./MoviePicks";
-import { portrait } from "../_lib/api";
+import { portrait, type Slot } from "../_lib/api";
 import type { RazorpayCheckoutResponse } from "@/app/checkout/checkout.types";
 
 export type Variant = "movies" | "hangouts" | "sports";
 type Pass = "solo" | "ladies" | "duo";
 type Gender = "female" | "male" | "other";
 
-const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri"];
-const WEEKENDS = ["Sat", "Sun"];
-const AREAS = ["Chandigarh", "Mohali", "Zirakpur", "Panchkula", "Kharar", "New Chandigarh"];
 const VIBES: [string, string][] = [
   ["i-chat", "Talker"], ["i-headphones", "Chill listener"], ["i-meal", "Foodie"], ["i-smile", "Friendly"],
   ["i-sparkle", "First time"], ["i-cap", "Student"], ["i-briefcase", "Working"], ["i-nodrink", "Non-drinker"],
@@ -125,14 +122,16 @@ function Chips({ options, selected, onToggle, none }: { options: ReactNode[]; se
   );
 }
 
-export default function JoinWizard({ variant }: { variant: Variant }) {
+/**
+ * Sign-up form. People book one of the open dates (`slots`, set in the panel); the date
+ * decides the day, time and area. With no open date the form is replaced by "coming soon".
+ */
+export default function JoinWizard({ variant, slots = [] }: { variant: Variant; slots?: Slot[] }) {
   const picks = useMoviePicks();
+  const [slotId, setSlotId] = useState(() => slots.find((s) => !s.full)?.id || "");
+  const slot = slots.find((s) => s.id === slotId) || null;
 
   // Answers
-  const [weekdays, setWeekdays] = useState<string[]>([]);
-  const [weekends, setWeekends] = useState<string[]>([]);
-  const [times, setTimes] = useState<string[]>(variant === "sports" ? [] : ["Evening"]);
-  const [area, setArea] = useState("");
   const [food, setFood] = useState("");
   const [vibes, setVibes] = useState<string[]>([]);
   const [sports, setSports] = useState<string[]>([]);
@@ -155,35 +154,25 @@ export default function JoinWizard({ variant }: { variant: Variant }) {
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
 
-  const timeOptions = variant === "sports" ? ["Early morning", "Morning", "Evening", "Night"] : ["Morning", "Afternoon", "Evening", "Night"];
-  const weekdayNone = weekdays.includes("none");
-  const weekendNone = weekends.includes("none");
-  const anyDay = weekdays.filter((d) => d !== "none").length + weekends.filter((d) => d !== "none").length > 0;
-  const whenAnswered = weekdays.length > 0 && weekends.length > 0 && times.length > 0;
-
   const toggle = (list: string[], set: (v: string[]) => void, v: string, max = 99) =>
     set(list.includes(v) ? list.filter((x) => x !== v) : list.length >= max ? list : [...list, v]);
-  const toggleDays = (list: string[], set: (v: string[]) => void, v: string) => {
-    if (v === "none") set(list.includes("none") ? [] : ["none"]);
-    else set(list.includes(v) ? list.filter((x) => x !== v) : [...list.filter((x) => x !== "none"), v]);
-  };
 
   const steps = useMemo(() => {
     const s: { name: string; valid: boolean }[] = [];
-    if (variant === "movies") s.push({ name: "Movies", valid: (picks?.picked.size || 0) > 0 || !!picks?.anyMovie });
+    // The date comes first; a date with its own film / sport skips that question.
+    s.push({ name: "Date", valid: !!slot && !slot.full });
+    if (variant === "movies" && !slot?.movie) s.push({ name: "Movies", valid: (picks?.picked.size || 0) > 0 || !!picks?.anyMovie });
     if (variant === "sports") {
-      s.push({ name: "Sport", valid: sports.length > 0 });
+      if (!slot?.sport) s.push({ name: "Sport", valid: sports.length > 0 });
       s.push({ name: "Level", valid: !!level && !!gear });
     }
-    s.push({ name: "When", valid: whenAnswered && anyDay });
-    s.push({ name: "Area", valid: !!area });
     if (variant === "hangouts") s.push({ name: "Vibe", valid: !!food && vibes.length > 0 });
     s.push({ name: "You", valid: name.trim().length >= 2 && !!gender && isAdult(dob) && validPhone(phone) });
     s.push({ name: "Pass", valid: true });
     return s;
-  }, [variant, picks, sports, level, gear, whenAnswered, anyDay, area, food, vibes, name, gender, dob, phone]);
+  }, [variant, slot, picks, sports, level, gear, food, vibes, name, gender, dob, phone]);
 
-  const step = steps[cur];
+  const step = steps[Math.min(cur, steps.length - 1)];
   const last = cur === steps.length - 1;
   const passes = PASSES[variant];
   const available: Pass[] = gender === "female" ? ["solo", "ladies", "duo"] : ["solo", "duo"];
@@ -233,31 +222,29 @@ export default function JoinWizard({ variant }: { variant: Variant }) {
     if (top < 80) showForm();
   }, [cur, showForm]);
 
-  // "Continue with my picks" under the movie rail.
+  // "Continue with my picks" under the movie rail: go to the first question still open.
   useEffect(() => {
-    if (picks?.jump) setCur(steps[0].valid ? 1 : 0);
+    if (!picks?.jump) return;
+    const open = steps.findIndex((s) => !s.valid);
+    setCur(open < 0 ? steps.length - 1 : open);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [picks?.jump]);
 
   async function submit() {
     setSending(true);
     setError("");
+    // The date sets the day, time and area on the server.
     const body = {
       category: variant,
       cityId: "b536b222-3661-4c60-9695-f34c7a5519d4",
+      slotId,
       name: name.trim(),
       gender,
       dateOfBirth: dob,
       phone: "+91" + phone,
-      availability: {
-        weekdays: weekdayNone ? [] : weekdays,
-        weekends: weekendNone ? [] : weekends,
-        timeOfDay: times,
-      },
-      area,
       prefs: {
-        movies: variant === "movies" ? (picks?.anyMovie ? ["any"] : Array.from(picks?.picked || [])) : undefined,
-        sports: variant === "sports" ? sports : undefined,
+        movies: variant === "movies" && !slot?.movie ? (picks?.anyMovie ? ["any"] : Array.from(picks?.picked || [])) : undefined,
+        sports: variant === "sports" && !slot?.sport ? sports : undefined,
         level: level || undefined,
         gear: gear || undefined,
         food: food || undefined,
@@ -284,7 +271,8 @@ export default function JoinWizard({ variant }: { variant: Variant }) {
         } catch {
           // Money went through Razorpay; the team re-checks it from the panel. Don't show a scary error.
         }
-        window.location.href = `${window.location.pathname.replace(/\/$/, "")}/joined`;
+        const q = new URLSearchParams({ when: slot?.label || "", where: [slot?.venueName, slot?.area].filter(Boolean).join(", "), pass });
+        window.location.href = `${window.location.pathname.replace(/\/$/, "")}/joined?${q}`;
       };
       if (created.checkout.keyId === "dev") {
         // Local backend with HANGOUTS_DEV_PAYMENTS=1: no real payment.
@@ -315,7 +303,14 @@ export default function JoinWizard({ variant }: { variant: Variant }) {
   const movieSummary = picks?.anyMovie
     ? "Any movie"
     : Array.from(picks?.picked || []).slice(0, 3).join(", ") + ((picks?.picked.size || 0) > 3 ? ` +${(picks?.picked.size || 0) - 3} more` : "");
-  const dayText = [...weekdays, ...weekends].filter((d) => d !== "none").join(", ");
+  if (!slots.length) {
+    return (
+      <div className="scard wiz-closed" id="wiz">
+        <h3>Next date coming soon</h3>
+        <p>We open a few fixed dates at a time so every group fills up. Follow <b>@synctrips</b> on Instagram to hear first.</p>
+      </div>
+    );
+  }
 
   return (
     <form className="scard" id="wiz" ref={formRef} onSubmit={(e) => e.preventDefault()}>
@@ -390,34 +385,22 @@ export default function JoinWizard({ variant }: { variant: Variant }) {
         </div>
       )}
 
-      {step.name === "When" && (
+      {step.name === "Date" && (
         <div className="wstep on">
-          <h3>When are you free?</h3>
-          <p className="hint">Answer all three. More options = faster match.</p>
-          <div className="wgroup"><span>Weekdays</span>
-            <Chips options={[...WEEKDAYS, "No weekdays"]} none={5}
-              selected={weekdayNone ? [5] : weekdays.map((d) => WEEKDAYS.indexOf(d))}
-              onToggle={(i) => toggleDays(weekdays, setWeekdays, i === 5 ? "none" : WEEKDAYS[i])} />
+          <h3>Pick your date</h3>
+          <p className="hint">Everyone who books the same date goes into one group. Chandigarh Tricity only for now.</p>
+          <div className="passes">
+            {slots.map((d) => (
+              <div key={d.id} className={`pass slot${slotId === d.id ? " on" : ""}${d.full ? " full" : ""}`} onClick={() => !d.full && setSlotId(d.id)}>
+                <span className="radio" />
+                <div className="txt">
+                  <b>{d.label}</b>
+                  <small>{[d.title, d.movie?.name, d.venueName, d.area].filter(Boolean).join(" · ")}</small>
+                </div>
+                <div className="amt2">{d.full ? "Full" : <small>book by {d.cutoffLabel}</small>}</div>
+              </div>
+            ))}
           </div>
-          <div className="wgroup"><span>Weekends</span>
-            <Chips options={[...WEEKENDS, "No weekends"]} none={2}
-              selected={weekendNone ? [2] : weekends.map((d) => WEEKENDS.indexOf(d))}
-              onToggle={(i) => toggleDays(weekends, setWeekends, i === 2 ? "none" : WEEKENDS[i])} />
-          </div>
-          <div className="wgroup"><span>Time of day</span>
-            <Chips options={timeOptions} selected={times.map((t) => timeOptions.indexOf(t))} onToggle={(i) => toggle(times, setTimes, timeOptions[i])} />
-          </div>
-          {weekdays.length > 0 && weekends.length > 0 && !anyDay && (
-            <p className="hint" style={{ color: "var(--cinema)", margin: 0 }}>You need at least one day, on a weekday or the weekend.</p>
-          )}
-        </div>
-      )}
-
-      {step.name === "Area" && (
-        <div className="wstep on">
-          <h3>Where will you come from?</h3>
-          <p className="hint">We&apos;ll pick a place close to everyone in your group. Chandigarh Tricity only for now.</p>
-          <Chips options={AREAS} selected={area ? [AREAS.indexOf(area)] : []} onToggle={(i) => setArea(AREAS[i])} />
         </div>
       )}
 
@@ -483,10 +466,10 @@ export default function JoinWizard({ variant }: { variant: Variant }) {
             </div>
           )}
           <div className="summary">
-            {variant === "movies" && <div><Ico name="i-ticket" /><span><b>Movies:</b> {movieSummary || "-"}</span></div>}
-            {variant === "sports" && <div><Ico name="i-ball" /><span><b>Sports:</b> {SPORTS.filter((s) => sports.includes(s.key)).map((s) => s.name).join(", ")} · {level}</span></div>}
-            <div><Ico name="i-calendar" /><span><b>Free on:</b> {dayText || "-"} · {times.join(", ")}</span></div>
-            <div><Ico name="i-pin" /><span><b>From:</b> {area}{food ? ` · ${food}` : ""}</span></div>
+            {variant === "movies" && <div><Ico name="i-ticket" /><span><b>Movie:</b> {slot?.movie?.name || movieSummary || "-"}</span></div>}
+            {variant === "sports" && <div><Ico name="i-ball" /><span><b>Sport:</b> {(slot?.sport ? SPORTS.filter((s) => s.key === slot.sport) : SPORTS.filter((s) => sports.includes(s.key))).map((s) => s.name).join(", ")} · {level}</span></div>}
+            <div><Ico name="i-calendar" /><span><b>Date:</b> {slot?.label || "-"}</span></div>
+            <div><Ico name="i-pin" /><span><b>Where:</b> {[slot?.venueName, slot?.area].filter(Boolean).join(", ") || "-"}{food ? ` · ${food}` : ""}</span></div>
             <div><Ico name="i-users" /><span><b>{name}</b> · +91 {phone}</span></div>
           </div>
           {otpSent && (
