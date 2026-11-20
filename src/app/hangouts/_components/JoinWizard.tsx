@@ -395,9 +395,10 @@ export default function JoinWizard({ variant, slots = [] }: { variant: Variant; 
                 <span className="radio" />
                 <div className="txt">
                   <b>{d.label}</b>
-                  <small>{[d.title, d.movie?.name, d.venueName, d.area].filter(Boolean).join(" · ")}</small>
+                  <small>{[d.movie?.name || d.title, d.venueName, d.area].filter(Boolean).join(" · ")}</small>
+                  {!d.full && <small className="by">Book by {d.cutoffLabel}</small>}
                 </div>
-                <div className="amt2">{d.full ? "Full" : <small>book by {d.cutoffLabel}</small>}</div>
+                {d.full && <span className="slot-full">Full</span>}
               </div>
             ))}
           </div>
