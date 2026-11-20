@@ -148,7 +148,7 @@ export default async function MoviesPage() {
         ["When will I know my group?", "The evening before your date, once bookings close. We send your group, the cinema, show time and seats on WhatsApp, and your group chat opens in the SyncTrip app."],
         ["How do I get my ticket?", "We book seats for the whole group together and send your ticket to the BookMyShow app on your phone number. Your seat number shows in SyncTrip too."],
         ["How does the Ladies' Pass work?", "Your ticket is free and we book it for you. You pay a ₹99 holding deposit so seats don't go empty. When you check in with your group, the ₹99 comes back as SyncTrip credit."],
-        ["What if you can't find my group?", "If we can't make a group for your date, you get a full refund within 48 hours, or move to the next date if you prefer. Changed your mind before your group is made? Cancel in the SyncTrip app: get the full amount back as SyncTrip credit instantly, or to your bank minus a 3% processing fee."],
+        ["What if you can't find my group?", "If we can't make a group for your date, you get a full refund within 48 hours, or move to the next date if you prefer. Changed your mind? Until bookings close (8 pm the day before) you can cancel in the SyncTrip app: get the full amount back as SyncTrip credit instantly, or to your bank minus a 3% processing fee. After bookings close we've bought your tickets, so it can't be cancelled."],
       ]} />
 
       <Final title={<>Your next movie night<br />is one tap away.</>} text="Pick your movie night. We'll handle the group, the seats and the chat." cta="Find my movie group" />
