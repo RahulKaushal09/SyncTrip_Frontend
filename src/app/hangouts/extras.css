@@ -83,6 +83,7 @@ body:has(.stl) .App{overflow-x:clip!important}
 .stl .pass.slot.full{opacity:.5;cursor:not-allowed}
 .stl .pass.slot .txt small{display:block;line-height:1.4}
 .stl .pass.slot .txt small.by{margin-top:4px;font-size:12px;color:var(--text-3)}
+.stl .pass.slot .txt small.by b.slot-price{display:inline;font-size:12px;color:var(--navy);margin-right:8px}
 .stl .pass.slot .slot-full{flex:none;padding:4px 10px;border-radius:99px;background:var(--border);color:var(--text-2);font:700 12px Satoshi,system-ui,sans-serif}
 .stl .wiz-closed{text-align:center;padding:28px 10px}
 .stl .wiz-closed h3{font-family:"Clash Display",Satoshi,sans-serif;color:var(--navy);margin-bottom:8px}

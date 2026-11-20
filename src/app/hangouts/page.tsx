@@ -135,7 +135,7 @@ export default async function HangoutsPage() {
             { icon: "i-coffee", label: "Extra orders: pay your own", off: true },
           ]} />
           <PriceCards
-            note="How the meal works: check in at the café in the SyncTrip app, show your meal pass at the counter, and the café bills SyncTrip. The Ladies' Pass needs a verified profile."
+            note="How the meal works: check in at the café in the SyncTrip app, show your meal pass at the counter, and the café bills SyncTrip. Some dates have their own price: you'll see it on the date before paying. The Ladies' Pass needs a verified profile."
             cards={[
               { pass: "solo", name: "Solo Pass", badge: "Most booked", amount: "₹449", unit: "/ person", fine: "Come alone, we'll put you in a group.", payIcon: "i-meal", payLine: <><b>1 meal up to ₹250</b> included</>, bullets: ["Your meal at the café, paid by us", "Table booked for your group", "Group chat before you meet"], cta: "Choose Solo" },
               { pass: "ladies", ladies: true, name: "Ladies' Pass", badge: "Free meal", amount: "₹99", unit: "refundable", fine: "Your meal is free, up to ₹250. The ₹99 is a holding deposit so tables don't go empty.", payIcon: "i-refund", payLine: <><b>₹99 comes back</b> as SyncTrip credit when you check in</>, bullets: ["Free meal up to ₹250, paid by us", "Never the only woman in a group", "Women-only groups if you prefer"], cta: "Claim free meal" },

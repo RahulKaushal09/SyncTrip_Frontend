@@ -20,6 +20,7 @@ export default function NextDate({ slots }: { slots: Slot[] }) {
         <b>Next: {next.label}</b>
         {where && <> · {where}</>}
         {next.movie && <> · {next.movie.name}</>}
+        {next.ownPrices && next.prices && <> · ₹{next.prices.solo.toLocaleString("en-IN")}</>}
         <small>Book by {next.cutoffLabel}</small>
       </span>
     </a>

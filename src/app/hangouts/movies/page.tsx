@@ -123,7 +123,7 @@ export default async function MoviesPage() {
               { icon: "i-clock", label: "Popcorn & chai: pay your own", off: true },
             ]} />
             <PriceCards
-              note="Tickets are standard 2D seats at the multiplex we pick near your group. IMAX/recliner cost extra. The Ladies' Pass needs a verified profile."
+              note="Tickets are standard 2D seats at the multiplex we pick near your group. IMAX/recliner cost extra. Some dates (like big releases) have their own price: you'll see it on the date before paying. The Ladies' Pass needs a verified profile."
               cards={[
                 { pass: "solo", name: "Solo Pass", badge: "Most booked", amount: "₹449", unit: "/ person", fine: "Come alone, we'll put you in a group.", payIcon: "i-ticket", payLine: <><b>1 ticket included</b> in ₹449</>, bullets: ["Your movie ticket, booked by us", "Seated with your group", "Group chat before the show"], cta: "Choose Solo" },
                 { pass: "ladies", ladies: true, name: "Ladies' Pass", badge: "Free ticket", amount: "₹99", unit: "refundable", fine: "Your ticket is free. The ₹99 is a holding deposit so seats don't go empty.", payIcon: "i-refund", payLine: <><b>₹99 comes back</b> as SyncTrip credit when you show up</>, bullets: ["Free movie ticket, booked by us", "Never the only woman in a group", "Women-only groups if you prefer"], cta: "Claim free ticket" },

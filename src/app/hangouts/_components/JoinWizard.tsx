@@ -42,6 +42,21 @@ const PASSES: Record<Variant, Record<Pass, PassInfo>> = {
     duo: { name: "Duo Pass", price: "₹449", amount: "₹449", unit: "for both", line: "You + a partner · court fee for both" },
   },
 };
+/** The pass cards for the picked date: its own prices if it has them. */
+function passesFor(variant: Variant, slot: Slot | null): Record<Pass, PassInfo> {
+  const base = PASSES[variant];
+  const p = slot?.prices;
+  if (!p) return base;
+  const rupees = (n: number) => `₹${n.toLocaleString("en-IN")}`;
+  // A date priced on its own (e.g. a small evening meetup) may not include the standard meal / court.
+  const own = !!slot?.ownPrices && variant !== "movies";
+  return {
+    solo: { ...base.solo, price: rupees(p.solo), amount: rupees(p.solo), line: own ? "Price for this date · we put you in a group" : base.solo.line },
+    ladies: { ...base.ladies, price: rupees(p.ladies), amount: rupees(p.ladies), line: own ? `Price for this date · ${rupees(p.ladies)} back as credit when you check in` : base.ladies.line.replace("₹99", rupees(p.ladies)) },
+    duo: { ...base.duo, price: rupees(p.duo), amount: rupees(p.duo), line: own ? "You + a friend · one payment for both" : base.duo.line },
+  };
+}
+
 const PASS_HINT: Record<Variant, string> = {
   movies: "Movie ticket is included in every pass.",
   hangouts: "Every pass includes a meal worth up to ₹250 per person.",
@@ -174,7 +189,7 @@ export default function JoinWizard({ variant, slots = [] }: { variant: Variant; 
 
   const step = steps[Math.min(cur, steps.length - 1)];
   const last = cur === steps.length - 1;
-  const passes = PASSES[variant];
+  const passes = passesFor(variant, slot);
   const available: Pass[] = gender === "female" ? ["solo", "ladies", "duo"] : ["solo", "duo"];
 
   // Ladies' Pass only for women; switch back if gender changes.
@@ -396,7 +411,7 @@ export default function JoinWizard({ variant, slots = [] }: { variant: Variant; 
                 <div className="txt">
                   <b>{d.label}</b>
                   <small>{[d.movie?.name || d.title, d.venueName, d.area].filter(Boolean).join(" · ")}</small>
-                  {!d.full && <small className="by">Book by {d.cutoffLabel}</small>}
+                  {!d.full && <small className="by">{d.ownPrices && d.prices ? <b className="slot-price">₹{d.prices.solo.toLocaleString("en-IN")} {variant === "sports" ? "per player" : "per person"}</b> : null}Book by {d.cutoffLabel}</small>}
                 </div>
                 {d.full && <span className="slot-full">Full</span>}
               </div>
@@ -450,7 +465,7 @@ export default function JoinWizard({ variant, slots = [] }: { variant: Variant; 
       {step.name === "Pass" && (
         <div className="wstep on">
           <h3>Choose your pass</h3>
-          <p className="hint">{PASS_HINT[variant]}</p>
+          <p className="hint">{slot?.ownPrices && variant !== "movies" ? `Prices for ${slot.label}${slot.title ? ` · ${slot.title}` : ""}.` : PASS_HINT[variant]}</p>
           <div className="passes">
             {available.map((p) => (
               <div key={p} className={`pass${p === "ladies" ? " ladies" : ""}${pass === p ? " on" : ""}`} onClick={() => setPass(p)}>

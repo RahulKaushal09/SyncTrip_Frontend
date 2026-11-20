@@ -34,6 +34,10 @@ export type Slot = {
   venueName: string;
   movie: { movieId: string | null; name: string; image: string | null } | null;
   sport: string | null;
+  /** What each pass costs on this date (servers before per-date prices leave it out). */
+  prices?: { solo: number; ladies: number; duo: number };
+  /** True when this date has its own price, different from the standard cards. */
+  ownPrices?: boolean;
   full: boolean;
 };
 export type Venue = { id: string; name: string; locality: string; activities: string[]; syncTripHosted: boolean };

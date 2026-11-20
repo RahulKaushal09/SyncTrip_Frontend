@@ -175,7 +175,7 @@ export default async function SportsPage() {
             { icon: "i-whistle", label: "Racket & shoes: bring your own", off: true },
           ]} />
           <PriceCards
-            note="Football turf and cricket box games may cost a little more because of bigger venues. You'll see the exact price before paying."
+            note="Football turf and cricket box games may cost a little more because of bigger venues. Some dates have their own price: you'll see it on the date before paying."
             cards={[
               { pass: "solo", name: "Player Pass", badge: "Most booked", amount: "₹249", unit: "/ game", fine: "Come alone, we'll put you in a game.", payIcon: "i-court", payLine: <><b>Court fee included</b> for 1 player</>, bullets: ["About 1 hour of play", "Players at your level", "Team chat before the game"], cta: "Choose Player" },
               { pass: "ladies", ladies: true, name: "Ladies' Pass", badge: "Free court", amount: "₹99", unit: "refundable", fine: "Your court is free. The ₹99 is a holding deposit so games don't fall short.", payIcon: "i-refund", payLine: <><b>₹99 comes back</b> as SyncTrip credit when you check in</>, bullets: ["Free court, booked by us", "Women-only games if you prefer", "Never the only woman in a game"], cta: "Claim free game" },
