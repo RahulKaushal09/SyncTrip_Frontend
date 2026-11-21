@@ -145,6 +145,11 @@ export default function JoinWizard({ variant, slots = [] }: { variant: Variant; 
   const picks = useMoviePicks();
   const [slotId, setSlotId] = useState(() => slots.find((s) => !s.full)?.id || "");
   const slot = slots.find((s) => s.id === slotId) || null;
+  // "Invite a friend" links from the app carry ?slot=<id>: start on that date if it's still bookable.
+  useEffect(() => {
+    const wanted = new URLSearchParams(window.location.search).get("slot");
+    if (wanted && slots.some((s) => s.id === wanted && !s.full)) setSlotId(wanted);
+  }, [slots]);
 
   // Answers
   const [food, setFood] = useState("");
