@@ -11,7 +11,7 @@ export const revalidate = 600;
 
 const TITLE = "SyncTrip Hangouts · Meet new people over food & games in Chandigarh";
 const DESCRIPTION =
-  "Pick a date and book your seat. SyncTrip puts you at a table with 4-6 people in Chandigarh, Mohali & Panchkula, at a café we've hosted at, and your SyncTrip combo (a main + a drink) is included.";
+  "Pick a date and book your seat. SyncTrip puts you at a table with 4-6 people in Chandigarh, Mohali & Panchkula, at a café we've hosted at, and your meal is included.";
 
 export const metadata: Metadata = {
   title: { absolute: TITLE },
@@ -44,7 +44,7 @@ export default async function HangoutsPage() {
           <div>
             <span className="chip"><img src="/hangouts/icons/outingIcon.png" alt="" />Hangouts in Chandigarh · Mohali · Panchkula</span>
             <h1>New people.<br />Good food. <Highlight color="#3ABEF5">Every week.</Highlight></h1>
-            <p className="lead">Pick a date and book your seat. We&apos;ll put you at a table with 4-6 people at a café we&apos;ve hosted at, and share your group on WhatsApp the evening before. Your SyncTrip combo is included.</p>
+            <p className="lead">Pick a date and book your seat. We&apos;ll put you at a table with 4-6 people at a café we&apos;ve hosted at, and share your group on WhatsApp the evening before. Your meal is included.</p>
             <NextDate slots={slots} />
             <div className="hero-ctas">
               <a className="sbtn sbtn-primary" href="#join">Find my hangout group</a>
@@ -55,7 +55,7 @@ export default async function HangoutsPage() {
           <div className="visual">
             <div className="photo" style={{ backgroundImage: "url(/home/real-roundtable.webp)", backgroundPosition: "center 40%" }} />
             <div className="stoast t1"><img src="/hangouts/icons/communityIcon.png" alt="" /><div><b>Your group is ready</b>Say hi before Thursday</div></div>
-            <div className="stoast t2"><img src="/hangouts/icons/place-Restaurant.png" alt="" /><div><b>Combo included</b>A main + a drink, on us</div></div>
+            <div className="stoast t2"><img src="/hangouts/icons/place-Restaurant.png" alt="" /><div><b>Meal included</b>Up to ₹250, on us</div></div>
             <div className="group-card">
               <div className="gc-head"><img src="/home/real-dinner.webp" alt="" /><div><b>Your hangout</b><small>{venues[0] ? `${venues[0].name} · ${venues[0].locality}` : "A café near you"}</small></div></div>
               <div className="gc-rows"><div>Time<b>Thu · 8 pm</b></div><div>Table<b>For 6</b></div></div>
@@ -119,27 +119,27 @@ export default async function HangoutsPage() {
         ["outingIcon", "Pick a date", "Choose one of our fixed dates. Everyone who books it shares a table."],
         ["vibe-Friendly", "Tell us about you", "Food, your vibe at a table, your name and birthday."],
         ["communityIcon", "We plan your hangout", "Once 4-6 people fit, we pick the plan and a café near all of you."],
-        ["place-Restaurant", "Chat, meet, eat", "Your group chat opens in the app. Check in at the café and your combo is on us."],
+        ["place-Restaurant", "Chat, meet, eat", "Your group chat opens in the app. Check in at the café and your meal is on us."],
       ]} />
 
       <section id="pricing" style={{ paddingTop: 20 }}>
         <div className="wrap" style={{ textAlign: "center" }}>
           <div className="eyebrow">Pricing</div>
-          <h2 className="h2">Your combo is included.</h2>
-          <p className="sub" style={{ margin: "0 auto" }}>Everyone at the SyncTrip table gets the <b>SyncTrip combo</b>: a main and a drink we fix with the café, paid by us. Anything extra, order and pay at the counter.</p>
+          <h2 className="h2">Your meal is included.</h2>
+          <p className="sub" style={{ margin: "0 auto" }}>Everyone gets a meal worth up to <b>₹250</b> at the café, paid by SyncTrip. Order more if you like and pay the difference.</p>
           <Included items={[
-            { icon: "i-meal", label: "SyncTrip combo per person" },
+            { icon: "i-meal", label: "Meal up to ₹250 per person" },
             { icon: "i-table", label: "Table reserved" },
             { icon: "i-users", label: "A matched group of 4-6" },
             { icon: "i-chat", label: "Group chat on SyncTrip" },
             { icon: "i-coffee", label: "Extra orders: pay your own", off: true },
           ]} />
           <PriceCards
-            note="How the combo works: sit at the SyncTrip table and check in with your group in the app. The café serves everyone the combo and bills SyncTrip. Some dates have their own price: you'll see it on the date before paying. The Ladies' Pass needs a verified profile."
+            note="How the meal works: sit at the SyncTrip table, check in with your group in the app and order anything up to ₹250. SyncTrip pays that part; anything over it, you pay at the counter. Some dates have their own price: you'll see it on the date before paying. The Ladies' Pass needs a verified profile."
             cards={[
-              { pass: "solo", name: "Solo Pass", badge: "Most booked", amount: "₹449", unit: "/ person", fine: "Come alone, we'll put you in a group.", payIcon: "i-meal", payLine: <><b>1 SyncTrip combo</b> included</>, bullets: ["A main + a drink at the café, paid by us", "Table booked for your group", "Group chat before you meet"], cta: "Choose Solo" },
-              { pass: "ladies", ladies: true, name: "Ladies' Pass", badge: "Free combo", amount: "₹99", unit: "refundable", fine: "Your SyncTrip combo is free. The ₹99 is a holding deposit so tables don't go empty.", payIcon: "i-refund", payLine: <><b>₹99 comes back</b> as SyncTrip credit when you check in</>, bullets: ["Free combo, paid by us", "Never the only woman in a group", "Women-only groups if you prefer"], cta: "Claim free combo" },
-              { pass: "duo", name: "Duo Pass", badge: "You + a friend", amount: "₹849", unit: "for both of you", fine: "Bring a friend. You two join a group together. One payment covers both.", payIcon: "i-meal", payLine: <><b>2 SyncTrip combos</b> included</>, bullets: ["A combo for you and one for your friend", "You sit together", "Easiest way to try it the first time"], cta: "Choose Duo" },
+              { pass: "solo", name: "Solo Pass", badge: "Most booked", amount: "₹449", unit: "/ person", fine: "Come alone, we'll put you in a group.", payIcon: "i-meal", payLine: <><b>1 meal up to ₹250</b> included</>, bullets: ["Your meal at the café, paid by us", "Table booked for your group", "Group chat before you meet"], cta: "Choose Solo" },
+              { pass: "ladies", ladies: true, name: "Ladies' Pass", badge: "Free meal", amount: "₹99", unit: "refundable", fine: "Your meal is free, up to ₹250. The ₹99 is a holding deposit so tables don't go empty.", payIcon: "i-refund", payLine: <><b>₹99 comes back</b> as SyncTrip credit when you check in</>, bullets: ["Free meal up to ₹250, paid by us", "Never the only woman in a group", "Women-only groups if you prefer"], cta: "Claim free meal" },
+              { pass: "duo", name: "Duo Pass", badge: "You + a friend", amount: "₹849", unit: "for both of you", fine: "Bring a friend. You two join a group together. One payment covers both.", payIcon: "i-meal", payLine: <><b>2 meals, up to ₹250 each</b> included</>, bullets: ["A meal for you and one for your friend", "You sit together", "Easiest way to try it the first time"], cta: "Choose Duo" },
             ]}
           />
         </div>
@@ -149,20 +149,20 @@ export default async function HangoutsPage() {
 
       <section id="join">
         <div className="wrap join-grid">
-          <JoinAside eyebrow="Join the next group" title="2 minutes, then we take it from here." last={["i-qr", "Check in, eat", "Check in with your group at the café and enjoy your combo."]} />
+          <JoinAside eyebrow="Join the next group" title="2 minutes, then we take it from here." last={["i-qr", "Check in, eat", "Check in with your group at the café and order your meal."]} />
           <JoinWizard variant="hangouts" slots={slots} />
         </div>
       </section>
 
       <Faq items={[
         ["Is this a dating app?", "No. It's a way to make new friends in Tricity over food and games. Groups are 4-6 people, matched on interests, age, food and where you live."],
-        ["How does the combo work?", "For every date we fix a SyncTrip combo with the café: a main and a drink. When you reach the café, sit at the SyncTrip table and check in with your group in the app. The café serves everyone the combo and bills SyncTrip, not you. Want something extra? Order it and pay at the counter."],
+        ["How does the meal work?", "When you reach the café, sit at the SyncTrip table and check in with your group in the app. Order anything up to ₹250: SyncTrip pays that part, not you. If your order costs more, you pay only the difference at the counter."],
         ["Can I choose what we do or where?", "No, and that's the fun part. We plan the hangout (chai, games, dinner or brunch) at a café we've hosted at, close to everyone in your group."],
-        ["How does the Ladies' Pass work?", "Your SyncTrip combo is free. You pay a ₹99 holding deposit so tables don't go empty. When you check in with your group, the ₹99 comes back as SyncTrip credit for your next plan."],
+        ["How does the Ladies' Pass work?", "Your meal is free. You pay a ₹99 holding deposit so tables don't go empty. When you check in with your group, the ₹99 comes back as SyncTrip credit for your next plan."],
         ["What if you can't find my group?", "If we can't make a group for your date, you get a full refund within 48 hours, or move to the next date if you prefer. Changed your mind? Until bookings close (8 pm the day before) you can cancel in the SyncTrip app: get the full amount back as SyncTrip credit instantly, or to your bank minus a 3% processing fee. After bookings close we've booked your table, so it can't be cancelled."],
       ]} />
 
-      <Final title={<>Your next table<br />is already waiting.</>} text="Pick a date. We'll handle the group, the plan, the café and your combo." cta="Find my hangout group" />
+      <Final title={<>Your next table<br />is already waiting.</>} text="Pick a date. We'll handle the group, the plan, the café and your meal." cta="Find my hangout group" />
       <CategoryFooter current="hangouts" blurb="Meet new people at fun plans every week in Chandigarh, Mohali & Panchkula." />
     </div>
   );

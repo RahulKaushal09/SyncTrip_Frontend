@@ -32,9 +32,9 @@ const PASSES: Record<Variant, Record<Pass, PassInfo>> = {
     duo: { name: "Duo Pass", price: "₹799", amount: "₹799", unit: "for both", line: "2 tickets included · you + a friend" },
   },
   hangouts: {
-    solo: { name: "Solo Pass", price: "₹449", amount: "₹449", line: "1 SyncTrip combo · we put you in a group" },
-    ladies: { name: "Ladies' Pass", price: "₹99", amount: "₹99", unit: "refundable", line: "Free SyncTrip combo · ₹99 back as credit when you check in" },
-    duo: { name: "Duo Pass", price: "₹849", amount: "₹849", unit: "for both", line: "You + a friend · 2 SyncTrip combos" },
+    solo: { name: "Solo Pass", price: "₹449", amount: "₹449", line: "1 meal up to ₹250 · we put you in a group" },
+    ladies: { name: "Ladies' Pass", price: "₹99", amount: "₹99", unit: "refundable", line: "Free meal up to ₹250 · ₹99 back as credit when you check in" },
+    duo: { name: "Duo Pass", price: "₹849", amount: "₹849", unit: "for both", line: "You + a friend · 2 meals, up to ₹250 each" },
   },
   sports: {
     solo: { name: "Player Pass", price: "₹249", amount: "₹249", line: "Court fee included · we put you in a game" },
@@ -48,7 +48,7 @@ function passesFor(variant: Variant, slot: Slot | null): Record<Pass, PassInfo> 
   const p = slot?.prices;
   if (!p) return base;
   const rupees = (n: number) => `₹${n.toLocaleString("en-IN")}`;
-  // A date priced on its own (e.g. a small evening meetup) may not include the standard combo / court.
+  // A date priced on its own (e.g. a small evening meetup) may not include the standard meal / court.
   const own = !!slot?.ownPrices && variant !== "movies";
   return {
     solo: { ...base.solo, price: rupees(p.solo), amount: rupees(p.solo), line: own ? "Price for this date · we put you in a group" : base.solo.line },
@@ -59,7 +59,7 @@ function passesFor(variant: Variant, slot: Slot | null): Record<Pass, PassInfo> 
 
 const PASS_HINT: Record<Variant, string> = {
   movies: "Movie ticket is included in every pass.",
-  hangouts: "Every pass includes the SyncTrip combo (a main + a drink) per person.",
+  hangouts: "Every pass includes a meal worth up to ₹250 per person.",
   sports: "Your court fee is included in every pass.",
 };
 
