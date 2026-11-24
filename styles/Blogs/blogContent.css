@@ -394,6 +394,32 @@
     margin-bottom: 0.75rem;
 }
 
+/* Tables pasted into a post (quick lists, comparisons). Scrolls sideways on
+   narrow screens instead of squashing the columns. */
+.editorial-body-text table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    margin: 0 0 1.5rem;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.editorial-body-text th,
+.editorial-body-text td {
+    padding: 0.65rem 0.85rem;
+    border-bottom: 1px solid #e2e8f0;
+    text-align: left;
+    vertical-align: top;
+}
+
+.editorial-body-text thead th {
+    background: #f1f5f9;
+    font-weight: 700;
+    color: #0f172a;
+    white-space: nowrap;
+}
+
 /* ── MOBILE TEXT OVERRIDES ── */
 @media (max-width: 768px) {
     .editorial-body-text {
