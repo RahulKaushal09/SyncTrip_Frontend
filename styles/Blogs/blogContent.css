@@ -370,10 +370,12 @@
     border-radius: 0 12px 12px 0;
 }
 
+/* !important: globals.css sets `a { color: inherit !important }`, which would
+   otherwise turn every link in a post into plain bold text. */
 .editorial-body-text a {
-    color: #1583b7;
+    color: #1583b7 !important;
     text-decoration: none;
-    border-bottom: 1px solid transparent;
+    border-bottom: 1px solid rgba(21, 131, 183, 0.35);
     transition: border-color 0.2s ease;
     font-weight: 600;
 }
