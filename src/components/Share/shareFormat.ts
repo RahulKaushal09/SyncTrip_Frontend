@@ -157,3 +157,24 @@ export function leadPass<P extends PassLike>(
   const next = buyable.filter((p) => p.admits === pass.admits && p.price > pass.price).sort((a, b) => a.price - b.price)[0] ?? null;
   return { pass, left: passesLeft(pass, event), next };
 }
+
+/**
+ * Reservation tickets: when a pass description says "Total price: ₹4,999 per
+ * person" (or "for 3 people") and that is more than the pass price, the price
+ * is only the advance paid now. Pages must then say "to reserve" and show the
+ * full total, or people read the advance as the whole cost.
+ */
+export type PassReserve = { total: number; per: string | null };
+
+export function passReserve(p: { price: number; description?: string | null }): PassReserve | null {
+  const m = p.description?.match(/total(?:\s+price)?\s*:?\s*(?:₹|rs\.?|inr)\s*([\d,]+)(?:\s*(per person|for \d+ people|for \d+))?/i);
+  if (!m) return null;
+  const total = Number(m[1].replace(/,/g, ""));
+  if (!Number.isFinite(total) || total <= p.price) return null;
+  return { total, per: m[2] ? m[2].toLowerCase() : null };
+}
+
+/** True when any ticket on the event is a reservation (advance now, rest later). */
+export function hasReservePasses(passes: { price: number; description?: string | null }[] | null | undefined): boolean {
+  return !!passes?.some((p) => passReserve(p));
+}

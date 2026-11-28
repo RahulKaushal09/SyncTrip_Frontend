@@ -9,7 +9,7 @@ import styles from "./ShareDetail.module.css";
 import GetAppCta from "./GetAppCta";
 import ClubEventBooking from "./ClubEventBooking";
 import bookingStyles from "./ClubBooking.module.css";
-import { formatPrice, formatTime, formatWhen, humanize, isPast } from "./shareFormat";
+import { formatPrice, formatTime, formatWhen, humanize, isPast, passReserve } from "./shareFormat";
 import RichText from "@/components/common/RichText";
 
 type Props = {
@@ -31,7 +31,14 @@ export default function ClubEventShareDetail({ event, club = null, moreFromClub 
   const heroImage = event.coverImageUrl || event.media?.find((m) => m.type === "image")?.url || null;
   const venue = event.venue ?? null;
   const venueLine = [venue?.name, venue?.address || venue?.locality].filter(Boolean).join(" · ");
-  const price = formatPrice(event.pricing?.isFree, event.pricing?.ticketPrice, event.pricing?.currency);
+  const basePrice = formatPrice(event.pricing?.isFree, event.pricing?.ticketPrice, event.pricing?.currency);
+  // Reservation tickets: the stored price is only the advance, so say so and
+  // give the lowest full price, read from the ticket descriptions.
+  const reserves = (event.passes ?? []).map((p) => ({ p, r: passReserve(p) })).filter((x) => x.r);
+  const cheapest = reserves.length ? reserves.reduce((a, b) => (b.r!.total < a.r!.total ? b : a)) : null;
+  const price = cheapest
+    ? `₹${cheapest.p.price.toLocaleString("en-IN")} to reserve · full price from ₹${cheapest.r!.total.toLocaleString("en-IN")}${cheapest.r!.per === "per person" ? " per person" : ""}`
+    : basePrice;
   const isCancelled = event.status === "cancelled";
   const hasEnded = !isCancelled && isPast(event.endsAt || event.startsAt);
   const whenLine = formatWhen(event.startsAt, event.endsAt);

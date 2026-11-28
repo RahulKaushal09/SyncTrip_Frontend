@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { ShieldCheck, Smartphone } from "lucide-react";
 import type { ClubEvent } from "@/types";
 import { useNow } from "@/hooks/useNow";
-import { deadlineLabel, isLowStock, leadPass, passesLeft } from "./shareFormat";
+import { deadlineLabel, hasReservePasses, isLowStock, leadPass, passReserve, passesLeft } from "./shareFormat";
 import styles from "./ClubBooking.module.css";
 
 const rupees = (n: number) => `₹${Math.round(n || 0).toLocaleString("en-IN")}`;
@@ -71,6 +71,7 @@ export default function ClubTicketCard({ event, bookable, soldOut, closedLabel, 
   const passFrom = passes ? Math.min(...(onSale.length ? onSale : passes.map((p) => p.price))) : null;
   const price = passFrom ?? cur?.price ?? event.pricing?.ticketPrice ?? 0;
   const now = useNow();
+  const reserve = hasReservePasses(passes);
   const seatsLeft = (event.capacity ?? 0) > 0 ? event.seatsLeft ?? null : null;
 
   // Pass events: the cheapest ticket still buyable leads the urgency - how
@@ -91,6 +92,7 @@ export default function ClubTicketCard({ event, bookable, soldOut, closedLabel, 
           {passes && !isFree && <span className={styles.priceLabel}>from</span>}
           <span className={styles.price}>{isFree ? "Free" : rupees(price)}</span>
           {!isFree && !passes && <span className={styles.priceLabel}>per person</span>}
+          {reserve && <span className={styles.priceLabel}>to reserve your spot</span>}
           {cur?.nextPrice && cur.nextPrice > price && (
             <span className={styles.nextPrice}>
               then {rupees(cur.nextPrice)}{cur.nextLabel ? ` (${cur.nextLabel})` : ""}
@@ -109,8 +111,8 @@ export default function ClubTicketCard({ event, bookable, soldOut, closedLabel, 
 
         {bookable && lead && isLowStock(leadLeft) && (
           <div className={styles.urgentLine}>
-            Only {leadLeft} {lead.name} left{lead.price > 0 ? ` at ${rupees(lead.price)}` : ""}
-            {leadNext ? `, then ${rupees(leadNext.price)}` : ""}
+            Only {leadLeft} {lead.name} left{lead.price > 0 ? ` at ${rupees(passReserve(lead)?.total ?? lead.price)}` : ""}
+            {leadNext ? `, then ${rupees(passReserve(leadNext)?.total ?? leadNext.price)}` : ""}
           </div>
         )}
         {bookable && lead?.salesEndAt && (leadCountdown ? (
@@ -157,6 +159,12 @@ export default function ClubTicketCard({ event, bookable, soldOut, closedLabel, 
           </div>
         )}
 
+        {reserve && (
+          <p className={styles.reserveNote}>
+            This is the reservation amount, not the full price. Pay it now to hold your spot and pay the balance later - each ticket below shows its full price.
+          </p>
+        )}
+
         {passes && (
           <div className={styles.ladder}>
             {passes.map((p) => {
@@ -175,8 +183,16 @@ export default function ClubTicketCard({ event, bookable, soldOut, closedLabel, 
                       {!off && isLowStock(left) && !(showSeatsLeft && left === seatsLeft) && <span className={styles.ladderHot}> · Only {left} left</span>}
                       {ends && <span className={styles.ladderHot}> · Ends {ends}</span>}
                     </span>
+                    {(() => {
+                      const r = passReserve(p);
+                      return r ? (
+                        <span className={styles.ladderTotal}>
+                          Full price {rupees(r.total)}{r.per ? ` ${r.per}` : ""} · {rupees(p.price)} now to reserve
+                        </span>
+                      ) : null;
+                    })()}
                   </div>
-                  <span className={`${styles.ladderPrice} ${off ? styles.struck : ""}`}>{p.price === 0 ? "Free" : rupees(p.price)}</span>
+                  <span className={`${styles.ladderPrice} ${off ? styles.struck : ""}`}>{p.price === 0 ? "Free" : rupees(passReserve(p)?.total ?? p.price)}</span>
                 </div>
               );
             })}

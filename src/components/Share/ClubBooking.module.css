@@ -938,3 +938,22 @@ details[open] > .refundToggle > svg {
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 1rem 1.5rem;
 }
+
+.reserveNote {
+  margin: 0.75rem 0 0;
+  padding: 0.6rem 0.75rem;
+  border-radius: 12px;
+  background: #e0f2fe;
+  color: #075985;
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.ladderTotal {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #0369a1;
+  margin-top: 0.15rem;
+}

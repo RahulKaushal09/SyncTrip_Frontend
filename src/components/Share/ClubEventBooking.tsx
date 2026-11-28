@@ -10,7 +10,7 @@ import { trackViewContent } from "@/utils/adTracking";
 import { useClubPixel } from "@/hooks/useClubPixel";
 import { useNow } from "@/hooks/useNow";
 import ClubTicketCard from "./ClubTicketCard";
-import { deadlineLabel, isLowStock, leadPass } from "./shareFormat";
+import { deadlineLabel, hasReservePasses, isLowStock, leadPass, passReserve } from "./shareFormat";
 import styles from "./ClubBooking.module.css";
 
 /**
@@ -62,7 +62,7 @@ export default function ClubEventBooking({ event }: { event: ClubEvent }) {
   const leadEnds = lead?.pass.salesEndAt && now != null ? deadlineLabel(lead.pass.salesEndAt, now) : null;
   const mobileNote = event.pricing?.isFree && !passes?.length
     ? (isLowStock(seatsLeft) ? `Only ${seatsLeft} left` : null)
-    : lead && isLowStock(lead.left) ? `Only ${lead.left} left${lead.pass.price > 0 ? ` at ₹${Math.round(lead.pass.price).toLocaleString("en-IN")}` : ""}`
+    : lead && isLowStock(lead.left) ? `Only ${lead.left} left${lead.pass.price > 0 ? ` at ₹${Math.round(passReserve(lead.pass)?.total ?? lead.pass.price).toLocaleString("en-IN")}` : ""}`
     : leadEnds ? `Ends ${leadEnds}`
     : tier && isLowStock(tier.seatsLeft) ? `Only ${tier.seatsLeft} left at this price`
     : isLowStock(seatsLeft) ? `Only ${seatsLeft} spot${seatsLeft === 1 ? "" : "s"} left`
@@ -84,7 +84,7 @@ export default function ClubEventBooking({ event }: { event: ClubEvent }) {
           <div className={styles.mobilePrice}>
             <span className={styles.mobilePriceValue}>
               {passes?.length
-                ? (price === 0 && event.pricing?.isFree ? "Free" : `from ₹${Math.round(price).toLocaleString("en-IN")}`)
+                ? (price === 0 && event.pricing?.isFree ? "Free" : `${hasReservePasses(passes) ? "Reserve from" : "from"} ₹${Math.round(price).toLocaleString("en-IN")}`)
                 : event.pricing?.isFree ? "Free" : `₹${Math.round(price).toLocaleString("en-IN")}`}
             </span>
             {mobileNote && <span className={styles.mobilePriceNote}>{mobileNote}</span>}

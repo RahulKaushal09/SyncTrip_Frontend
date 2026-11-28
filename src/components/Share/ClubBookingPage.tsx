@@ -15,7 +15,7 @@ import { captureWebAttribution, getWebAttribution } from "@/utils/webAttribution
 import { trackInitiateCheckout, trackPurchase } from "@/utils/adTracking";
 import { useClubPixel } from "@/hooks/useClubPixel";
 import type { RazorpayCheckoutResponse } from "@/app/checkout/checkout.types";
-import { deadlineLabel, formatWhen, isLowStock, passesLeft } from "./shareFormat";
+import { deadlineLabel, formatWhen, isLowStock, passReserve, passesLeft } from "./shareFormat";
 import { useNow } from "@/hooks/useNow";
 import s from "./ClubBookingPage.module.css";
 
@@ -195,6 +195,15 @@ export default function ClubBookingPage({ event }: { event: ClubEvent }) {
   const missingQuestions = questions.filter((q) => q.required && !answered(q, answers[q.id]));
   const namesMissing = askNames && names.filter((n) => n.trim()).length < nameCount;
   const cartReady = usesPasses ? items.length > 0 && !!passQuote : classicFree || !!seatQuote;
+  // Reservation tickets: what is left to pay after the advance (from each
+  // pass description's "Total price"), so the summary never reads as the full cost.
+  const balanceLater = usesPasses
+    ? items.reduce((sum, it) => {
+        const p = passes?.find((x) => x.id === it.passId);
+        const r = p ? passReserve(p) : null;
+        return r && p ? sum + (r.total - p.price) * it.quantity : sum;
+      }, 0)
+    : 0;
 
   const fail = (e: unknown) => {
     const err = e instanceof CheckoutError ? e : new CheckoutError("NETWORK", "Something went wrong. Please try again.");
@@ -434,7 +443,17 @@ export default function ClubBookingPage({ event }: { event: ClubEvent }) {
                               {badges.map((b) => <span key={b} className={`${s.badge} ${off ? "" : s.badgeWarn}`}>{b}</span>)}
                             </div>
                           </div>
-                          <div className={s.passPrice}>{p.price === 0 ? "Free" : rupees(p.price)}</div>
+                          {(() => {
+                            const r = passReserve(p);
+                            if (!r) return <div className={s.passPrice}>{p.price === 0 ? "Free" : rupees(p.price)}</div>;
+                            return (
+                              <div className={s.passPriceBox}>
+                                <div className={s.passPrice}>{rupees(r.total)}</div>
+                                <div className={s.passPriceNote}>total{r.per ? ` ${r.per}` : ""}</div>
+                                <div className={s.passReserve}>Pay {rupees(p.price)} now to reserve</div>
+                              </div>
+                            );
+                          })()}
                         </div>
                         {p.description && <p className={s.passDesc}><Linkified text={p.description} /></p>}
                         {p.highlights.length > 0 && (
@@ -571,9 +590,15 @@ export default function ClubBookingPage({ event }: { event: ClubEvent }) {
               <div className={s.sumRow}><span>Booking fee</span><span>{rupees(usesPasses ? passQuote!.platformFee : seatQuote!.platformFee)}</span></div>
             )}
             <div className={`${s.sumRow} ${s.sumTotal}`}>
-              <span>Total</span>
+              <span>{balanceLater > 0 ? "Pay now to reserve" : "Total"}</span>
               <span>{isFreeTotal && cartReady ? "Free" : cartReady ? rupees(total) : "—"}</span>
             </div>
+            {balanceLater > 0 && cartReady && (
+              <>
+                <div className={s.sumRow}><span>Balance, paid later</span><span>{rupees(balanceLater)}</span></div>
+                <p className={s.helper}>You pay only the reservation amount now. The balance and its due date are in each ticket&apos;s details.</p>
+              </>
+            )}
             {usesPasses && passQuote && <p className={s.helper}>One ticket admits {people(passQuote.seats)}.</p>}
             {!isFreeTotal && (passQuote?.memberDiscountPercent || seatQuote?.memberDiscountPercent) ? (
               <p className={s.helper}>SyncTrip Plus members get {passQuote?.memberDiscountPercent ?? seatQuote?.memberDiscountPercent}% off - applied after you verify.</p>
