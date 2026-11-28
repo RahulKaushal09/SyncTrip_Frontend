@@ -556,3 +556,54 @@ a.row:hover {
     margin-top: 0;
   }
 }
+/* Phones: the cover card was too crowded - smaller pills, byline and title,
+   tighter gaps, and the subtitle capped at three lines so the photo shows. */
+@media (max-width: 600px) {
+  .heroCard,
+  .heroTall {
+    min-height: 340px;
+  }
+
+  .heroCard .heroInner {
+    padding: 1.1rem 1.1rem 1.25rem;
+    gap: 0.55rem;
+  }
+
+  .badgeRow {
+    gap: 0.35rem;
+  }
+
+  .badge {
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    padding: 4px 10px;
+  }
+
+  .heroByline {
+    font-size: 0.78rem;
+    gap: 0.45rem;
+    line-height: 1.3;
+  }
+
+  .heroLogo {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    flex-shrink: 0;
+  }
+
+  .heroTitle {
+    font-size: 1.6rem;
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+  }
+
+  .heroSubtitle {
+    font-size: 0.88rem;
+    line-height: 1.45;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}

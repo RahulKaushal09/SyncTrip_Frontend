@@ -39,6 +39,8 @@ export default function ClubEventShareDetail({ event, club = null, moreFromClub 
   const price = cheapest
     ? `₹${cheapest.p.price.toLocaleString("en-IN")} to reserve · full price from ₹${cheapest.r!.total.toLocaleString("en-IN")}${cheapest.r!.per === "per person" ? " per person" : ""}`
     : basePrice;
+  // Hero pill stays short: the real starting price, not the advance.
+  const heroPrice = cheapest ? `From ₹${cheapest.r!.total.toLocaleString("en-IN")}` : basePrice;
   const isCancelled = event.status === "cancelled";
   const hasEnded = !isCancelled && isPast(event.endsAt || event.startsAt);
   const whenLine = formatWhen(event.startsAt, event.endsAt);
@@ -63,7 +65,7 @@ export default function ClubEventShareDetail({ event, club = null, moreFromClub 
         <div className={styles.heroInner}>
           <div className={styles.badgeRow}>
             {event.category && <span className={styles.badge}>{humanize(event.category)}</span>}
-            <span className={styles.badge}>{price}</span>
+            <span className={styles.badge}>{heroPrice}</span>
             {isCancelled ? (
               <span className={`${styles.badge} ${styles.badgeWarn}`}>Cancelled</span>
             ) : hasEnded ? (
